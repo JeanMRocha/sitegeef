@@ -30,9 +30,9 @@ Preparar acessos, conectores, seguranca, Git, VPS, Cloudflare, Supabase e CI/CD 
    - [ ] Configurar protecao basica antes de uso colaborativo.
 
 3. Supabase
-   - [ ] Configurar MCP.
-   - [ ] Validar autenticacao.
-   - [ ] Confirmar project ref.
+   - [x] Configurar MCP.
+   - [x] Validar autenticacao.
+   - [ ] Confirmar project ref por ferramenta Supabase apos recarregar sessao.
    - [ ] Nao criar schema definitivo antes de ADR.
 
 4. Cloudflare

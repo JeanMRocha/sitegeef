@@ -37,12 +37,18 @@ Objetivo:
 
 - Permitir consulta e operacao segura do projeto Supabase quando necessario.
 
+Configuracao do projeto GEEF:
+
+- Nome MCP: `supabase-geef`
+- Project ref: `nycgpokqlmrfzegjlrwa`
+- Detalhes: `docs/SUPABASE.md`
+
 Checklist:
 
-- Configurar MCP apontando para o projeto correto.
-- Autenticar via fluxo oficial.
-- Validar acesso sem expor tokens na documentacao.
-- Confirmar project ref.
+- [x] Configurar MCP apontando para o projeto correto.
+- [x] Autenticar via fluxo oficial.
+- [x] Validar configuracao sem expor tokens na documentacao.
+- [ ] Confirmar project ref por ferramenta Supabase apos recarregar a sessao.
 - Antes de criar schema, produzir ADR de banco e modelo multi-instituicao.
 
 Regras:

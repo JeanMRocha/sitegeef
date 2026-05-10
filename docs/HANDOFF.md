@@ -14,6 +14,13 @@ O repositorio Git local foi inicializado e conectado ao GitHub:
 
 Ainda nao ha aplicacao Next.js criada.
 
+Supabase MCP:
+
+- MCP especifico criado: `supabase-geef`
+- Project ref: `nycgpokqlmrfzegjlrwa`
+- OAuth concluido com sucesso.
+- Pode ser necessario recarregar a sessao do Codex para as ferramentas Supabase aparecerem no ambiente.
+
 ## Decisoes confirmadas
 
 - Frontend: Next.js.
@@ -27,7 +34,7 @@ Ainda nao ha aplicacao Next.js criada.
 
 ## Proximas acoes recomendadas
 
-1. Configurar e validar MCP/conector Supabase.
+1. Recarregar a sessao Codex e validar o MCP `supabase-geef` com ferramenta Supabase especifica.
 2. Configurar e validar acesso Cloudflare para dominio, DNS, SSL e seguranca.
 3. Validar SSH na VPS Oracle e registrar requisitos de hardening.
 4. Definir estrategia inicial de deploy: systemd, Docker Compose ou PM2.
@@ -44,6 +51,8 @@ Ainda nao ha aplicacao Next.js criada.
 - Git local inicializado.
 - GitHub remoto conectado.
 - Primeiro commit documental enviado para `main`.
+- MCP Supabase especifico do GEEF criado como `supabase-geef`.
+- Login OAuth do MCP Supabase concluido.
 
 ## Cuidados
 
