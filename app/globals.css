@@ -1,20 +1,22 @@
 :root {
   color-scheme: light;
   --bg: #f8f4ec;
-  --bg-alt: #eef4fb;
-  --surface: rgba(255, 255, 255, 0.82);
+  --bg-alt: #f1efe6;
+  --surface: rgba(255, 255, 255, 0.84);
   --surface-strong: #ffffff;
-  --text: #172033;
-  --muted: #5c6780;
-  --line: rgba(23, 32, 51, 0.12);
-  --blue: #2047b8;
-  --blue-strong: #17338f;
-  --gold: #c7a35a;
-  --shadow: 0 24px 60px rgba(24, 37, 78, 0.12);
+  --text: #1c201f;
+  --muted: #5d6578;
+  --line: rgba(14, 36, 8, 0.12);
+  --uva: #8a005a;
+  --uva-strong: #6a0045;
+  --leaf: #63d51f;
+  --leaf-soft: #a7ef50;
+  --vine: #0e2408;
+  --shadow: 0 24px 60px rgba(18, 31, 18, 0.12);
   --radius-xl: 32px;
   --radius-lg: 24px;
   --radius-md: 18px;
-  --font-heading: "Cormorant Garamond", serif;
+  --font-heading: "Fredoka", system-ui, sans-serif;
   --font-body: "Manrope", system-ui, sans-serif;
 }
 
@@ -32,9 +34,9 @@ body {
   color: var(--text);
   font-family: var(--font-body);
   background:
-    radial-gradient(circle at top left, rgba(32, 71, 184, 0.12), transparent 28%),
-    radial-gradient(circle at 85% 10%, rgba(199, 163, 90, 0.16), transparent 20%),
-    linear-gradient(180deg, #faf7f0 0%, #f4f0ea 54%, #eef3f9 100%);
+    radial-gradient(circle at top left, rgba(99, 213, 31, 0.14), transparent 28%),
+    radial-gradient(circle at 85% 10%, rgba(138, 0, 90, 0.12), transparent 22%),
+    linear-gradient(180deg, #faf7f0 0%, #f4efe6 50%, #eef3eb 100%);
 }
 
 a {
@@ -73,20 +75,23 @@ img {
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.85rem;
   min-width: 0;
 }
 
-.brand-mark {
-  width: 2.6rem;
-  height: 2.6rem;
-  display: grid;
-  place-items: center;
-  border-radius: 999px;
-  background: linear-gradient(135deg, var(--blue), #5f86ff);
-  color: #fff;
-  font-weight: 700;
-  box-shadow: 0 12px 24px rgba(32, 71, 184, 0.25);
+.brand-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 11rem;
+  max-width: 11rem;
+  flex: 0 0 auto;
+}
+
+.brand-logo img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
 }
 
 .brand-text {
@@ -123,7 +128,7 @@ img {
 
 .site-nav a:hover,
 .site-nav a:focus-visible {
-  background: rgba(32, 71, 184, 0.08);
+  background: rgba(138, 0, 90, 0.08);
   color: var(--text);
   outline: none;
 }
@@ -159,7 +164,7 @@ img {
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--blue);
+  color: var(--uva);
 }
 
 .hero h1,
@@ -207,9 +212,9 @@ img {
 }
 
 .button-primary {
-  background: linear-gradient(135deg, var(--blue), var(--blue-strong));
+  background: linear-gradient(135deg, var(--uva), var(--uva-strong));
   color: #fff;
-  box-shadow: 0 16px 30px rgba(32, 71, 184, 0.24);
+  box-shadow: 0 16px 30px rgba(138, 0, 90, 0.24);
 }
 
 .button-secondary {
@@ -231,8 +236,8 @@ img {
   position: relative;
   background:
     radial-gradient(circle at 25% 20%, rgba(255, 255, 255, 0.85), transparent 26%),
-    radial-gradient(circle at 60% 65%, rgba(32, 71, 184, 0.16), transparent 32%),
-    linear-gradient(160deg, #f8fbff 0%, #edf3ff 56%, #dce7fb 100%);
+    radial-gradient(circle at 60% 65%, rgba(99, 213, 31, 0.14), transparent 32%),
+    linear-gradient(160deg, #fbfbf7 0%, #f3f4ea 56%, #e8f4dd 100%);
 }
 
 .hero-visual::before,
@@ -248,7 +253,7 @@ img {
   height: 11rem;
   right: -2rem;
   top: -1rem;
-  background: rgba(199, 163, 90, 0.15);
+  background: rgba(138, 0, 90, 0.12);
 }
 
 .hero-visual::after {
@@ -256,7 +261,7 @@ img {
   height: 17rem;
   left: -4rem;
   bottom: -5rem;
-  background: rgba(32, 71, 184, 0.12);
+  background: rgba(99, 213, 31, 0.14);
 }
 
 .hero-panel {
@@ -271,6 +276,18 @@ img {
   box-shadow: 0 18px 36px rgba(28, 48, 88, 0.12);
 }
 
+.hero-brand {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.hero-brand img {
+  width: min(100%, 18rem);
+  height: auto;
+  object-fit: contain;
+}
+
 .hero-panel-top {
   display: flex;
   justify-content: space-between;
@@ -281,10 +298,15 @@ img {
 .pill {
   padding: 0.45rem 0.75rem;
   border-radius: 999px;
-  background: rgba(32, 71, 184, 0.1);
-  color: var(--blue-strong);
+  background: rgba(138, 0, 90, 0.1);
+  color: var(--uva-strong);
   font-size: 0.82rem;
   font-weight: 600;
+}
+
+.pill-primary {
+  background: rgba(99, 213, 31, 0.16);
+  color: #2d6a14;
 }
 
 .hero-panel h2 {
@@ -321,8 +343,8 @@ img {
   width: 0.55rem;
   height: 0.55rem;
   border-radius: 999px;
-  background: var(--gold);
-  box-shadow: 0 0 0 6px rgba(199, 163, 90, 0.15);
+  background: var(--leaf);
+  box-shadow: 0 0 0 6px rgba(99, 213, 31, 0.14);
 }
 
 .section {
@@ -366,7 +388,7 @@ img {
 .feature-card:hover,
 .feature-card:focus-visible {
   transform: translateY(-2px);
-  border-color: rgba(32, 71, 184, 0.24);
+  border-color: rgba(138, 0, 90, 0.24);
   box-shadow: 0 28px 60px rgba(24, 37, 78, 0.14);
   outline: none;
 }
@@ -384,8 +406,8 @@ img {
   height: 2.6rem;
   padding: 0.65rem;
   border-radius: 999px;
-  background: rgba(32, 71, 184, 0.08);
-  color: var(--blue);
+  background: rgba(138, 0, 90, 0.08);
+  color: var(--uva);
 }
 
 .feature-card h3,
@@ -429,7 +451,7 @@ img {
 
 .schedule-meta {
   margin: 0.75rem 0 0;
-  color: var(--blue-strong);
+  color: var(--uva-strong);
   font-weight: 600;
 }
 
@@ -442,7 +464,7 @@ img {
 }
 
 .contact-list a {
-  color: var(--blue-strong);
+  color: var(--uva-strong);
   font-weight: 600;
 }
 
@@ -490,6 +512,11 @@ img {
     align-items: flex-start;
   }
 
+  .brand-logo {
+    width: 9.5rem;
+    max-width: 9.5rem;
+  }
+
   .site-nav {
     justify-content: flex-start;
   }
@@ -514,6 +541,10 @@ img {
 
   .site-header {
     padding: 0.9rem;
+  }
+
+  .brand {
+    align-items: flex-start;
   }
 
   .site-nav {

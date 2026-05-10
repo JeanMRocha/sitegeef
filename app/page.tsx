@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowIcon, BookIcon, CalendarIcon, GroupIcon, HeartIcon, LiveIcon, MailIcon } from "@/components/site-icons";
 import { featureCards, schedule, site } from "@/lib/site-data";
@@ -36,8 +37,17 @@ export default function Home() {
 
         <aside className="hero-visual" aria-label="Resumo do site">
           <div className="hero-panel">
+            <div className="hero-brand">
+              <Image
+                src="/brand/logo-oficial.jpg"
+                alt="Logo oficial do GEEF"
+                width={320}
+                height={138}
+                priority
+              />
+            </div>
             <div className="hero-panel-top">
-              <span className="pill">Acolhimento</span>
+              <span className="pill pill-primary">Acolhimento</span>
               <span className="pill">Agenda aberta</span>
             </div>
             <h2>Estudo, escuta e presença.</h2>
