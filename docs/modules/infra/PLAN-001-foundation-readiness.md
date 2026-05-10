@@ -18,47 +18,47 @@ Preparar acessos, conectores, seguranca, Git, VPS, Cloudflare, Supabase e CI/CD 
 ## Tarefas
 
 1. Seguranca local
-   - Confirmar `.gitignore`.
-   - Criar `.env.example`.
-   - Rotacionar credenciais expostas.
-   - Garantir que `.secrets/` nao sera versionado.
+   - [x] Confirmar `.gitignore`.
+   - [x] Criar `.env.example`.
+   - [x] Remover credenciais reais do markdown versionado.
+   - [x] Garantir que `.secrets/` nao sera versionado.
 
 2. GitHub
-   - Inicializar Git local.
-   - Conectar ao repositorio remoto.
-   - Criar branch principal.
-   - Configurar protecao basica antes de uso colaborativo.
+   - [x] Inicializar Git local.
+   - [x] Conectar ao repositorio remoto.
+   - [x] Criar branch principal.
+   - [ ] Configurar protecao basica antes de uso colaborativo.
 
 3. Supabase
-   - Configurar MCP.
-   - Validar autenticacao.
-   - Confirmar project ref.
-   - Nao criar schema definitivo antes de ADR.
+   - [ ] Configurar MCP.
+   - [ ] Validar autenticacao.
+   - [ ] Confirmar project ref.
+   - [ ] Nao criar schema definitivo antes de ADR.
 
 4. Cloudflare
-   - Validar acesso ao dominio.
-   - Mapear DNS atual.
-   - Planejar proxy, SSL e WAF.
-   - Registrar decisoes antes de apontar producao.
+   - [ ] Validar acesso ao dominio.
+   - [ ] Mapear DNS atual.
+   - [ ] Planejar proxy, SSL e WAF.
+   - [ ] Registrar decisoes antes de apontar producao.
 
 5. VPS
-   - Testar SSH.
-   - Atualizar sistema.
-   - Configurar firewall.
-   - Criar usuario de deploy.
-   - Definir rollback.
+   - [ ] Testar SSH.
+   - [ ] Atualizar sistema.
+   - [ ] Configurar firewall.
+   - [ ] Criar usuario de deploy.
+   - [ ] Definir rollback.
 
 6. CI/CD
-   - Criar pipeline de build.
-   - Criar pipeline de deploy.
-   - Guardar segredos no GitHub Secrets.
-   - Testar deploy em ambiente controlado.
+   - [ ] Criar pipeline de build.
+   - [ ] Criar pipeline de deploy.
+   - [ ] Guardar segredos no GitHub Secrets.
+   - [ ] Testar deploy em ambiente controlado.
 
 7. Next.js
-   - Criar app.
-   - Configurar TypeScript.
-   - Configurar lint, testes e build.
-   - Criar estrutura inicial de modulos.
+   - [ ] Criar app.
+   - [ ] Configurar TypeScript.
+   - [ ] Configurar lint, testes e build.
+   - [ ] Criar estrutura inicial de modulos.
 
 ## Criterios de conclusao
 

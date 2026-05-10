@@ -2,7 +2,17 @@
 
 ## Estado atual
 
-O projeto ainda esta no inicio. Existem documentos de visao e bootstrap, mas nao ha aplicacao Next.js criada nem repositorio Git inicializado nesta pasta.
+O projeto ainda esta no inicio. Existem documentos de visao, bootstrap, seguranca, conexoes, arquitetura e planos iniciais.
+
+O repositorio Git local foi inicializado e conectado ao GitHub:
+
+- Remoto: `git@github.com:Geef-EliasFrancis/sitegeef.git`
+- URL: `https://github.com/Geef-EliasFrancis/sitegeef`
+- Branch principal: `main`
+- Ultimo commit enviado: `43a7b69 docs: add initial project foundation`
+- `.secrets/` esta ignorado e nao foi versionado.
+
+Ainda nao ha aplicacao Next.js criada.
 
 ## Decisoes confirmadas
 
@@ -17,15 +27,23 @@ O projeto ainda esta no inicio. Existem documentos de visao e bootstrap, mas nao
 
 ## Proximas acoes recomendadas
 
-1. Rotacionar credenciais Supabase que apareceram em markdown.
-2. Confirmar que `.secrets/` contem apenas arquivos locais e esta fora do Git.
-3. Inicializar Git local.
-4. Criar `.env.example`.
-5. Configurar MCPs/conectores: Supabase, GitHub e Cloudflare.
-6. Validar SSH na VPS.
-7. Criar app Next.js.
-8. Criar pipeline CI.
-9. Executar Fase 1 do site publico.
+1. Configurar e validar MCP/conector Supabase.
+2. Configurar e validar acesso Cloudflare para dominio, DNS, SSL e seguranca.
+3. Validar SSH na VPS Oracle e registrar requisitos de hardening.
+4. Definir estrategia inicial de deploy: systemd, Docker Compose ou PM2.
+5. Criar GitHub Actions basico para CI.
+6. Criar app Next.js somente depois dos acessos essenciais estarem documentados.
+7. Executar Fase 1 do site publico.
+
+## Etapas concluidas
+
+- `.gitignore` criado com protecao de `.secrets/` e `.env`.
+- `.env.example` criado sem valores reais.
+- Credenciais reais removidas do markdown versionado.
+- Documentacao base criada em `docs/`.
+- Git local inicializado.
+- GitHub remoto conectado.
+- Primeiro commit documental enviado para `main`.
 
 ## Cuidados
 
@@ -33,3 +51,4 @@ O projeto ainda esta no inicio. Existem documentos de visao e bootstrap, mas nao
 - Nao iniciar deploy antes de validar rollback.
 - Nao criar banco multi-instituicao sem ADR.
 - Nao implementar painel administrativo antes do site publico MVP.
+- Atualizar este `HANDOFF.md` ao final de cada etapa relevante.
