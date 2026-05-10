@@ -64,6 +64,19 @@ Cloudflare MCP:
 - Login OAuth do MCP Supabase concluido.
 - MCP Cloudflare especifico do GEEF criado como `cloudflare-geef`.
 - Login OAuth do MCP Cloudflare concluido.
+- SSH da VPS Oracle validado com a chave local do projeto.
+- Host `204.216.166.12` respondeu como `vpsgeef` com usuario `ubuntu`.
+- Fingerprint do host registrada em `.secrets/ssh/known_hosts`.
+- Cloudflare com `A` em `geef.com.br` apontando para `204.216.166.12`.
+- Cloudflare com `CNAME` em `www.geef.com.br` apontando para `geef.com.br`.
+- App Next.js inicial criado com uma pagina `Olá, mundo` em `/`.
+- VPS com `sitegeef.service` rodando Next.js em `localhost:3000`.
+- VPS com `sitegeef-tunnel.service` rodando `cloudflared` para o tunnel da Cloudflare.
+- Dominio publicado via Cloudflare Tunnel em `geef.com.br` e `www.geef.com.br`.
+- Home trocada para uma tela de manutencao orientada ao fluxo de deploy.
+- Workflow GitHub Actions criado para deploy automatico na `main`.
+- Fluxo de deploy automatico codificado, mas a VPS perdeu conectividade SSH durante a publicacao manual e o tunnel Cloudflare ficou sem conexoes.
+- Estado publico atual: `geef.com.br` e `www.geef.com.br` retornam erro Cloudflare 530 enquanto a VPS nao responde.
 
 ## Cuidados
 
