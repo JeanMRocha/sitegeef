@@ -42,8 +42,9 @@ Estado operacional recente:
 - O erro Cloudflare `502` apareceu quando a origem `localhost:3000` nao estava respondendo.
 - O processo da VPS chegou a falhar com `sh: 1: next: not found`, indicando dependencia de runtime ausente no host.
 - O deploy de producao foi migrado para um fluxo manual via SSH, usando o modelo `standalone` do Next.js.
-- O GitHub Actions agora fica apenas como validacao e heartbeat, sem empurrar alteracoes para a VPS.
+- O GitHub Actions agora fica como validacao em push e heartbeat semanal, sem empurrar alteracoes para a VPS.
 - O comando `npm run deploy:ssh` faz build local, empacota os artefatos e publica na VPS.
+- Os links internos do site usam query `v=` para evitar cache antigo da Cloudflare enquanto nao ha purge direto.
 - O `sitegeef.service` agora roda `node server.js` dentro de `/home/ubuntu/sitegeef/standalone`.
 - A origem local voltou a responder `200 OK` em `http://127.0.0.1:3000`.
 - `geef.com.br` e `www.geef.com.br` voltaram a responder `200` pela Cloudflare.
@@ -110,7 +111,7 @@ Estado operacional recente:
 - Base real do site publico iniciada com home institucional, shell reutilizavel e rotas estaticas para `quem-somos`, `agenda`, `atividades`, `estudos`, `evangelizacao`, `atendimento-fraterno`, `doacoes`, `ao-vivo`, `contato` e `privacidade`.
 - Identidade visual oficial aplicada na interface publica, com logo oficial e tipografia institucional.
 - Backend de logs planejado para Supabase com endpoint autenticado `POST /api/ops/ingest` e cron semanal `scripts/weekly-ops-report.mjs`.
-- GitHub Actions passou a enviar heartbeat direto para o Supabase em todo push na `main`, independente da VPS.
+- GitHub Actions passou a enviar heartbeat direto para o Supabase em agendamento semanal, independente da VPS.
 - Tabela `public.ops_events` criada no Supabase e teste de insercao concluido com sucesso.
 - Supabase confirmou recebimento dos heartbeats do GitHub Actions com `201` no endpoint de ingestao.
 - `public.ops_events` atualmente contem apenas eventos `heartbeat/info`; ainda nao chegaram eventos `log` ou `error` da VPS.

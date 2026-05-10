@@ -31,6 +31,8 @@ export type ContentPage = {
   sections: PageSection[];
 };
 
+const publicCacheVersion = "20260510";
+
 export const site = {
   name: "Grupo Espírita Elias Francis",
   shortName: "GEEF",
@@ -42,50 +44,61 @@ export const site = {
   facebook: "@grupoespiritaeliasfrancis",
 };
 
+export function publicHref(path: string) {
+  if (/^https?:\/\//i.test(path)) {
+    return path;
+  }
+
+  const [pathname, hash = ""] = path.split("#", 2);
+  const separator = pathname.includes("?") ? "&" : "?";
+  const query = `v=${publicCacheVersion}`;
+  return `${pathname}${separator}${query}${hash ? `#${hash}` : ""}`;
+}
+
 export const navItems: NavItem[] = [
-  { href: "/quem-somos", label: "Quem somos" },
-  { href: "/agenda", label: "Agenda" },
-  { href: "/atividades", label: "Atividades" },
-  { href: "/estudos", label: "Estudos" },
-  { href: "/evangelizacao", label: "Evangelização" },
-  { href: "/atendimento-fraterno", label: "Atendimento fraterno" },
-  { href: "/ao-vivo", label: "Ao vivo" },
-  { href: "/contato", label: "Contato" },
+  { href: publicHref("/quem-somos"), label: "Quem somos" },
+  { href: publicHref("/agenda"), label: "Agenda" },
+  { href: publicHref("/atividades"), label: "Atividades" },
+  { href: publicHref("/estudos"), label: "Estudos" },
+  { href: publicHref("/evangelizacao"), label: "Evangelização" },
+  { href: publicHref("/atendimento-fraterno"), label: "Atendimento fraterno" },
+  { href: publicHref("/ao-vivo"), label: "Ao vivo" },
+  { href: publicHref("/contato"), label: "Contato" },
 ];
 
 export const featureCards: FeatureCard[] = [
   {
-    href: "/quem-somos",
+    href: publicHref("/quem-somos"),
     title: "Quem somos",
     description: "Missão, valores e história da casa.",
     icon: "group",
   },
   {
-    href: "/agenda",
+    href: publicHref("/agenda"),
     title: "Agenda",
     description: "Reuniões públicas, estudos e eventos.",
     icon: "calendar",
   },
   {
-    href: "/atendimento-fraterno",
+    href: publicHref("/atendimento-fraterno"),
     title: "Atendimento fraterno",
     description: "Escuta, acolhimento e orientação.",
     icon: "heart",
   },
   {
-    href: "/ao-vivo",
+    href: publicHref("/ao-vivo"),
     title: "Ao vivo",
     description: "Transmissões e gravações no YouTube.",
     icon: "live",
   },
   {
-    href: "/estudos",
+    href: publicHref("/estudos"),
     title: "Estudos",
     description: "Evangelho, doutrina e formação contínua.",
     icon: "book",
   },
   {
-    href: "/contato",
+    href: publicHref("/contato"),
     title: "Contato",
     description: "Endereço, telefone e redes sociais.",
     icon: "mail",
@@ -122,7 +135,7 @@ export const contentPages: Record<string, ContentPage> = {
     intro:
       "O Grupo Espírita Elias Francis é uma casa de estudo, acolhimento e serviço fraterno. Nossa atuação prioriza a simplicidade, o respeito, a caridade e a continuidade de uma história marcada por presença e serviço.",
     ctaLabel: "Ver agenda",
-    ctaHref: "/agenda",
+    ctaHref: publicHref("/agenda"),
     sections: [
       {
         heading: "Nossa missão",
@@ -165,7 +178,7 @@ export const contentPages: Record<string, ContentPage> = {
     intro:
       "A agenda abaixo é uma base simples para o site público. Ela pode depois ser mantida manualmente ou integrada ao fluxo administrativo.",
     ctaLabel: "Falar com a casa",
-    ctaHref: "/contato",
+    ctaHref: publicHref("/contato"),
     sections: [
       {
         heading: "Programação semanal",
@@ -184,7 +197,7 @@ export const contentPages: Record<string, ContentPage> = {
     intro:
       "As atividades organizam o fluxo da casa e ajudam o visitante a entender rapidamente o que acontece em cada horário.",
     ctaLabel: "Ver estudos",
-    ctaHref: "/estudos",
+    ctaHref: publicHref("/estudos"),
     sections: [
       {
         heading: "O que oferecemos",
@@ -204,7 +217,7 @@ export const contentPages: Record<string, ContentPage> = {
     intro:
       "Os estudos sustentam a vida da casa e permitem crescer com método, serenidade e disciplina.",
     ctaLabel: "Ir para evangelização",
-    ctaHref: "/evangelizacao",
+    ctaHref: publicHref("/evangelizacao"),
     sections: [
       {
         heading: "Linhas de estudo",
@@ -223,7 +236,7 @@ export const contentPages: Record<string, ContentPage> = {
     intro:
       "A evangelização é uma das frentes mais importantes da formação moral e social dentro da casa espírita.",
     ctaLabel: "Falar com atendimento",
-    ctaHref: "/atendimento-fraterno",
+    ctaHref: publicHref("/atendimento-fraterno"),
     sections: [
       {
         heading: "Proposta",
@@ -237,7 +250,7 @@ export const contentPages: Record<string, ContentPage> = {
     intro:
       "O atendimento fraterno é um espaço de escuta humana e orientação inicial. O site já deixa isso visível sem burocracia.",
     ctaLabel: "Entrar em contato",
-    ctaHref: "/contato",
+    ctaHref: publicHref("/contato"),
     sections: [
       {
         heading: "Como funciona",
@@ -256,7 +269,7 @@ export const contentPages: Record<string, ContentPage> = {
     intro:
       "A página de doações começa informativa. Quando houver decisão operacional, ela pode ganhar fluxo mais completo.",
     ctaLabel: "Ir para contato",
-    ctaHref: "/contato",
+    ctaHref: publicHref("/contato"),
     sections: [
       {
         heading: "Uso das contribuições",
@@ -284,7 +297,7 @@ export const contentPages: Record<string, ContentPage> = {
     intro:
       "O contato inicial deve ser fácil, claro e disponível no primeiro clique.",
     ctaLabel: "Ver privacidade",
-    ctaHref: "/privacidade",
+    ctaHref: publicHref("/privacidade"),
     sections: [
       {
         heading: "Informações",
@@ -298,7 +311,7 @@ export const contentPages: Record<string, ContentPage> = {
     intro:
       "Esta página registra a base inicial de privacidade para o site público. O texto final pode crescer junto com os módulos internos.",
     ctaLabel: "Voltar ao início",
-    ctaHref: "/",
+    ctaHref: publicHref("/"),
     sections: [
       {
         heading: "Princípios",

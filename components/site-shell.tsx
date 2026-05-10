@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { navItems, site } from "@/lib/site-data";
 
@@ -8,12 +7,13 @@ export function SiteShell({ children }: Readonly<{ children: React.ReactNode }>)
       <header className="site-header">
         <Link href="/" className="brand" aria-label={site.name}>
           <span className="brand-logo">
-            <Image
+            <img
               src="/brand/logo-oficial.jpg"
               alt=""
               width={260}
               height={112}
-              priority
+              loading="eager"
+              decoding="async"
             />
           </span>
           <span className="brand-text">

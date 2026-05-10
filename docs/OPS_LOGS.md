@@ -14,9 +14,9 @@ Fonte de verdade operacional para logs do GEEF.
 
 1. A VPS executa `scripts/collect-system-errors.mjs` a cada poucos minutos.
 2. O coletor lê o `journalctl -p err..alert` e envia apenas erros novos.
-3. O script semanal `scripts/weekly-ops-report.mjs` envia um heartbeat mesmo sem erro.
+3. O script semanal `scripts/weekly-ops-report.mjs` envia um relatório semanal mesmo sem erro.
 4. A rota `POST /api/ops/ingest` grava o evento na tabela `public.ops_events` usando a chave de serviço.
-5. O GitHub Actions envia um heartbeat direto para o Supabase em todo push na `main`, mesmo se a VPS estiver fora do ar.
+5. O GitHub Actions envia um heartbeat direto para o Supabase em um agendamento semanal, mesmo se a VPS estiver fora do ar.
 
 ## Segredos
 
@@ -41,7 +41,7 @@ Coletor frequente:
 */10 * * * * root . /etc/sitegeef/sitegeef.env && node /home/ubuntu/sitegeef/scripts/collect-system-errors.mjs >> /var/log/sitegeef-errors.log 2>&1
 ```
 
-Heartbeat semanal:
+Relatório semanal:
 
 ```cron
 0 6 * * 1 GEEF_LOG_INGEST_URL=https://geef.com.br/api/ops/ingest GEEF_LOG_INGEST_TOKEN=seu-token node /home/ubuntu/sitegeef/scripts/weekly-ops-report.mjs

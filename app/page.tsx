@@ -1,7 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowIcon, BookIcon, CalendarIcon, GroupIcon, HeartIcon, LiveIcon, MailIcon } from "@/components/site-icons";
-import { featureCards, schedule, site } from "@/lib/site-data";
+import { featureCards, publicHref, schedule, site } from "@/lib/site-data";
 
 const iconMap = {
   group: GroupIcon,
@@ -25,11 +24,11 @@ export default function Home() {
             transmissões.
           </p>
           <div className="hero-actions">
-            <Link href="/contato" className="button button-primary">
+            <Link href={publicHref("/contato")} className="button button-primary">
               Falar com a casa
               <ArrowIcon className="button-icon" />
             </Link>
-            <Link href="/agenda" className="button button-secondary">
+            <Link href={publicHref("/agenda")} className="button button-secondary">
               Ver agenda
             </Link>
           </div>
@@ -38,12 +37,13 @@ export default function Home() {
         <aside className="hero-visual" aria-label="Resumo do site">
           <div className="hero-panel">
             <div className="hero-brand">
-              <Image
+              <img
                 src="/brand/logo-oficial.jpg"
                 alt="Logo oficial do GEEF"
                 width={320}
                 height={138}
-                priority
+                loading="eager"
+                decoding="async"
               />
             </div>
             <div className="hero-panel-top">

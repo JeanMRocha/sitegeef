@@ -13,7 +13,8 @@ Depois, abra `http://localhost:3000`.
 ## Deploy
 
 O deploy de producao e manual via SSH, usando o modelo standalone do Next.js para reduzir o
-consumo da VPS. O GitHub Actions fica apenas como CI/heartbeat e nao faz mais push para a VPS.
+consumo da VPS. O GitHub Actions fica como CI no push e heartbeat semanal separado, e nao faz
+mais push para a VPS.
 
 Fluxo recomendado:
 

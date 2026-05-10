@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowIcon } from "@/components/site-icons";
+import { publicHref } from "@/lib/site-data";
 import { type ContentPage } from "@/lib/site-data";
 
 export function ContentPageView({ page }: Readonly<{ page: ContentPage }>) {
@@ -9,11 +9,13 @@ export function ContentPageView({ page }: Readonly<{ page: ContentPage }>) {
       <section className="content-hero">
         <div className="content-hero-top">
           <div className="content-brand">
-            <Image
+            <img
               src="/brand/logo-oficial.jpg"
               alt="Logo oficial do GEEF"
               width={280}
               height={121}
+              loading="eager"
+              decoding="async"
             />
           </div>
           <div className="content-badge">
@@ -54,7 +56,7 @@ export function ContentPageView({ page }: Readonly<{ page: ContentPage }>) {
             {page.ctaLabel}
             <ArrowIcon className="button-icon" />
           </Link>
-          <Link href="/" className="button button-secondary">
+          <Link href={publicHref("/")} className="button button-secondary">
             Voltar ao início
           </Link>
         </div>
