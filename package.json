@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "collect:system-errors": "node scripts/collect-system-errors.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.102.0",

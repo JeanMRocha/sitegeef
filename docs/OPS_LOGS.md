@@ -6,15 +6,16 @@ Fonte de verdade operacional para logs do GEEF.
 
 - receber logs e relatórios semanais da VPS no Supabase;
 - manter um heartbeat semanal mesmo quando não houver erros;
+- capturar erros do sistema inteiro, não só do site;
 - reduzir dependência de logs locais para debug rápido;
 - usar o projeto Supabase como backend de observabilidade leve.
 
 ## Fluxo
 
-1. A VPS executa `scripts/weekly-ops-report.mjs` semanalmente.
-2. O script coleta status da aplicação e do tunnel.
-3. O script envia um evento autenticado para `POST /api/ops/ingest`.
-4. A rota grava o evento na tabela `public.ops_events` usando a chave de serviço.
+1. A VPS executa `scripts/collect-system-errors.mjs` a cada poucos minutos.
+2. O coletor lê o `journalctl -p err..alert` e envia apenas erros novos.
+3. O script semanal `scripts/weekly-ops-report.mjs` envia um heartbeat mesmo sem erro.
+4. A rota `POST /api/ops/ingest` grava o evento na tabela `public.ops_events` usando a chave de serviço.
 
 ## Segredos
 
@@ -27,15 +28,33 @@ Use estes nomes no ambiente da VPS e no GitHub Actions quando necessário:
 
 ## Agendamento sugerido
 
-Executar toda segunda-feira às 06:00 UTC.
+Coletor frequente:
 
-Exemplo de crontab:
+```cron
+*/10 * * * * root . /etc/sitegeef/sitegeef.env && node /home/ubuntu/sitegeef/scripts/collect-system-errors.mjs >> /var/log/sitegeef-errors.log 2>&1
+```
+
+Heartbeat semanal:
 
 ```cron
 0 6 * * 1 GEEF_LOG_INGEST_URL=https://geef.com.br/api/ops/ingest GEEF_LOG_INGEST_TOKEN=seu-token node /home/ubuntu/sitegeef/scripts/weekly-ops-report.mjs
 ```
 
 Se preferir, use um arquivo de ambiente e carregue antes do comando.
+
+## O que entra na coleta de erros
+
+- `sitegeef.service`
+- `sitegeef-tunnel.service`
+- `nginx`
+- `sshd`
+- quaisquer outros serviços que registrarem erro no `journalctl`
+
+## O que ainda não cobre sozinho
+
+- falhas de hardware fora do journald;
+- pane total da instância sem boot;
+- eventos da camada da OCI que nunca chegaram ao sistema operacional.
 
 ## Retenção local
 
