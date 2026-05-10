@@ -44,12 +44,13 @@ jobs:
             --exclude '.next' \
             --exclude '.secrets' \
             --exclude 'node_modules' \
-            -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
+            -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ServerAliveInterval=30 -o ServerAliveCountMax=10 -o TCPKeepAlive=yes" \
             ./ "${{ secrets.GEEF_VPS_USER }}@${{ secrets.GEEF_VPS_HOST }}:${{ secrets.GEEF_VPS_PATH }}/"
 
       - name: Restart app
         run: |
           ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
+            -o ServerAliveInterval=30 -o ServerAliveCountMax=10 -o TCPKeepAlive=yes \
             "${{ secrets.GEEF_VPS_USER }}@${{ secrets.GEEF_VPS_HOST }}" <<'EOF'
           set -e
           cd "${{ secrets.GEEF_VPS_PATH }}"
