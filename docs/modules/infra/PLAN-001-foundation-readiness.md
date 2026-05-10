@@ -1,0 +1,79 @@
+# PLAN-001: Foundation Readiness
+
+## Objetivo
+
+Preparar acessos, conectores, seguranca, Git, VPS, Cloudflare, Supabase e CI/CD antes da implementacao do site publico.
+
+## Escopo
+
+- Proteger segredos.
+- Inicializar Git.
+- Configurar GitHub remoto.
+- Validar Supabase MCP.
+- Validar Cloudflare/dominio.
+- Validar VPS e SSH.
+- Preparar deploy.
+- Criar esqueleto Next.js.
+
+## Tarefas
+
+1. Seguranca local
+   - Confirmar `.gitignore`.
+   - Criar `.env.example`.
+   - Rotacionar credenciais expostas.
+   - Garantir que `.secrets/` nao sera versionado.
+
+2. GitHub
+   - Inicializar Git local.
+   - Conectar ao repositorio remoto.
+   - Criar branch principal.
+   - Configurar protecao basica antes de uso colaborativo.
+
+3. Supabase
+   - Configurar MCP.
+   - Validar autenticacao.
+   - Confirmar project ref.
+   - Nao criar schema definitivo antes de ADR.
+
+4. Cloudflare
+   - Validar acesso ao dominio.
+   - Mapear DNS atual.
+   - Planejar proxy, SSL e WAF.
+   - Registrar decisoes antes de apontar producao.
+
+5. VPS
+   - Testar SSH.
+   - Atualizar sistema.
+   - Configurar firewall.
+   - Criar usuario de deploy.
+   - Definir rollback.
+
+6. CI/CD
+   - Criar pipeline de build.
+   - Criar pipeline de deploy.
+   - Guardar segredos no GitHub Secrets.
+   - Testar deploy em ambiente controlado.
+
+7. Next.js
+   - Criar app.
+   - Configurar TypeScript.
+   - Configurar lint, testes e build.
+   - Criar estrutura inicial de modulos.
+
+## Criterios de conclusao
+
+- Nenhum segredo versionado.
+- Git inicializado e conectado.
+- Acessos externos validados.
+- VPS pronta para receber deploy.
+- Cloudflare preparado.
+- CI executando build.
+- Next.js criado com build verde.
+
+## Fora de escopo
+
+- Banco final.
+- Painel admin.
+- Financeiro.
+- Atendimento fraterno.
+- Multi-instituicao ativa.

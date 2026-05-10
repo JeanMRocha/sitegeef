@@ -1,0 +1,376 @@
+PROJECT_BOOTSTRAP.md
+1. Objetivo
+
+Este documento define a estrutura mínima obrigatória para criação e evolução de projetos, garantindo:
+
+Padronização técnica
+Escalabilidade estrutural
+Rastreabilidade de decisões
+Facilidade de manutenção
+Operabilidade por agentes (IA e humanos)
+
+Todo projeto iniciado deve seguir integralmente estas diretrizes.
+
+
+2. Infraestrutura Base
+Arquivo obrigatório
+Agent.md
+
+Documento raiz e ponto de entrada do projeto.
+
+Regras:
+Deve ser lido antes de qualquer ação
+Define comportamento do agente
+Contém regras de leitura, navegação e execução
+
+Sem leitura do Agent.md, nenhuma operação é considerada válida.
+
+3. Stack Padrão
+
+A stack base do projeto deve seguir:
+
+ver arquivo baseinicial.md
+Regras:
+Alterações na stack exigem ADR obrigatório
+Evitar fragmentação tecnológica
+Manter coerência entre projetos
+
+
+4. Princípios Obrigatórios
+
+4.1 Modularização
+
+Cada módulo deve ser:
+
+Independente
+Isolado
+Testável de forma autônoma
+Evoluível sem impacto direto em outros módulos
+Proibido:
+Acoplamento direto entre módulos
+Compartilhamento de estado interno
+Dependência implícita
+
+4.2 Boas práticas estruturais
+Aplicar princípios do SOLID e Clean Architecture.
+
+Camadas Obrigatórias:
+1. Domínio (Entities/Use Cases): Regras de negócio puras, sem dependência de frameworks.
+2. Interface (Controllers/Presenters): Adaptação para entrada e saída de dados.
+3. Infraestrutura (Repositories/Drivers): Implementações de banco (Supabase), mensageria e serviços externos.
+
+Regras de Ouro:
+- Repository Pattern: O domínio nunca acessa o banco diretamente; ele utiliza interfaces.
+- Inversão de Dependência: A infraestrutura depende do domínio, nunca o contrário.
+- Schema-First: APIs devem ser definidas via OpenAPI (Swagger) antes da implementação.
+
+4.3 Testes
+A qualidade é garantida pela Pirâmide de Testes e validada antes do merge.
+
+Estrutura da Pirâmide:
+- Unitários (60%): Lógica de negócio e funções puras.
+- Integração (30%): Comunicação entre módulos e repositórios.
+- E2E/Contrato (10%): Validação de fluxo completo e contratos de API (OpenAPI/Pact).
+
+Regras:
+- Testes unitários devem existir antes da implementação (TDD-ish).
+- Cobertura mínima: 70% (focada em camadas de Domínio).
+- Bugs só são considerados resolvidos com teste de regressão que impeça sua reincidência.
+
+4.4 RFC, ADR e PLAN
+
+O ciclo de vida de uma mudança técnica segue: RFC → ADR → PLAN.
+Localização: `/docs/modules/{modulo}/`
+
+Definições:
+- RFC (Request for Comments): Documento temporário para propor e debater ideias antes da decisão.
+- ADR (Architecture Decision Record): Registro imutável da decisão tomada e seu contexto.
+- PLAN (Execution Plan): Roteiro técnico para a implementação atual.
+
+Governança:
+- Naming: `RFC-001-*.md`, `ADR-001-*.md`, `PLAN-001-*.md`.
+- Estado: Apenas 1 PLAN ativo por módulo.
+- Histórico: ADRs e RFCs aprovadas são permanentes.
+- Arquivamento: PLANs concluídos devem ser movidos para `/docs/archive` após 30 dias.
+
+4.5 Observabilidade
+
+O sistema deve permitir a rastreabilidade total do ciclo de vida de uma requisição.
+
+Componentes Obrigatórios:
+- Logs Estruturados: Formato JSON com metadados (request-id, user-id, module).
+- Distributed Tracing: Rastreamento de fluxo entre Frontend, Backend e Banco (ex: OpenTelemetry).
+- Error Handling: Erros devem ser tipados por módulo (ex: `ErrUserNotFound`) e nunca expor detalhes de infraestrutura ao cliente final.
+- Health Checks: Endpoints ativos para monitoramento de disponibilidade por módulo.
+
+4.6 Sistema de Notificações
+
+Padrão único de interface:
+
+Toast / balão
+Fechamento automático
+Deve conter:
+Feedback visual ao usuário
+Integração com logs
+Exibição detalhada em modo debug
+
+4.7 Resiliência e Idempotência
+O sistema deve ser tolerante a falhas e evitar efeitos colaterais duplicados.
+
+Regras:
+- Operações de Escrita: Devem aceitar um `idempotency-key` no cabeçalho para evitar duplicidade.
+- Retries: Implementar políticas de retentativa com "exponential backoff" no api_client.
+- Circuit Breaker: Módulos críticos devem isolar falhas de serviços externos para não derrubar o sistema todo.
+
+4.8 Gestão de Configurações
+Segurança e portabilidade entre ambientes (Dev/Staging/Prod).
+
+Regras:
+- Secret Management: Proibido salvar chaves de API ou senhas em arquivos .env commitados.
+- Type-Safe Config: O módulo `config` deve validar a presença e o tipo de todas as variáveis no boot da aplicação.
+- Fail-Fast: Se uma configuração obrigatória faltar, o sistema deve impedir a inicialização (panic).
+
+4.9 Padronização de Identificadores (IDs)O sistema utiliza identificadores curtos, não sequenciais e amigáveis para URL.Formato: Base62 (alfanumérico: [0-9a-zA-Z]).Comprimento: Estritamente 8 dígitos (ex: k3B7pL9w).Vantagens: - Total de combinações: $62^8 \approx 218$ trilhões de IDs únicos.Proteção contra varredura de dados (ID Enumeration).URLs mais limpas e compactas.Implementação: - O ID deve ser gerado na camada de Domínio ou via função dedicada no banco de dados.Proibido o uso de IDs sequenciais (inteiros) em rotas públicas ou respostas de API.
+
+4.10 Estratégia de Cache e Invalidação
+Projetos escaláveis não podem depender apenas da velocidade do banco de dados.
+
+Camadas: Implementar cache em dois níveis:
+
+Shared Cache (Redis): Para dados globais e sessões.
+
+Local Cache (In-memory): Para configurações de sistema que mudam raramente.
+
+Regra de Ouro: "Cache sem estratégia de invalidação é um bug anunciado".
+
+Padrão: Todo dado cacheado deve possuir um TTL (Time-to-Live) definido e uma lógica de Purge (limpeza) disparada via Hooks de banco ou eventos de domínio.
+
+5. Estrutura Base de Módulos
+
+5.1 Núcleo obrigatório
+auth
+Autenticação completa
+Login / logout / refresh
+Controle de sessão
+2FA opcional
+users
+CRUD completo
+Dados:
+Nome
+Contato
+Identificação
+Endereço
+Foto
+themes
+Identidade visual
+Tokens de design
+Suporte a tema claro/escuro
+language
+Internacionalização (i18n)
+Centralização de textos
+notifications
+Templates reutilizáveis
+Tipos:
+Sucesso
+Erro
+Alerta
+Informativo
+observability
+Logs estruturados
+Captura de erros
+Rastreamento por módulo
+Debug
+Integração futura com monitoramento externo
+
+
+5.2 Módulos recomendados
+config
+Variáveis de ambiente
+Feature flags
+Configuração central
+permissions
+Controle de acesso (RBAC)
+Separado de autenticação
+audit
+Registro de ações
+Histórico rastreável
+core
+Tipos base
+Interfaces
+Utilitários globais
+api_client
+Comunicação com backend
+Padronização de chamadas
+
+5.3 Regras de dependência entre módulos
+Permitido:
+Interfaces compartilhadas (core)
+Comunicação via api_client
+Proibido:
+Import direto entre módulos
+Acesso a estado interno
+Objetivo:
+Baixo acoplamento
+Evolução independente
+
+
+6. Estrutura de Pastas
+
+6.1 Estrutura raiz
+/project
+  /modules
+  /docs
+  /tests
+
+6.2 Módulos
+Estrutura interna para garantir baixo acoplamento.
+
+/modules/{modulo}
+  /internal  -> Código privado do módulo (proibido import externo)
+  /public    -> Interfaces e DTOs acessíveis por outros módulos
+  /src       -> Implementação dos Use Cases
+  /tests     -> Suíte de testes local
+
+Regra de Ouro:
+O acesso às funcionalidades de um módulo por outro deve ocorrer exclusivamente através do `api_client` ou de interfaces definidas na pasta `/public`.
+
+6.3 Documentação centralizada
+/docs
+  Agent.md
+  INDEX.md
+
+  /modules/{modulo}
+    INDEX.md
+    /ADR
+    /PLAN
+6.3.1 Glossário de Termos (Ubiquitous Language)
+Localização: /docs/GLOSSARY.md
+
+Regra:
+- Todo termo técnico ou de negócio deve ser definido neste arquivo.
+- O código (variáveis e funções) e a documentação (ADR/PLAN) devem usar estritamente os termos do glossário.
+
+6.4 INDEX global
+
+Função:
+
+Direcionar leitura
+
+Fluxo:
+
+Identificar módulo
+Acessar INDEX do módulo
+Ler apenas o necessário
+
+
+6.5 INDEX do módulo
+
+Define:
+
+ADRs disponíveis
+PLAN ativo
+Contexto de uso
+
+6.6 Regra de leitura para agentes
+
+Obrigatório no Agent.md:
+
+Nunca ler toda documentação
+Sempre iniciar por /docs/INDEX.md
+Ler apenas o necessário
+Proibido:
+Leitura massiva
+Leitura fora do contexto
+
+6.7 Governança
+Documentação única em /docs
+ADR → decisões
+PLAN → execução
+INDEX → navegação
+
+6.8 Padrão de nomenclatura
+Módulos: lowercase
+Arquivos: kebab-case
+
+Ex:
+
+auth-service.go
+user-controller.ts
+
+Documentação:
+
+ADR-001-*.md
+PLAN-001-*.md
+
+7. Regras de Evolução do Projeto
+Nenhuma alteração sem:
+Atualizar ADR
+Atualizar PLAN
+Toda nova funcionalidade deve:
+Nascer como módulo ou extensão modular
+Ser testada
+Ser documentada
+Proibido:
+Lógica espalhada
+Alterações sem rastreabilidade
+
+7.1 Gestão de Mudanças Quebrantes (Breaking Changes)
+Em um ecossistema modular, você não pode simplesmente mudar um campo no backend sem quebrar o frontend ou agentes que dependem dele.
+
+Versionamento de API: Uso de prefixos (ex: /api/v1/).
+
+Depreciação: Campos que serão removidos devem ser marcados como @deprecated na documentação/OpenAPI e mantidos por pelo menos 2 ciclos de PLAN antes da remoção real.
+
+Migrações de Banco: Proibido o uso de DROP COLUMN sem antes garantir que nenhuma versão ativa do código utiliza aquela coluna.
+
+8. Diretriz de Qualidade
+
+Um projeto só é considerado válido se atender simultaneamente:
+
+Modularidade real (baixo acoplamento)
+Cobertura de testes ≥ 70%
+Documentação atualizada (ADR + PLAN)
+Observabilidade ativa
+Estrutura escalável
+Regra final:
+
+Se qualquer item falhar →
+o projeto está tecnicamente incompleto
+
+9. Segurança e Resiliência de Dados
+Este item define a proteção da integridade, confidencialidade e disponibilidade dos dados do projeto.
+
+9.1 Segurança e Criptografia
+Dados em Repouso (At-Rest): Todos os dados sensíveis no PostgreSQL devem ser criptografados. Campos de PII (Personally Identifiable Information) devem usar criptografia de nível de aplicação (AES-256) antes da persistência, se necessário.
+
+Dados em Trânsito (In-Transit): Uso obrigatório de TLS 1.3 para todas as comunicações (Client-Server e Server-DB).
+
+Gestão de Chaves: Uso de KMS (Key Management Service) ou Vault para rotação de chaves. Proibido o uso de chaves "hardcoded".
+
+Hashing de Senhas: Uso mandatório de Argon2 ou bcrypt com salt dinâmico.
+
+9.2 Backup e Restauração (DRP)
+O Plano de Recuperação de Desastres (Disaster Recovery Plan) deve ser testado mensalmente.
+
+Estratégia de Backup:
+
+Point-in-Time Recovery (PITR): Habilitado para o banco de dados (mínimo de 7 dias de retenção).
+
+Off-site Backup: Cópias criptografadas em regiões geográficas distintas (ex: S3 em outra região).
+
+Procedimento de Restauração:
+
+Cada módulo que possua estado (banco) deve ter um script de restauração validado em /scripts/restore-{modulo}.sh.
+
+RTO (Recovery Time Objective): Máximo de 2 horas.
+
+RPO (Recovery Point Objective): Máximo de 15 minutos de perda de dados.
+
+9.3 Auditoria de Segurança
+SAST/DAST: Integração de ferramentas de análise estática de segurança no CI/CD para detectar vulnerabilidades no código Go/Vue.
+
+Princípio do Menor Privilégio (PoLP): O backend (Go) deve acessar o banco com um usuário de permissões limitadas, nunca como superuser/owner.
+
+## Regra de Contrato para Agentes
+- Sempre valide o `openapi.yaml` (ou equivalente) antes de sugerir mudanças no `api_client`.
+- Ao criar um novo módulo, o primeiro passo é definir a Interface/Contrato, não a implementação.
