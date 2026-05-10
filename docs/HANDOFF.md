@@ -78,6 +78,9 @@ Cloudflare MCP:
 - Fluxo de deploy automatico codificado, mas a VPS perdeu conectividade SSH durante a publicacao manual e o tunnel Cloudflare ficou sem conexoes.
 - Estado publico atual: `geef.com.br` e `www.geef.com.br` retornam erro Cloudflare 530 enquanto a VPS nao responde.
 - Base real do site publico iniciada com home institucional, shell reutilizavel e rotas estaticas para `quem-somos`, `agenda`, `atividades`, `estudos`, `evangelizacao`, `atendimento-fraterno`, `doacoes`, `ao-vivo`, `contato` e `privacidade`.
+- Identidade visual oficial aplicada na interface publica, com logo oficial e tipografia institucional.
+- Backend de logs planejado para Supabase com endpoint autenticado `POST /api/ops/ingest` e cron semanal `scripts/weekly-ops-report.mjs`.
+- Tabela `public.ops_events` criada no Supabase e teste de insercao concluido com sucesso.
 - Build local do Next.js validado com as novas rotas.
 - Manual da marca criado em `docs/IDENTIDADE_VISUAL.md`.
 - Logo oficial copiado para `public/brand/logo-oficial.jpg`.

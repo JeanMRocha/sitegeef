@@ -20,3 +20,16 @@ Secrets esperados no GitHub:
 - `GEEF_VPS_HOST`
 - `GEEF_VPS_USER`
 - `GEEF_VPS_PATH`
+
+## Observabilidade
+
+O backend de logs usa Supabase como destino dos relatórios enviados pela VPS.
+
+Variáveis esperadas no ambiente da VPS:
+
+- `GEEF_SUPABASE_URL`
+- `GEEF_SUPABASE_SERVICE_ROLE_KEY`
+- `GEEF_LOG_INGEST_URL`
+- `GEEF_LOG_INGEST_TOKEN`
+
+O script semanal fica em [scripts/weekly-ops-report.mjs](/c:/Projetos/site-geef/scripts/weekly-ops-report.mjs) e a documentação operacional em [docs/OPS_LOGS.md](/c:/Projetos/site-geef/docs/OPS_LOGS.md).

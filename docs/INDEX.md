@@ -11,6 +11,7 @@ Este indice direciona a leitura da documentacao do site GEEF.
 - `docs/SUPABASE.md`: configuracao Supabase MCP do projeto GEEF.
 - `docs/CLOUDFLARE.md`: configuracao Cloudflare MCP do projeto GEEF.
 - `docs/IDENTIDADE_VISUAL.md`: manual da marca e fonte de verdade visual.
+- `docs/OPS_LOGS.md`: fluxo de logs e heartbeat semanal via Supabase.
 - `docs/CONNECTIONS.md`: preparacao de plugins, MCPs, GitHub, Cloudflare, Supabase e VPS.
 - `docs/ROADMAP.md`: fases de execucao.
 - `docs/HANDOFF.md`: instrucoes para continuar o projeto sem depender de contexto oral.
