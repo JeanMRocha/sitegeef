@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-const supabaseUrl = process.env.GEEF_SUPABASE_URL;
-const serviceRoleKey = process.env.GEEF_SUPABASE_SERVICE_ROLE_KEY;
+const supabaseUrl = process.env.GEEF_SUPABASE_URL?.trim();
+const serviceRoleKey = process.env.GEEF_SUPABASE_SERVICE_ROLE_KEY?.trim();
 const source = process.env.GEEF_GITHUB_HEARTBEAT_SOURCE || "github-actions";
 const eventType = "heartbeat";
 const level = process.env.GEEF_GITHUB_HEARTBEAT_LEVEL || "info";
@@ -27,7 +27,9 @@ const payload = {
   },
 };
 
-const response = await fetch(`${supabaseUrl.replace(/\/$/, "")}/rest/v1/ops_events`, {
+const baseUrl = normalizeBaseUrl(supabaseUrl);
+
+const response = await fetch(`${baseUrl}/rest/v1/ops_events`, {
   method: "POST",
   headers: {
     apikey: serviceRoleKey,
@@ -49,4 +51,24 @@ console.log(JSON.stringify({ ok: true, inserted: Array.isArray(data) ? data.leng
 function fail(message) {
   console.error(message);
   process.exit(1);
+}
+
+function normalizeBaseUrl(value) {
+  if (!value) {
+    fail("Missing GEEF_SUPABASE_URL.");
+  }
+
+  let parsed;
+
+  try {
+    parsed = new URL(value);
+  } catch {
+    fail(`Invalid GEEF_SUPABASE_URL: ${value}`);
+  }
+
+  if (parsed.protocol !== "https:") {
+    fail("GEEF_SUPABASE_URL must use https.");
+  }
+
+  return `${parsed.protocol}//${parsed.host}${parsed.pathname}`.replace(/\/+$/, "");
 }
