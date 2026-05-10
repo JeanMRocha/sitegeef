@@ -8,25 +8,17 @@ export function ContentPageView({ page }: Readonly<{ page: ContentPage }>) {
     <main className="content-page">
       <section className="content-hero">
         <div className="content-hero-top">
-          <div className="content-brand">
-            <img
-              src="/brand/logo-oficial.jpg"
-              alt="Logo oficial do GEEF"
-              width={280}
-              height={121}
-              loading="eager"
-              decoding="async"
-            />
+          <div className="content-kicker">
+            <p className="eyebrow">GEEF</p>
+            <span className="content-badge-text">Grupo Espírita Elias Francis</span>
           </div>
           <div className="content-badge">
             <span className="content-badge-label">Identidade oficial</span>
-            <span className="content-badge-text">GEEF · Grupo Espírita Elias Francis</span>
           </div>
         </div>
 
         <div className="content-hero-body">
           <div className="content-copy">
-            <p className="eyebrow">GEEF</p>
             <h1>{page.title}</h1>
             <p className="content-summary">{page.summary}</p>
             <p className="content-intro">{page.intro}</p>

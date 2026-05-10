@@ -179,7 +179,7 @@ img {
 .hero-lead,
 .content-summary {
   max-width: 42rem;
-  margin: 1rem 0 0;
+  margin: 0.75rem 0 0;
   font-size: 1.1rem;
   line-height: 1.7;
   color: var(--muted);
@@ -470,11 +470,11 @@ img {
 
 .content-page {
   display: grid;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .content-hero {
-  padding: clamp(1.5rem, 4vw, 3rem);
+  padding: clamp(1.2rem, 3vw, 2rem);
 }
 
 .content-hero-top {
@@ -482,27 +482,25 @@ img {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 1.25rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid rgba(14, 36, 8, 0.08);
 }
 
-.content-brand {
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-start;
-  width: min(100%, 16rem);
+.content-kicker {
+  display: grid;
+  gap: 0.15rem;
+  align-items: start;
 }
 
-.content-brand img {
-  width: 100%;
-  height: auto;
-  object-fit: contain;
+.content-kicker .eyebrow {
+  margin-bottom: 0;
 }
 
 .content-badge {
-  display: grid;
-  gap: 0.2rem;
-  justify-items: end;
-  text-align: right;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .content-badge-label {
@@ -525,13 +523,13 @@ img {
 
 .content-hero-body {
   display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(240px, 0.65fr);
+  grid-template-columns: minmax(0, 1.45fr) minmax(240px, 0.55fr);
   gap: 1rem;
   align-items: start;
 }
 
 .content-panel {
-  padding: 1rem;
+  padding: 0.95rem;
   border-radius: var(--radius-lg);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(248, 244, 236, 0.92));
@@ -564,7 +562,7 @@ img {
 }
 
 .content-intro {
-  margin: 1rem 0 0;
+  margin: 0.8rem 0 0;
   max-width: 42rem;
   font-size: 1.05rem;
   line-height: 1.7;
@@ -671,8 +669,7 @@ img {
   }
 
   .content-badge {
-    justify-items: start;
-    text-align: left;
+    justify-content: flex-start;
   }
 
   .content-hero-body {
