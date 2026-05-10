@@ -13,6 +13,7 @@ Depois, abra `http://localhost:3000`.
 ## Deploy
 
 O deploy automatizado ocorre a cada push na branch `main` via GitHub Actions.
+O build roda no GitHub Actions e a VPS recebe apenas o sincronismo dos arquivos gerados e o restart do serviço `sitegeef`.
 Pushs locais agora exigem autorizacao manual via gate. Antes de executar `git push`, defina:
 
 ```powershell

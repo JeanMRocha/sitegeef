@@ -75,6 +75,7 @@ Cloudflare MCP:
 - Dominio publicado via Cloudflare Tunnel em `geef.com.br` e `www.geef.com.br`.
 - Home trocada para uma tela de manutencao orientada ao fluxo de deploy.
 - Workflow GitHub Actions criado para deploy automatico na `main`.
+- Workflow de deploy ajustado para build no GitHub Actions e restart minimo na VPS.
 - Fluxo de deploy automatico codificado, mas a VPS perdeu conectividade SSH durante a publicacao manual e o tunnel Cloudflare ficou sem conexoes.
 - Estado publico atual: `geef.com.br` e `www.geef.com.br` retornam erro Cloudflare 530 enquanto a VPS nao responde.
 - Base real do site publico iniciada com home institucional, shell reutilizavel e rotas estaticas para `quem-somos`, `agenda`, `atividades`, `estudos`, `evangelizacao`, `atendimento-fraterno`, `doacoes`, `ao-vivo`, `contato` e `privacidade`.

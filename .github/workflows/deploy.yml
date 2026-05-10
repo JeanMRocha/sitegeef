@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -23,13 +23,6 @@ jobs:
 
       - name: Build
         run: npm run build
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
 
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.9.0
@@ -50,7 +43,7 @@ jobs:
           rsync -az --delete \
             --exclude '.git' \
             --exclude '.github' \
-            --exclude '.next' \
+            --exclude '.next/cache' \
             --exclude '.secrets' \
             --exclude 'node_modules' \
             -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ServerAliveInterval=30 -o ServerAliveCountMax=10 -o TCPKeepAlive=yes" \
@@ -63,7 +56,5 @@ jobs:
             "${{ secrets.GEEF_VPS_USER }}@${{ secrets.GEEF_VPS_HOST }}" <<'EOF'
           set -e
           cd "${{ secrets.GEEF_VPS_PATH }}"
-          npm ci
-          npm run build
           sudo systemctl restart sitegeef
           EOF
