@@ -49,6 +49,17 @@ jobs:
             --exclude '.github' \
             --exclude '.next/cache' \
             --exclude '.secrets' \
+            --exclude '.env' \
+            --exclude '.env.example' \
+            --exclude '.githooks' \
+            --exclude '.gitignore' \
+            --exclude 'README.md' \
+            --exclude 'LICENSE' \
+            --exclude 'baseinicial.md' \
+            --exclude 'bootstrap.txt' \
+            --exclude 'docs' \
+            --exclude 'scripts' \
+            --exclude 'supabase' \
             --exclude 'node_modules' \
             -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ServerAliveInterval=30 -o ServerAliveCountMax=10 -o TCPKeepAlive=yes" \
             ./ "${{ secrets.GEEF_VPS_USER }}@${{ secrets.GEEF_VPS_HOST }}:${{ secrets.GEEF_VPS_PATH }}/"
