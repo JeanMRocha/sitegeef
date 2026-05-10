@@ -1,9 +1,23 @@
 import type { Metadata } from "next";
+import { Manrope, Cormorant_Garamond } from "next/font/google";
+import { SiteShell } from "@/components/site-shell";
 import "./globals.css";
+
+const headingFont = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-heading",
+});
+
+const bodyFont = Manrope({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-body",
+});
 
 export const metadata: Metadata = {
   title: "GEEF",
-  description: "Página simples de teste do site GEEF.",
+  description: "Site público do Grupo Espírita Elias Francis.",
 };
 
 export default function RootLayout({
@@ -13,7 +27,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body>{children}</body>
+      <body className={`${headingFont.variable} ${bodyFont.variable}`}>
+        <SiteShell>{children}</SiteShell>
+      </body>
     </html>
   );
 }

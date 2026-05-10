@@ -77,6 +77,10 @@ Cloudflare MCP:
 - Workflow GitHub Actions criado para deploy automatico na `main`.
 - Fluxo de deploy automatico codificado, mas a VPS perdeu conectividade SSH durante a publicacao manual e o tunnel Cloudflare ficou sem conexoes.
 - Estado publico atual: `geef.com.br` e `www.geef.com.br` retornam erro Cloudflare 530 enquanto a VPS nao responde.
+- Base real do site publico iniciada com home institucional, shell reutilizavel e rotas estaticas para `quem-somos`, `agenda`, `atividades`, `estudos`, `evangelizacao`, `atendimento-fraterno`, `doacoes`, `ao-vivo`, `contato` e `privacidade`.
+- Build local do Next.js validado com as novas rotas.
+- Manual da marca criado em `docs/IDENTIDADE_VISUAL.md`.
+- Logo oficial copiado para `public/brand/logo-oficial.jpg`.
 
 ## Cuidados
 
