@@ -118,9 +118,9 @@ export const schedule: ScheduleItem[] = [
 export const contentPages: Record<string, ContentPage> = {
   "quem-somos": {
     title: "Quem somos",
-    summary: "Conheça a história, a missão e a forma de trabalho da casa.",
+    summary: "Conheça a história, a missão, os valores e a forma de trabalho da casa.",
     intro:
-      "O Grupo Espírita Elias Francis é uma casa de estudo, acolhimento e serviço fraterno. Nossa atuação prioriza a simplicidade, o respeito e a prática da caridade.",
+      "O Grupo Espírita Elias Francis é uma casa de estudo, acolhimento e serviço fraterno. Nossa atuação prioriza a simplicidade, o respeito, a caridade e a continuidade de uma história marcada por presença e serviço.",
     ctaLabel: "Ver agenda",
     ctaHref: "/agenda",
     sections: [
@@ -129,12 +129,32 @@ export const contentPages: Record<string, ContentPage> = {
         text: "Acolher, estudar e servir, oferecendo uma referência segura para quem busca orientação espiritual e convivência fraterna.",
       },
       {
+        heading: "Nossa história",
+        text: "A casa preserva a memória de um trabalho espiritual que nasceu da dedicação fraterna e se consolidou como ponto de encontro para estudo, assistência e evangelização.",
+        bullets: [
+          "Origem ligada ao trabalho de Elias Francis.",
+          "Caminho sustentado por continuidade e simplicidade.",
+          "Compromisso com presença fraterna e serviço à comunidade.",
+        ],
+      },
+      {
+        heading: "Nossos valores",
+        text: "Toda a comunicação da casa deve refletir serenidade, clareza e respeito pela trajetória da instituição.",
+        bullets: [
+          "Caridade sem ostentação.",
+          "Estudo com disciplina e humildade.",
+          "Acolhimento sem burocracia.",
+          "Comunicação clara e confiável.",
+        ],
+      },
+      {
         heading: "Como trabalhamos",
         text: "Valorizamos a leitura, a prática do evangelho e o atendimento humano, sem complicar o acesso à casa.",
         bullets: [
           "Reuniões públicas abertas.",
           "Estudos regulares.",
           "Atendimento fraterno com escuta.",
+          "Evangelização e convivência para diferentes faixas etárias.",
         ],
       },
     ],

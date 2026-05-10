@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowIcon } from "@/components/site-icons";
 import { type ContentPage } from "@/lib/site-data";
@@ -6,10 +7,48 @@ export function ContentPageView({ page }: Readonly<{ page: ContentPage }>) {
   return (
     <main className="content-page">
       <section className="content-hero">
-        <p className="eyebrow">GEEF</p>
-        <h1>{page.title}</h1>
-        <p className="content-summary">{page.summary}</p>
-        <p className="content-intro">{page.intro}</p>
+        <div className="content-hero-top">
+          <div className="content-brand">
+            <Image
+              src="/brand/logo-oficial.jpg"
+              alt="Logo oficial do GEEF"
+              width={280}
+              height={121}
+            />
+          </div>
+          <div className="content-badge">
+            <span className="content-badge-label">Identidade oficial</span>
+            <span className="content-badge-text">GEEF · Grupo Espírita Elias Francis</span>
+          </div>
+        </div>
+
+        <div className="content-hero-body">
+          <div className="content-copy">
+            <p className="eyebrow">GEEF</p>
+            <h1>{page.title}</h1>
+            <p className="content-summary">{page.summary}</p>
+            <p className="content-intro">{page.intro}</p>
+          </div>
+
+          <div className="content-panel">
+            <p className="content-panel-label">Resumo da página</p>
+            <ul className="content-panel-list">
+              <li>
+                <span className="mini-dot" aria-hidden="true" />
+                Conteúdo preparado para leitura rápida
+              </li>
+              <li>
+                <span className="mini-dot" aria-hidden="true" />
+                Estrutura compatível com celular e desktop
+              </li>
+              <li>
+                <span className="mini-dot" aria-hidden="true" />
+                Identidade visual alinhada ao manual
+              </li>
+            </ul>
+          </div>
+        </div>
+
         <div className="content-actions">
           <Link href={page.ctaHref} className="button button-primary">
             {page.ctaLabel}
