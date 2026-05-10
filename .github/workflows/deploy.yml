@@ -42,15 +42,6 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.GEEF_VPS_SSH_KEY }}
 
-      - name: Normalize remote ownership
-        run: |
-          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
-            -o ServerAliveInterval=30 -o ServerAliveCountMax=10 -o TCPKeepAlive=yes \
-            "${{ secrets.GEEF_VPS_USER }}@${{ secrets.GEEF_VPS_HOST }}" <<'EOF'
-          set -e
-          sudo chown -R "${{ secrets.GEEF_VPS_USER }}:${{ secrets.GEEF_VPS_USER }}" "${{ secrets.GEEF_VPS_PATH }}"
-          EOF
-
       - name: Sync files
         run: |
           rsync -az --delete \
