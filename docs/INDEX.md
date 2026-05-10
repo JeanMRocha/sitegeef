@@ -12,6 +12,9 @@ Este indice direciona a leitura da documentacao do site GEEF.
 - `docs/CLOUDFLARE.md`: configuracao Cloudflare MCP do projeto GEEF.
 - `docs/IDENTIDADE_VISUAL.md`: manual da marca e fonte de verdade visual.
 - `docs/OPS_LOGS.md`: fluxo de logs e heartbeat semanal via Supabase.
+- `docs/DEPLOY_SSH.md`: deploy manual via SSH para a VPS.
+- `docs/AUTOREFLEX_ADAPTADO.md`: base interna de conhecimento do agente inspirada no Autoreflex.
+- `docs/cases/`: casos resolvidos e notas operacionais novas.
 - `docs/CONNECTIONS.md`: preparacao de plugins, MCPs, GitHub, Cloudflare, Supabase e VPS.
 - `docs/ROADMAP.md`: fases de execucao.
 - `docs/HANDOFF.md`: instrucoes para continuar o projeto sem depender de contexto oral.

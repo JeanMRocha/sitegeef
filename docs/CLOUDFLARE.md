@@ -25,6 +25,36 @@ codex mcp login cloudflare-geef
 - A conexao generica `cloudflare-api` permanece separada e nao foi alterada.
 - As ferramentas Cloudflare especificas podem exigir recarregar a sessao do Codex para ficarem disponiveis.
 
+## Diagnostico operacional
+
+Informacoes confirmadas no ambiente atual:
+
+- Zona ativa: `geef.com.br`.
+- Plano da zona: `Free Website`.
+- Tunnel ativo: `sitegeef-vps`.
+- Ingress do tunnel:
+  - `geef.com.br` -> `http://localhost:3000`
+  - `www.geef.com.br` -> `http://localhost:3000`
+  - fallback -> `http_status:404`
+- O tunnel foi observado como `healthy` com conexoes ativas, mas a origem ainda pode falhar se a VPS nao estiver respondendo.
+- `Logpush` para a zona nao esta configurado.
+- `Instant Logs` e `Logpush` de requests nao estao disponiveis para essa zona no plano atual.
+- O melhor caminho de debug na borda e usar logs do `cloudflared` na VPS e, quando necessario, o streaming remoto de logs do tunnel.
+
+Sinais de erro ja vistos:
+
+- `1033 Cloudflare Tunnel error` quando a borda nao conseguiu resolver a origem do tunnel.
+- `530` quando o tunnel ficou sem conexao util com a VPS.
+- `502` quando a origem `localhost:3000` nao estava respondendo.
+
+Para aumentar a observabilidade na VPS, configurar `cloudflared` com:
+
+```powershell
+cloudflared tunnel --loglevel debug --logfile /var/log/cloudflared/cloudflared.log run --token <TOKEN>
+```
+
+Se necessario, manter tambem um endpoint de metricas local do `cloudflared` e um arquivo de log persistente para auditoria de incidentes.
+
 ## Regras
 
 - Nao misturar `cloudflare-geef` com `cloudflare-api`.
@@ -39,4 +69,5 @@ codex mcp login cloudflare-geef
 2. Listar contas/zonas acessiveis.
 3. Confirmar se o dominio `geef.com.br` esta disponivel na conta correta.
 4. Mapear DNS atual antes de qualquer alteracao.
-5. Registrar resultado no `HANDOFF.md`.
+5. Confirmar status do tunnel e do `Logpush`.
+6. Registrar resultado no `HANDOFF.md`.

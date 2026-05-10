@@ -31,11 +31,19 @@ Antes de alterar codigo, documentacao, infraestrutura ou configuracao, o agente 
 ## Ordem de leitura
 
 1. `docs/INDEX.md`
-2. `docs/PRODUCT_VISION.md`
-3. `docs/ARCHITECTURE.md`
-4. `docs/ROADMAP.md`
-5. Documento do modulo em `docs/modules/{modulo}/INDEX.md`
-6. PLAN ativo do modulo
+2. `docs/AUTOREFLEX_ADAPTADO.md`
+3. `docs/PRODUCT_VISION.md`
+4. `docs/ARCHITECTURE.md`
+5. `docs/ROADMAP.md`
+6. Documento do modulo em `docs/modules/{modulo}/INDEX.md`
+7. PLAN ativo do modulo
+
+## Base de conhecimento local
+
+Quando o projeto ja tiver a rota ativa, o agente pode consultar `GET /api/knowledge`
+para listar documentos indexados ou pesquisar por termo antes de mergulhar nos
+arquivos manualmente. Isso e uma ferramenta interna do agente, nao um recurso
+da interface publica.
 
 ## Criterios de qualidade
 

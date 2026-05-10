@@ -12,8 +12,20 @@ Depois, abra `http://localhost:3000`.
 
 ## Deploy
 
-O deploy automatizado ocorre a cada push na branch `main` via GitHub Actions.
-O build roda no GitHub Actions e a VPS recebe apenas o sincronismo dos arquivos gerados e o restart do serviço `sitegeef`.
+O deploy de producao e manual via SSH, usando o modelo standalone do Next.js para reduzir o
+consumo da VPS. O GitHub Actions fica apenas como CI/heartbeat e nao faz mais push para a VPS.
+
+Fluxo recomendado:
+
+```powershell
+npm run deploy:ssh
+```
+
+Esse comando gera o build, envia `.next/standalone`, `.next/static` e `public` para a VPS,
+reinicia o servico `sitegeef` e valida a origem em `http://127.0.0.1:3000`.
+
+Detalhes operacionais em [docs/DEPLOY_SSH.md](/c:/Projetos/site-geef/docs/DEPLOY_SSH.md).
+
 Pushs locais agora exigem autorizacao manual via gate. Antes de executar `git push`, defina:
 
 ```powershell

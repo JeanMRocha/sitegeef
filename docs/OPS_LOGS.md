@@ -62,6 +62,16 @@ Se preferir, use um arquivo de ambiente e carregue antes do comando.
 - falhas de hardware fora do journald;
 - pane total da instância sem boot;
 - eventos da camada da OCI que nunca chegaram ao sistema operacional.
+- logs HTTP detalhados da Cloudflare para a zona `geef.com.br`, porque a conta atual esta no plano `Free Website` e nao tem `Instant Logs`/`Logpush` de requests para a zona.
+
+## Cloudflare como apoio de debug
+
+O ambiente atual da Cloudflare pode ajudar no debug operacional assim:
+
+- o tunnel `sitegeef-vps` mostra o estado de conexao e os pontos de falha da origem;
+- o `cloudflared` na VPS e a principal fonte para diagnosticar `1033`, `530` e resets de conexao;
+- `Logpush` da zona nao esta ativo, entao nao existe historico de requests da borda para consultar;
+- para mais detalhe, subir o `cloudflared` com `--loglevel debug` e `--logfile` persistente.
 
 ## Retenção local
 

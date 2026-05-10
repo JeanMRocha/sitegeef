@@ -1,4 +1,4 @@
-name: Deploy to VPS
+name: Build and Validate
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  build-and-validate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -36,66 +36,3 @@ jobs:
           GITHUB_WORKFLOW: ${{ github.workflow }}
           GITHUB_ACTOR: ${{ github.actor }}
         run: node scripts/github-heartbeat.mjs
-
-      - name: Setup SSH
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.GEEF_VPS_SSH_KEY }}
-
-      - name: Sync files
-        run: |
-          rsync -az --delete \
-            --exclude '.git' \
-            --exclude '.github' \
-            --exclude '.next/cache' \
-            --exclude '.secrets' \
-            --exclude '.env' \
-            --exclude '.env.example' \
-            --exclude '.githooks' \
-            --exclude '.gitignore' \
-            --exclude 'README.md' \
-            --exclude 'LICENSE' \
-            --exclude 'baseinicial.md' \
-            --exclude 'bootstrap.txt' \
-            --exclude 'docs' \
-            --exclude 'scripts' \
-            --exclude 'supabase' \
-            --exclude 'node_modules' \
-            -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ServerAliveInterval=30 -o ServerAliveCountMax=10 -o TCPKeepAlive=yes" \
-            ./ "${{ secrets.GEEF_VPS_USER }}@${{ secrets.GEEF_VPS_HOST }}:${{ secrets.GEEF_VPS_PATH }}/"
-
-      - name: Install runtime dependencies on VPS
-        run: |
-          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
-            -o ServerAliveInterval=30 -o ServerAliveCountMax=10 -o TCPKeepAlive=yes \
-            "${{ secrets.GEEF_VPS_USER }}@${{ secrets.GEEF_VPS_HOST }}" <<'EOF'
-          set -e
-          cd "${{ secrets.GEEF_VPS_PATH }}"
-          npm ci --omit=dev
-          EOF
-
-      - name: Restart app
-        run: |
-          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
-            -o ServerAliveInterval=30 -o ServerAliveCountMax=10 -o TCPKeepAlive=yes \
-            "${{ secrets.GEEF_VPS_USER }}@${{ secrets.GEEF_VPS_HOST }}" <<'EOF'
-          set -e
-          cd "${{ secrets.GEEF_VPS_PATH }}"
-          sudo systemctl restart sitegeef
-          EOF
-
-      - name: Verify origin responds
-        run: |
-          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
-            -o ServerAliveInterval=30 -o ServerAliveCountMax=10 -o TCPKeepAlive=yes \
-            "${{ secrets.GEEF_VPS_USER }}@${{ secrets.GEEF_VPS_HOST }}" <<'EOF'
-          set -e
-          for _ in 1 2 3 4 5 6 7 8 9 10; do
-            if curl -fsS --max-time 5 http://127.0.0.1:3000 >/dev/null; then
-              exit 0
-            fi
-            sleep 3
-          done
-          echo "Origin did not become ready on localhost:3000"
-          exit 1
-          EOF
