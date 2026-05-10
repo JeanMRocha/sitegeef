@@ -13,6 +13,12 @@ Depois, abra `http://localhost:3000`.
 ## Deploy
 
 O deploy automatizado ocorre a cada push na branch `main` via GitHub Actions.
+Pushs locais agora exigem autorizacao manual via gate. Antes de executar `git push`, defina:
+
+```powershell
+$env:GEEF_PUSH_APPROVED="1"
+$env:GEEF_PUSH_APPROVAL_REASON="review aprovado"
+```
 
 Secrets esperados no GitHub:
 
