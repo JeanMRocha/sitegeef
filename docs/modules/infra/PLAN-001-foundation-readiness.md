@@ -36,7 +36,9 @@ Preparar acessos, conectores, seguranca, Git, VPS, Cloudflare, Supabase e CI/CD 
    - [ ] Nao criar schema definitivo antes de ADR.
 
 4. Cloudflare
-   - [ ] Validar acesso ao dominio.
+   - [x] Criar MCP especifico `cloudflare-geef`.
+   - [x] Validar autenticacao OAuth.
+   - [ ] Validar acesso ao dominio apos recarregar sessao.
    - [ ] Mapear DNS atual.
    - [ ] Planejar proxy, SSL e WAF.
    - [ ] Registrar decisoes antes de apontar producao.

@@ -21,6 +21,14 @@ Supabase MCP:
 - OAuth concluido com sucesso.
 - Pode ser necessario recarregar a sessao do Codex para as ferramentas Supabase aparecerem no ambiente.
 
+Cloudflare MCP:
+
+- MCP especifico criado: `cloudflare-geef`
+- URL: `https://mcp.cloudflare.com/mcp`
+- OAuth concluido com sucesso.
+- A conexao generica `cloudflare-api` nao foi alterada.
+- Pode ser necessario recarregar a sessao do Codex para as ferramentas Cloudflare aparecerem no ambiente.
+
 ## Decisoes confirmadas
 
 - Frontend: Next.js.
@@ -34,13 +42,14 @@ Supabase MCP:
 
 ## Proximas acoes recomendadas
 
-1. Recarregar a sessao Codex e validar o MCP `supabase-geef` com ferramenta Supabase especifica.
-2. Configurar e validar acesso Cloudflare para dominio, DNS, SSL e seguranca.
-3. Validar SSH na VPS Oracle e registrar requisitos de hardening.
-4. Definir estrategia inicial de deploy: systemd, Docker Compose ou PM2.
-5. Criar GitHub Actions basico para CI.
-6. Criar app Next.js somente depois dos acessos essenciais estarem documentados.
-7. Executar Fase 1 do site publico.
+1. Recarregar a sessao Codex e validar as tools dos MCPs `supabase-geef` e `cloudflare-geef`.
+2. Confirmar conta/zona Cloudflare do dominio `geef.com.br`.
+3. Mapear DNS atual antes de qualquer alteracao.
+4. Validar SSH na VPS Oracle e registrar requisitos de hardening.
+5. Definir estrategia inicial de deploy: systemd, Docker Compose ou PM2.
+6. Criar GitHub Actions basico para CI.
+7. Criar app Next.js somente depois dos acessos essenciais estarem documentados.
+8. Executar Fase 1 do site publico.
 
 ## Etapas concluidas
 
@@ -53,6 +62,8 @@ Supabase MCP:
 - Primeiro commit documental enviado para `main`.
 - MCP Supabase especifico do GEEF criado como `supabase-geef`.
 - Login OAuth do MCP Supabase concluido.
+- MCP Cloudflare especifico do GEEF criado como `cloudflare-geef`.
+- Login OAuth do MCP Cloudflare concluido.
 
 ## Cuidados
 

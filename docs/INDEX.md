@@ -9,6 +9,7 @@ Este indice direciona a leitura da documentacao do site GEEF.
 - `docs/ARCHITECTURE.md`: arquitetura tecnica, stack e limites entre sistemas.
 - `docs/SECURITY.md`: seguranca, segredos, LGPD, SSH, Supabase, VPS e Cloudflare.
 - `docs/SUPABASE.md`: configuracao Supabase MCP do projeto GEEF.
+- `docs/CLOUDFLARE.md`: configuracao Cloudflare MCP do projeto GEEF.
 - `docs/CONNECTIONS.md`: preparacao de plugins, MCPs, GitHub, Cloudflare, Supabase e VPS.
 - `docs/ROADMAP.md`: fases de execucao.
 - `docs/HANDOFF.md`: instrucoes para continuar o projeto sem depender de contexto oral.

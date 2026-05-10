@@ -63,15 +63,23 @@ Objetivo:
 
 - Controlar DNS, SSL, proxy, WAF e protecao do dominio.
 
+Configuracao do projeto GEEF:
+
+- Nome MCP: `cloudflare-geef`
+- URL MCP: `https://mcp.cloudflare.com/mcp`
+- Detalhes: `docs/CLOUDFLARE.md`
+
 Checklist:
 
-- Confirmar acesso a conta.
-- Confirmar zona do dominio.
-- Mapear DNS atual antes de alterar.
-- Configurar registros para VPS.
-- Ativar SSL adequado.
-- Criar regra de redirecionamento HTTPS.
-- Planejar protecao para rotas administrativas futuras.
+- [x] Criar MCP especifico para o GEEF.
+- [x] Autenticar via fluxo oficial.
+- [ ] Confirmar acesso a conta apos recarregar a sessao.
+- [ ] Confirmar zona do dominio.
+- [ ] Mapear DNS atual antes de alterar.
+- [ ] Configurar registros para VPS.
+- [ ] Ativar SSL adequado.
+- [ ] Criar regra de redirecionamento HTTPS.
+- [ ] Planejar protecao para rotas administrativas futuras.
 
 ## VPS Oracle
 
