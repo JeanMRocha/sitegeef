@@ -16,6 +16,7 @@ Fonte de verdade operacional para logs do GEEF.
 2. O coletor lê o `journalctl -p err..alert` e envia apenas erros novos.
 3. O script semanal `scripts/weekly-ops-report.mjs` envia um heartbeat mesmo sem erro.
 4. A rota `POST /api/ops/ingest` grava o evento na tabela `public.ops_events` usando a chave de serviço.
+5. O GitHub Actions envia um heartbeat direto para o Supabase em todo push na `main`, mesmo se a VPS estiver fora do ar.
 
 ## Segredos
 
@@ -25,6 +26,12 @@ Use estes nomes no ambiente da VPS e no GitHub Actions quando necessário:
 - `GEEF_SUPABASE_SERVICE_ROLE_KEY`
 - `GEEF_LOG_INGEST_URL`
 - `GEEF_LOG_INGEST_TOKEN`
+
+GitHub Actions também usa:
+
+- `GEEF_GITHUB_HEARTBEAT_SOURCE`
+- `GEEF_GITHUB_HEARTBEAT_LEVEL`
+- `GEEF_GITHUB_HEARTBEAT_MESSAGE`
 
 ## Agendamento sugerido
 

@@ -81,6 +81,7 @@ Cloudflare MCP:
 - Base real do site publico iniciada com home institucional, shell reutilizavel e rotas estaticas para `quem-somos`, `agenda`, `atividades`, `estudos`, `evangelizacao`, `atendimento-fraterno`, `doacoes`, `ao-vivo`, `contato` e `privacidade`.
 - Identidade visual oficial aplicada na interface publica, com logo oficial e tipografia institucional.
 - Backend de logs planejado para Supabase com endpoint autenticado `POST /api/ops/ingest` e cron semanal `scripts/weekly-ops-report.mjs`.
+- GitHub Actions passou a enviar heartbeat direto para o Supabase em todo push na `main`, independente da VPS.
 - Tabela `public.ops_events` criada no Supabase e teste de insercao concluido com sucesso.
 - Build local do Next.js validado com as novas rotas.
 - Manual da marca criado em `docs/IDENTIDADE_VISUAL.md`.

@@ -23,6 +23,8 @@ $env:GEEF_PUSH_APPROVAL_REASON="review aprovado"
 
 Secrets esperados no GitHub:
 
+- `GEEF_SUPABASE_URL`
+- `GEEF_SUPABASE_SERVICE_ROLE_KEY`
 - `GEEF_VPS_SSH_KEY`
 - `GEEF_VPS_HOST`
 - `GEEF_VPS_USER`
