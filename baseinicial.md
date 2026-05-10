@@ -2,23 +2,23 @@ O site GEEF é o principal canal de divulgação da doutrina espírita do Grupo 
 
 Orientações do site sistema:
 
-* Newsletter de divulgação da Doutrina - parte pública + parte interna para criação e publicação.
-* Divulgação das atividades - espaços dedicados ao calendário de eventos, estudos e demais atividades da casa
-* Organização interna - Cadastro de Tarefeiros(trabalhadores voluntários), termos de voluntariados,
-* gestão das redes sociais - todas cadastradas e o conteúdo do site com controle para publicação simultâneo facebook/ instagram / youtube
-* salas direcionadas - temos as reuniões públicas com palestras onde podemos ter o resumo, o vídeo embebed do youtube da palestra/evento, tela geral de busca e tela de detalhes.
-* Dados gerais da instituição, estatuto, regulamentos, orientações, normas, departamentos, responsáveis por cada departamento, validade de cada chapa com os representantes e históricos de cada pasta(similar a um sistema de prefeito e secretarias)
-* vínculos com organizações a agrupamentos de nível superior, GEEF faz parte do 45° CEU - Reunir - CEERJ - FEB. Hierarquia da casa.
-* Possibilidade de que outras casas espiritas possam usar o sistema;
-* Sala de palestra ao vivo online - transmitida via youtube ou aplicativo como zoom, meeet, etc, uma aba do ao vivo com possibilidade de notificações, tempo para iniciar, informações do evento, etc.
-* Cadastro de Palestrantes -
-* Formulários de autorizações de imagem, som, vídeo e demais informações segundo LGPD;
-* Avisos das atividades fixas e eventos esporádicos
-* cadastro e organização das atividades fixas
-* Cadastro das outras casas espíritas com link e redes sociais;
-* cadastro de usuários para solicitar ajudas, auxílios, acompanhamento, etc.
-* Seguir LGPD em toda estrutura.
-* Organização financeira completa do centro- cadastro de contas, possibilidade de recebimento de doações, cadastro de entradas e saídas, centros de custo, etc.
+- Newsletter de divulgação da Doutrina - parte pública + parte interna para criação e publicação.
+- Divulgação das atividades - espaços dedicados ao calendário de eventos, estudos e demais atividades da casa
+- Organização interna - Cadastro de Tarefeiros(trabalhadores voluntários), termos de voluntariados,
+- gestão das redes sociais - todas cadastradas e o conteúdo do site com controle para publicação simultâneo facebook/ instagram / youtube
+- salas direcionadas - temos as reuniões públicas com palestras onde podemos ter o resumo, o vídeo embebed do youtube da palestra/evento, tela geral de busca e tela de detalhes.
+- Dados gerais da instituição, estatuto, regulamentos, orientações, normas, departamentos, responsáveis por cada departamento, validade de cada chapa com os representantes e históricos de cada pasta(similar a um sistema de prefeito e secretarias)
+- vínculos com organizações a agrupamentos de nível superior, GEEF faz parte do 45° CEU - Reunir - CEERJ - FEB. Hierarquia da casa.
+- Possibilidade de que outras casas espiritas possam usar o sistema;
+- Sala de palestra ao vivo online - transmitida via youtube ou aplicativo como zoom, meeet, etc, uma aba do ao vivo com possibilidade de notificações, tempo para iniciar, informações do evento, etc.
+- Cadastro de Palestrantes -
+- Formulários de autorizações de imagem, som, vídeo e demais informações segundo LGPD;
+- Avisos das atividades fixas e eventos esporádicos
+- cadastro e organização das atividades fixas
+- Cadastro das outras casas espíritas com link e redes sociais;
+- cadastro de usuários para solicitar ajudas, auxílios, acompanhamento, etc.
+- Seguir LGPD em toda estrutura.
+- Organização financeira completa do centro- cadastro de contas, possibilidade de recebimento de doações, cadastro de entradas e saídas, centros de custo, etc.
 
 contatos:
 Youtube: www.youtube.com/@GrupoEspiritaEliasFrancis - marcador: @GrupoEspiritaEliasFrancis
@@ -31,6 +31,13 @@ telefone: (22) 99725-1807
 Instagram: @grupoespiritaeliasfrancis
 Facebook: @grupoespiritaeliasfrancis
 
+Dados Registro BR
+
+Domínio: geef.com.br
+Status: Publicado
+Data de criação:09/05/2026sábado, 9 de maio de 2026
+Data de expiração: 09/05/2028
+
 Fluxo
 
 Projeto feito no vscode - ligado via Git e GitHub(https://github.com/Geef-EliasFrancis/sitegeef) para deploy CI/CD, Hospedagem na vps oracle geef, armazenamento de dados frios na oracle drive, backend supabase
@@ -38,13 +45,11 @@ Projeto feito no vscode - ligado via Git e GitHub(https://github.com/Geef-EliasF
 
 Fazer as conexões mcp com:
 
-* supabase - backend
-* oracle vps geff e drive geff : criar e manter os dados do sistema
-* github: organização de projetos e segredos (.env)
-* cloudflare: organizar proxies e segurança e demais necessidades.
-* wwww.geef.com.br
-
-
+- supabase - backend
+- oracle vps geff e drive geff : criar e manter os dados do sistema
+- github: organização de projetos e segredos (.env)
+- cloudflare: organizar proxies e segurança e demais necessidades.
+- wwww.geef.com.br
 
 projetos com conteúdo útil para aproveitar se necessário:
 
@@ -54,59 +59,57 @@ https://github.com/JeanMRocha/Autoreflex
 
 https://github.com/JeanMRocha/opensquad
 
-
-
 importante observar para seguir:
 
 # Oracle Geef VPS reference
 
-ORACLE\_GEEF\_ID=node\_oracle\_geef
-ORACLE\_GEEF\_NAME=Oracle Geef
-ORACLE\_GEEF\_ROLE=external
-ORACLE\_GEEF\_PROVIDER=Oracle Cloud
-ORACLE\_GEEF\_DOMAIN=geef.com.br
-ORACLE\_GEEF\_HOST=204.216.166.12
-ORACLE\_GEEF\_HOSTNAME=vpsgeef
-ORACLE\_GEEF\_IPV4=204.216.166.12
-ORACLE\_GEEF\_PRIVATE\_IPV4=
-ORACLE\_GEEF\_IPV6=
-ORACLE\_GEEF\_REGION=
-ORACLE\_GEEF\_OS=Ubuntu 24.04 Oracle kernel
-ORACLE\_GEEF\_PLAN=geef.com.br dedicated VPS
-ORACLE\_GEEF\_SSH\_USER=ubuntu
-ORACLE\_GEEF\_SSH\_PORT=22
-ORACLE\_GEEF\_PANEL\_URL=https://cloud.oracle.com/
-ORACLE\_GEEF\_SSH\_PRIVATE\_KEY\_PATH=.secrets/ssh/oracle\_geef/vps\_geef/ssh-key-geefvps-2026-05-09.key
-ORACLE\_GEEF\_SSH\_KNOWN\_HOSTS\_PATH=.secrets/ssh/known\_hosts
-ORACLE\_GEEF\_CONSOLE\_METHOD=Cloud console + SSH
-ORACLE\_GEEF\_BACKUP\_TARGET=
-ORACLE\_GEEF\_SAFE\_CHECKS=ssh,porta 22,painel do provedor,DNS geef.com.br,SSL geef.com.br
-ORACLE\_GEEF\_NOTES=Usar diretamente geef.com.br.
+ORACLE_GEEF_ID=node_oracle_geef
+ORACLE_GEEF_NAME=Oracle Geef
+ORACLE_GEEF_ROLE=external
+ORACLE_GEEF_PROVIDER=Oracle Cloud
+ORACLE_GEEF_DOMAIN=geef.com.br
+ORACLE_GEEF_HOST=204.216.166.12
+ORACLE_GEEF_HOSTNAME=vpsgeef
+ORACLE_GEEF_IPV4=204.216.166.12
+ORACLE_GEEF_PRIVATE_IPV4=
+ORACLE_GEEF_IPV6=
+ORACLE_GEEF_REGION=
+ORACLE_GEEF_OS=Ubuntu 24.04 Oracle kernel
+ORACLE_GEEF_PLAN=geef.com.br dedicated VPS
+ORACLE_GEEF_SSH_USER=ubuntu
+ORACLE_GEEF_SSH_PORT=22
+ORACLE_GEEF_PANEL_URL=https://cloud.oracle.com/
+ORACLE_GEEF_SSH_PRIVATE_KEY_PATH=.secrets/ssh/oracle_geef/vps_geef/ssh-key-geefvps-2026-05-09.key
+ORACLE_GEEF_SSH_KNOWN_HOSTS_PATH=.secrets/ssh/known_hosts
+ORACLE_GEEF_CONSOLE_METHOD=Cloud console + SSH
+ORACLE_GEEF_BACKUP_TARGET=
+ORACLE_GEEF_SAFE_CHECKS=ssh,porta 22,painel do provedor,DNS geef.com.br,SSL geef.com.br
+ORACLE_GEEF_NOTES=Usar diretamente geef.com.br.
 
 # Oracle Geef Drive instance reference
 
-ORACLE\_GEEF\_DRIVE\_ID=node\_oracle\_geef\_drive
-ORACLE\_GEEF\_DRIVE\_NAME=Oracle Geef Drive
-ORACLE\_GEEF\_DRIVE\_ROLE=external
-ORACLE\_GEEF\_DRIVE\_PROVIDER=Oracle Cloud
-ORACLE\_GEEF\_DRIVE\_DOMAIN=geef.com.br
-ORACLE\_GEEF\_DRIVE\_HOST=157.151.13.219
-ORACLE\_GEEF\_DRIVE\_HOSTNAME=geefdrive
-ORACLE\_GEEF\_DRIVE\_IPV4=157.151.13.219
-ORACLE\_GEEF\_DRIVE\_PRIVATE\_IPV4=
-ORACLE\_GEEF\_DRIVE\_IPV6=
-ORACLE\_GEEF\_DRIVE\_REGION=
-ORACLE\_GEEF\_DRIVE\_OS=Ubuntu 24.04 Oracle kernel
-ORACLE\_GEEF\_DRIVE\_PLAN=geef.com.br drive support
-ORACLE\_GEEF\_DRIVE\_SSH\_USER=ubuntu
-ORACLE\_GEEF\_DRIVE\_SSH\_PORT=22
-ORACLE\_GEEF\_DRIVE\_PANEL\_URL=https://cloud.oracle.com/
-ORACLE\_GEEF\_DRIVE\_SSH\_PRIVATE\_KEY\_PATH=.secrets/ssh/oracle\_geef/vps\_drive\_geef/ssh-key-geefdrive-2026-05-09.key
-ORACLE\_GEEF\_DRIVE\_SSH\_KNOWN\_HOSTS\_PATH=.secrets/ssh/known\_hosts
-ORACLE\_GEEF\_DRIVE\_CONSOLE\_METHOD=Cloud console + SSH
-ORACLE\_GEEF\_DRIVE\_BACKUP\_TARGET=
-ORACLE\_GEEF\_DRIVE\_SAFE\_CHECKS=ssh,porta 22,painel do provedor,DNS geef.com.br,SSL geef.com.br
-ORACLE\_GEEF\_DRIVE\_NOTES=Suporte drive para geef.com.br.
+ORACLE_GEEF_DRIVE_ID=node_oracle_geef_drive
+ORACLE_GEEF_DRIVE_NAME=Oracle Geef Drive
+ORACLE_GEEF_DRIVE_ROLE=external
+ORACLE_GEEF_DRIVE_PROVIDER=Oracle Cloud
+ORACLE_GEEF_DRIVE_DOMAIN=geef.com.br
+ORACLE_GEEF_DRIVE_HOST=157.151.13.219
+ORACLE_GEEF_DRIVE_HOSTNAME=geefdrive
+ORACLE_GEEF_DRIVE_IPV4=157.151.13.219
+ORACLE_GEEF_DRIVE_PRIVATE_IPV4=
+ORACLE_GEEF_DRIVE_IPV6=
+ORACLE_GEEF_DRIVE_REGION=
+ORACLE_GEEF_DRIVE_OS=Ubuntu 24.04 Oracle kernel
+ORACLE_GEEF_DRIVE_PLAN=geef.com.br drive support
+ORACLE_GEEF_DRIVE_SSH_USER=ubuntu
+ORACLE_GEEF_DRIVE_SSH_PORT=22
+ORACLE_GEEF_DRIVE_PANEL_URL=https://cloud.oracle.com/
+ORACLE_GEEF_DRIVE_SSH_PRIVATE_KEY_PATH=.secrets/ssh/oracle_geef/vps_drive_geef/ssh-key-geefdrive-2026-05-09.key
+ORACLE_GEEF_DRIVE_SSH_KNOWN_HOSTS_PATH=.secrets/ssh/known_hosts
+ORACLE_GEEF_DRIVE_CONSOLE_METHOD=Cloud console + SSH
+ORACLE_GEEF_DRIVE_BACKUP_TARGET=
+ORACLE_GEEF_DRIVE_SAFE_CHECKS=ssh,porta 22,painel do provedor,DNS geef.com.br,SSL geef.com.br
+ORACLE_GEEF_DRIVE_NOTES=Suporte drive para geef.com.br.
 
 supabase:
 projectname: sitegeef
@@ -816,4 +819,3 @@ Esses são os módulos que diferenciam:
 um simples site,
 de:
 uma plataforma institucional séria e duradoura.
-
