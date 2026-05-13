@@ -108,12 +108,12 @@ export const featureCards: FeatureCard[] = [
 export const schedule: ScheduleItem[] = [
   {
     title: "Estudo doutrinário",
-    when: "Segundas e quintas, 19h30",
+    when: "Terças, 19h30",
     description: "Leitura, conversa e reflexão sobre a Doutrina Espírita.",
   },
   {
     title: "Reunião pública",
-    when: "Sábados, 19h",
+    when: "Quinta, 19h",
     description: "Palestra, acolhimento e encerramento com prece.",
   },
   {
@@ -123,7 +123,7 @@ export const schedule: ScheduleItem[] = [
   },
   {
     title: "Evangelização",
-    when: "Domingos, 9h30",
+    when: "jovens, quinta 16h30 - infantil, 19h00",
     description: "Atividades e estudo voltados para crianças e jovens.",
   },
 ];

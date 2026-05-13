@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "deploy:ssh": "node scripts/deploy-ssh.mjs",
-    "collect:system-errors": "node scripts/collect-system-errors.mjs"
+    "collect:system-errors": "node scripts/collect-system-errors.mjs",
+    "credentials:validate": "node scripts/rotate-credentials.mjs --validate",
+    "credentials:backup": "node scripts/rotate-credentials.mjs --backup",
+    "credentials:rotate": "node scripts/rotate-credentials.mjs --rotate"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.102.0",

@@ -8,17 +8,13 @@ export function SiteShell({ children }: Readonly<{ children: React.ReactNode }>)
         <Link href="/" className="brand" aria-label={site.name}>
           <span className="brand-logo">
             <img
-              src="/brand/logo-oficial.jpg"
+              src="/brand/logo-oficial-transparent.png"
               alt=""
               width={260}
               height={112}
               loading="eager"
               decoding="async"
             />
-          </span>
-          <span className="brand-text">
-            <strong>Site público</strong>
-            <span>{site.shortName}</span>
           </span>
         </Link>
 

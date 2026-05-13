@@ -38,7 +38,7 @@ export default function Home() {
           <div className="hero-panel">
             <div className="hero-brand">
               <img
-                src="/brand/logo-oficial.jpg"
+                src="/brand/logo-oficial-transparent.png"
                 alt="Logo oficial do GEEF"
                 width={320}
                 height={138}
