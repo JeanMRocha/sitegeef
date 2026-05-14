@@ -33,8 +33,8 @@ Informacoes confirmadas no ambiente atual:
 - Plano da zona: `Free Website`.
 - Tunnel ativo: `sitegeef-vps`.
 - Ingress do tunnel:
-  - `geef.com.br` -> `http://localhost:3000`
-  - `www.geef.com.br` -> `http://localhost:3000`
+  - `geef.com.br` -> `http://localhost:3500`
+  - `www.geef.com.br` -> `http://localhost:3500`
   - fallback -> `http_status:404`
 - O tunnel foi observado como `healthy` com conexoes ativas, mas a origem ainda pode falhar se a VPS nao estiver respondendo.
 - `Logpush` para a zona nao esta configurado.
@@ -45,7 +45,7 @@ Sinais de erro ja vistos:
 
 - `1033 Cloudflare Tunnel error` quando a borda nao conseguiu resolver a origem do tunnel.
 - `530` quando o tunnel ficou sem conexao util com a VPS.
-- `502` quando a origem `localhost:3000` nao estava respondendo.
+- `502` quando a origem `localhost:3500` nao estava respondendo.
 
 Para aumentar a observabilidade na VPS, configurar `cloudflared` com:
 

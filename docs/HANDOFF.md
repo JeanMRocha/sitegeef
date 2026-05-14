@@ -31,7 +31,7 @@ Cloudflare MCP:
 
 Estado operacional recente:
 
-- O dominio `geef.com.br` usa Cloudflare Tunnel com a origem `http://localhost:3000`.
+- O dominio `geef.com.br` usa Cloudflare Tunnel com a origem `http://localhost:3500`.
 - O tunnel `sitegeef-vps` esta configurado para `geef.com.br` e `www.geef.com.br`.
 - A conta Cloudflare do projeto esta no plano `Free Website`.
 - Nao ha `Logpush` configurado para a zona `geef.com.br`.
@@ -39,14 +39,14 @@ Estado operacional recente:
 - O melhor debug da borda hoje e via logs do `cloudflared` na VPS.
 - O tunnel foi verificado como `healthy` com conexoes ativas em `2026-05-10 13:27 UTC`, mas isso nao elimina falhas intermitentes de SSH ou de origem.
 - O erro Cloudflare `1033` apareceu quando a borda nao conseguiu resolver a origem do tunnel.
-- O erro Cloudflare `502` apareceu quando a origem `localhost:3000` nao estava respondendo.
+- O erro Cloudflare `502` apareceu quando a origem `localhost:3500` nao estava respondendo.
 - O processo da VPS chegou a falhar com `sh: 1: next: not found`, indicando dependencia de runtime ausente no host.
 - O deploy de producao foi migrado para um fluxo manual via SSH, usando o modelo `standalone` do Next.js.
 - O GitHub Actions agora fica como validacao em push e heartbeat semanal, sem empurrar alteracoes para a VPS.
 - O comando `npm run deploy:ssh` faz build local, empacota os artefatos e publica na VPS.
 - Os links internos do site usam query `v=` para evitar cache antigo da Cloudflare enquanto nao ha purge direto.
 - O `sitegeef.service` agora roda `node server.js` dentro de `/home/ubuntu/sitegeef/standalone`.
-- A origem local voltou a responder `200 OK` em `http://127.0.0.1:3000`.
+- A origem local voltou a responder `200 OK` em `http://127.0.0.1:3500`.
 - `geef.com.br` e `www.geef.com.br` voltaram a responder `200` pela Cloudflare.
 - A etapa SSH do deploy ainda pode falhar por `connection reset by peer`, entao a VPS continua sendo o ponto mais fragil.
 - A tabela `public.ops_events` no Supabase esta recebendo `heartbeat` do GitHub Actions, mas ainda nao ha logs de erro da VPS gravados ali.
@@ -100,7 +100,7 @@ Estado operacional recente:
 - Cloudflare com `A` em `geef.com.br` apontando para `204.216.166.12`.
 - Cloudflare com `CNAME` em `www.geef.com.br` apontando para `geef.com.br`.
 - App Next.js inicial criado com uma pagina `Olá, mundo` em `/`.
-- VPS com `sitegeef.service` rodando Next.js em `localhost:3000`.
+- VPS com `sitegeef.service` rodando Next.js em `localhost:3500`.
 - VPS com `sitegeef-tunnel.service` rodando `cloudflared` para o tunnel da Cloudflare.
 - Dominio publicado via Cloudflare Tunnel em `geef.com.br` e `www.geef.com.br`.
 - Home trocada para uma tela de manutencao orientada ao fluxo de deploy.

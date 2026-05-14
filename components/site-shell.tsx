@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { navItems, site } from "@/lib/site-data";
+import { UserIcon } from "@/components/site-icons";
 
 export function SiteShell({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
@@ -20,8 +21,21 @@ export function SiteShell({ children }: Readonly<{ children: React.ReactNode }>)
 
         <nav className="site-nav" aria-label="Navegação principal">
           {navItems.map((item) => (
-            <Link key={item.href} href={item.href}>
-              {item.label}
+            <Link
+              key={item.href}
+              href={item.href}
+              className={item.icon ? "site-nav-icon" : undefined}
+              aria-label={item.icon ? item.label : undefined}
+              title={item.icon ? item.label : undefined}
+            >
+              {item.icon === "user" ? (
+                <>
+                  <UserIcon className="site-nav-icon-svg" />
+                  <span className="sr-only">{item.label}</span>
+                </>
+              ) : (
+                item.label
+              )}
             </Link>
           ))}
         </nav>

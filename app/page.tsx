@@ -1,5 +1,14 @@
 import Link from "next/link";
-import { ArrowIcon, BookIcon, CalendarIcon, GroupIcon, HeartIcon, LiveIcon, MailIcon } from "@/components/site-icons";
+import {
+  ArrowIcon,
+  BookIcon,
+  CalendarIcon,
+  GroupIcon,
+  HeartIcon,
+  LiveIcon,
+  MailIcon,
+  UserIcon,
+} from "@/components/site-icons";
 import { featureCards, publicHref, schedule, site } from "@/lib/site-data";
 
 const iconMap = {
@@ -9,6 +18,7 @@ const iconMap = {
   live: LiveIcon,
   book: BookIcon,
   mail: MailIcon,
+  user: UserIcon,
 };
 
 export default function Home() {

@@ -11,7 +11,7 @@ O dominio `geef.com.br` passou a exibir `Cloudflare Tunnel error 1033` e, em out
 ## Diagnostico
 
 - O tunnel `sitegeef-vps` estava configurado corretamente para `geef.com.br` e `www.geef.com.br`.
-- A origem `http://localhost:3000` na VPS nem sempre respondia.
+- A origem `http://localhost:3500` na VPS nem sempre respondia.
 - O serviço `sitegeef.service` chegou a falhar com `sh: 1: next: not found`.
 - O `rsync` do deploy tambem sofreu resets por instabilidade de SSH.
 - O plano Cloudflare da zona nao oferecia `Instant Logs`/`Logpush` de requests para a zona.

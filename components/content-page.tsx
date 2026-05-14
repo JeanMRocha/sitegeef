@@ -1,6 +1,3 @@
-import Link from "next/link";
-import { ArrowIcon } from "@/components/site-icons";
-import { publicHref } from "@/lib/site-data";
 import { type ContentPage } from "@/lib/site-data";
 
 export function ContentPageView({ page }: Readonly<{ page: ContentPage }>) {
@@ -43,15 +40,6 @@ export function ContentPageView({ page }: Readonly<{ page: ContentPage }>) {
           </div>
         </div>
 
-        <div className="content-actions">
-          <Link href={page.ctaHref} className="button button-primary">
-            {page.ctaLabel}
-            <ArrowIcon className="button-icon" />
-          </Link>
-          <Link href={publicHref("/")} className="button button-secondary">
-            Voltar ao início
-          </Link>
-        </div>
       </section>
 
       <section className="content-grid" aria-label={`Seções de ${page.title}`}>

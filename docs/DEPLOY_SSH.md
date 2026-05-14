@@ -34,7 +34,7 @@ npm run deploy:ssh -- --dry-run
 - Para o servico `sitegeef`
 - Troca a release em `/home/ubuntu/sitegeef/standalone`
 - Sobe o servico novamente
-- Valida `http://127.0.0.1:3000` na VPS
+- Valida `http://127.0.0.1:3500` na VPS
 - Mantem uma copia de rollback em `standalone.prev` se a ativacao falhar
 
 ## Observacoes

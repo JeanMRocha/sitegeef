@@ -24,25 +24,25 @@ e busca textual leve.
 Listar fontes indexadas:
 
 ```powershell
-curl http://localhost:3000/api/knowledge
+curl http://localhost:3500/api/knowledge
 ```
 
 Pesquisar um tema:
 
 ```powershell
-curl "http://localhost:3000/api/knowledge?q=cloudflare%20tunnel&limit=5"
+curl "http://localhost:3500/api/knowledge?q=cloudflare%20tunnel&limit=5"
 ```
 
 Consultar o gate antes do caso:
 
 ```powershell
-curl -H "x-geef-agent-key: <chave>" http://localhost:3000/api/knowledge/gate
+curl -H "x-geef-agent-key: <chave>" http://localhost:3500/api/knowledge/gate
 ```
 
 Registrar um caso novo:
 
 ```powershell
-curl -X POST http://localhost:3000/api/knowledge/cases `
+curl -X POST http://localhost:3500/api/knowledge/cases `
   -H "content-type: application/json" `
   -H "x-geef-agent-key: <chave>" `
   -d '{"title":"Exemplo","summary":"Resumo","symptom":"Sintoma","diagnosis":"Diagnostico","resolution":"Resolucao","impact":"Impacto","tags":["infra"],"source":"agente"}'

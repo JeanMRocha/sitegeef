@@ -86,7 +86,7 @@ Notas de operacao:
 - A zona `geef.com.br` esta no plano `Free Website`.
 - `Instant Logs` e `Logpush` de requests para a zona nao estao disponiveis nesse plano.
 - Para debug do tunnel, usar logs locais do `cloudflared` e nao depender de logpush da borda.
-- Se o tunnel voltar a gerar `1033`, conferir se a VPS respondeu em `localhost:3000` antes de mexer em DNS ou SSL.
+- Se o tunnel voltar a gerar `1033`, conferir se a VPS respondeu em `localhost:3500` antes de mexer em DNS ou SSL.
 
 ## VPS Oracle
 

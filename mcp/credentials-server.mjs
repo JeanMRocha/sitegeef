@@ -341,7 +341,7 @@ ssh ${vpsUser}@${vpsHost} << 'EOFREMOTE'
   sleep 3
 
   echo "🔍 Health check..."
-  curl -fsS http://127.0.0.1:3000 > /dev/null && echo "✅ Serviço online"
+  curl -fsS http://127.0.0.1:3500 > /dev/null && echo "✅ Serviço online"
 
   echo "✅ Sucesso!"
 EOFREMOTE

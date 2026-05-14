@@ -94,7 +94,7 @@ SSH Remote Script:
   - systemctl stop sitegeef
   - Extract tarballs
   - systemctl start sitegeef
-  - Validate health (curl localhost:3000)
+  - Validate health (curl localhost:3500)
   - Rollback if fails
 ```
 
@@ -111,7 +111,7 @@ SSH Remote Script:
    - Para o serviço
    - Extrai os tarballs
    - Reinicia
-   - **Valida** curl em localhost:3000 (10 tentativas)
+   - **Valida** curl em localhost:3500 (10 tentativas)
    - **Rollback automático** se falhar
 5. ✅ Cleanup de temps
 

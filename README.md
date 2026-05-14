@@ -8,7 +8,15 @@ npm install
 npm run dev
 ```
 
-Depois, abra `http://localhost:3000`.
+Depois, abra `http://localhost:3500`.
+
+Se quiser um modo de trabalho com reinicio automatico quando o servidor cair:
+
+```powershell
+npm run dev:watchdog
+```
+
+Esse comando e manual e termina quando voce fechar o terminal.
 
 ## Deploy
 
@@ -23,7 +31,7 @@ npm run deploy:ssh
 ```
 
 Esse comando gera o build, envia `.next/standalone`, `.next/static` e `public` para a VPS,
-reinicia o servico `sitegeef` e valida a origem em `http://127.0.0.1:3000`.
+reinicia o servico `sitegeef` e valida a origem em `http://127.0.0.1:3500`.
 
 Detalhes operacionais em [docs/DEPLOY_SSH.md](/c:/Projetos/site-geef/docs/DEPLOY_SSH.md).
 

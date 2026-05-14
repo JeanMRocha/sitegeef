@@ -82,7 +82,7 @@ npm run collect:system-errors
 # Ou faça um push para testar a integração com Supabase
 
 # VPS
-curl http://127.0.0.1:3000  # Health check
+curl http://127.0.0.1:3500  # Health check
 ```
 
 ---
@@ -138,7 +138,7 @@ VPS:
   ☐ SSH para 204.216.166.12
   ☐ Atualizar .env
   ☐ Restart do serviço
-  ☐ Health check: curl localhost:3000
+  ☐ Health check: curl localhost:3500
   
 Final:
   ☐ Validar que todos os logs chegam ao Supabase

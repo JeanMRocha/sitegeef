@@ -1,13 +1,14 @@
 export type NavItem = {
   href: string;
   label: string;
+  icon?: "user";
 };
 
 export type FeatureCard = {
   href: string;
   title: string;
   description: string;
-  icon: "group" | "calendar" | "heart" | "live" | "book" | "mail";
+  icon: "group" | "calendar" | "heart" | "live" | "book" | "mail" | "user";
 };
 
 export type ScheduleItem = {
@@ -64,6 +65,7 @@ export const navItems: NavItem[] = [
   { href: publicHref("/atendimento-fraterno"), label: "Atendimento fraterno" },
   { href: publicHref("/ao-vivo"), label: "Ao vivo" },
   { href: publicHref("/contato"), label: "Contato" },
+  { href: publicHref("/perfil"), label: "Perfil do usuário", icon: "user" },
 ];
 
 export const featureCards: FeatureCard[] = [
@@ -102,6 +104,12 @@ export const featureCards: FeatureCard[] = [
     title: "Contato",
     description: "Endereço, telefone e redes sociais.",
     icon: "mail",
+  },
+  {
+    href: publicHref("/perfil"),
+    title: "Perfil do usuário",
+    description: "Base profissional para login, sessão e preferências.",
+    icon: "user",
   },
 ];
 

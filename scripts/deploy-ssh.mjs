@@ -167,13 +167,13 @@ const remoteScript = [
   '  exit 1',
   'fi',
   "for _ in 1 2 3 4 5 6 7 8 9 10; do",
-  '  if curl -fsS --max-time 5 http://127.0.0.1:3000 >/dev/null; then',
+  '  if curl -fsS --max-time 5 http://127.0.0.1:3500 >/dev/null; then',
   '    rm -rf "$backup_dir"',
   "    exit 0",
   "  fi",
   "  sleep 3",
   "done",
-  'echo "Origin did not become ready on localhost:3000" >&2',
+  'echo "Origin did not become ready on localhost:3500" >&2',
   'exit 1',
 ].join("\n");
 

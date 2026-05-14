@@ -4,7 +4,7 @@ Use este checklist quando o dominio `geef.com.br` ou `www.geef.com.br` estiver e
 
 ## Objetivo
 
-Isolar rapidamente se a falha esta na borda Cloudflare, no tunnel `cloudflared` ou na origem `localhost:3000` da VPS.
+Isolar rapidamente se a falha esta na borda Cloudflare, no tunnel `cloudflared` ou na origem `localhost:3500` da VPS.
 
 ## Ordem de verificacao
 
@@ -20,8 +20,8 @@ Isolar rapidamente se a falha esta na borda Cloudflare, no tunnel `cloudflared` 
 4. Verificar o tunnel na Cloudflare:
    - tunnel ativo: `sitegeef-vps`
    - ingress esperado:
-     - `geef.com.br` -> `http://localhost:3000`
-     - `www.geef.com.br` -> `http://localhost:3000`
+     - `geef.com.br` -> `http://localhost:3500`
+     - `www.geef.com.br` -> `http://localhost:3500`
    - fallback: `http_status:404`
 5. Verificar se existe `Logpush`/`Instant Logs` na zona:
    - no plano atual `Free Website`, nao esperar `Instant Logs` ou `Logpush` de requests para a zona.
@@ -31,7 +31,7 @@ Isolar rapidamente se a falha esta na borda Cloudflare, no tunnel `cloudflared` 
    - persistir com `--logfile`
    - procurar `connection reset`, `connect: connection refused`, `too many open files` e problemas de origem.
 7. Validar a origem local:
-   - `curl http://127.0.0.1:3000`
+   - `curl http://127.0.0.1:3500`
    - `systemctl status sitegeef`
    - `journalctl -u sitegeef -n 100`
 8. Se o SSH falhar:
@@ -53,7 +53,7 @@ Isolar rapidamente se a falha esta na borda Cloudflare, no tunnel `cloudflared` 
 ## O que nao adianta tentar primeiro
 
 - Alterar DNS antes de confirmar a VPS.
-- Ajustar SSL antes de verificar `cloudflared` e `localhost:3000`.
+- Ajustar SSL antes de verificar `cloudflared` e `localhost:3500`.
 - Procurar `Logpush` de requests na zona enquanto a conta estiver no plano `Free Website`.
 
 ## Resultado esperado
@@ -62,5 +62,5 @@ Ao final da triagem, o agente deve conseguir responder:
 
 - a borda Cloudflare esta saudavel ou nao;
 - o tunnel esta ativo ou nao;
-- a VPS esta respondendo em `localhost:3000` ou nao;
+- a VPS esta respondendo em `localhost:3500` ou nao;
 - se existe log suficiente para fechar a causa raiz.

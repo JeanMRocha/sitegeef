@@ -76,6 +76,17 @@ export function MailIcon(props: IconProps) {
   );
 }
 
+export function UserIcon(props: IconProps) {
+  return (
+    <IconShell {...props}>
+      <circle cx="12" cy="8" r="3.25" />
+      <path d="M5.5 20a6.5 6.5 0 0 1 13 0" />
+      <path d="M8.5 12.5h7" />
+      <path d="M8.5 15.5h4.5" />
+    </IconShell>
+  );
+}
+
 export function ArrowIcon(props: IconProps) {
   return (
     <IconShell {...props}>
