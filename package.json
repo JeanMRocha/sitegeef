@@ -6,12 +6,7 @@
     "dev": "next dev -p 3500",
     "dev:watchdog": "node scripts/dev-watchdog.mjs",
     "build": "next build",
-    "start": "next start",
-    "deploy:ssh": "node scripts/deploy-ssh.mjs",
-    "collect:system-errors": "node scripts/collect-system-errors.mjs",
-    "credentials:validate": "node scripts/rotate-credentials.mjs --validate",
-    "credentials:backup": "node scripts/rotate-credentials.mjs --backup",
-    "credentials:rotate": "node scripts/rotate-credentials.mjs --rotate"
+    "start": "next start"
   },
   "dependencies": {
     "@supabase/ssr": "^0.6.1",
