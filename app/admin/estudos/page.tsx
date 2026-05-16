@@ -19,13 +19,15 @@ async function EstudosContent() {
 
   return (
     <div className="area-page">
-      <div className="admin-page-header">
-        <div>
-          <span className="admin-dashboard-kicker">Estudos</span>
-          <h1 className="admin-page-title">Estudos Doutrinários</h1>
-          <p className="admin-page-subtitle">Gestão de cursos e turmas de estudo</p>
+      <section className="area-hero">
+        <div className="area-hero-top">
+          <div>
+            <p className="area-subtitle">Estudos</p>
+            <h1 className="area-hero-title">Estudos Doutrinários</h1>
+          </div>
         </div>
-      </div>
+        <p className="area-subtitle">Gestão de cursos e turmas de estudo.</p>
+      </section>
 
       <section className="area-section">
         <div className="stat-grid">
@@ -52,8 +54,11 @@ async function EstudosContent() {
       </section>
 
       <section className="area-section">
-        <div className="admin-card">
-          <h2 style={{ margin: "0 0 1rem", fontSize: "1.1rem", color: "var(--text)" }}>Cursos disponíveis</h2>
+        <div className="area-section-title">
+          <h2>Cursos disponíveis</h2>
+          <p>Cards de acesso rápido para cada curso.</p>
+        </div>
+        <div className="table-surface">
 
           {cursos.length > 0 ? (
             <div className="module-grid" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))" }}>

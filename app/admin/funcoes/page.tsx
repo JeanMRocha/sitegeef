@@ -10,64 +10,66 @@ async function FuncoesList() {
   const funcoes = await getFuncoes();
 
   return (
-    <div>
-      {/* Header */}
-      <div className="admin-page-header">
-        <div>
-          <h1 className="admin-page-title">Funções e Temas</h1>
-          <p className="admin-page-subtitle">Configure funções de escalas e temas doutrinários</p>
-        </div>
-        <Link href="/admin/funcoes/nova" className="admin-btn admin-btn-primary">
-          ➕ Nova Função
-        </Link>
-      </div>
-
-      {/* Tabs Navigation */}
-      <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--admin-border)', paddingBottom: '1rem' }}>
-        <Link href="/admin/funcoes" style={{ paddingBottom: '0.5rem', borderBottom: '2px solid var(--primary)', color: 'var(--primary)', fontWeight: 600, textDecoration: 'none' }}>
-          ⚙️ Funções
-        </Link>
-        <Link href="/admin/funcoes/temas" style={{ paddingBottom: '0.5rem', color: 'var(--muted)', textDecoration: 'none' }}>
-          📚 Temas Doutrinários
-        </Link>
-      </div>
-
-      {/* Table */}
-      <div className="admin-card" style={{ overflowX: 'auto' }}>
-        {funcoes.length === 0 ? (
-          <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--muted)' }}>
-            <p>Nenhuma função cadastrada.</p>
-            <Link href="/admin/funcoes/nova" className="admin-btn admin-btn-primary" style={{ marginTop: '1rem' }}>
-              ➕ Criar primeira função
-            </Link>
+    <div className="area-page">
+      <section className="area-hero">
+        <div className="area-hero-top">
+          <div>
+            <p className="area-subtitle">Escalas e temas</p>
+            <h1 className="area-hero-title">Funções e Temas</h1>
           </div>
-        ) : (
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>Descrição</th>
-                <th>Ação</th>
-              </tr>
-            </thead>
-            <tbody>
-              {funcoes.map((funcao: any) => (
-                <tr key={funcao.id}>
-                  <td style={{ fontWeight: 600 }}>{funcao.nome}</td>
-                  <td style={{ fontSize: '0.9rem', color: 'var(--muted)' }}>
-                    {funcao.descricao || '—'}
-                  </td>
-                  <td>
-                    <Link href={`/admin/funcoes/${funcao.id}`} className="admin-btn admin-btn-small">
-                      ✏️ Editar
-                    </Link>
-                  </td>
+          <Link href="/admin/funcoes/nova" className="profile-form-btn profile-form-btn-primary">
+            Nova Função
+          </Link>
+        </div>
+        <p className="area-subtitle">Configure funções de escalas e temas doutrinários.</p>
+      </section>
+
+      <section className="area-section">
+        <div className="area-panel-grid">
+          <Link href="/admin/funcoes" className="module-card" style={{ borderColor: 'var(--accent)' }}>
+            <h3 className="module-title">Funções</h3>
+            <p>Cadastros de funções usadas nas escalas.</p>
+          </Link>
+          <Link href="/admin/funcoes/temas" className="module-card">
+            <h3 className="module-title">Temas doutrinários</h3>
+            <p>Categoria de temas utilizados em estudos e palestras.</p>
+          </Link>
+        </div>
+      </section>
+
+      <section className="area-section">
+        <div className="table-surface">
+          {funcoes.length === 0 ? (
+            <div className="area-empty">
+              <p>Nenhuma função cadastrada.</p>
+              <Link href="/admin/funcoes/nova" className="profile-form-btn profile-form-btn-primary">Criar primeira função</Link>
+            </div>
+          ) : (
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Descrição</th>
+                  <th>Ação</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
+              </thead>
+              <tbody>
+                {funcoes.map((funcao: any) => (
+                  <tr key={funcao.id}>
+                    <td style={{ fontWeight: 600 }}>{funcao.nome}</td>
+                    <td style={{ color: 'var(--muted)' }}>{funcao.descricao || '—'}</td>
+                    <td>
+                      <Link href={`/admin/funcoes/${funcao.id}`} className="profile-form-btn profile-form-btn-secondary">
+                        Editar
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </section>
     </div>
   );
 }
