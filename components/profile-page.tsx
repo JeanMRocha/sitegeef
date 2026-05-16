@@ -29,9 +29,7 @@ export async function ProfilePageView() {
                 className="profile-compact-avatar-img"
               />
             ) : (
-              <div className="profile-compact-avatar-placeholder">
-                {nomeCompleto?.charAt(0)?.toUpperCase() || user.email?.charAt(0)?.toUpperCase()}
-              </div>
+              <div className="profile-compact-avatar-placeholder">👤</div>
             )}
           </div>
           <div className="profile-compact-header-info">

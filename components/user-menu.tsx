@@ -50,8 +50,6 @@ export function UserMenu({
   }
 
   // Authenticated
-  const initial = (nomeCompleto?.charAt(0) || userEmail?.charAt(0) || "U").toUpperCase();
-
   return (
     <div ref={menuRef} className="site-header-user">
       <button
@@ -71,7 +69,7 @@ export function UserMenu({
             unoptimized
           />
         ) : (
-          <div className="site-header-user-initial">{initial}</div>
+          <div className="site-header-user-initial">👤</div>
         )}
       </button>
 
@@ -89,7 +87,7 @@ export function UserMenu({
                 unoptimized
               />
             ) : (
-              <div className="site-header-user-initial-lg">{initial}</div>
+              <div className="site-header-user-initial-lg">👤</div>
             )}
             <div className="site-header-user-details">
               <strong>{nomeCompleto || "Usuário"}</strong>
