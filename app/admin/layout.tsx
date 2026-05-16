@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { AdminSidebar } from '@/components/admin/admin-sidebar';
 import { AdminHeader } from '@/components/admin/admin-header';
 import '@/styles/admin.css';
+import '@/styles/admin-sidebar.css';
 
 export const metadata = {
   title: 'Admin - GEEF',
@@ -24,7 +25,7 @@ export default async function AdminLayout({
   // Verificar se o usuário tem acesso ao admin
   const { data: usuarioSistema } = await supabase
     .from('usuarios_sistema')
-    .select('role, pode_editar_pessoas, pode_editar_escalas, pode_publicar')
+    .select('perfil, pode_mediunidade, pode_escalas, pode_biblioteca, pode_livraria, pode_financeiro, pode_pessoas, pode_publicar, pode_atendimento, pode_apse')
     .eq('id', user.id)
     .single();
 
@@ -48,7 +49,7 @@ export default async function AdminLayout({
     <div className="admin-layout">
       <AdminHeader user={user} usuarioSistema={usuarioSistema} />
       <div className="admin-container">
-        <AdminSidebar />
+        <AdminSidebar podeMediunidade={usuarioSistema.pode_mediunidade} />
         <main className="admin-main">
           {children}
         </main>

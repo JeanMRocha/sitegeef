@@ -2,12 +2,63 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useState, useEffect } from 'react';
 
-export function AdminSidebar() {
+type AdminSidebarProps = {
+  podeMediunidade?: boolean;
+};
+
+export function AdminSidebar({ podeMediunidade = false }: AdminSidebarProps) {
   const pathname = usePathname();
   const currentPath = pathname ?? '';
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    // Load expanded groups from localStorage
+    const saved = localStorage.getItem('admin-sidebar-expanded');
+    if (saved) {
+      setExpandedGroups(JSON.parse(saved));
+    }
+  }, []);
+
+  const toggleGroup = (groupName: string) => {
+    const newState = { ...expandedGroups, [groupName]: !expandedGroups[groupName] };
+    setExpandedGroups(newState);
+    localStorage.setItem('admin-sidebar-expanded', JSON.stringify(newState));
+  };
 
   const isActive = (href: string) => currentPath.startsWith(href);
+
+  const NavGroup = ({
+    name,
+    title,
+    collapsible = false,
+    children,
+  }: {
+    name?: string;
+    title?: string;
+    collapsible?: boolean;
+    children: React.ReactNode;
+  }) => {
+    const isExpanded = name ? expandedGroups[name] !== false : true;
+
+    return (
+      <div className="admin-nav-section">
+        {title && collapsible && (
+          <button
+            onClick={() => name && toggleGroup(name)}
+            className="admin-nav-title admin-nav-title-button"
+            aria-expanded={isExpanded}
+          >
+            <span>{title}</span>
+            <span className="admin-nav-title-arrow">{isExpanded ? '▼' : '▶'}</span>
+          </button>
+        )}
+        {title && !collapsible && <h3 className="admin-nav-title">{title}</h3>}
+        {isExpanded && <div className="admin-nav-group-items">{children}</div>}
+      </div>
+    );
+  };
 
   return (
     <aside className="admin-sidebar">
@@ -51,8 +102,7 @@ export function AdminSidebar() {
         </div>
 
         {/* Governança */}
-        <div className="admin-nav-section">
-          <h3 className="admin-nav-title">Governança</h3>
+        <NavGroup name="governanca" title="Governança" collapsible>
           <Link
             href="/admin/governanca"
             className={`admin-nav-item ${isActive('/admin/governanca') ? 'active' : ''}`}
@@ -60,12 +110,12 @@ export function AdminSidebar() {
             🏢 Diretorias e Cargos
           </Link>
           <Link
-            href="/admin/assembleias"
-            className={`admin-nav-item ${isActive('/admin/assembleias') ? 'active' : ''}`}
+            href="/admin/governanca/assembleias"
+            className={`admin-nav-item ${isActive('/admin/governanca/assembleias') ? 'active' : ''}`}
           >
             📋 Assembleias e Atas
           </Link>
-        </div>
+        </NavGroup>
 
         {/* Departamentos */}
         <div className="admin-nav-section">
@@ -78,8 +128,7 @@ export function AdminSidebar() {
         </div>
 
         {/* Escalas */}
-        <div className="admin-nav-section">
-          <h3 className="admin-nav-title">Escalas</h3>
+        <NavGroup name="escalas" title="Escalas" collapsible>
           <Link
             href="/admin/escalas"
             className={`admin-nav-item ${isActive('/admin/escalas') ? 'active' : ''}`}
@@ -93,12 +142,12 @@ export function AdminSidebar() {
             🎯 Funções
           </Link>
           <Link
-            href="/admin/temas"
-            className={`admin-nav-item ${isActive('/admin/temas') ? 'active' : ''}`}
+            href="/admin/funcoes/temas"
+            className={`admin-nav-item ${isActive('/admin/funcoes/temas') ? 'active' : ''}`}
           >
             📚 Temas
           </Link>
-        </div>
+        </NavGroup>
 
         {/* Atendimento Espiritual */}
         <div className="admin-nav-section">
@@ -163,23 +212,24 @@ export function AdminSidebar() {
         </div>
 
         {/* Mediunidade */}
-        <div className="admin-nav-section">
-          <Link
-            href="/admin/mediunidade"
-            className={`admin-nav-item ${isActive('/admin/mediunidade') ? 'active' : ''}`}
-          >
-            🔒 Mediunidade
-          </Link>
-        </div>
+        {podeMediunidade && (
+          <NavGroup name="mediunidade" title="Mediunidade" collapsible>
+            <Link
+              href="/admin/mediunidade"
+              className={`admin-nav-item ${isActive('/admin/mediunidade') ? 'active' : ''}`}
+            >
+              🔒 Grupos Mediúnicos
+            </Link>
+          </NavGroup>
+        )}
 
         {/* Biblioteca */}
-        <div className="admin-nav-section">
-          <h3 className="admin-nav-title">Biblioteca</h3>
+        <NavGroup name="biblioteca" title="Biblioteca" collapsible>
           <Link
-            href="/admin/biblioteca/obras"
-            className={`admin-nav-item ${isActive('/admin/biblioteca') ? 'active' : ''}`}
+            href="/admin/biblioteca"
+            className={`admin-nav-item ${isActive('/admin/biblioteca') && currentPath !== '/admin/biblioteca/emprestimos' ? 'active' : ''}`}
           >
-            📚 Obras
+            📚 Obras e Exemplares
           </Link>
           <Link
             href="/admin/biblioteca/emprestimos"
@@ -187,7 +237,7 @@ export function AdminSidebar() {
           >
             📤 Empréstimos
           </Link>
-        </div>
+        </NavGroup>
 
         {/* Livraria */}
         <div className="admin-nav-section">
@@ -286,17 +336,6 @@ export function AdminSidebar() {
             className={`admin-nav-item ${isActive('/admin/relatorios') ? 'active' : ''}`}
           >
             📊 Relatórios
-          </Link>
-        </div>
-
-        {/* Observabilidade */}
-        <div className="admin-nav-section">
-          <h3 className="admin-nav-title">Observabilidade</h3>
-          <Link
-            href="/admin/erros"
-            className={`admin-nav-item ${isActive('/admin/erros') ? 'active' : ''}`}
-          >
-            🧭 Erros e Debug
           </Link>
         </div>
 
