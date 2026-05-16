@@ -43,10 +43,11 @@ COPY --from=builder /app/public ./public
 # Set environment to production
 ENV NODE_ENV=production
 ENV PORT=3500
+ENV HOSTNAME=0.0.0.0
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:3500 || exit 1
+  CMD curl -fsS http://127.0.0.1:3500/ || exit 1
 
 # Use dumb-init to properly handle signals
 ENTRYPOINT ["dumb-init", "--"]
