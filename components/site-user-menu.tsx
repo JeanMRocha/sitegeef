@@ -75,8 +75,8 @@ export function SiteUserMenu({
             <span>{userEmail}</span>
           </div>
 
-          <Link href="/perfil" className="site-user-menu-item" role="menuitem" onClick={() => setOpen(false)}>
-            Perfil
+          <Link href="/minha-area" className="site-user-menu-item" role="menuitem" onClick={() => setOpen(false)}>
+            Minha Área
           </Link>
 
           {hasAdminAccess ? (
@@ -86,7 +86,7 @@ export function SiteUserMenu({
           ) : null}
 
           <form action={signOut} className="site-user-menu-form">
-            <button type="submit" className="site-user-menu-item site-user-menu-logout" onClick={() => setOpen(false)}>
+            <button type="submit" className="site-user-menu-item site-user-menu-logout">
               Logout
             </button>
           </form>
