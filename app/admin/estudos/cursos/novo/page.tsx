@@ -1,0 +1,77 @@
+import { redirect } from 'next/navigation';
+import Link from 'next/link';
+import { createCurso } from '../../actions';
+
+export const metadata = {
+  title: 'Novo Curso - Admin GEEF',
+};
+
+async function handleSubmit(formData: FormData) {
+  'use server';
+
+  try {
+    const curso = await createCurso({
+      nome: formData.get('nome') as string,
+      descricao: (formData.get('descricao') as string) || undefined,
+    });
+
+    redirect(`/admin/estudos/cursos/${curso.id}`);
+  } catch (error) {
+    console.error('Erro:', error);
+    throw error;
+  }
+}
+
+export default function NovoCursoPage() {
+  return (
+    <div>
+      <div className="admin-page-header">
+        <div>
+          <h1 className="admin-page-title">Novo Curso</h1>
+          <p className="admin-page-subtitle">Crie um novo curso de estudo</p>
+        </div>
+      </div>
+
+      <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto' }}>
+        <form action={handleSubmit}>
+          <div className="admin-form-group">
+            <label>Nome do Curso *</label>
+            <input
+              type="text"
+              name="nome"
+              placeholder="Ex: IEE, ESDE, EOB, EADE"
+              required
+            />
+          </div>
+
+          <div className="admin-form-group">
+            <label>Descrição</label>
+            <textarea
+              name="descricao"
+              placeholder="Objetivo, conteúdo programático..."
+              rows={3}
+              style={{
+                padding: '0.65rem 0.85rem',
+                border: '1px solid var(--admin-border)',
+                borderRadius: '0.6rem',
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.95rem',
+                color: 'var(--text)',
+                resize: 'vertical',
+              }}
+            />
+          </div>
+
+          <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+            <button type="submit" className="admin-btn admin-btn-primary">
+              ✅ Criar Curso
+            </button>
+            <Link href="/admin/estudos/cursos" className="admin-btn admin-btn-secondary">
+              ❌ Cancelar
+            </Link>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
