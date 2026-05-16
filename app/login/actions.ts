@@ -34,13 +34,13 @@ export async function signInWithEmail(email: string, password: string) {
   }
 
   revalidatePath("/", "layout");
-  redirect("/perfil");
+  redirect("/minha-area");
 }
 
 export async function signUpWithEmail(email: string, password: string, nomeCompleto: string) {
   const supabase = await createClient();
 
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -52,6 +52,28 @@ export async function signUpWithEmail(email: string, password: string, nomeCompl
 
   if (error) {
     return { error: error.message };
+  }
+
+  if (data.user) {
+    const { error: usersError } = await supabase
+      .from("usuarios_sistema")
+      .insert({
+        id: data.user.id,
+        perfil: "publico",
+        pode_escalas: false,
+        pode_biblioteca: false,
+        pode_livraria: false,
+        pode_financeiro: false,
+        pode_pessoas: false,
+        pode_publicar: false,
+        pode_mediunidade: false,
+        pode_atendimento: false,
+        pode_apse: false,
+      });
+
+    if (usersError) {
+      console.error("Erro ao criar usuarios_sistema:", usersError);
+    }
   }
 
   return { success: true };
