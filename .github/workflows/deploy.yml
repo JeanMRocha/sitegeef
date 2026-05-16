@@ -28,6 +28,15 @@ jobs:
         run: npm ci
         continue-on-error: true
 
+      - name: Configure Environment
+        run: |
+          cat > .env.local << 'EOF'
+          NEXT_PUBLIC_SITE_URL=https://geef.com.br
+          NEXT_PUBLIC_SUPABASE_URL=https://nycgpokqlmrfzegjlrwa.supabase.co
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_jDq5SX_k4spHMCCPVvlsrQ_-ZZybt8e
+          SUPABASE_SERVICE_ROLE_KEY=${{ secrets.GEEF_SUPABASE_SERVICE_ROLE_KEY }}
+          EOF
+
       - name: Lint Check
         id: lint
         run: npm run agent:lint 2>&1 || echo "⚠️ Linting warnings (non-blocking)"

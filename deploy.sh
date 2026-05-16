@@ -13,6 +13,15 @@ echo "⬇️  Pulling latest code from GitHub..."
 git fetch origin
 git reset --hard origin/main
 
+# 1.5 Configure environment variables
+echo "⚙️  Configuring environment..."
+cat > .env.local << 'EOF'
+NEXT_PUBLIC_SITE_URL=https://geef.com.br
+NEXT_PUBLIC_SUPABASE_URL=https://nycgpokqlmrfzegjlrwa.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_jDq5SX_k4spHMCCPVvlsrQ_-ZZybt8e
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im55Y2dwb2txbG1yZnplZ2pscndhIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3ODM3Mzc4MSwiZXhwIjoyMDkzOTQ5NzgxfQ.BnoQWqFmV0YyfKAfCSJMiMJYUuTWwwmT3ORBKMHElJM
+EOF
+
 # 2. Install dependencies
 echo "📦 Installing dependencies..."
 npm ci --prefer-offline --no-audit
