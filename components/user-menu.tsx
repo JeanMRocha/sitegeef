@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useTheme } from "@/hooks/useTheme";
+import { signOut } from "@/app/login/actions";
 
 type UserMenuProps = {
   userEmail?: string | null;
@@ -144,9 +145,12 @@ export function UserMenu({
           <div className="site-header-user-divider"></div>
 
           {/* Logout */}
-          <Link href="/minha-area" className="site-header-user-logout">
-            <span>📋</span> Minha Área
-          </Link>
+          <button
+            onClick={() => signOut()}
+            className="site-header-user-logout"
+          >
+            <span>🚪</span> Sair
+          </button>
         </div>
       )}
     </div>

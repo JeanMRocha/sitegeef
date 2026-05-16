@@ -7,9 +7,9 @@ import { navItems, site } from "@/lib/site-data";
 import { UserMenu } from "@/components/user-menu";
 
 type SiteHeaderProps = {
-  userEmail?: string | null;
-  nomeCompleto?: string | null;
-  avatarUrl?: string | null;
+  userEmail: string | null;
+  nomeCompleto: string | null;
+  avatarUrl: string | null;
 };
 
 export function SiteHeader({ userEmail, nomeCompleto, avatarUrl }: SiteHeaderProps) {

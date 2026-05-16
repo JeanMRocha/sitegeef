@@ -1,11 +1,21 @@
 import Link from "next/link";
 import { site } from "@/lib/site-data";
 import { SiteHeader } from "@/components/site-header";
+import type { User } from "@supabase/supabase-js";
 
-export function SiteShell({ children }: Readonly<{ children: React.ReactNode }>) {
+type SiteShellProps = {
+  user: User | null;
+  children: React.ReactNode;
+};
+
+export function SiteShell({ user, children }: Readonly<SiteShellProps>) {
+  const userEmail = user?.email || null;
+  const nomeCompleto = (user?.user_metadata?.full_name as string) || null;
+  const avatarUrl = (user?.user_metadata?.avatar_url as string) || null;
+
   return (
     <div className="site-shell">
-      <SiteHeader />
+      <SiteHeader userEmail={userEmail} nomeCompleto={nomeCompleto} avatarUrl={avatarUrl} />
 
       {children}
 

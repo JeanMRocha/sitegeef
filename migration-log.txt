@@ -1,0 +1,33 @@
+
+> sitegeef@0.1.0 geef:migrations
+> node scripts/geef-migrations.mjs
+
+◇ injected env (34) from .env // tip: ⌁ auth for agents [www.vestauth.com]
+🚀 GEEF Migrations Runner
+
+📍 Project: nycgpokqlmrfzegjlrwa
+🔗 URL: https://nycgpokqlmrfzegjlrwa.supabase.co
+
+📋 Found 5 migration files:
+
+   1. 20260510_create_ops_events.sql
+   2. 20260515_auth_profiles.sql
+   3. 20260515_geef_erp.sql
+   4. 20260515_rls_sensitive_modules.sql
+   5. 20260516_fix_profiles_and_storage.sql
+
+▶️  Applying migrations via Supabase CLI...
+
+Attempting to apply migrations...
+failed to parse environment file: .env (unexpected character '\n' in variable name)
+Try rerunning the command with --debug to troubleshoot the error.
+
+⚠️  Supabase CLI method failed, trying direct SQL execution...
+
+📋 To apply migrations manually:
+
+1. Visit: https://app.supabase.com/project/nycgpokqlmrfzegjlrwa/sql/new
+2. Open file: supabase/combined-migrations.sql
+3. Copy all content and paste in SQL Editor
+4. Click 'Run'
+

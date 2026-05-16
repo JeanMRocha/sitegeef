@@ -14,31 +14,28 @@ export async function ProfilePageView() {
     redirect("/login?next=/perfil");
   }
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", user.id)
-    .maybeSingle();
+  const avatarUrl = (user.user_metadata?.avatar_url as string) || null;
+  const nomeCompleto = (user.user_metadata?.full_name as string) || null;
 
   return (
     <main className="profile-page-compact">
       <div className="profile-compact-container">
         <header className="profile-compact-header">
           <div className="profile-compact-avatar">
-            {profile?.avatar_url ? (
+            {avatarUrl ? (
               <img
-                src={profile.avatar_url}
+                src={avatarUrl}
                 alt="Avatar"
                 className="profile-compact-avatar-img"
               />
             ) : (
               <div className="profile-compact-avatar-placeholder">
-                {profile?.nome_completo?.charAt(0)?.toUpperCase() || user.email?.charAt(0)?.toUpperCase()}
+                {nomeCompleto?.charAt(0)?.toUpperCase() || user.email?.charAt(0)?.toUpperCase()}
               </div>
             )}
           </div>
           <div className="profile-compact-header-info">
-            <h1>{profile?.nome_completo || "Usuário"}</h1>
+            <h1>{nomeCompleto || "Usuário"}</h1>
             <p>{user.email}</p>
           </div>
         </header>
@@ -52,7 +49,7 @@ export async function ProfilePageView() {
                   id="nome_completo"
                   name="nome_completo"
                   type="text"
-                  defaultValue={profile?.nome_completo || ""}
+                  defaultValue={nomeCompleto || ""}
                   placeholder="Seu nome"
                   className="profile-form-input"
                 />
@@ -80,6 +77,7 @@ export async function ProfilePageView() {
               </div>
             </div>
           </form>
+
         </div>
 
         <div className="profile-compact-info">

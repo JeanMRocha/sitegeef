@@ -14,7 +14,13 @@
     "apply-migration": "node scripts/apply-migration.js",
     "apply-rls-sensitive-modules": "node scripts/apply-migration.js supabase/migrations/20260515_rls_sensitive_modules.sql",
     "check-migration": "node scripts/verify-migration.js",
-    "check-rls-sensitive-modules": "node scripts/verify-rls-sensitive-modules.js"
+    "check-rls-sensitive-modules": "node scripts/verify-rls-sensitive-modules.js",
+    "db:migrate": "node scripts/db-migrate.mjs",
+    "db:status": "npx supabase migration list --linked",
+    "db:push": "npx supabase db push",
+    "db:pull": "npx supabase db pull",
+    "geef:migrations": "node scripts/geef-migrations.mjs",
+    "geef:sql": "node scripts/copy-and-open-sql.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.6.1",
@@ -28,6 +34,9 @@
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "dotenv": "^17.4.2",
+    "pg": "^8.20.0",
+    "supabase": "^2.98.2",
     "typescript": "^5.0.0"
   }
 }

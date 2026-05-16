@@ -126,7 +126,18 @@ export async function updateProfile(formData: FormData) {
     throw new Error("Não autenticado");
   }
 
-  const { error } = await supabase
+  const { error: authError } = await supabase.auth.updateUser({
+    data: {
+      full_name: nomeCompleto,
+    },
+  });
+
+  if (authError) {
+    throw new Error(authError.message);
+  }
+
+  // Also update profiles table if it exists
+  const { error: profileError } = await supabase
     .from("profiles")
     .update({
       nome_completo: nomeCompleto,
@@ -134,11 +145,13 @@ export async function updateProfile(formData: FormData) {
     })
     .eq("id", user.id);
 
-  if (error) {
-    throw new Error(error.message);
+  if (profileError) {
+    console.error("Erro ao atualizar profiles:", profileError);
+    // Don't throw - this is not critical if profiles table doesn't exist yet
   }
 
   revalidatePath("/perfil");
+  revalidatePath("/", "layout");
   invalidateUserAreaCache();
 }
 
@@ -158,21 +171,38 @@ export async function uploadAvatar(formData: FormData) {
 
   const fileName = `${user.id}/avatar-${Date.now()}`;
 
-  const { error: uploadError } = await supabase.storage
+  const { error: uploadError, data: uploadData } = await supabase.storage
     .from("avatares")
     .upload(fileName, file, {
       upsert: true,
     });
 
   if (uploadError) {
-    throw new Error(uploadError.message);
+    console.error("Upload error:", {
+      message: uploadError.message,
+      status: (uploadError as any).status,
+      statusCode: (uploadError as any).statusCode,
+    });
+    throw new Error(`Erro ao fazer upload: ${uploadError.message}`);
   }
 
   const { data } = supabase.storage
     .from("avatares")
     .getPublicUrl(fileName);
 
-  const { error: updateError } = await supabase
+  // Update user metadata with avatar URL
+  const { error: authError } = await supabase.auth.updateUser({
+    data: {
+      avatar_url: data.publicUrl,
+    },
+  });
+
+  if (authError) {
+    throw new Error(authError.message);
+  }
+
+  // Also update profiles table if it exists
+  const { error: profileError } = await supabase
     .from("profiles")
     .update({
       avatar_url: data.publicUrl,
@@ -180,10 +210,12 @@ export async function uploadAvatar(formData: FormData) {
     })
     .eq("id", user.id);
 
-  if (updateError) {
-    throw new Error(updateError.message);
+  if (profileError) {
+    console.error("Erro ao atualizar profiles:", profileError);
+    // Don't throw - this is not critical if profiles table doesn't exist
   }
 
   revalidatePath("/perfil");
+  revalidatePath("/", "layout");
   invalidateUserAreaCache();
 }

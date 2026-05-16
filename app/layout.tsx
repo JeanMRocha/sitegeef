@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Manrope, Fredoka } from "next/font/google";
 import { SiteShell } from "@/components/site-shell";
 import { ThemeProvider } from "@/lib/theme/theme-provider";
+import { createClient } from "@/lib/supabase/server";
 import "@/styles/theme.css";
 import "@/styles/globals.css";
 import "@/styles/site-header.css";
@@ -23,16 +24,22 @@ export const metadata: Metadata = {
   description: "Site público do Grupo Espírita Elias Francis.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const client = await createClient();
+  const {
+    data: { user },
+  } = await client.auth.getUser();
+
+
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={`${headingFont.variable} ${bodyFont.variable}`}>
         <ThemeProvider>
-          <SiteShell>{children}</SiteShell>
+          <SiteShell user={user}>{children}</SiteShell>
         </ThemeProvider>
       </body>
     </html>
