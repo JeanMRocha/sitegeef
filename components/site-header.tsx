@@ -29,8 +29,7 @@ export function SiteHeader({ userEmail, nomeCompleto, avatarUrl }: SiteHeaderPro
   }, [moreOpen]);
 
   // Filter navItems
-  const primaryLinks = navItems.filter((item) => item.primary);
-  const secondaryLinks = navItems.filter((item) => !item.primary && !item.icon && !item.group);
+  const primaryLinks = navItems.filter((item) => !item.group && !item.icon);
   const institutionalLinks = navItems.filter((item) => item.group === "institucional");
 
   return (
@@ -41,8 +40,8 @@ export function SiteHeader({ userEmail, nomeCompleto, avatarUrl }: SiteHeaderPro
           <img
             src="/brand/logo-oficial-transparent.png"
             alt=""
-            width={260}
-            height={112}
+            width={360}
+            height={156}
             loading="eager"
             decoding="async"
           />
@@ -65,32 +64,15 @@ export function SiteHeader({ userEmail, nomeCompleto, avatarUrl }: SiteHeaderPro
           <button
             onClick={() => setMoreOpen(!moreOpen)}
             className="site-nav-more-btn"
-            aria-label="Mais opções"
+            aria-label="Mais opções institucionais"
             aria-expanded={moreOpen}
           >
-            Mais <span className="site-nav-more-arrow">▼</span>
+            Institucional <span className="site-nav-more-arrow">▼</span>
           </button>
 
           {moreOpen && (
             <div className="site-nav-more-dropdown">
-              {/* Secondary Links */}
-              <nav className="site-nav-secondary">
-                {secondaryLinks.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="site-nav-dropdown-item"
-                    onClick={() => setMoreOpen(false)}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </nav>
-
-              {/* Divider */}
-              <div className="site-nav-divider"></div>
-
-              {/* Institutional Group */}
+              {/* Institutional group stays in overflow because it is less used */}
               <nav className="site-nav-institucional">
                 {institutionalLinks.map((item) => (
                   <Link

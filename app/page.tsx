@@ -33,6 +33,11 @@ export default function Home() {
             claro para agenda, atendimento, transmissão e informação
             institucional.
           </p>
+          <ul className="hero-highlights" aria-label="Destaques da página">
+            <li>Agenda, estudos e atendimento em foco</li>
+            <li>Leitura rápida no celular e no desktop</li>
+            <li>Identidade institucional sem excesso visual</li>
+          </ul>
           <div className="hero-actions">
             <Link href={publicHref("/contato")} className="button button-primary">
               Falar com a casa
@@ -46,24 +51,14 @@ export default function Home() {
 
         <aside className="hero-visual" aria-label="Resumo do site">
           <div className="hero-panel">
-            <div className="hero-brand">
-              <img
-                src="/brand/logo-oficial-transparent.png"
-                alt="Logo oficial do GEEF"
-                width={320}
-                height={138}
-                loading="eager"
-                decoding="async"
-              />
-            </div>
             <div className="hero-panel-top">
-              <span className="pill pill-primary">Acolhimento</span>
-              <span className="pill">Agenda aberta</span>
+              <span className="pill pill-primary">Site público</span>
+              <span className="pill">Visão rápida</span>
             </div>
-            <h2>Estudo, escuta e presença.</h2>
+            <h2>Uma entrada clara para quem chega pela primeira vez.</h2>
             <p>
-              O site começa enxuto, legível e pronto para crescer com novas
-              páginas e conteúdos.
+              A home organiza informação essencial sem competir com a leitura
+              principal.
             </p>
             <ul className="hero-panel-list">
               <li>
@@ -77,6 +72,10 @@ export default function Home() {
               <li>
                 <span className="mini-dot" aria-hidden="true" />
                 Vídeos e transmissões
+              </li>
+              <li>
+                <span className="mini-dot" aria-hidden="true" />
+                Contato e informações institucionais
               </li>
             </ul>
           </div>

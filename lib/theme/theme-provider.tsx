@@ -20,11 +20,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   // Carregar tema preferido do localStorage
   useEffect(() => {
     const saved = localStorage.getItem("geef-theme") as Theme | null;
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
+    const isPublicSurface = isPublicRoute(window.location.pathname);
 
-    const initialTheme = saved || (prefersDark ? "dark" : "light");
+    const initialTheme = isPublicSurface ? "light" : (saved || "light");
     setThemeState(initialTheme);
     applyTheme(initialTheme);
     setMounted(true);
@@ -57,4 +55,8 @@ function applyTheme(theme: Theme) {
     root.classList.remove("dark");
     root.style.colorScheme = "light";
   }
+}
+
+function isPublicRoute(pathname: string) {
+  return !pathname.startsWith("/admin") && pathname !== "/login" && pathname !== "/minha-area" && pathname !== "/perfil";
 }
