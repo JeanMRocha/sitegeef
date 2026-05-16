@@ -46,13 +46,15 @@ async function RelatoriosContent() {
 
   return (
     <div className="area-page">
-      <div className="admin-page-header">
-        <div>
-          <span className="admin-dashboard-kicker">Relatórios</span>
-          <h1 className="admin-page-title">Relatórios</h1>
-          <p className="admin-page-subtitle">Síntese e análise de dados da organização</p>
+      <section className="area-hero">
+        <div className="area-hero-top">
+          <div>
+            <p className="area-subtitle">Relatórios</p>
+            <h1 className="area-hero-title">Relatórios</h1>
+          </div>
         </div>
-      </div>
+        <p className="area-subtitle">Síntese e análise de dados da organização.</p>
+      </section>
 
       <section className="area-section">
         <div className="stat-grid">
@@ -76,10 +78,11 @@ async function RelatoriosContent() {
       </section>
 
       <section className="area-section">
-        <div className="admin-card">
-          <h2 style={{ margin: '0 0 1rem', fontSize: '1.1rem', color: 'var(--text)' }}>
-            Resumo financeiro - {meses[relatorio.mes - 1]?.nome} de {relatorio.ano}
-          </h2>
+        <div className="area-section-title">
+          <h2>Resumo financeiro - {meses[relatorio.mes - 1]?.nome} de {relatorio.ano}</h2>
+          <p>Consolidação do período selecionado.</p>
+        </div>
+        <div className="table-surface">
 
           <div className="stat-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
             <div className="stat-card">
@@ -102,9 +105,7 @@ async function RelatoriosContent() {
             </div>
           </div>
 
-          <p style={{ margin: '1rem 0 0', fontSize: '0.9rem', color: 'var(--muted)' }}>
-            Relatórios detalhados estão disponíveis nos módulos específicos.
-          </p>
+          <p style={{ margin: '1rem 0 0', fontSize: '0.9rem', color: 'var(--muted)' }}>Relatórios detalhados estão disponíveis nos módulos específicos.</p>
         </div>
       </section>
 

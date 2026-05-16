@@ -16,31 +16,36 @@ async function InstituicaoContent() {
 
   return (
     <div className="area-page">
-      <div className="admin-page-header">
-        <div>
-          <span className="admin-dashboard-kicker">Instituição</span>
-          <h1 className="admin-page-title">Instituição</h1>
-          <p className="admin-page-subtitle">Dados oficiais do GEEF</p>
+      <section className="area-hero">
+        <div className="area-hero-top">
+          <div>
+            <p className="area-subtitle">Instituição</p>
+            <h1 className="area-hero-title">Instituição</h1>
+          </div>
+          {instituicao && (
+            <Link href="/admin/instituicao/editar" className="profile-form-btn profile-form-btn-primary">
+              Editar
+            </Link>
+          )}
         </div>
-        {instituicao && (
-          <Link href="/admin/instituicao/editar" className="admin-btn admin-btn-primary">
-            ✏️ Editar
-          </Link>
-        )}
-      </div>
+        <p className="area-subtitle">Dados oficiais do GEEF.</p>
+      </section>
 
       {!instituicao ? (
-        <div className="admin-card" style={{ textAlign: "center", padding: "2rem" }}>
-          <p style={{ marginBottom: "1rem", color: "var(--muted)" }}>Nenhum dado institucional registrado.</p>
-          <Link href="/admin/instituicao/editar" className="admin-btn admin-btn-primary">
-            ➕ Cadastrar Dados Institucionais
-          </Link>
-        </div>
+        <section className="area-section">
+          <div className="area-empty">
+            <p>Nenhum dado institucional registrado.</p>
+            <Link href="/admin/instituicao/editar" className="profile-form-btn profile-form-btn-primary">Cadastrar dados institucionais</Link>
+          </div>
+        </section>
       ) : (
         <>
           <section className="area-section">
-            <div className="admin-card">
-              <h2 style={{ margin: "0 0 1rem", fontSize: "1.1rem", color: "var(--text)" }}>Dados básicos</h2>
+            <div className="table-surface">
+              <div className="area-section-title">
+                <h2>Dados básicos</h2>
+                <p>Identificação institucional.</p>
+              </div>
               <div className="stat-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
                 <div className="area-panel-item">
                   <strong>Nome oficial</strong>
@@ -75,8 +80,11 @@ async function InstituicaoContent() {
 
           {endereco && (
             <section className="area-section">
-              <div className="admin-card">
-                <h2 style={{ margin: "0 0 1rem", fontSize: "1.1rem", color: "var(--text)" }}>Endereço</h2>
+              <div className="table-surface">
+                <div className="area-section-title">
+                  <h2>Endereço</h2>
+                  <p>Localização e referência geográfica.</p>
+                </div>
                 <div className="stat-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
                   <div className="area-panel-item">
                     <strong>Logradouro</strong>
@@ -106,9 +114,9 @@ async function InstituicaoContent() {
                       href={endereco.maps_link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="admin-btn admin-btn-secondary"
+                      className="profile-form-btn profile-form-btn-secondary"
                     >
-                      🗺️ Ver no Google Maps
+                      Ver no Google Maps
                     </a>
                   </div>
                 )}
@@ -117,11 +125,11 @@ async function InstituicaoContent() {
           )}
 
           <section className="area-section">
-            <div className="admin-card">
+            <div className="table-surface">
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", marginBottom: "1rem", flexWrap: "wrap" }}>
                 <h2 style={{ margin: 0, fontSize: "1.1rem", color: "var(--text)" }}>Contatos</h2>
-                <Link href="/admin/instituicao/contatos" className="admin-btn admin-btn-small">
-                  ➕ Adicionar
+                <Link href="/admin/instituicao/contatos" className="profile-form-btn profile-form-btn-secondary">
+                  Adicionar
                 </Link>
               </div>
 
@@ -146,11 +154,11 @@ async function InstituicaoContent() {
           </section>
 
           <section className="area-section">
-            <div className="admin-card">
+            <div className="table-surface">
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", marginBottom: "1rem", flexWrap: "wrap" }}>
                 <h2 style={{ margin: 0, fontSize: "1.1rem", color: "var(--text)" }}>Contas bancárias e PIX</h2>
-                <Link href="/admin/instituicao/contas" className="admin-btn admin-btn-small">
-                  ➕ Adicionar
+                <Link href="/admin/instituicao/contas" className="profile-form-btn profile-form-btn-secondary">
+                  Adicionar
                 </Link>
               </div>
 

@@ -53,210 +53,133 @@ async function EditInstituicaoContent() {
 
   return (
     <form action={handleSubmit}>
-      {/* Header */}
-      <div className="admin-page-header">
-        <div>
-          <h1 className="admin-page-title">Editar Instituição</h1>
-          <p className="admin-page-subtitle">Dados oficiais do GEEF</p>
-        </div>
-      </div>
-
-      {/* Form */}
-      <div className="admin-card" style={{ maxWidth: '900px', margin: '0 auto' }}>
-        {/* Seção 1: Identificação */}
-        <h2 style={{ margin: '0 0 1.5rem', fontSize: '1.1rem', color: 'var(--text)' }}>🏛️ Identificação</h2>
-
-        <div className="admin-form-group">
-          <label>Nome Oficial *</label>
-          <input type="text" name="nome_oficial" defaultValue={instituicao?.nome_oficial || ''} required />
-        </div>
-
-        <div className="admin-form-group">
-          <label>Nome Curto (sigla)</label>
-          <input type="text" name="nome_curto" defaultValue={instituicao?.nome_curto || ''} />
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-          <div className="admin-form-group">
-            <label>CNPJ</label>
-            <input type="text" name="cnpj" placeholder="00.000.000/0000-00" defaultValue={instituicao?.cnpj || ''} />
+      <div className="area-page">
+        <section className="area-hero">
+          <div className="area-hero-top">
+            <div>
+              <p className="area-subtitle">Instituição</p>
+              <h1 className="area-hero-title">Editar Instituição</h1>
+            </div>
           </div>
-          <div className="admin-form-group">
-            <label>Data de Fundação</label>
-            <input type="date" name="data_fundacao" defaultValue={instituicao?.data_fundacao || ''} />
+          <p className="area-subtitle">Dados oficiais do GEEF.</p>
+        </section>
+
+        <section className="area-section">
+          <div className="table-surface" style={{ maxWidth: '920px', margin: '0 auto' }}>
+            <div className="area-section-title">
+              <h2>Identificação</h2>
+              <p>Dados legais e apresentação institucional.</p>
+            </div>
+            <div className="module-grid">
+              <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
+                <span>Nome oficial *</span>
+                <input type="text" name="nome_oficial" defaultValue={instituicao?.nome_oficial || ''} required className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>Nome curto</span>
+                <input type="text" name="nome_curto" defaultValue={instituicao?.nome_curto || ''} className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>CNPJ</span>
+                <input type="text" name="cnpj" placeholder="00.000.000/0000-00" defaultValue={instituicao?.cnpj || ''} className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>Data de fundação</span>
+                <input type="date" name="data_fundacao" defaultValue={instituicao?.data_fundacao || ''} className="profile-form-input" />
+              </label>
+              <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
+                <span>Natureza jurídica</span>
+                <input type="text" name="natureza_juridica" placeholder="Ex: Associação Civil Sem Fins Lucrativos" defaultValue={instituicao?.natureza_juridica || ''} className="profile-form-input" />
+              </label>
+            </div>
+
+            <div className="area-section-title" style={{ marginTop: '1.5rem' }}>
+              <h2>Endereço</h2>
+              <p>Localização institucional.</p>
+            </div>
+            <div className="module-grid">
+              <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
+                <span>Logradouro</span>
+                <input type="text" name="logradouro" defaultValue={endereco?.logradouro || ''} className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>Bairro</span>
+                <input type="text" name="bairro" defaultValue={endereco?.bairro || ''} className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>Número</span>
+                <input type="text" name="numero" defaultValue={endereco?.numero || ''} className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>Complemento</span>
+                <input type="text" name="complemento" defaultValue={endereco?.complemento || ''} className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>Cidade</span>
+                <input type="text" name="cidade" defaultValue={endereco?.cidade || ''} className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>Estado</span>
+                <input type="text" name="estado" maxLength={2} defaultValue={endereco?.estado || ''} className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>CEP</span>
+                <input type="text" name="cep" placeholder="00000-000" defaultValue={endereco?.cep || ''} className="profile-form-input" />
+              </label>
+              <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
+                <span>Link Google Maps</span>
+                <input type="url" name="maps_link" defaultValue={endereco?.maps_link || ''} className="profile-form-input" />
+              </label>
+            </div>
+
+            <div className="area-section-title" style={{ marginTop: '1.5rem' }}>
+              <h2>Descritivo</h2>
+              <p>Texto institucional, missão, visão e valores.</p>
+            </div>
+            <div className="module-grid">
+              <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
+                <span>Descrição breve</span>
+                <textarea name="descricao" defaultValue={instituicao?.descricao || ''} rows={3} className="profile-form-input" />
+              </label>
+              <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
+                <span>História</span>
+                <textarea name="historia" defaultValue={instituicao?.historia || ''} rows={4} className="profile-form-input" />
+              </label>
+              <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
+                <span>Missão</span>
+                <textarea name="missao" defaultValue={instituicao?.missao || ''} rows={3} className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>Visão</span>
+                <textarea name="visao" defaultValue={instituicao?.visao || ''} rows={3} className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>Valores</span>
+                <textarea name="valores" defaultValue={instituicao?.valores || ''} rows={3} className="profile-form-input" />
+              </label>
+            </div>
+
+            <div className="area-section-title" style={{ marginTop: '1.5rem' }}>
+              <h2>Documentos</h2>
+              <p>Links e arquivos de referência.</p>
+            </div>
+            <div className="module-grid">
+              <label className="profile-form-field">
+                <span>Logo (URL)</span>
+                <input type="url" name="logo_url" defaultValue={instituicao?.logo_url || ''} className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>Estatuto (URL do PDF)</span>
+                <input type="url" name="estatuto_url" defaultValue={instituicao?.estatuto_url || ''} className="profile-form-input" />
+              </label>
+            </div>
+
+            <div className="area-panel-grid" style={{ marginTop: '1.5rem' }}>
+              <button type="submit" className="profile-form-btn profile-form-btn-primary">Salvar</button>
+              <Link href="/admin/instituicao" className="profile-form-btn profile-form-btn-secondary">Cancelar</Link>
+            </div>
           </div>
-        </div>
-
-        <div className="admin-form-group">
-          <label>Natureza Jurídica</label>
-          <input
-            type="text"
-            name="natureza_juridica"
-            placeholder="Ex: Associação Civil Sem Fins Lucrativos"
-            defaultValue={instituicao?.natureza_juridica || ''}
-          />
-        </div>
-
-        {/* Seção 2: Endereço */}
-        <h2 style={{ margin: '2rem 0 1.5rem', fontSize: '1.1rem', color: 'var(--text)' }}>📍 Endereço</h2>
-
-        <div className="admin-form-group">
-          <label>Logradouro</label>
-          <input type="text" name="logradouro" defaultValue={endereco?.logradouro || ''} />
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-          <div className="admin-form-group">
-            <label>Bairro</label>
-            <input type="text" name="bairro" defaultValue={endereco?.bairro || ''} />
-          </div>
-          <div className="admin-form-group">
-            <label>Número</label>
-            <input type="text" name="numero" defaultValue={endereco?.numero || ''} />
-          </div>
-          <div className="admin-form-group">
-            <label>Complemento</label>
-            <input type="text" name="complemento" defaultValue={endereco?.complemento || ''} />
-          </div>
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-          <div className="admin-form-group">
-            <label>Cidade</label>
-            <input type="text" name="cidade" defaultValue={endereco?.cidade || ''} />
-          </div>
-          <div className="admin-form-group">
-            <label>Estado</label>
-            <input type="text" name="estado" maxLength={2} defaultValue={endereco?.estado || ''} />
-          </div>
-          <div className="admin-form-group">
-            <label>CEP</label>
-            <input type="text" name="cep" placeholder="00000-000" defaultValue={endereco?.cep || ''} />
-          </div>
-        </div>
-
-        <div className="admin-form-group">
-          <label>Link Google Maps</label>
-          <input type="url" name="maps_link" defaultValue={endereco?.maps_link || ''} />
-        </div>
-
-        {/* Seção 3: Descritivo */}
-        <h2 style={{ margin: '2rem 0 1.5rem', fontSize: '1.1rem', color: 'var(--text)' }}>📝 Descritivo</h2>
-
-        <div className="admin-form-group">
-          <label>Descrição Breve</label>
-          <textarea
-            name="descricao"
-            defaultValue={instituicao?.descricao || ''}
-            rows={3}
-            style={{
-              padding: '0.65rem 0.85rem',
-              border: '1px solid var(--admin-border)',
-              borderRadius: '0.6rem',
-              fontFamily: 'var(--font-body)',
-              fontSize: '0.95rem',
-              color: 'var(--text)',
-              resize: 'vertical',
-            }}
-          />
-        </div>
-
-        <div className="admin-form-group">
-          <label>História</label>
-          <textarea
-            name="historia"
-            defaultValue={instituicao?.historia || ''}
-            rows={4}
-            style={{
-              padding: '0.65rem 0.85rem',
-              border: '1px solid var(--admin-border)',
-              borderRadius: '0.6rem',
-              fontFamily: 'var(--font-body)',
-              fontSize: '0.95rem',
-              color: 'var(--text)',
-              resize: 'vertical',
-            }}
-          />
-        </div>
-
-        <div className="admin-form-group">
-          <label>Missão</label>
-          <textarea
-            name="missao"
-            defaultValue={instituicao?.missao || ''}
-            rows={3}
-            style={{
-              padding: '0.65rem 0.85rem',
-              border: '1px solid var(--admin-border)',
-              borderRadius: '0.6rem',
-              fontFamily: 'var(--font-body)',
-              fontSize: '0.95rem',
-              color: 'var(--text)',
-              resize: 'vertical',
-            }}
-          />
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-          <div className="admin-form-group">
-            <label>Visão</label>
-            <textarea
-              name="visao"
-              defaultValue={instituicao?.visao || ''}
-              rows={3}
-              style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-                resize: 'vertical',
-              }}
-            />
-          </div>
-          <div className="admin-form-group">
-            <label>Valores</label>
-            <textarea
-              name="valores"
-              defaultValue={instituicao?.valores || ''}
-              rows={3}
-              style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-                resize: 'vertical',
-              }}
-            />
-          </div>
-        </div>
-
-        {/* Seção 4: URLs */}
-        <h2 style={{ margin: '2rem 0 1.5rem', fontSize: '1.1rem', color: 'var(--text)' }}>🔗 Documentos</h2>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-          <div className="admin-form-group">
-            <label>Logo (URL)</label>
-            <input type="url" name="logo_url" defaultValue={instituicao?.logo_url || ''} />
-          </div>
-          <div className="admin-form-group">
-            <label>Estatuto (URL do PDF)</label>
-            <input type="url" name="estatuto_url" defaultValue={instituicao?.estatuto_url || ''} />
-          </div>
-        </div>
-
-        {/* Botões */}
-        <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
-          <button type="submit" className="admin-btn admin-btn-primary">
-            ✅ Salvar
-          </button>
-          <Link href="/admin/instituicao" className="admin-btn admin-btn-secondary">
-            ❌ Cancelar
-          </Link>
-        </div>
+        </section>
       </div>
     </form>
   );

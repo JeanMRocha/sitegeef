@@ -19,13 +19,18 @@ async function ComunicacaoContent() {
 
   return (
     <div className="area-page">
-      <div className="admin-page-header">
-        <div>
-          <span className="admin-dashboard-kicker">Comunicação</span>
-          <h1 className="admin-page-title">Comunicação</h1>
-          <p className="admin-page-subtitle">Gestão de publicações e conteúdo</p>
+      <section className="area-hero">
+        <div className="area-hero-top">
+          <div>
+            <p className="area-subtitle">Comunicação</p>
+            <h1 className="area-hero-title">Comunicação</h1>
+          </div>
+          <Link href="/admin/comunicacao/nova-publicacao" className="profile-form-btn profile-form-btn-primary">
+            Nova Publicação
+          </Link>
         </div>
-      </div>
+        <p className="area-subtitle">Gestão de publicações e conteúdo.</p>
+      </section>
 
       <section className="area-section">
         <div className="stat-grid">
@@ -39,79 +44,65 @@ async function ComunicacaoContent() {
       </section>
 
       <section className="area-section">
-        <div style={{ marginBottom: "1rem" }}>
-          <Link href="/admin/comunicacao/nova-publicacao" className="admin-btn admin-btn-primary">
-            ➕ Nova Publicação
-          </Link>
+        <div className="area-section-title">
+          <h2>Publicações recentes</h2>
+          <p>Visão geral do conteúdo já cadastrado.</p>
         </div>
-      </section>
-
-      <section className="area-section">
-        <div className="admin-card">
-          <h2 style={{ margin: "0 0 1rem", fontSize: "1.1rem", color: "var(--text)" }}>Publicações recentes</h2>
-
+        <div className="table-surface">
           {publicacoes.length > 0 ? (
-            <div className="table-surface">
-              <table className="admin-table">
-                <thead>
-                  <tr>
-                    <th>Título</th>
-                    <th>Tipo</th>
-                    <th>Autor</th>
-                    <th>Status</th>
-                    <th>Data</th>
-                    <th>Ação</th>
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Título</th>
+                  <th>Tipo</th>
+                  <th>Autor</th>
+                  <th>Status</th>
+                  <th>Data</th>
+                  <th>Ação</th>
+                </tr>
+              </thead>
+              <tbody>
+                {publicacoes.map((publicacao: any) => (
+                  <tr key={publicacao.id}>
+                    <td style={{ fontWeight: 500, maxWidth: "200px" }}>{publicacao.titulo}</td>
+                    <td>{publicacao.tipo || "—"}</td>
+                    <td>{publicacao.autor?.nome || "—"}</td>
+                    <td>
+                      <span className="inline-status" style={{
+                        backgroundColor:
+                          publicacao.status === "rascunho"
+                            ? "rgba(107, 114, 128, 0.1)"
+                            : publicacao.status === "revisao"
+                              ? "rgba(168, 85, 247, 0.1)"
+                              : publicacao.status === "aprovado"
+                                ? "rgba(59, 130, 246, 0.1)"
+                                : "rgba(34, 197, 94, 0.1)",
+                        color:
+                          publicacao.status === "rascunho"
+                            ? "#6b7280"
+                            : publicacao.status === "revisao"
+                              ? "#a855f7"
+                              : publicacao.status === "aprovado"
+                                ? "#3b82f6"
+                                : "#22c55e",
+                      }}>
+                        {publicacao.status}
+                      </span>
+                    </td>
+                    <td style={{ color: "var(--muted)" }}>
+                      {publicacao.publicado_em
+                        ? new Date(publicacao.publicado_em).toLocaleDateString("pt-BR")
+                        : new Date(publicacao.criado_em).toLocaleDateString("pt-BR")}
+                    </td>
+                    <td>
+                      <Link href={`/admin/comunicacao/${publicacao.id}`} className="profile-form-btn profile-form-btn-secondary">
+                        Editar
+                      </Link>
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {publicacoes.map((publicacao: any) => (
-                    <tr key={publicacao.id}>
-                      <td style={{ fontWeight: 500, maxWidth: "200px" }}>{publicacao.titulo}</td>
-                      <td style={{ fontSize: "0.9rem" }}>{publicacao.tipo || "—"}</td>
-                      <td style={{ fontSize: "0.9rem" }}>{publicacao.autor?.nome}</td>
-                      <td>
-                        <span
-                          className="inline-status"
-                          style={{
-                            backgroundColor:
-                              publicacao.status === "rascunho"
-                                ? "rgba(107, 114, 128, 0.1)"
-                                : publicacao.status === "revisao"
-                                  ? "rgba(168, 85, 247, 0.1)"
-                                  : publicacao.status === "aprovado"
-                                    ? "rgba(59, 130, 246, 0.1)"
-                                    : "rgba(34, 197, 94, 0.1)",
-                            color:
-                              publicacao.status === "rascunho"
-                                ? "#6b7280"
-                                : publicacao.status === "revisao"
-                                  ? "#a855f7"
-                                  : publicacao.status === "aprovado"
-                                    ? "#3b82f6"
-                                    : "#22c55e",
-                          }}
-                        >
-                          {publicacao.status === "rascunho" && "📝 Rascunho"}
-                          {publicacao.status === "revisao" && "🔍 Revisão"}
-                          {publicacao.status === "aprovado" && "✓ Aprovado"}
-                          {publicacao.status === "publicado" && "🔔 Publicado"}
-                        </span>
-                      </td>
-                      <td style={{ fontSize: "0.85rem", color: "var(--muted)" }}>
-                        {publicacao.publicado_em
-                          ? new Date(publicacao.publicado_em).toLocaleDateString("pt-BR")
-                          : new Date(publicacao.criado_em).toLocaleDateString("pt-BR")}
-                      </td>
-                      <td>
-                        <Link href={`/admin/comunicacao/${publicacao.id}`} className="admin-btn admin-btn-small">
-                          ✏️ Editar
-                        </Link>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                ))}
+              </tbody>
+            </table>
           ) : (
             <div className="area-empty">Nenhuma publicação cadastrada.</div>
           )}
