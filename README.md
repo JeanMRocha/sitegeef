@@ -27,3 +27,15 @@ npm run start
 ```
 
 O comando `npm run start` executa o servidor standalone gerado em `.next/standalone/server.js`.
+
+## 🚀 Deploy Automático
+
+O site está configurado para deploy automático ao fazer `git push origin main`.
+
+**Workflow de 3 estágios**:
+
+1. **Validação** — Build e lint
+2. **Pré-Deploy** — Verificação de artefatos com retry automático
+3. **Deploy** — Deploy ao VPS com retry automático (até 3 tentativas por estágio)
+
+Veja `DEPLOY.md` e `WORKFLOW_STAGES.md` para mais detalhes.
