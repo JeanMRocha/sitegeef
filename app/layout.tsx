@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Manrope, Fredoka } from "next/font/google";
 import { SiteShell } from "@/components/site-shell";
-import "./globals.css";
+import "@/styles/globals.css";
 
 const headingFont = Fredoka({
   subsets: ["latin"],

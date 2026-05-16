@@ -1,0 +1,59 @@
+/* Site Global Styles */
+
+:root {
+  --uva: #663399;
+  --verde: #22c55e;
+  --vermelho: #ef4444;
+  --text: #1f2937;
+  --border: #e5e7eb;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #ffffff;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+a {
+  color: var(--uva);
+  text-decoration: none;
+}
+
+a:hover {
+  opacity: 0.8;
+}
+
+input, textarea, select {
+  font-family: inherit;
+  font-size: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  width: 100%;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background: var(--uva);
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #5a2d7d;
+}
