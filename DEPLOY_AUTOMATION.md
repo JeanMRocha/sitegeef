@@ -42,7 +42,7 @@ git push origin main
 ├─ Retry automático até 3x se falhar
 └─ Upload logs de cada tentativa
     ↓
-✅ Site atualizado em https://geef.com.br
+✅ Site atualizado em https://www.geef.com.br
 ```
 
 ---
@@ -61,7 +61,7 @@ GEEF_SUPABASE_SERVICE_ROLE_KEY = [chave do Supabase]
 ### Variáveis de Ambiente (✅ Configuradas)
 
 **No GitHub Actions Workflow** (`.github/workflows/deploy.yml`):
-- `NEXT_PUBLIC_SITE_URL` = https://geef.com.br
+- `NEXT_PUBLIC_SITE_URL` = https://www.geef.com.br
 - `NEXT_PUBLIC_SUPABASE_URL` = https://nycgpokqlmrfzegjlrwa.supabase.co
 - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` = [chave pública]
 - `SUPABASE_SERVICE_ROLE_KEY` = [do secret GEEF_SUPABASE_SERVICE_ROLE_KEY]

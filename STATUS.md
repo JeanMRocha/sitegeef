@@ -80,7 +80,7 @@ Para fechar isso com segurança:
 ### Site
 | Variável | Status | Descrição |
 |----------|--------|-----------|
-| `NEXT_PUBLIC_SITE_URL` | ✅ | URL pública (https://geef.com.br) |
+| `NEXT_PUBLIC_SITE_URL` | ✅ | URL pública (https://www.geef.com.br) |
 
 ### Deploy & Ops
 | Variável | Status | Descrição |

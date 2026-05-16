@@ -41,7 +41,7 @@
 - [ ] SSH conecta e funciona
 - [ ] Docker funciona
 - [ ] Primeiro deploy bem-sucedido
-- [ ] Site acessível em https://geef.com.br
+- [ ] Site acessível em https://www.geef.com.br
 - [ ] Health check passa
 
 ### Desligar VPS antigo
@@ -58,9 +58,9 @@
 ### Verificar DNS atual
 
 ```bash
-nslookup geef.com.br
+nslookup www.geef.com.br
 # ou
-dig geef.com.br
+dig www.geef.com.br
 ```
 
 **Resultado deve mostrar o IP do VPS ativo.**
@@ -68,7 +68,7 @@ dig geef.com.br
 ### Verificar via curl
 
 ```bash
-curl -v https://geef.com.br 2>&1 | grep "Connected to"
+curl -v https://www.geef.com.br 2>&1 | grep "Connected to"
 ```
 
 ---

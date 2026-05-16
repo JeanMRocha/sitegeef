@@ -17,7 +17,7 @@ git push origin main
     ↓
 5. Healthcheck valida a aplicação
     ↓
-✅ Site geef.com.br atualizado!
+✅ Site www.geef.com.br atualizado!
 ```
 
 ## Setup Necessário
@@ -35,14 +35,14 @@ git push origin main
 **Importante:** Deve apontar direto para o novo IP do VPS, não usar Cloudflare Tunnel.
 
 1. Vá para: https://dash.cloudflare.com/
-2. Selecione domínio `geef.com.br`
+2. Selecione domínio `www.geef.com.br`
 3. Vá para **DNS**
 4. Crie/edite registro `A`:
 
 | Campo | Valor |
 | --- | --- |
 | **Tipo** | `A` |
-| **Nome** | `geef.com.br` |
+| **Nome** | `www.geef.com.br` |
 | **Conteúdo** | `78.142.242.236` |
 | **TTL** | Auto |
 | **Proxy** | Cinza (DNS only) |
@@ -71,7 +71,7 @@ sudo usermod -aG docker $USER
 No repositório, adicione os secrets usados pelo workflow:
 
 ```
-NEXT_PUBLIC_SITE_URL=https://geef.com.br
+NEXT_PUBLIC_SITE_URL=https://www.geef.com.br
 NEXT_PUBLIC_SUPABASE_URL=https://nycgpokqlmrfzegjlrwa.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_jDq5SX_k4spHMCCPVvlsrQ_-ZZybt8e
 SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
@@ -94,7 +94,7 @@ git push origin main
 # Vá para: Actions → Build, Validate & Deploy
 
 # 4. Verifique o site
-# Acesse: https://geef.com.br
+# Acesse: https://www.geef.com.br
 ```
 
 ## Troubleshooting

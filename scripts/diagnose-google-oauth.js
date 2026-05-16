@@ -16,8 +16,8 @@ console.log(`  ${GOOGLE_CLIENT_ID}\n`);
 
 console.log('Redirect URIs que DEVEM estar no Google Cloud Console:');
 console.log(`  1. https://${SUPABASE_PROJECT}.supabase.co/auth/v1/callback`);
-console.log(`  2. https://geef.com.br/auth/callback`);
-console.log(`  3. https://www.geef.com.br/auth/callback\n`);
+console.log(`  2. https://www.geef.com.br/auth/callback`);
+console.log(`  3. https://geef.com.br/auth/callback\n`);
 
 console.log('❌ Erro que está recebendo:');
 console.log('  redirect_uri_mismatch\n');
@@ -36,8 +36,8 @@ console.log('4. Clique nele para editar\n');
 console.log('5. Verifique se em "Authorized redirect URIs" tem:\n');
 const requiredURIs = [
   `https://${SUPABASE_PROJECT}.supabase.co/auth/v1/callback`,
-  'https://geef.com.br/auth/callback',
-  'https://www.geef.com.br/auth/callback'
+  'https://www.geef.com.br/auth/callback',
+  'https://geef.com.br/auth/callback'
 ];
 
 requiredURIs.forEach((uri, i) => {

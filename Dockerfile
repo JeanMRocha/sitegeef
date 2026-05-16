@@ -43,7 +43,7 @@ COPY --from=builder /app/public ./public
 ENV NODE_ENV=production
 ENV PORT=3500
 ENV HOSTNAME=0.0.0.0
-ENV NEXT_PUBLIC_SITE_URL=https://geef.com.br
+ENV NEXT_PUBLIC_SITE_URL=https://www.geef.com.br
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \

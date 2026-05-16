@@ -26,7 +26,11 @@ export function normalizeInternalPath(
 }
 
 function isLocalhostHost(hostname: string) {
-  return hostname === "localhost" || hostname === "127.0.0.1";
+  return (
+    hostname === "localhost" ||
+    hostname === "127.0.0.1" ||
+    hostname === "0.0.0.0"
+  );
 }
 
 function tryParseOrigin(value: string | null | undefined) {
@@ -87,16 +91,16 @@ function getForwardedOrigin(headers: Headers) {
 }
 
 export function getAppOrigin(headers?: Headers) {
-  const forwardedOrigin = headers ? getForwardedOrigin(headers) : null;
-
-  if (forwardedOrigin) {
-    return forwardedOrigin;
-  }
-
   const configuredOrigin = getConfiguredOrigin();
 
   if (configuredOrigin && !isLocalhostHost(new URL(configuredOrigin).hostname)) {
     return configuredOrigin;
+  }
+
+  const forwardedOrigin = headers ? getForwardedOrigin(headers) : null;
+
+  if (forwardedOrigin) {
+    return forwardedOrigin;
   }
 
   if (process.env.NODE_ENV !== "production") {
