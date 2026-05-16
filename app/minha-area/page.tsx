@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { EnsureUserSystem } from "@/components/ensure-user-system";
 
 export const metadata = {
   title: "Minha Área",
@@ -27,13 +28,13 @@ async function MinhaAreaContent() {
 
   const pessoaId = usuario?.pessoa_id;
 
-  let pessoa = null;
-  let emprestimos = [];
-  let reservas = [];
-  let movimentosLivraria = [];
-  let escalas = [];
-  let voluntariados = [];
-  let consentimentos = [];
+  let pessoa: any = null;
+  let emprestimos: any[] = [];
+  let reservas: any[] = [];
+  let movimentosLivraria: any[] = [];
+  let escalas: any[] = [];
+  let voluntariados: any[] = [];
+  let consentimentos: any[] = [];
 
   if (pessoaId) {
     const { data } = await supabase
@@ -115,6 +116,7 @@ async function MinhaAreaContent() {
 
   return (
     <div style={{ maxWidth: "1000px", margin: "0 auto", padding: "2rem 1rem" }}>
+      <EnsureUserSystem />
       <h1 style={{ margin: "0 0 2rem", fontSize: "2rem", fontWeight: 700 }}>
         👤 Minha Área
       </h1>

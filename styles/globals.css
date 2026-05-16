@@ -843,6 +843,8 @@ img {
   margin-bottom: 1.5rem;
   padding-bottom: 1.5rem;
   border-bottom: 1px solid var(--line);
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .site-footer-main p {
@@ -877,6 +879,7 @@ img {
   display: flex;
   gap: 0.75rem;
   justify-content: flex-end;
+  flex-wrap: wrap;
 }
 
 .footer-badge {
