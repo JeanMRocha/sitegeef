@@ -6,16 +6,20 @@
  */
 
 const https = require('https');
+const { createClient } = require('@supabase/supabase-js');
+const { getDatabaseUrl, withDatabase } = require('./supabase-db');
 
 // Configuration
 const SUPABASE_URL = 'https://nycgpokqlmrfzegjlrwa.supabase.co';
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.GEEF_SUPABASE_SERVICE_ROLE_KEY;
+const DATABASE_URL = getDatabaseUrl();
 
-if (!SUPABASE_SERVICE_ROLE_KEY) {
+if (!SUPABASE_SERVICE_ROLE_KEY && !DATABASE_URL) {
   console.error('❌ Erro: SUPABASE_SERVICE_ROLE_KEY não definido');
   console.log('\nDefina a variável de ambiente:');
   console.log('  export SUPABASE_SERVICE_ROLE_KEY="seu-service-role-key"\n');
   console.log('Ou use GEEF_SUPABASE_SERVICE_ROLE_KEY\n');
+  console.log('Ou configure GEEF_SUPABASE_DB_URL / SUPABASE_DB_URL / DATABASE_URL para conexão direta.\n');
   process.exit(1);
 }
 
@@ -58,45 +62,38 @@ function makeRequest(options, body = null) {
  * Check if profiles table exists via SQL query
  */
 async function checkProfilesTable() {
-  const sql = `
-    SELECT EXISTS (
-      SELECT FROM information_schema.tables
-      WHERE table_schema = 'public'
-      AND table_name = 'profiles'
-    ) AS table_exists;
-  `;
+  if (DATABASE_URL) {
+    const sql = `
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables
+        WHERE table_schema = 'public'
+        AND table_name = 'profiles'
+      ) AS table_exists;
+    `;
 
-  const options = {
-    hostname: 'nycgpokqlmrfzegjlrwa.supabase.co',
-    port: 443,
-    path: '/rest/v1/rpc/get_connection_status',
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-      'Content-Type': 'application/json',
-      'apikey': SUPABASE_SERVICE_ROLE_KEY,
-    },
-  };
+    const rows = await withDatabase(DATABASE_URL, async (db) => db.unsafe(sql));
+    return Boolean(rows?.[0]?.table_exists);
+  }
 
   try {
-    // Try alternate approach: query information schema directly
-    const altOptions = {
-      hostname: 'nycgpokqlmrfzegjlrwa.supabase.co',
-      port: 443,
-      path: '/rest/v1/information_schema.tables?table_name=eq.profiles&table_schema=eq.public',
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-        'apikey': SUPABASE_SERVICE_ROLE_KEY,
-        'Accept': 'application/json',
-      },
-    };
+    const supabase = createClient(
+      SUPABASE_URL,
+      SUPABASE_SERVICE_ROLE_KEY,
+      { auth: { persistSession: false, autoRefreshToken: false } }
+    );
 
-    const result = await makeRequest(altOptions);
-    if (result.data && Array.isArray(result.data) && result.data.length > 0) {
-      return true;
+    const { error } = await supabase.from('profiles').select('id').limit(1);
+
+    if (error) {
+      if (error.code === 'PGRST205') {
+        return false;
+      }
+
+      console.error('⚠️  Erro ao verificar via REST API:', error.message);
+      return null;
     }
-    return false;
+
+    return true;
   } catch (error) {
     console.error('⚠️  Erro ao verificar via REST API:', error.message);
     return null;

@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { getDatabaseUrl, withDatabase } = require('./supabase-db');
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://nycgpokqlmrfzegjlrwa.supabase.co';
 const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.GEEF_SUPABASE_SERVICE_ROLE_KEY;
@@ -15,9 +16,9 @@ const TARGET_TABLES = [
   'irradiacoes',
 ];
 
-if (!SERVICE_ROLE_KEY) {
+if (!SERVICE_ROLE_KEY && !getDatabaseUrl()) {
   console.error('❌ Erro: SUPABASE_SERVICE_ROLE_KEY não definido');
-  console.error('Defina SUPABASE_SERVICE_ROLE_KEY ou GEEF_SUPABASE_SERVICE_ROLE_KEY.');
+  console.error('Defina SUPABASE_SERVICE_ROLE_KEY, GEEF_SUPABASE_SERVICE_ROLE_KEY, GEEF_SUPABASE_DB_URL, SUPABASE_DB_URL ou DATABASE_URL.');
   process.exit(1);
 }
 
@@ -27,6 +28,12 @@ if (!fs.existsSync(migrationPath)) {
 }
 
 async function executeSQL(sql) {
+  const databaseUrl = getDatabaseUrl();
+
+  if (databaseUrl) {
+    return withDatabase(databaseUrl, async (db) => db.unsafe(sql));
+  }
+
   const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/execute_sql`, {
     method: 'POST',
     headers: {

@@ -23,7 +23,7 @@ export async function getUserPermissions() {
     .from('usuarios_sistema')
     .select('id, pessoa_id, perfil, pode_escalas, pode_biblioteca, pode_livraria, pode_financeiro, pode_pessoas, pode_publicar, pode_mediunidade, pode_atendimento, pode_apse')
     .eq('id', user.id)
-    .single();
+    .maybeSingle();
 
   return usuarioSistema;
 }

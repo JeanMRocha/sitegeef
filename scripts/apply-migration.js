@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { getDatabaseUrl, withDatabase } = require('./supabase-db');
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://nycgpokqlmrfzegjlrwa.supabase.co';
 const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -9,39 +10,6 @@ const migrationArg = process.argv[2];
 const migrationPath = path.isAbsolute(migrationArg || '')
   ? migrationArg
   : path.join(__dirname, '..', migrationArg || 'supabase/migrations/20260515_geef_erp.sql');
-
-if (!SERVICE_ROLE_KEY) {
-  console.error('❌ Error: SUPABASE_SERVICE_ROLE_KEY not found');
-  console.error('');
-  console.error('Set it before running:');
-  console.error('  export SUPABASE_SERVICE_ROLE_KEY="your_service_role_key"');
-  console.error('');
-  console.error('Get your key from:');
-  console.error('  1. Supabase Dashboard > Your Project');
-  console.error('  2. Project Settings (⚙️) > API');
-  console.error('  3. Copy the "service_role" secret key');
-  process.exit(1);
-}
-
-async function executeSQL(sql) {
-  const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/execute_sql`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${SERVICE_ROLE_KEY}`,
-      'apikey': SERVICE_ROLE_KEY,
-    },
-    body: JSON.stringify({ query: sql }),
-  });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status}: ${JSON.stringify(data)}`);
-  }
-
-  return data;
-}
 
 async function main() {
   if (!fs.existsSync(migrationPath)) {
@@ -59,8 +27,34 @@ async function main() {
   console.log('');
 
   try {
-    console.log('   Executing SQL...');
-    await executeSQL(sql);
+    const databaseUrl = getDatabaseUrl();
+
+    if (databaseUrl) {
+      console.log('   Executing via direct Postgres connection...');
+      await withDatabase(databaseUrl, async (db) => {
+        await db.unsafe(sql);
+      });
+    } else if (SERVICE_ROLE_KEY) {
+      console.log('   Executing via Supabase RPC fallback...');
+      const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/execute_sql`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${SERVICE_ROLE_KEY}`,
+          'apikey': SERVICE_ROLE_KEY,
+        },
+        body: JSON.stringify({ query: sql }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${JSON.stringify(data)}`);
+      }
+    } else {
+      throw new Error('No GEEF_SUPABASE_DB_URL/SUPABASE_DB_URL/DATABASE_URL or SUPABASE_SERVICE_ROLE_KEY found');
+    }
+
     console.log('✅ Migration applied successfully!');
     console.log('');
     console.log('📊 Summary:');
@@ -77,8 +71,9 @@ async function main() {
     console.error(`   ${error.message}`);
     console.error('');
     console.error('💡 Troubleshooting:');
+    console.error('   - Prefer setting GEEF_SUPABASE_DB_URL, SUPABASE_DB_URL or DATABASE_URL for direct execution');
     console.error('   - If the project does not expose public.execute_sql, apply the SQL in the Supabase SQL Editor');
-    console.error('   - Verify SERVICE_ROLE_KEY is correct');
+    console.error('   - Verify DATABASE_URL or SERVICE_ROLE_KEY is correct');
     console.error('   - Check Supabase project is active');
     console.error('   - Try running from APPLY_MIGRATION.md for manual steps');
     process.exit(1);

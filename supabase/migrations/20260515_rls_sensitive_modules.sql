@@ -118,6 +118,13 @@ create policy "atendimento_fraterno_update"
       where id = auth.uid()
       and pode_atendimento = true
     )
+  )
+  with check (
+    exists (
+      select 1 from public.usuarios_sistema
+      where id = auth.uid()
+      and pode_atendimento = true
+    )
   );
 
 -- ============================================================================
@@ -153,6 +160,13 @@ create policy "irradiacao_update"
   on public.irradiacoes
   for update
   using (
+    exists (
+      select 1 from public.usuarios_sistema
+      where id = auth.uid()
+      and pode_atendimento = true
+    )
+  )
+  with check (
     exists (
       select 1 from public.usuarios_sistema
       where id = auth.uid()

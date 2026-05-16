@@ -1,40 +1,37 @@
 # 🚀 Aplicar Migration GEEF ERP
 
-## Como obter a Service Role Key
+## Como obter a URL do banco
 
-1. Vá para **Supabase Dashboard**: https://app.supabase.com/
+1. Vá para o **Supabase Dashboard**: https://app.supabase.com/
 2. Selecione seu projeto `site-geef`
-3. Vá para **Project Settings** (engrenagem no canto inferior esquerdo)
-4. Abra **API** na barra lateral
-5. Copie a **service_role** key (não use anon key!)
+3. Clique em **Connect**
+4. Copie a conexão Postgres direta ou a URL do Session Pooler
 
-## Aplicar via script (recomendado)
+## Aplicar via script
 
 ```bash
-# No terminal, na raiz do projeto:
-export SUPABASE_SERVICE_ROLE_KEY="sua_chave_aqui"
+# Na raiz do projeto:
+export GEEF_SUPABASE_DB_URL="postgresql://postgres:[SUA-SENHA]@db.nycgpokqlmrfzegjlrwa.supabase.co:5432/postgres"
 npm run apply-migration
 ```
 
-Se o projeto não expuser a RPC `public.execute_sql`, o script vai apontar a falha e a aplicação precisa ser feita no SQL Editor do Supabase.
+Se `GEEF_SUPABASE_DB_URL` não estiver definido, o script usa `SUPABASE_DB_URL` ou `DATABASE_URL` automaticamente.
 
 ## Aplicar a migration RLS dos módulos sensíveis
 
 ```bash
-export SUPABASE_SERVICE_ROLE_KEY="sua_chave_aqui"
+export GEEF_SUPABASE_DB_URL="postgresql://postgres:[SUA-SENHA]@db.nycgpokqlmrfzegjlrwa.supabase.co:5432/postgres"
 npm run apply-rls-sensitive-modules
 ```
 
-## Aplicar manualmente (alternativa)
+## Aplicar manualmente
 
 Se preferir fazer manualmente:
 
 1. Vá para **SQL Editor**: https://app.supabase.com/project/nycgpokqlmrfzegjlrwa/sql/editor
 2. Clique em **New Query**
-3. Copie todo o conteúdo de `supabase/migrations/20260515_geef_erp.sql`
-4. Cole no SQL Editor
-5. Clique em **Run** (ou Ctrl+Enter)
-6. Aguarde até aparecer "✅ Success"
+3. Cole o conteúdo de `supabase/migrations/20260515_rls_sensitive_modules.sql`
+4. Clique em **Run**
 
 ## Verificar se funcionou
 
@@ -45,11 +42,11 @@ npm run check-migration
 ## Verificar a RLS dos módulos sensíveis
 
 ```bash
-export SUPABASE_SERVICE_ROLE_KEY="sua_chave_aqui"
+export GEEF_SUPABASE_DB_URL="postgresql://postgres:[SUA-SENHA]@db.nycgpokqlmrfzegjlrwa.supabase.co:5432/postgres"
 npm run check-rls-sensitive-modules
 ```
 
-Esse verificador confirma se as tabelas-alvo têm RLS ativa e se há políticas registradas. Se a RPC `public.execute_sql` não existir, ele vai falhar com indicação para usar o SQL Editor.
+Esse verificador confirma se as tabelas-alvo têm RLS ativa e se há políticas registradas. Com `GEEF_SUPABASE_DB_URL`, `SUPABASE_DB_URL` ou `DATABASE_URL`, ele usa conexão direta automaticamente.
 
 Deve listar as 52 tabelas criadas:
 - pessoas

@@ -11,7 +11,7 @@ import {
 export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const nextUrl = searchParams.get("next") || "/perfil";
+  const nextUrl = searchParams?.get("next") || "/perfil";
 
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");

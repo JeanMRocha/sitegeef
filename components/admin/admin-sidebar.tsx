@@ -5,8 +5,9 @@ import { usePathname } from 'next/navigation';
 
 export function AdminSidebar() {
   const pathname = usePathname();
+  const currentPath = pathname ?? '';
 
-  const isActive = (href: string) => pathname.startsWith(href);
+  const isActive = (href: string) => currentPath.startsWith(href);
 
   return (
     <aside className="admin-sidebar">
@@ -15,7 +16,7 @@ export function AdminSidebar() {
         <div className="admin-nav-section">
           <Link
             href="/admin"
-            className={`admin-nav-item ${isActive('/admin') && pathname === '/admin' ? 'active' : ''}`}
+            className={`admin-nav-item ${isActive('/admin') && currentPath === '/admin' ? 'active' : ''}`}
           >
             📊 Dashboard
           </Link>
@@ -104,7 +105,7 @@ export function AdminSidebar() {
           <h3 className="admin-nav-title">Atendimento Espiritual</h3>
           <Link
             href="/admin/atendimento"
-            className={`admin-nav-item ${isActive('/admin/atendimento') && pathname === '/admin/atendimento' ? 'active' : ''}`}
+            className={`admin-nav-item ${isActive('/admin/atendimento') && currentPath === '/admin/atendimento' ? 'active' : ''}`}
           >
             🙏 Dashboard
           </Link>
