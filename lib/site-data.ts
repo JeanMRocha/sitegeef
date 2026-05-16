@@ -64,6 +64,8 @@ export const navItems: NavItem[] = [
   { href: publicHref("/evangelizacao"), label: "Evangelização" },
   { href: publicHref("/atendimento-fraterno"), label: "Atendimento fraterno" },
   { href: publicHref("/ao-vivo"), label: "Ao vivo" },
+  { href: publicHref("/escalas"), label: "Escalas" },
+  { href: publicHref("/institucional"), label: "Institucional" },
   { href: publicHref("/contato"), label: "Contato" },
   { href: publicHref("/perfil"), label: "Perfil do usuário", icon: "user" },
 ];

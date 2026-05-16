@@ -6,7 +6,9 @@
     "dev": "next dev -p 3500",
     "dev:watchdog": "node scripts/dev-watchdog.mjs",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "apply-migration": "node scripts/apply-migration.js",
+    "check-migration": "node scripts/verify-migration.js"
   },
   "dependencies": {
     "@supabase/ssr": "^0.6.1",
