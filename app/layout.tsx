@@ -5,6 +5,8 @@ import { ThemeProvider } from "@/lib/theme/theme-provider";
 import "@/styles/theme.css";
 import "@/styles/globals.css";
 import "@/styles/profile.css";
+import "@/styles/profile-compact.css";
+import "@/styles/float-menu.css";
 
 const headingFont = Fredoka({
   subsets: ["latin"],

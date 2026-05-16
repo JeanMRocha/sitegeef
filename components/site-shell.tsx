@@ -1,11 +1,10 @@
 import { unstable_noStore as noStore } from "next/cache";
 import Link from "next/link";
 import { navItems, site } from "@/lib/site-data";
-import { SiteUserMenu } from "@/components/site-user-menu";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { ProfileMenu } from "@/components/profile-menu";
+import { QuickNavSidebar } from "@/components/quick-nav-sidebar";
 import { UserIcon } from "@/components/site-icons";
 import { createClient } from "@/lib/supabase/server";
-import { getUserPermissions } from "@/lib/auth/permissions";
 
 export async function SiteShell({ children }: Readonly<{ children: React.ReactNode }>) {
   noStore();
@@ -14,7 +13,6 @@ export async function SiteShell({ children }: Readonly<{ children: React.ReactNo
   const { data: { user } } = await supabase.auth.getUser();
 
   let profile = null;
-  let hasAdminAccess = false;
   if (user) {
     const { data } = await supabase
       .from("profiles")
@@ -22,19 +20,6 @@ export async function SiteShell({ children }: Readonly<{ children: React.ReactNo
       .eq("id", user.id)
       .maybeSingle();
     profile = data;
-
-    const permissions = await getUserPermissions();
-    hasAdminAccess = Boolean(
-      permissions?.pode_escalas ||
-        permissions?.pode_biblioteca ||
-        permissions?.pode_livraria ||
-        permissions?.pode_financeiro ||
-        permissions?.pode_pessoas ||
-        permissions?.pode_publicar ||
-        permissions?.pode_mediunidade ||
-        permissions?.pode_atendimento ||
-        permissions?.pode_apse,
-    );
   }
 
   return (
@@ -61,14 +46,7 @@ export async function SiteShell({ children }: Readonly<{ children: React.ReactNo
                 {item.label}
               </Link>
             ))}
-          {user ? (
-            <SiteUserMenu
-              userEmail={user.email}
-              nomeCompleto={profile?.nome_completo}
-              avatarUrl={profile?.avatar_url}
-              hasAdminAccess={hasAdminAccess}
-            />
-          ) : (
+          {!user && (
             <Link
               href="/login?next=/perfil"
               className="site-nav-icon"
@@ -82,7 +60,19 @@ export async function SiteShell({ children }: Readonly<{ children: React.ReactNo
         </nav>
       </header>
       {children}
-      <ThemeToggle />
+
+      {/* Float Menus */}
+      {user && (
+        <>
+          <QuickNavSidebar />
+          <ProfileMenu
+            userEmail={user.email}
+            nomeCompleto={profile?.nome_completo}
+            avatarUrl={profile?.avatar_url}
+          />
+        </>
+      )}
+
       <footer className="site-footer">
         <div className="site-footer-content">
           <div className="site-footer-main">
