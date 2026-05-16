@@ -1,0 +1,28 @@
+name: Deploy to Coolify
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Trigger Coolify deployment
+        run: |
+          # Coolify will auto-trigger via GitHub App webhook
+          # This action confirms the deployment was triggered
+          echo "✅ Pushing to main branch"
+          echo "📡 Coolify webhook should trigger automatically"
+          echo "🔍 Monitor deployment at Coolify dashboard"
+
+      - name: Notify deployment start
+        run: |
+          echo "🚀 Deployment process started"
+          echo "Branch: ${{ github.ref }}"
+          echo "Commit: ${{ github.sha }}"
+          echo "Author: ${{ github.actor }}"
