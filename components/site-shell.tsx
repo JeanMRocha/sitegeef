@@ -2,6 +2,7 @@ import { unstable_noStore as noStore } from "next/cache";
 import Link from "next/link";
 import { navItems, site } from "@/lib/site-data";
 import { SiteUserMenu } from "@/components/site-user-menu";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { UserIcon } from "@/components/site-icons";
 import { createClient } from "@/lib/supabase/server";
 import { getUserPermissions } from "@/lib/auth/permissions";
@@ -81,6 +82,7 @@ export async function SiteShell({ children }: Readonly<{ children: React.ReactNo
         </nav>
       </header>
       {children}
+      <ThemeToggle />
       <footer className="site-footer">
         <div className="site-footer-content">
           <div className="site-footer-main">

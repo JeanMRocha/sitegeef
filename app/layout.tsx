@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { Manrope, Fredoka } from "next/font/google";
 import { SiteShell } from "@/components/site-shell";
+import { ThemeProvider } from "@/lib/theme/theme-provider";
+import "@/styles/theme.css";
 import "@/styles/globals.css";
+import "@/styles/profile.css";
 
 const headingFont = Fredoka({
   subsets: ["latin"],
@@ -26,9 +29,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" suppressHydrationWarning>
       <body className={`${headingFont.variable} ${bodyFont.variable}`}>
-        <SiteShell>{children}</SiteShell>
+        <ThemeProvider>
+          <SiteShell>{children}</SiteShell>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -2,7 +2,7 @@ import { unstable_noStore as noStore } from "next/cache";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { signOut, updateProfile, uploadAvatar } from "@/app/login/actions";
+import { updateProfile, uploadAvatar } from "@/app/login/actions";
 import { getUserPermissions } from "@/lib/auth/permissions";
 
 export async function ProfilePageView() {
@@ -37,108 +37,114 @@ export async function ProfilePageView() {
 
   return (
     <main className="profile-page">
-      <section className="profile-hero">
-        <div className="profile-header">
-          <h1>Seu Perfil</h1>
-          <p>Gerencie seus dados e preferências</p>
+      <div className="profile-container">
+        <header className="profile-header-new">
+          <h1>👤 Seu Perfil</h1>
+          <p>Gerencie suas informações pessoais</p>
+        </header>
+
+        <div className="profile-grid">
+          {/* Avatar e Informações Principais */}
+          <section className="profile-section profile-section-avatar">
+            <div className="profile-avatar-wrapper">
+              {profile?.avatar_url ? (
+                <img
+                  src={profile.avatar_url}
+                  alt="Avatar do usuário"
+                  className="profile-avatar-img"
+                />
+              ) : (
+                <div className="profile-avatar-placeholder">
+                  {profile?.nome_completo?.charAt(0)?.toUpperCase() || user.email?.charAt(0)?.toUpperCase()}
+                </div>
+              )}
+            </div>
+
+            <div className="profile-email-badge">
+              <span className="profile-email-label">Email</span>
+              <p className="profile-email-value">{user.email}</p>
+            </div>
+          </section>
+
+          {/* Formulários */}
+          <section className="profile-section profile-section-forms">
+            <form action={updateProfile} className="profile-form-group">
+              <div className="form-field-wrapper">
+                <label htmlFor="nome_completo" className="form-label">Nome Completo</label>
+                <div className="form-field-row">
+                  <input
+                    id="nome_completo"
+                    name="nome_completo"
+                    type="text"
+                    defaultValue={profile?.nome_completo || ""}
+                    placeholder="Digite seu nome completo"
+                    className="form-input"
+                  />
+                  <button type="submit" className="button button-primary-compact">
+                    ✓ Salvar
+                  </button>
+                </div>
+              </div>
+            </form>
+
+            <form action={uploadAvatar} className="profile-form-group">
+              <div className="form-field-wrapper">
+                <label htmlFor="avatar" className="form-label">Foto de Perfil</label>
+                <div className="form-field-row">
+                  <input
+                    id="avatar"
+                    name="avatar"
+                    type="file"
+                    accept="image/*"
+                    className="form-input"
+                  />
+                  <button type="submit" className="button button-secondary-compact">
+                    ↑ Upload
+                  </button>
+                </div>
+              </div>
+            </form>
+          </section>
         </div>
 
-        <div className="profile-card" style={{ marginBottom: "1.25rem" }}>
-          <h2 style={{ margin: 0, fontSize: "1.1rem" }}>Navegação</h2>
-          <p style={{ margin: "0.5rem 0 1rem", color: "var(--muted)" }}>
-            Acesse rapidamente a home ou o painel administrativo.
-          </p>
-
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem" }}>
-            <Link href="/" className="button button-secondary">
-              Ir para a home
+        {/* Navegação Rápida */}
+        <nav className="profile-nav-section">
+          <h2 className="profile-nav-title">Navegação Rápida</h2>
+          <div className="profile-nav-grid">
+            <Link href="/" className="profile-nav-button profile-nav-button-home">
+              <span className="nav-icon">🏠</span>
+              <span className="nav-label">Home</span>
+              <span className="nav-hint">Voltar à página inicial</span>
             </Link>
 
             {hasAdminAccess ? (
-              <Link href="/admin" className="button button-primary">
-                Abrir dashboard
+              <Link href="/admin" className="profile-nav-button profile-nav-button-admin">
+                <span className="nav-icon">📊</span>
+                <span className="nav-label">Dashboard</span>
+                <span className="nav-hint">Painel administrativo</span>
               </Link>
             ) : (
-              <Link href="/contato" className="button button-secondary">
-                Falar com a casa
+              <Link href="/contato" className="profile-nav-button profile-nav-button-contact">
+                <span className="nav-icon">💬</span>
+                <span className="nav-label">Contato</span>
+                <span className="nav-hint">Fale com a casa</span>
               </Link>
             )}
+
+            <Link href="/minha-area" className="profile-nav-button profile-nav-button-area">
+              <span className="nav-icon">👥</span>
+              <span className="nav-label">Minha Área</span>
+              <span className="nav-hint">Seus dados e atividades</span>
+            </Link>
           </div>
-        </div>
+        </nav>
 
-        <article className="profile-card profile-main">
-          <div className="profile-avatar-section">
-            {profile?.avatar_url ? (
-              <img
-                src={profile.avatar_url}
-                alt="Avatar do usuário"
-                className="profile-avatar"
-              />
-            ) : (
-              <div className="profile-avatar-placeholder">
-                <span className="profile-avatar-initial">
-                  {profile?.nome_completo?.charAt(0)?.toUpperCase() || user.email?.charAt(0)?.toUpperCase()}
-                </span>
-              </div>
-            )}
-          </div>
-
-          <div className="profile-info">
-            <div className="profile-field">
-              <label>Email</label>
-              <p className="profile-value">{user.email}</p>
-            </div>
-
-            <form
-              action={updateProfile}
-              className="profile-form"
-            >
-              <div className="profile-field">
-                <label htmlFor="nome_completo">Nome completo</label>
-                <input
-                  id="nome_completo"
-                  name="nome_completo"
-                  type="text"
-                  defaultValue={profile?.nome_completo || ""}
-                  placeholder="Seu nome"
-                  className="profile-input"
-                />
-              </div>
-              <button type="submit" className="button button-secondary">
-                Salvar nome
-              </button>
-            </form>
-
-            <form
-              action={uploadAvatar}
-              className="profile-form"
-            >
-              <div className="profile-field">
-                <label htmlFor="avatar">Foto de perfil</label>
-                <input
-                  id="avatar"
-                  name="avatar"
-                  type="file"
-                  accept="image/*"
-                  className="profile-input"
-                />
-              </div>
-              <button type="submit" className="button button-secondary">
-                Enviar foto
-              </button>
-            </form>
-          </div>
-        </article>
-
-        <form
-          action={signOut}
-          className="profile-logout"
-        >
-          <button type="submit" className="button button-secondary">
-            Sair
-          </button>
-        </form>
-      </section>
+        <footer className="profile-footer">
+          <p className="profile-footer-hint">
+            💡 Dica: Use o menu superior para fazer logout de sua conta.
+          </p>
+        </footer>
+      </div>
     </main>
   );
 }

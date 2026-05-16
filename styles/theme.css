@@ -1,0 +1,183 @@
+/**
+ * Sistema de Tema GEEF
+ * Suporta Light e Dark modes
+ */
+
+:root {
+  color-scheme: light;
+
+  /* Primárias (Uva) */
+  --uva-950: #3d0028;
+  --uva-900: #5a003d;
+  --uva-800: #7a0050;
+  --uva-700: #8a005a;
+  --uva-600: #a01470;
+  --uva-500: #b82d8a;
+  --uva-400: #d058aa;
+  --uva-300: #e08ac4;
+  --uva-200: #f0b5de;
+  --uva-100: #f8ddef;
+
+  /* Secundárias (Videira) */
+  --videira-950: #1a3d2e;
+  --videira-900: #2d5a47;
+  --videira-800: #3d7a5a;
+  --videira-700: #4d9a6d;
+  --videira-600: #63c984;
+  --videira-500: #7dd99a;
+  --videira-400: #9ae5b0;
+  --videira-300: #b5f0c9;
+  --videira-200: #d4f8e0;
+  --videira-100: #edfdf5;
+
+  /* Neutros (Luz) */
+  --light-950: #1c201f;
+  --light-900: #2d3135;
+  --light-800: #3d4449;
+  --light-700: #525a63;
+  --light-600: #6b7580;
+  --light-500: #8a95a8;
+  --light-400: #a8b5c4;
+  --light-300: #c8d0dc;
+  --light-200: #dfe3e8;
+  --light-100: #f0f2f5;
+  --light-50: #f8f9fa;
+
+  /* Tema Light (padrão) */
+  --bg: #f8f4ec;
+  --surface: rgba(255, 255, 255, 0.84);
+  --surface-hover: rgba(255, 255, 255, 0.92);
+  --text: #1c201f;
+  --text-muted: #6b7580;
+  --border: #dfe3e8;
+  --line: #dfe3e8;
+  --shadow: 0 24px 60px rgba(138, 0, 90, 0.08);
+  --shadow-lg: 0 40px 100px rgba(138, 0, 90, 0.12);
+  --shadow-sm: 0 4px 12px rgba(138, 0, 90, 0.06);
+
+  /* Cores de Estado */
+  --success: #63c984;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --info: #3b82f6;
+
+  /* Gradientes */
+  --gradient-uva: linear-gradient(135deg, #8a005a 0%, #b82d8a 100%);
+  --gradient-videira: linear-gradient(135deg, #4d9a6d 0%, #63c984 100%);
+  --gradient-light: linear-gradient(135deg, #f8f4ec 0%, #f0f2f5 100%);
+}
+
+/* Dark Mode */
+:root.dark {
+  color-scheme: dark;
+
+  /* Tema Dark */
+  --bg: #1a1818;
+  --surface: #2d2a2a;
+  --surface-hover: #3d3a3a;
+  --text: #f5f5f0;
+  --text-muted: #a8b5c4;
+  --border: #3d4449;
+  --line: #3d4449;
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 40px 100px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+  /* Cores primárias ajustadas para dark */
+  --uva-primary: #d058aa;
+  --uva-hover: #e08ac4;
+  --videira-primary: #9ae5b0;
+  --videira-hover: #b5f0c9;
+}
+
+/* Cores principais - sempre acessíveis */
+:root {
+  --primary: #8a005a; /* Uva padrão */
+  --primary-hover: #a01470;
+  --secondary: #63c984; /* Videira padrão */
+  --secondary-hover: #4d9a6d;
+
+  /* Radius padrão */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 32px;
+
+  /* Typography */
+  --font-heading: "Fredoka", system-ui, sans-serif;
+  --font-body: "Manrope", system-ui, sans-serif;
+
+  /* Transições */
+  --transition-fast: 160ms ease;
+  --transition-normal: 300ms ease;
+  --transition-slow: 500ms ease;
+}
+
+/* Aplicar tema dark ao body */
+body.dark {
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+/* Utilidades de gradiente */
+.gradient-uva {
+  background: var(--gradient-uva);
+  color: white;
+}
+
+.gradient-videira {
+  background: var(--gradient-videira);
+  color: white;
+}
+
+/* Suporte para transições de tema */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Desabilitar transição em alguns elementos para evitar lag */
+button,
+a,
+input,
+textarea,
+select {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow);
+  transition: all var(--transition-normal);
+  z-index: 999;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-lg);
+  background: linear-gradient(135deg, var(--uva-100), var(--videira-100));
+  border-color: var(--uva-500);
+}
+
+@media (max-width: 640px) {
+  .theme-toggle {
+    bottom: 1rem;
+    right: 1rem;
+    width: 45px;
+    height: 45px;
+    font-size: 1.25rem;
+  }
+}
