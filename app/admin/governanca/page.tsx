@@ -22,13 +22,15 @@ async function GovernancaContent() {
 
   return (
     <div className="area-page">
-      <div className="admin-page-header">
-        <div>
-          <span className="admin-dashboard-kicker">Governança</span>
-          <h1 className="admin-page-title">Governança</h1>
-          <p className="admin-page-subtitle">Gestão de diretorias, cargos e assembleias</p>
+      <section className="area-hero">
+        <div className="area-hero-top">
+          <div>
+            <p className="area-subtitle">Governança</p>
+            <h1 className="area-hero-title">Governança</h1>
+          </div>
         </div>
-      </div>
+        <p className="area-subtitle">Gestão de diretorias, cargos e assembleias.</p>
+      </section>
 
       <section className="area-section">
         <div className="stat-grid">
@@ -60,40 +62,37 @@ async function GovernancaContent() {
 
       {diretoriaAtiva && (
         <section className="area-section">
-          <div className="admin-card">
-            <h2 style={{ margin: "0 0 1rem", fontSize: "1.1rem", color: "var(--text)" }}>
-              Diretoria ativa: {diretoriaAtiva.nome}
-            </h2>
+          <div className="table-surface">
+            <div className="area-section-title">
+              <h2>Diretoria ativa: {diretoriaAtiva.nome}</h2>
+              <p>Composição atual e ocupações em vigor.</p>
+            </div>
 
             {ocupacoes.length > 0 ? (
-              <div className="table-surface">
-                <table className="admin-table">
-                  <thead>
-                    <tr>
-                      <th>Pessoa</th>
-                      <th>Cargo</th>
-                      <th>Data de Início</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {ocupacoes
-                      .filter((o: any) => o.diretoria_id === diretoriaAtiva.id && o.status === "ativo")
-                      .map((ocupacao: any) => (
-                        <tr key={ocupacao.id}>
-                          <td style={{ fontWeight: 500 }}>{ocupacao.pessoa?.nome}</td>
-                          <td style={{ fontSize: "0.9rem" }}>{ocupacao.cargo?.nome}</td>
-                          <td style={{ fontSize: "0.85rem", color: "var(--muted)" }}>
-                            {ocupacao.data_inicio ? new Date(ocupacao.data_inicio).toLocaleDateString("pt-BR") : "—"}
-                          </td>
-                          <td>
-                            <span className="inline-status inline-status-success">✓ Ativo</span>
-                          </td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
-              </div>
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>Pessoa</th>
+                    <th>Cargo</th>
+                    <th>Data de início</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {ocupacoes
+                    .filter((o: any) => o.diretoria_id === diretoriaAtiva.id && o.status === "ativo")
+                    .map((ocupacao: any) => (
+                      <tr key={ocupacao.id}>
+                        <td style={{ fontWeight: 500 }}>{ocupacao.pessoa?.nome}</td>
+                        <td>{ocupacao.cargo?.nome}</td>
+                        <td style={{ color: "var(--muted)" }}>
+                          {ocupacao.data_inicio ? new Date(ocupacao.data_inicio).toLocaleDateString("pt-BR") : "—"}
+                        </td>
+                        <td><span className="inline-status inline-status-success">Ativo</span></td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
             ) : (
               <div className="area-empty">Nenhuma pessoa em cargo nesta diretoria.</div>
             )}
