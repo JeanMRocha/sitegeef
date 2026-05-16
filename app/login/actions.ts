@@ -4,28 +4,25 @@ import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getAppOrigin } from "@/lib/security";
 
-async function getAppOrigin() {
+async function getRequestHeadersOrigin() {
   const requestHeaders = await headers();
-  const origin = requestHeaders.get("origin") || requestHeaders.get("x-forwarded-host");
+  const origin = requestHeaders.get("origin");
 
   if (origin?.startsWith("http://") || origin?.startsWith("https://")) {
     return origin;
   }
 
-  if (origin) {
-    const proto = requestHeaders.get("x-forwarded-proto") || "https";
-    return `${proto}://${origin}`;
-  }
-
-  return process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3500";
+  return getAppOrigin();
 }
 
 export async function signInWithEmail(email: string, password: string) {
   const supabase = await createClient();
+  const normalizedEmail = email.trim().toLowerCase();
 
   const { error } = await supabase.auth.signInWithPassword({
-    email,
+    email: normalizedEmail,
     password,
   });
 
@@ -39,13 +36,15 @@ export async function signInWithEmail(email: string, password: string) {
 
 export async function signUpWithEmail(email: string, password: string, nomeCompleto: string) {
   const supabase = await createClient();
+  const normalizedEmail = email.trim().toLowerCase();
+  const normalizedName = nomeCompleto.trim().slice(0, 120);
 
   const { data, error } = await supabase.auth.signUp({
-    email,
+    email: normalizedEmail,
     password,
     options: {
       data: {
-        full_name: nomeCompleto,
+        full_name: normalizedName,
       },
     },
   });
@@ -81,7 +80,7 @@ export async function signUpWithEmail(email: string, password: string, nomeCompl
 
 export async function signInWithGoogle() {
   const supabase = await createClient();
-  const appOrigin = await getAppOrigin();
+  const appOrigin = await getRequestHeadersOrigin();
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {

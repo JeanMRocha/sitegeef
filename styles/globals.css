@@ -1139,6 +1139,26 @@ img {
   gap: 0.65rem;
 }
 
+.content-page--compact .content-hero {
+  padding: clamp(0.6rem, 1.2vw, 0.9rem);
+}
+
+.content-page--compact .content-hero-body {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.content-page--compact .content-copy {
+  max-width: 54rem;
+}
+
+.content-page--compact .content-summary {
+  margin-top: 0.35rem;
+}
+
+.content-page--compact .content-intro {
+  margin-top: 0.4rem;
+}
+
 .content-hero {
   padding: clamp(0.75rem, 1.5vw, 1.05rem);
   background:
@@ -1246,6 +1266,14 @@ img {
 
 .content-card h2 {
   font-size: 1.15rem;
+}
+
+.content-page--compact .content-card {
+  padding: 0.8rem;
+}
+
+.content-page--compact .content-card h2 {
+  font-size: 1.05rem;
 }
 
 .content-card h2 {

@@ -1,8 +1,10 @@
 import { type ContentPage } from "@/lib/site-data";
 
 export function ContentPageView({ page }: Readonly<{ page: ContentPage }>) {
+  const isAgenda = page.title === "Agenda";
+
   return (
-    <main className="content-page">
+    <main className={`content-page${isAgenda ? " content-page--compact" : ""}`}>
       <section className="content-hero">
         <div className="content-hero-top">
           <div className="content-kicker">
@@ -21,19 +23,21 @@ export function ContentPageView({ page }: Readonly<{ page: ContentPage }>) {
             <p className="content-intro">{page.intro}</p>
           </div>
 
-          <div className="content-panel">
-            <p className="content-panel-label">Resumo da página</p>
-            <ul className="content-panel-list">
-              <li>
-                <span className="mini-dot" aria-hidden="true" />
-                Conteúdo preparado para leitura rápida
-              </li>
-              <li>
-                <span className="mini-dot" aria-hidden="true" />
-                Estrutura compatível com celular e desktop
-              </li>
-            </ul>
-          </div>
+          {!isAgenda ? (
+            <div className="content-panel">
+              <p className="content-panel-label">Resumo da página</p>
+              <ul className="content-panel-list">
+                <li>
+                  <span className="mini-dot" aria-hidden="true" />
+                  Conteúdo preparado para leitura rápida
+                </li>
+                <li>
+                  <span className="mini-dot" aria-hidden="true" />
+                  Estrutura compatível com celular e desktop
+                </li>
+              </ul>
+            </div>
+          ) : null}
         </div>
       </section>
 

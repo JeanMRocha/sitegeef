@@ -1,15 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ContentPageView } from "@/components/content-page";
-import { contentPages, publicSlugs } from "@/lib/site-data";
+import { contentPages } from "@/lib/site-data";
 
 type Params = {
   slug: string;
 };
-
-export function generateStaticParams() {
-  return publicSlugs.map((slug) => ({ slug }));
-}
 
 export async function generateMetadata({
   params,

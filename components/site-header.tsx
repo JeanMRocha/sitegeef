@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { navItems, site } from "@/lib/site-data";
 import { UserMenu } from "@/components/user-menu";
@@ -37,13 +38,13 @@ export function SiteHeader({ userEmail, nomeCompleto, avatarUrl }: SiteHeaderPro
       {/* Brand Logo */}
       <Link href="/" className="site-header-brand" aria-label={site.name}>
         <span className="site-header-brand-logo">
-          <img
+          <Image
             src="/brand/logo-oficial-transparent.png"
             alt=""
             width={360}
             height={156}
-            loading="eager"
             decoding="async"
+            priority
           />
         </span>
       </Link>
