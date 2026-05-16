@@ -1,94 +1,99 @@
-# 🚀 Deploy Automático - GitHub Actions
+# 🚀 Deploy Automático - Coolify
 
-O site GEEF agora possui deploy automático ao fazer push para `main`.
+O site GEEF agora possui deploy automático via Coolify ao fazer push para `main`.
 
 ## Como funciona?
 
-```
+```mermaid
 git push origin main
     ↓
-GitHub Actions dispara workflow
+GitHub dispara webhook no Coolify
     ↓
-1. Build e valida código
+1. Coolify faz clone do repositório
     ↓
-2. Faz deploy via SSH no VPS
+2. Build Docker (Dockerfile)
     ↓
-3. Pull do código
+3. Deploy no VPS (78.142.242.236)
     ↓
-4. Install dependências
+4. Container inicia automaticamente
     ↓
-5. Build da aplicação
-    ↓
-6. Restart com PM2
+5. Healthcheck verifica aplicação
     ↓
 ✅ Site geef.com.br atualizado!
 ```
 
 ## Setup Necessário
 
-### 1. Gerar SSH Key para GitHub Actions
+### 1. Criar organização no GitHub
 
-**No seu computador local:**
+**IMPORTANTE:** O repositório DEVE estar em uma organização, não em conta pessoal.
+
+- Crie organização em: [https://github.com/account/organizations/new](https://github.com/account/organizations/new)
+- Mova repositório para lá
+- Adicione você como **Owner/Proprietário**
+
+### 2. GitHub App no Coolify
+
+1. Vá para: [https://github.com/organizations/[SUA-ORG]/settings/apps](https://github.com/organizations/[SUA-ORG]/settings/apps)
+2. Clique em **"New GitHub App"**
+3. Preencha:
+   - **GitHub App name**: `Coolify Deploy`
+   - **Homepage URL**: `https://coolify.io`
+   - **Webhook active**: ❌ Desmarque
+
+4. **Permissões necessárias**:
+   - Repository → `Contents` (Read & write)
+   - Repository → `Metadata` (Read-only)
+   - Organization → `Members` (Read-only)
+
+5. Clique em **"Create GitHub App"**
+6. No Coolify: Settings → Git Providers → "Add GitHub App"
+
+### 3. Configurar DNS no Cloudflare
+
+**Importante:** Deve apontar direto para o novo IP do VPS, não usar Cloudflare Tunnel.
+
+1. Vá para: https://dash.cloudflare.com/
+2. Selecione domínio `geef.com.br`
+3. Vá para **DNS**
+4. Crie/edite registro `A`:
+
+| Campo | Valor |
+| --- | --- |
+| **Tipo** | `A` |
+| **Nome** | `geef.com.br` |
+| **Conteúdo** | `78.142.242.236` |
+| **TTL** | Auto |
+| **Proxy** | Cinza (DNS only) |
+
+### 4. VPS Setup (78.142.242.236)
 
 ```bash
-ssh-keygen -t rsa -b 4096 -f ~/.ssh/geef-deploy -N ""
+# SSH no VPS
+ssh root@78.142.242.236
+
+# Atualizar sistema
+sudo apt update && sudo apt upgrade -y
+
+# Instalar Node.js 22
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+# Instalar Docker (para Coolify)
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo usermod -aG docker $USER
 ```
 
-Isso gera dois arquivos:
-- `~/.ssh/geef-deploy` (chave privada)
-- `~/.ssh/geef-deploy.pub` (chave pública)
+### 5. Adicionar Secrets no Coolify
 
-### 2. Adicionar chave pública no VPS
+Na aplicação no Coolify, vá para **Environment Variables** e adicione:
 
-```bash
-# No servidor VPS (204.216.166.12)
-ssh ubuntu@204.216.166.12
-
-# Dentro do VPS:
-mkdir -p ~/.ssh
-cat >> ~/.ssh/authorized_keys << 'EOF'
-# Cole o conteúdo de ~/.ssh/geef-deploy.pub aqui
-EOF
-
-chmod 600 ~/.ssh/authorized_keys
 ```
-
-### 3. Configurar Secrets no GitHub
-
-**NOTA:** Os secrets já estão configurados no GitHub com os nomes corretos abaixo.
-
-Vá para: https://github.com/Geef-EliasFrancis/sitegeef/settings/secrets/actions
-
-Verifique se estes secrets existem:
-
-| Nome | Valor |
-|------|-------|
-| `GEEF_VPS_HOST` | `204.216.166.12` |
-| `GEEF_VPS_USER` | `ubuntu` |
-| `GEEF_VPS_PATH` | `/home/ubuntu/sitegeef` |
-| `GEEF_VPS_SSH_KEY` | Conteúdo de `~/.ssh/geef-deploy` |
-| `GEEF_SUPABASE_SERVICE_ROLE_KEY` | Valor de `SUPABASE_SERVICE_ROLE_KEY` do `.env` |
-
-### 3.1 Adicionar Secret do Supabase
-
-Se o secret `GEEF_SUPABASE_SERVICE_ROLE_KEY` não existe:
-
-```bash
-# Via CLI do GitHub (se tiver `gh` instalado):
-gh secret set GEEF_SUPABASE_SERVICE_ROLE_KEY --body "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-
-# Ou manualmente no GitHub:
-# 1. https://github.com/Geef-EliasFrancis/sitegeef/settings/secrets/actions
-# 2. Clique em "New repository secret"
-# 3. Nome: GEEF_SUPABASE_SERVICE_ROLE_KEY
-# 4. Valor: Cole o conteúdo de SUPABASE_SERVICE_ROLE_KEY do arquivo .env
-```
-
-### 4. Garantir que deploy.sh tem permissão de execução
-
-```bash
-# No VPS:
-chmod +x /home/ubuntu/sitegeef/deploy.sh
+NEXT_PUBLIC_SITE_URL=https://geef.com.br
+NEXT_PUBLIC_SUPABASE_URL=https://nycgpokqlmrfzegjlrwa.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_jDq5SX_k4spHMCCPVvlsrQ_-ZZybt8e
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
 ## Testando o Deploy
@@ -97,15 +102,15 @@ Após configurar tudo:
 
 ```bash
 # 1. Faça uma mudança pequena
-echo "# Teste de deploy" >> README.md
+echo "# Deploy teste" >> README.md
 
 # 2. Commit e push
 git add README.md
-git commit -m "test: verify deployment workflow"
+git commit -m "test: verify Coolify deployment"
 git push origin main
 
-# 3. Monitore no GitHub
-# Vá para: Actions → Build and Deploy → Veja o progresso
+# 3. Monitore no Coolify
+# Vá para: Aplicação → Deployment → Logs
 
 # 4. Verifique o site
 # Acesse: https://geef.com.br
@@ -113,88 +118,67 @@ git push origin main
 
 ## Troubleshooting
 
-### Deploy falha com erro de SSH
-
-```
-❌ Permission denied (publickey)
-```
-
-**Solução:**
-- Verifique se a chave pública está em `~/.ssh/authorized_keys` no VPS
-- Verifique permissões: `chmod 600 ~/.ssh/authorized_keys`
-- Teste manualmente: `ssh -i ~/.ssh/geef-deploy ubuntu@204.216.166.12`
-
-### PM2 não encontrado
-
-```
-❌ pm2: command not found
-```
-
-**Solução:**
-```bash
-# No VPS:
-npm install -g pm2
-```
-
-### Porta já em uso
-
-```
-❌ Error: listen EADDRINUSE: address already in use :::3000
-```
-
-**Solução:**
-```bash
-# No VPS:
-pm2 kill
-pm2 start npm --name "sitegeef" -- run start:standalone
-```
-
-### Ver logs do deploy
-
-```bash
-# No VPS:
-pm2 logs sitegeef
-
-# Ou via GitHub Actions:
-# Actions → Build and Deploy → View logs
-```
-
-## Workflow Manual (Se deploy automático falhar)
+### Site mostra erro 502/503
 
 ```bash
 # SSH no VPS
-ssh ubuntu@204.216.166.12
+ssh root@78.142.242.236
 
-# Dentro do VPS:
-cd /home/ubuntu/sitegeef
-bash deploy.sh
+# Ver containers em execução
+docker ps
+
+# Ver logs do container
+docker logs [container-id] -f
+
+# Reiniciar container
+docker restart [container-id]
 ```
 
-## Próximos passos
+### Coolify não faz deploy ao fazer push
 
-- [ ] Configurar SSL/HTTPS automático
-- [ ] Adicionar health checks
-- [ ] Notificações de deploy (Slack/Email)
-- [ ] Rollback automático em caso de falha
-- [ ] Blue-green deployment
+1. Verificar se GitHub App está corretamente instalado
+2. Verificar webhook no GitHub: `Settings → Webhooks`
+3. No Coolify: Applications → Redeploy manualmente
 
-## Arquivos de Deploy
+### Construção do Docker falha
+
+```bash
+# SSH no VPS
+docker build -t sitegeef:latest .
+```
+
+Ver logs de erro e corrigir Dockerfile.
+
+## Arquivos importantes
 
 | Arquivo | Função |
-|---------|--------|
-| `.github/workflows/deploy.yml` | Workflow do GitHub Actions |
-| `deploy.sh` | Script executado no VPS |
-| `.env` | Credenciais do VPS (não commitado) |
+| --- | --- |
+| `Dockerfile` | Build e deploy da aplicação |
+| `package.json` | Scripts: `build`, `start:standalone` |
+| `.github/workflows/deploy.yml` | Workflow antigo (pode remover) |
+| `deploy.sh` | Script antigo (pode remover) |
 
 ## Segurança
 
-✅ **Boas práticas:**
-- SSH key privada armazenada em GitHub Secrets
-- Chave pública apenas no VPS
-- Permissões restrictivas nos arquivos
+✅ **Implementado:**
+- Variáveis de ambiente em Coolify (não em git)
+- GitHub App com permissões mínimas
+- DNS direto (sem Cloudflare Tunnel)
+- Healthcheck configurado
 
-⚠️ **Nunca:**
-- Commitar SSH keys no git
-- Compartilhar secrets publicamente
-- Usar mesma key para múltiplos projetos (ideal)
+⚠️ **Atenção:**
+- Variáveis públicas (`NEXT_PUBLIC_*`) são visíveis no código
+- Service role key é privada, mantém segura!
+- Não commitar `.env` ou `.env.local`
 
+## IP do VPS
+
+- **Antigo (offline)**: 204.216.166.12 (Oracle Cloud)
+- **Novo (ativo)**: 78.142.242.236 (Hetzner ou similar)
+
+**IMPORTANTE:** Sempre atualize o DNS quando mudar de VPS!
+
+---
+
+**Última atualização**: 2026-05-16  
+**Status**: ✅ Totalmente operacional com Coolify
