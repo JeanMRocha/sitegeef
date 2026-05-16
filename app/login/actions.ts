@@ -9,13 +9,7 @@ import { invalidateUserAreaCache } from "@/lib/areas/invalidate-user-area";
 
 async function getRequestHeadersOrigin() {
   const requestHeaders = await headers();
-  const origin = requestHeaders.get("origin");
-
-  if (origin?.startsWith("http://") || origin?.startsWith("https://")) {
-    return origin;
-  }
-
-  return getAppOrigin();
+  return getAppOrigin(requestHeaders);
 }
 
 export async function signInWithEmail(email: string, password: string, nextUrl = "/minha-area") {

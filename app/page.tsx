@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import {
   ArrowIcon,
   BookIcon,
@@ -10,6 +11,17 @@ import {
   UserIcon,
 } from "@/components/site-icons";
 import { featureCards, publicHref, schedule, site } from "@/lib/site-data";
+import { normalizeInternalPath } from "@/lib/security";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+type HomePageProps = {
+  searchParams?: Promise<{
+    code?: string;
+    next?: string;
+  }>;
+};
 
 const iconMap = {
   group: GroupIcon,
@@ -21,7 +33,20 @@ const iconMap = {
   user: UserIcon,
 };
 
-export default function Home() {
+export default async function Home({ searchParams }: HomePageProps) {
+  const resolvedSearchParams = await searchParams;
+  const authCode = resolvedSearchParams?.code;
+
+  if (authCode) {
+    const nextUrl = normalizeInternalPath(resolvedSearchParams?.next, "/perfil");
+    const search = new URLSearchParams({
+      code: authCode,
+      next: nextUrl,
+    });
+
+    redirect(`/auth/callback?${search.toString()}`);
+  }
+
   return (
     <main>
       <section className="hero">
