@@ -60,13 +60,13 @@ export function publicHref(path: string) {
 
 export const navItems: NavItem[] = [
   // Primary navigation (visible in header bar on desktop)
+  { href: "/quem-somos", label: "Quem somos", primary: true },
   { href: "/agenda", label: "Agenda", primary: true },
   { href: "/escalas", label: "Escalas", primary: true },
   { href: "/ao-vivo", label: "Ao vivo", primary: true },
   { href: "/atividades", label: "Atividades", primary: true },
 
   // Secondary navigation (in "Mais" dropdown)
-  { href: "/quem-somos", label: "Quem somos" },
   { href: "/estudos", label: "Estudos" },
   { href: "/evangelizacao", label: "Evangelização" },
   { href: "/atendimento-fraterno", label: "Atendimento fraterno" },
