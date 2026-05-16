@@ -132,10 +132,11 @@ async function NotificacaoContent({ id }: { id: string }) {
   );
 }
 
-export default function NotificacaoPage({ params }: { params: { id: string } }) {
+export default async function NotificacaoPage({ params }: { params: Promise<any> }) {
+  const resolvedParams = await params;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <NotificacaoContent id={params.id} />
+      <NotificacaoContent id={resolvedParams.id} />
     </Suspense>
   );
 }

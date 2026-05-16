@@ -284,10 +284,11 @@ async function EditPessoaContent({ id }: { id: string }) {
   );
 }
 
-export default function EditPessoaPage({ params }: { params: { id: string } }) {
+export default async function EditPessoaPage({ params }: { params: Promise<any> }) {
+  const resolvedParams = await params;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <EditPessoaContent id={params.id} />
+      <EditPessoaContent id={resolvedParams.id} />
     </Suspense>
   );
 }

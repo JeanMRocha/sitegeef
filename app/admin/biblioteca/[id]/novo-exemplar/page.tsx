@@ -25,8 +25,9 @@ async function handleSubmit(formData: FormData, obraId: string) {
   }
 }
 
-export default async function NovoExemplarPage({ params }: { params: { id: string } }) {
-  const obra = await getObraById(params.id);
+export default async function NovoExemplarPage({ params }: { params: Promise<any> }) {
+  const resolvedParams = await params;
+  const obra = await getObraById(resolvedParams.id);
 
   return (
     <div>
@@ -40,7 +41,7 @@ export default async function NovoExemplarPage({ params }: { params: { id: strin
 
       {/* Form */}
       <div className="admin-card" style={{ maxWidth: '600px', margin: '0 auto' }}>
-        <form action={(formData) => handleSubmit(formData, params.id)}>
+        <form action={(formData) => handleSubmit(formData, resolvedParams.id)}>
           <div className="admin-form-group">
             <label>Código do Exemplar *</label>
             <input
@@ -105,7 +106,7 @@ export default async function NovoExemplarPage({ params }: { params: { id: strin
             <button type="submit" className="admin-btn admin-btn-primary">
               ✅ Adicionar Exemplar
             </button>
-            <Link href={`/admin/biblioteca/${params.id}`} className="admin-btn admin-btn-secondary">
+            <Link href={`/admin/biblioteca/${resolvedParams.id}`} className="admin-btn admin-btn-secondary">
               ❌ Cancelar
             </Link>
           </div>

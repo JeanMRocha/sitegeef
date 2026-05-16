@@ -229,7 +229,7 @@ export async function createMovimento(formData: {
   comprovante_url?: string;
 }) {
   const supabase = await createClient();
-  const { data: user } = await supabase.auth.getUser();
+  const { data: { user } } = await supabase.auth.getUser();
 
   const { data, error } = await supabase
     .from('movimentos_financeiros')

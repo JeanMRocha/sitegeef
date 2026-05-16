@@ -123,10 +123,12 @@ async function EscalasList({ searchParams }: { searchParams: { page?: string } }
   );
 }
 
-export default function EscalasPage({ searchParams }: { searchParams: { page?: string } }) {
+export default async function EscalasPage({ searchParams }: { searchParams: Promise<any> }) {
+  const resolvedSearchParams = await searchParams;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <EscalasList searchParams={searchParams} />
+      <EscalasList searchParams={resolvedSearchParams} />
     </Suspense>
   );
 }
+

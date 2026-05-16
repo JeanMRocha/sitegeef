@@ -124,10 +124,11 @@ async function ContaContent({ id }: { id: string }) {
   );
 }
 
-export default function ContaPage({ params }: { params: { id: string } }) {
+export default async function ContaPage({ params }: { params: Promise<any> }) {
+  const resolvedParams = await params;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <ContaContent id={params.id} />
+      <ContaContent id={resolvedParams.id} />
     </Suspense>
   );
 }

@@ -5,6 +5,10 @@ const path = require('path');
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://nycgpokqlmrfzegjlrwa.supabase.co';
 const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const migrationArg = process.argv[2];
+const migrationPath = path.isAbsolute(migrationArg || '')
+  ? migrationArg
+  : path.join(__dirname, '..', migrationArg || 'supabase/migrations/20260515_geef_erp.sql');
 
 if (!SERVICE_ROLE_KEY) {
   console.error('❌ Error: SUPABASE_SERVICE_ROLE_KEY not found');
@@ -40,8 +44,6 @@ async function executeSQL(sql) {
 }
 
 async function main() {
-  const migrationPath = path.join(__dirname, '../supabase/migrations/20260515_geef_erp.sql');
-
   if (!fs.existsSync(migrationPath)) {
     console.error(`❌ Migration file not found: ${migrationPath}`);
     process.exit(1);
@@ -53,6 +55,7 @@ async function main() {
   console.log(`✅ Migration loaded (${Math.round(sql.length / 1024)}KB)`);
   console.log('🚀 Applying to Supabase...');
   console.log(`   URL: ${SUPABASE_URL}`);
+  console.log(`   File: ${path.relative(path.join(__dirname, '..'), migrationPath)}`);
   console.log('');
 
   try {
@@ -74,6 +77,7 @@ async function main() {
     console.error(`   ${error.message}`);
     console.error('');
     console.error('💡 Troubleshooting:');
+    console.error('   - If the project does not expose public.execute_sql, apply the SQL in the Supabase SQL Editor');
     console.error('   - Verify SERVICE_ROLE_KEY is correct');
     console.error('   - Check Supabase project is active');
     console.error('   - Try running from APPLY_MIGRATION.md for manual steps');

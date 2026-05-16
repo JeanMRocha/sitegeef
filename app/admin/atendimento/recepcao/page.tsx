@@ -131,10 +131,12 @@ async function RecepcaoContent({ searchParams }: { searchParams: { mes?: string;
   );
 }
 
-export default function RecepcaoPage({ searchParams }: { searchParams: { mes?: string; ano?: string } }) {
+export default async function RecepcaoPage({ searchParams }: { searchParams: Promise<any> }) {
+  const resolvedSearchParams = await searchParams;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <RecepcaoContent searchParams={searchParams} />
+      <RecepcaoContent searchParams={resolvedSearchParams} />
     </Suspense>
   );
 }
+

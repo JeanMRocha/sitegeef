@@ -155,10 +155,11 @@ async function CursoContent({ id }: { id: string }) {
   );
 }
 
-export default function CursoPage({ params }: { params: { id: string } }) {
+export default async function CursoPage({ params }: { params: Promise<any> }) {
+  const resolvedParams = await params;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <CursoContent id={params.id} />
+      <CursoContent id={resolvedParams.id} />
     </Suspense>
   );
 }

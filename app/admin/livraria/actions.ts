@@ -138,7 +138,7 @@ export async function registrarMovimento(formData: {
   observacao?: string;
 }) {
   const supabase = await createClient();
-  const { data: user } = await supabase.auth.getUser();
+  const { data: { user } } = await supabase.auth.getUser();
 
   // Create movimento
   const { data: movimento, error: movimentoError } = await supabase
@@ -167,6 +167,10 @@ export async function registrarMovimento(formData: {
     .select('qtd_estoque')
     .eq('id', formData.produto_id)
     .single();
+
+  if (!produto) {
+    throw new Error('Produto não encontrado');
+  }
 
   let novoEstoque = produto.qtd_estoque;
 

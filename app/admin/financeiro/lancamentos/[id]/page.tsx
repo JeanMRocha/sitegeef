@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { getMovimentoById, updateMovimento, deleteMovimento, getPlanoContas, getCentrosCusto, getPessoasDisponiveis } from '../../actions';
+import { getMovimentoById, updateMovimento, deleteMovimento, getPlanoContas, getCentrosCusto } from '../../actions';
+import { getPessoas } from '../../../pessoas/actions';
 import { Suspense } from 'react';
 
 export const metadata = {
@@ -46,7 +47,7 @@ async function LancamentoContent({ id }: { id: string }) {
   const movimento = await getMovimentoById(id);
   const contas = await getPlanoContas('ativo');
   const centros = await getCentrosCusto(true);
-  const pessoas = await getPessoasDisponiveis();
+  const { pessoas } = await getPessoas();
 
   return (
     <div>
@@ -263,10 +264,11 @@ async function LancamentoContent({ id }: { id: string }) {
   );
 }
 
-export default function LancamentoPage({ params }: { params: { id: string } }) {
+export default async function LancamentoPage({ params }: { params: Promise<any> }) {
+  const resolvedParams = await params;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <LancamentoContent id={params.id} />
+      <LancamentoContent id={resolvedParams.id} />
     </Suspense>
   );
 }

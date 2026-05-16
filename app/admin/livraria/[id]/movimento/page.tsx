@@ -237,6 +237,7 @@ async function MovimentoContent({ produto_id }: { produto_id: string }) {
   );
 }
 
-export default function MovimentoPage({ params }: { params: { id: string } }) {
-  return <MovimentoContent produto_id={params.id} />;
+export default async function MovimentoPage({ params }: { params: Promise<any> }) {
+  const resolvedParams = await params;
+  return <MovimentoContent produto_id={resolvedParams.id} />;
 }

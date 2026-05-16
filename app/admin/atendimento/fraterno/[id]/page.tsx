@@ -243,10 +243,11 @@ async function AtendimentoContent({ id }: { id: string }) {
   );
 }
 
-export default function AtendimentoPage({ params }: { params: { id: string } }) {
+export default async function AtendimentoPage({ params }: { params: Promise<any> }) {
+  const resolvedParams = await params;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <AtendimentoContent id={params.id} />
+      <AtendimentoContent id={resolvedParams.id} />
     </Suspense>
   );
 }

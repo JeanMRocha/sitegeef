@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { addPasseEscalon, getPessoasDisponiveis } from '../../../actions';
+import { addPasseEscalon, getPessoasDisponiveis } from '../../../../actions';
 
 export const metadata = {
   title: 'Adicionar Passe - Admin GEEF',
@@ -26,8 +26,9 @@ async function handleSubmit(formData: FormData, escalaId: string, reuniaoId: str
 export default async function NovoPassePage({
   params,
 }: {
-  params: { id: string; reuniao_id: string };
+  params: Promise<any>;
 }) {
+  const resolvedParams = await params;
   const pessoas = await getPessoasDisponiveis();
 
   return (
@@ -42,7 +43,7 @@ export default async function NovoPassePage({
 
       {/* Form */}
       <div className="admin-card" style={{ maxWidth: '600px', margin: '0 auto' }}>
-        <form action={(formData) => handleSubmit(formData, params.id, params.reuniao_id)}>
+        <form action={(formData) => handleSubmit(formData, resolvedParams.id, resolvedParams.reuniao_id)}>
           <div className="admin-form-group">
             <label>Pessoa *</label>
             <select
@@ -81,7 +82,7 @@ export default async function NovoPassePage({
             <button type="submit" className="admin-btn admin-btn-primary">
               ✅ Adicionar Passe
             </button>
-            <Link href={`/admin/escalas/${params.id}`} className="admin-btn admin-btn-secondary">
+            <Link href={`/admin/escalas/${resolvedParams.id}`} className="admin-btn admin-btn-secondary">
               ❌ Cancelar
             </Link>
           </div>

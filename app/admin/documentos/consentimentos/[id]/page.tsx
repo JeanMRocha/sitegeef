@@ -125,10 +125,11 @@ async function ConsentimentoContent({ id }: { id: string }) {
   );
 }
 
-export default function ConsentimentoPage({ params }: { params: { id: string } }) {
+export default async function ConsentimentoPage({ params }: { params: Promise<any> }) {
+  const resolvedParams = await params;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <ConsentimentoContent id={params.id} />
+      <ConsentimentoContent id={resolvedParams.id} />
     </Suspense>
   );
 }

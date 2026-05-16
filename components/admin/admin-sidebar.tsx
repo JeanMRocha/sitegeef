@@ -99,14 +99,20 @@ export function AdminSidebar() {
           </Link>
         </div>
 
-        {/* Atendimento */}
+        {/* Atendimento Espiritual */}
         <div className="admin-nav-section">
-          <h3 className="admin-nav-title">Atendimento</h3>
+          <h3 className="admin-nav-title">Atendimento Espiritual</h3>
+          <Link
+            href="/admin/atendimento"
+            className={`admin-nav-item ${isActive('/admin/atendimento') && pathname === '/admin/atendimento' ? 'active' : ''}`}
+          >
+            🙏 Dashboard
+          </Link>
           <Link
             href="/admin/atendimento/recepcao"
-            className={`admin-nav-item ${isActive('/admin/atendimento') ? 'active' : ''}`}
+            className={`admin-nav-item ${isActive('/admin/atendimento/recepcao') ? 'active' : ''}`}
           >
-            🙏 Recepção
+            👋 Recepção
           </Link>
           <Link
             href="/admin/atendimento/fraterno"
@@ -115,10 +121,16 @@ export function AdminSidebar() {
             💬 Atendimento Fraterno
           </Link>
           <Link
-            href="/admin/atendimento/passe"
-            className={`admin-nav-item ${isActive('/admin/atendimento/passe') ? 'active' : ''}`}
+            href="/admin/atendimento/evangelhos-lar"
+            className={`admin-nav-item ${isActive('/admin/atendimento/evangelhos-lar') ? 'active' : ''}`}
           >
-            ✨ Passe
+            🏠 Evangelhos no Lar
+          </Link>
+          <Link
+            href="/admin/atendimento/irradiacao"
+            className={`admin-nav-item ${isActive('/admin/atendimento/irradiacao') ? 'active' : ''}`}
+          >
+            ✨ Irradiação
           </Link>
         </div>
 

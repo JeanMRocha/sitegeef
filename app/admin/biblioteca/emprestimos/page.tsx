@@ -17,7 +17,8 @@ async function EmprestimosList({ searchParams }: { searchParams: { page?: string
     data = await getHistoricoEmprestimos(page);
   }
 
-  const totalPages = Math.ceil(data.total / data.pageSize);
+  const emprestimos = view === 'ativos' ? (data as any).emprestimos : (data as any).historico;
+  const totalPages = Math.ceil((data as any).total / (data as any).pageSize);
   const today = new Date().toISOString().split('T')[0];
 
   return (
@@ -65,7 +66,7 @@ async function EmprestimosList({ searchParams }: { searchParams: { page?: string
 
       {/* Table */}
       <div className="admin-card" style={{ overflowX: 'auto' }}>
-        {data.emprestimos && data.emprestimos.length > 0 ? (
+        {emprestimos && emprestimos.length > 0 ? (
           <table className="admin-table">
             <thead>
               <tr>
@@ -88,7 +89,7 @@ async function EmprestimosList({ searchParams }: { searchParams: { page?: string
               </tr>
             </thead>
             <tbody>
-              {data.emprestimos.map((emprestimo: any) => {
+              {emprestimos.map((emprestimo: any) => {
                 const vencido = emprestimo.prazo_devolucao < today;
                 return (
                   <tr key={emprestimo.id}>
@@ -174,10 +175,12 @@ async function EmprestimosList({ searchParams }: { searchParams: { page?: string
   );
 }
 
-export default function EmprestimosPage({ searchParams }: { searchParams: { page?: string; view?: string } }) {
+export default async function EmprestimosPage({ searchParams }: { searchParams: Promise<any> }) {
+  const resolvedSearchParams = await searchParams;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <EmprestimosList searchParams={searchParams} />
+      <EmprestimosList searchParams={resolvedSearchParams} />
     </Suspense>
   );
 }
+

@@ -102,10 +102,12 @@ async function ReservasList({ searchParams }: { searchParams: { page?: string } 
   );
 }
 
-export default function ReservasPage({ searchParams }: { searchParams: { page?: string } }) {
+export default async function ReservasPage({ searchParams }: { searchParams: Promise<any> }) {
+  const resolvedSearchParams = await searchParams;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <ReservasList searchParams={searchParams} />
+      <ReservasList searchParams={resolvedSearchParams} />
     </Suspense>
   );
 }
+

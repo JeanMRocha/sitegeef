@@ -106,10 +106,11 @@ async function EditFuncaoContent({ id }: { id: string }) {
   );
 }
 
-export default function EditFuncaoPage({ params }: { params: { id: string } }) {
+export default async function EditFuncaoPage({ params }: { params: Promise<any> }) {
+  const resolvedParams = await params;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <EditFuncaoContent id={params.id} />
+      <EditFuncaoContent id={resolvedParams.id} />
     </Suspense>
   );
 }

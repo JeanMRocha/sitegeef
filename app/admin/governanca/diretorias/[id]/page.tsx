@@ -267,10 +267,11 @@ async function DiretoriaContent({ id }: { id: string }) {
   );
 }
 
-export default function DiretoriaPage({ params }: { params: { id: string } }) {
+export default async function DiretoriaPage({ params }: { params: Promise<any> }) {
+  const resolvedParams = await params;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <DiretoriaContent id={params.id} />
+      <DiretoriaContent id={resolvedParams.id} />
     </Suspense>
   );
 }

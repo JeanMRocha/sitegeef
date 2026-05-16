@@ -48,7 +48,12 @@ export async function ProfilePageView() {
               <p className="profile-value">{user.email}</p>
             </div>
 
-            <form action={updateProfile} className="profile-form">
+            <form
+              action={async (formData) => {
+                await updateProfile(formData);
+              }}
+              className="profile-form"
+            >
               <div className="profile-field">
                 <label htmlFor="nome_completo">Nome completo</label>
                 <input
@@ -65,7 +70,12 @@ export async function ProfilePageView() {
               </button>
             </form>
 
-            <form action={uploadAvatar} className="profile-form">
+            <form
+              action={async (formData) => {
+                await uploadAvatar(formData);
+              }}
+              className="profile-form"
+            >
               <div className="profile-field">
                 <label htmlFor="avatar">Foto de perfil</label>
                 <input
@@ -83,7 +93,12 @@ export async function ProfilePageView() {
           </div>
         </article>
 
-        <form action={signOut} className="profile-logout">
+        <form
+          action={async () => {
+            await signOut();
+          }}
+          className="profile-logout"
+        >
           <button type="submit" className="button button-secondary">
             Sair
           </button>

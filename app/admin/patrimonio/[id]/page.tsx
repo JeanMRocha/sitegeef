@@ -231,10 +231,11 @@ async function BemContent({ id }: { id: string }) {
   );
 }
 
-export default function BemPage({ params }: { params: { id: string } }) {
+export default async function BemPage({ params }: { params: Promise<any> }) {
+  const resolvedParams = await params;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <BemContent id={params.id} />
+      <BemContent id={resolvedParams.id} />
     </Suspense>
   );
 }

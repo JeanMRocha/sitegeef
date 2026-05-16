@@ -140,10 +140,11 @@ async function AssembleiaContent({ id }: { id: string }) {
   );
 }
 
-export default function AssembleiaPage({ params }: { params: { id: string } }) {
+export default async function AssembleiaPage({ params }: { params: Promise<any> }) {
+  const resolvedParams = await params;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <AssembleiaContent id={params.id} />
+      <AssembleiaContent id={resolvedParams.id} />
     </Suspense>
   );
 }

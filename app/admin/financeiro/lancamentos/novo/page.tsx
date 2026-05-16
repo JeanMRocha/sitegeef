@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { createMovimento, getPlanoContas, getCentrosCusto, getPessoasDisponiveis } from '../../actions';
+import { createMovimento, getPlanoContas, getCentrosCusto } from '../../actions';
+import { getPessoas } from '../../../pessoas/actions';
 
 export const metadata = {
   title: 'Novo Lançamento - Admin GEEF',
@@ -32,7 +33,7 @@ async function handleSubmit(formData: FormData) {
 async function NovoLancamentoPage() {
   const contas = await getPlanoContas('ativo');
   const centros = await getCentrosCusto(true);
-  const pessoas = await getPessoasDisponiveis();
+  const { pessoas } = await getPessoas();
   const hoje = new Date().toISOString().split('T')[0];
 
   return (

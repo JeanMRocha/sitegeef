@@ -317,10 +317,11 @@ async function EditObraContent({ id }: { id: string }) {
   );
 }
 
-export default function EditObraPage({ params }: { params: { id: string } }) {
+export default async function EditObraPage({ params }: { params: Promise<any> }) {
+  const resolvedParams = await params;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <EditObraContent id={params.id} />
+      <EditObraContent id={resolvedParams.id} />
     </Suspense>
   );
 }

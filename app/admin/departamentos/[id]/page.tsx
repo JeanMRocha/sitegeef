@@ -256,10 +256,11 @@ async function EditDepartamentoContent({ id }: { id: string }) {
   );
 }
 
-export default function EditDepartamentoPage({ params }: { params: { id: string } }) {
+export default async function EditDepartamentoPage({ params }: { params: Promise<any> }) {
+  const resolvedParams = await params;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <EditDepartamentoContent id={params.id} />
+      <EditDepartamentoContent id={resolvedParams.id} />
     </Suspense>
   );
 }

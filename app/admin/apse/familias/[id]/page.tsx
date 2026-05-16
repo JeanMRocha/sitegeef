@@ -291,10 +291,12 @@ async function FamiliaContent({ id }: { id: string }) {
   );
 }
 
-export default function FamiliaPage({ params }: { params: { id: string } }) {
+export default async function FamiliaPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <FamiliaContent id={params.id} />
+      <FamiliaContent id={id} />
     </Suspense>
   );
 }

@@ -142,10 +142,12 @@ async function TermosList({ searchParams }: { searchParams: { page?: string } })
   );
 }
 
-export default function TermosPage({ searchParams }: { searchParams: { page?: string } }) {
+export default async function TermosPage({ searchParams }: { searchParams: Promise<any> }) {
+  const resolvedSearchParams = await searchParams;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <TermosList searchParams={searchParams} />
+      <TermosList searchParams={resolvedSearchParams} />
     </Suspense>
   );
 }
+

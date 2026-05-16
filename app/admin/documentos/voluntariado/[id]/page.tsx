@@ -200,10 +200,11 @@ async function EditServicoContent({ id }: { id: string }) {
   );
 }
 
-export default function EditServicoPage({ params }: { params: { id: string } }) {
+export default async function EditServicoPage({ params }: { params: Promise<any> }) {
+  const resolvedParams = await params;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <EditServicoContent id={params.id} />
+      <EditServicoContent id={resolvedParams.id} />
     </Suspense>
   );
 }

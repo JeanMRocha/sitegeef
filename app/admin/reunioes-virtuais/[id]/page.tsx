@@ -232,10 +232,11 @@ async function ReuniaoContent({ id }: { id: string }) {
   );
 }
 
-export default function ReuniaoPage({ params }: { params: { id: string } }) {
+export default async function ReuniaoPage({ params }: { params: Promise<any> }) {
+  const resolvedParams = await params;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <ReuniaoContent id={params.id} />
+      <ReuniaoContent id={resolvedParams.id} />
     </Suspense>
   );
 }

@@ -16,6 +16,15 @@ export SUPABASE_SERVICE_ROLE_KEY="sua_chave_aqui"
 npm run apply-migration
 ```
 
+Se o projeto não expuser a RPC `public.execute_sql`, o script vai apontar a falha e a aplicação precisa ser feita no SQL Editor do Supabase.
+
+## Aplicar a migration RLS dos módulos sensíveis
+
+```bash
+export SUPABASE_SERVICE_ROLE_KEY="sua_chave_aqui"
+npm run apply-rls-sensitive-modules
+```
+
 ## Aplicar manualmente (alternativa)
 
 Se preferir fazer manualmente:
@@ -32,6 +41,15 @@ Se preferir fazer manualmente:
 ```bash
 npm run check-migration
 ```
+
+## Verificar a RLS dos módulos sensíveis
+
+```bash
+export SUPABASE_SERVICE_ROLE_KEY="sua_chave_aqui"
+npm run check-rls-sensitive-modules
+```
+
+Esse verificador confirma se as tabelas-alvo têm RLS ativa e se há políticas registradas. Se a RPC `public.execute_sql` não existir, ele vai falhar com indicação para usar o SQL Editor.
 
 Deve listar as 52 tabelas criadas:
 - pessoas

@@ -121,10 +121,12 @@ async function ConsentimentosList({ searchParams }: { searchParams: { page?: str
   );
 }
 
-export default function ConsentimentosPage({ searchParams }: { searchParams: { page?: string } }) {
+export default async function ConsentimentosPage({ searchParams }: { searchParams: Promise<any> }) {
+  const resolvedSearchParams = await searchParams;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <ConsentimentosList searchParams={searchParams} />
+      <ConsentimentosList searchParams={resolvedSearchParams} />
     </Suspense>
   );
 }
+

@@ -93,10 +93,12 @@ async function DepartamentosList({ searchParams }: { searchParams: { page?: stri
   );
 }
 
-export default function DepartamentosPage({ searchParams }: { searchParams: { page?: string } }) {
+export default async function DepartamentosPage({ searchParams }: { searchParams: Promise<any> }) {
+  const resolvedSearchParams = await searchParams;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <DepartamentosList searchParams={searchParams} />
+      <DepartamentosList searchParams={resolvedSearchParams} />
     </Suspense>
   );
 }
+

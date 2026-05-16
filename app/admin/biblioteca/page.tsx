@@ -162,10 +162,12 @@ async function BibliotecaList({ searchParams }: { searchParams: { page?: string;
   );
 }
 
-export default function BibliotecaPage({ searchParams }: { searchParams: { page?: string; search?: string } }) {
+export default async function BibliotecaPage({ searchParams }: { searchParams: Promise<any> }) {
+  const resolvedSearchParams = await searchParams;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <BibliotecaList searchParams={searchParams} />
+      <BibliotecaList searchParams={resolvedSearchParams} />
     </Suspense>
   );
 }
+

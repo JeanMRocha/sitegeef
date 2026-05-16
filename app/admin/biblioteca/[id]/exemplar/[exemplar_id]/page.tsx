@@ -173,14 +173,16 @@ async function EditExemplarContent({
   );
 }
 
-export default function EditExemplarPage({
+export default async function EditExemplarPage({
   params,
 }: {
-  params: { id: string; exemplar_id: string };
+  params: Promise<any>;
 }) {
+  const resolvedParams = await params;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <EditExemplarContent params={params} />
+      <EditExemplarContent params={resolvedParams} />
     </Suspense>
   );
 }
+

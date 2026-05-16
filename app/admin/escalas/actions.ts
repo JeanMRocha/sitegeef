@@ -70,7 +70,7 @@ export async function createEscala(formData: {
   ano: number;
 }) {
   const supabase = await createClient();
-  const { data: user } = await supabase.auth.getUser();
+  const { data: { user } } = await supabase.auth.getUser();
 
   // Create escala
   const { data: escala, error: escalaError } = await supabase
@@ -80,7 +80,7 @@ export async function createEscala(formData: {
         mes: formData.mes,
         ano: formData.ano,
         status: 'rascunho',
-        criado_por: user?.user?.id,
+        criado_por: user?.id,
       },
     ])
     .select()

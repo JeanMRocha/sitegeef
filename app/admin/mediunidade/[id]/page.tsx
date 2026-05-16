@@ -342,10 +342,11 @@ async function GrupoContent({ id }: { id: string }) {
   );
 }
 
-export default function GrupoPage({ params }: { params: { id: string } }) {
+export default async function GrupoPage({ params }: { params: Promise<any> }) {
+  const resolvedParams = await params;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <GrupoContent id={params.id} />
+      <GrupoContent id={resolvedParams.id} />
     </Suspense>
   );
 }

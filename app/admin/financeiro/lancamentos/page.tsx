@@ -149,10 +149,12 @@ async function LancamentosContent({ searchParams }: { searchParams: { mes?: stri
   );
 }
 
-export default function LancamentosPage({ searchParams }: { searchParams: { mes?: string; ano?: string } }) {
+export default async function LancamentosPage({ searchParams }: { searchParams: Promise<any> }) {
+  const resolvedSearchParams = await searchParams;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <LancamentosContent searchParams={searchParams} />
+      <LancamentosContent searchParams={resolvedSearchParams} />
     </Suspense>
   );
 }
+

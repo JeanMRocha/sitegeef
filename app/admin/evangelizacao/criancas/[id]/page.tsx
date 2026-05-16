@@ -162,10 +162,11 @@ async function CriancaContent({ id }: { id: string }) {
   );
 }
 
-export default function CriancaPage({ params }: { params: { id: string } }) {
+export default async function CriancaPage({ params }: { params: Promise<any> }) {
+  const resolvedParams = await params;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <CriancaContent id={params.id} />
+      <CriancaContent id={resolvedParams.id} />
     </Suspense>
   );
 }

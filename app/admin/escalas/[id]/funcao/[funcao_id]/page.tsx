@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { getEscalaFuncaoById, updateFuncao, removeFuncao, getPessoasDisponiveis, getFuncoes } from '../../../../actions';
+import { getEscalaFuncaoById, updateFuncao, removeFuncao, getPessoasDisponiveis, getFuncoes } from '../../../actions';
 import { Suspense } from 'react';
 
 export const metadata = {
@@ -154,10 +154,12 @@ async function EditFuncaoContent({
   );
 }
 
-export default function EditFuncaoPage({ params }: { params: { id: string; funcao_id: string } }) {
+export default async function EditFuncaoPage({ params }: { params: Promise<any> }) {
+  const resolvedParams = await params;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <EditFuncaoContent params={params} />
+      <EditFuncaoContent params={resolvedParams} />
     </Suspense>
   );
 }
+

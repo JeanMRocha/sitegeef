@@ -183,10 +183,12 @@ async function PessoasList({ searchParams }: { searchParams: { page?: string; se
   );
 }
 
-export default function PessoasPage({ searchParams }: { searchParams: { page?: string; search?: string } }) {
+export default async function PessoasPage({ searchParams }: { searchParams: Promise<any> }) {
+  const resolvedSearchParams = await searchParams;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <PessoasList searchParams={searchParams} />
+      <PessoasList searchParams={resolvedSearchParams} />
     </Suspense>
   );
 }
+

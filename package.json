@@ -8,7 +8,9 @@
     "build": "next build",
     "start": "next start",
     "apply-migration": "node scripts/apply-migration.js",
-    "check-migration": "node scripts/verify-migration.js"
+    "apply-rls-sensitive-modules": "node scripts/apply-migration.js supabase/migrations/20260515_rls_sensitive_modules.sql",
+    "check-migration": "node scripts/verify-migration.js",
+    "check-rls-sensitive-modules": "node scripts/verify-rls-sensitive-modules.js"
   },
   "dependencies": {
     "@supabase/ssr": "^0.6.1",

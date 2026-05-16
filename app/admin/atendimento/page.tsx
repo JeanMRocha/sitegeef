@@ -1,12 +1,26 @@
 import Link from 'next/link';
 import { getRecepcoes, getAtendimentosFraterno, getEvangelhasNoLar, getIrradiacoes } from './actions';
 import { Suspense } from 'react';
+import { checkPermission } from '@/lib/auth/permissions';
 
 export const metadata = {
   title: 'Atendimento - Admin GEEF',
 };
 
 async function AtendimentoContent() {
+  const allowed = await checkPermission('pode_atendimento');
+
+  if (!allowed) {
+    return (
+      <div className="admin-page-header" style={{ marginBottom: '2rem' }}>
+        <div>
+          <h1 className="admin-page-title">🔒 Módulo Restrito</h1>
+          <p className="admin-page-subtitle">Acesso negado ao Atendimento Espiritual</p>
+        </div>
+      </div>
+    );
+  }
+
   const hoje = new Date();
   const mesAtual = hoje.getMonth() + 1;
   const anoAtual = hoje.getFullYear();

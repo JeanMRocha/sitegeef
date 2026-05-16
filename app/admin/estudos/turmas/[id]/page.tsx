@@ -272,10 +272,11 @@ async function TurmaContent({ id }: { id: string }) {
   );
 }
 
-export default function TurmaPage({ params }: { params: { id: string } }) {
+export default async function TurmaPage({ params }: { params: Promise<any> }) {
+  const resolvedParams = await params;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <TurmaContent id={params.id} />
+      <TurmaContent id={resolvedParams.id} />
     </Suspense>
   );
 }

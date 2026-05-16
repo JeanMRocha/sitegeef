@@ -47,23 +47,24 @@
 
 ### Status Atual
 - **Diretório**: `mcp/` ✅ Existe
-- **Arquivos**: ⚠️ **Vazio** — nenhum MCP específico configurado
+- **Arquivos**: ⚠️ **Sem implementação local** — a conexão específica fica declarada em [`.mcp.json`](.mcp.json)
+- **Nome isolado**: `supabase-geef`
 
 ### O que está faltando
 
-O diretório MCP está vazio. Para um MCP específico do GEEF funcionar, seria necessário:
+O que ainda falta não é um MCP genérico do app, e sim a ativação/uso da conexão isolada do Supabase do GEEF:
 
-1. **Criar arquivo de definição do MCP** (ex: `mcp/geef.mcp.json`)
-2. **Definir recursos/ferramentas** que o MCP expõe
-3. **Configurar em `.claude/settings.json`** (se existente)
-4. **Adicionar rotas/handlers** para operações do GEEF
+1. **Garantir que o perfil `supabase-geef` apareça na sessão atual**
+2. **Validar a autenticação OAuth desse perfil**
+3. **Executar testes de conexão no projeto GEEF**
+4. **Testar os endpoints/queries que usam o Supabase do GEEF**
 
 ### Próximas Etapas
-Para criar um MCP específico do GEEF, seria preciso:
-- Definir quais recursos/dados o MCP deve expor (pages, schedule, user profiles, etc)
-- Implementar handlers para operações comuns (ler dados, atualizar agenda, etc)
-- Conectar com Supabase para persistência
-- Testar integração com Claude
+Para fechar isso com segurança:
+- Reabrir/recarregar a sessão depois da alteração do nome
+- Confirmar `supabase-geef` em vez de `supabase`
+- Testar leitura/escrita apenas no projeto `nycgpokqlmrfzegjlrwa`
+- Manter outras contas/projetos separados
 
 ---
 
@@ -105,7 +106,7 @@ Para criar um MCP específico do GEEF, seria preciso:
 - [x] Build Next.js bem-sucedido
 - [x] Dev server rodando
 - [x] Clientes Supabase configurados (browser + server)
-- [ ] MCP específico do GEEF criado
+- [ ] Conexão MCP `supabase-geef` ativada na sessão
 - [ ] Testes de conexão Supabase executados
 - [ ] API endpoints de profile testados
 
@@ -127,9 +128,9 @@ Para criar um MCP específico do GEEF, seria preciso:
 
 3. **Teste de MCP** (quando implementado)
    ```bash
-   npm run mcp:geef
+   # Validar a conexão Supabase do GEEF após recarregar a sessão
    ```
 
 ---
 
-**Próxima ação**: Criar e implementar o MCP específico do GEEF se necessário para as mudanças planejadas.
+**Próxima ação**: ativar e validar a conexão MCP `supabase-geef` nesta sessão, mantendo isolamento de contas/projetos.

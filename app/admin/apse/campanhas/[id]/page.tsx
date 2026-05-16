@@ -136,10 +136,12 @@ async function CampanhaContent({ id }: { id: string }) {
   );
 }
 
-export default function CampanhaPage({ params }: { params: { id: string } }) {
+export default async function CampanhaPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <CampanhaContent id={params.id} />
+      <CampanhaContent id={id} />
     </Suspense>
   );
 }

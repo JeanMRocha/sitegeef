@@ -152,10 +152,12 @@ async function FraternoContent({ searchParams }: { searchParams: { mes?: string;
   );
 }
 
-export default function FraternoPage({ searchParams }: { searchParams: { mes?: string; ano?: string } }) {
+export default async function FraternoPage({ searchParams }: { searchParams: Promise<any> }) {
+  const resolvedSearchParams = await searchParams;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <FraternoContent searchParams={searchParams} />
+      <FraternoContent searchParams={resolvedSearchParams} />
     </Suspense>
   );
 }
+

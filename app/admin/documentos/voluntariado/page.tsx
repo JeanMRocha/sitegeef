@@ -132,10 +132,12 @@ async function ServicosList({ searchParams }: { searchParams: { page?: string } 
   );
 }
 
-export default function VoluntariadoPage({ searchParams }: { searchParams: { page?: string } }) {
+export default async function VoluntariadoPage({ searchParams }: { searchParams: Promise<any> }) {
+  const resolvedSearchParams = await searchParams;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <ServicosList searchParams={searchParams} />
+      <ServicosList searchParams={resolvedSearchParams} />
     </Suspense>
   );
 }
+

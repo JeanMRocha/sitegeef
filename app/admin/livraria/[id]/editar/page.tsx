@@ -172,10 +172,11 @@ async function EditarContent({ id }: { id: string }) {
   );
 }
 
-export default function EditarProdutoPage({ params }: { params: { id: string } }) {
+export default async function EditarProdutoPage({ params }: { params: Promise<any> }) {
+  const resolvedParams = await params;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <EditarContent id={params.id} />
+      <EditarContent id={resolvedParams.id} />
     </Suspense>
   );
 }

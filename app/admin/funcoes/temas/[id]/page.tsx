@@ -114,10 +114,11 @@ async function EditTemaContent({ id }: { id: string }) {
   );
 }
 
-export default function EditTemaPage({ params }: { params: { id: string } }) {
+export default async function EditTemaPage({ params }: { params: Promise<any> }) {
+  const resolvedParams = await params;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <EditTemaContent id={params.id} />
+      <EditTemaContent id={resolvedParams.id} />
     </Suspense>
   );
 }

@@ -6,7 +6,7 @@ export const metadata = {
   title: 'Livraria - Admin GEEF',
 };
 
-async function LivrariList({ searchParams }: { searchParams: { page?: string; search?: string } }) {
+async function LivrariaList({ searchParams }: { searchParams: { page?: string; search?: string } }) {
   const page = parseInt(searchParams.page || '1');
   const search = searchParams.search || '';
 
@@ -169,10 +169,12 @@ async function LivrariList({ searchParams }: { searchParams: { page?: string; se
   );
 }
 
-export default function Livraria​Page({ searchParams }: { searchParams: { page?: string; search?: string } }) {
+export default async function LivrariaPage({ searchParams }: { searchParams: Promise<any> }) {
+  const resolvedSearchParams = await searchParams;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <LivrariList searchParams={searchParams} />
+      <LivrariaList searchParams={resolvedSearchParams} />
     </Suspense>
   );
 }
+

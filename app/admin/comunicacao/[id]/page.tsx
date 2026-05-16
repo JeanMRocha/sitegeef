@@ -172,10 +172,11 @@ async function PublicacaoContent({ id }: { id: string }) {
   );
 }
 
-export default function PublicacaoPage({ params }: { params: { id: string } }) {
+export default async function PublicacaoPage({ params }: { params: Promise<any> }) {
+  const resolvedParams = await params;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <PublicacaoContent id={params.id} />
+      <PublicacaoContent id={resolvedParams.id} />
     </Suspense>
   );
 }

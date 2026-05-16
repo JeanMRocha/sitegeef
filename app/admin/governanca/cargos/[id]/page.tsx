@@ -103,10 +103,11 @@ async function CargoContent({ id }: { id: string }) {
   );
 }
 
-export default function CargoPage({ params }: { params: { id: string } }) {
+export default async function CargoPage({ params }: { params: Promise<any> }) {
+  const resolvedParams = await params;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <CargoContent id={params.id} />
+      <CargoContent id={resolvedParams.id} />
     </Suspense>
   );
 }

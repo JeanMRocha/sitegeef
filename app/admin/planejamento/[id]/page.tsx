@@ -242,10 +242,11 @@ async function MetaContent({ id }: { id: string }) {
   );
 }
 
-export default function MetaPage({ params }: { params: { id: string } }) {
+export default async function MetaPage({ params }: { params: Promise<any> }) {
+  const resolvedParams = await params;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <MetaContent id={params.id} />
+      <MetaContent id={resolvedParams.id} />
     </Suspense>
   );
 }

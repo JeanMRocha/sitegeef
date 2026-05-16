@@ -160,10 +160,11 @@ async function Content({ id }: { id: string }) {
   );
 }
 
-export default function Page({ params }: { params: { id: string } }) {
+export default async function Page({ params }: { params: Promise<any> }) {
+  const resolvedParams = await params;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <Content id={params.id} />
+      <Content id={resolvedParams.id} />
     </Suspense>
   );
 }

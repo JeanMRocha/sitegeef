@@ -209,10 +209,11 @@ async function ProdutoContent({ id }: { id: string }) {
   );
 }
 
-export default function ProdutoPage({ params }: { params: { id: string } }) {
+export default async function ProdutoPage({ params }: { params: Promise<any> }) {
+  const resolvedParams = await params;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <ProdutoContent id={params.id} />
+      <ProdutoContent id={resolvedParams.id} />
     </Suspense>
   );
 }

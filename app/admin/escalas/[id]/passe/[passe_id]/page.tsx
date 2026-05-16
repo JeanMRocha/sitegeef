@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { getPasseById, updatePasseEscalon, removePasseEscalon, getPessoasDisponiveis } from '../../../../actions';
+import { getPasseById, updatePasseEscalon, removePasseEscalon, getPessoasDisponiveis } from '../../../actions';
 import { Suspense } from 'react';
 
 export const metadata = {
@@ -124,10 +124,12 @@ async function EditPasseContent({
   );
 }
 
-export default function EditPassePage({ params }: { params: { id: string; passe_id: string } }) {
+export default async function EditPassePage({ params }: { params: Promise<any> }) {
+  const resolvedParams = await params;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <EditPasseContent params={params} />
+      <EditPasseContent params={resolvedParams} />
     </Suspense>
   );
 }
+

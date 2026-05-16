@@ -217,10 +217,12 @@ async function DREContent({ searchParams }: { searchParams: { mes?: string; ano?
   );
 }
 
-export default function DREPage({ searchParams }: { searchParams: { mes?: string; ano?: string } }) {
+export default async function DREPage({ searchParams }: { searchParams: Promise<any> }) {
+  const resolvedSearchParams = await searchParams;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <DREContent searchParams={searchParams} />
+      <DREContent searchParams={resolvedSearchParams} />
     </Suspense>
   );
 }
+

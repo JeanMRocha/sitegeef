@@ -195,10 +195,11 @@ async function EditTermoContent({ id }: { id: string }) {
   );
 }
 
-export default function EditTermoPage({ params }: { params: { id: string } }) {
+export default async function EditTermoPage({ params }: { params: Promise<any> }) {
+  const resolvedParams = await params;
   return (
     <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <EditTermoContent id={params.id} />
+      <EditTermoContent id={resolvedParams.id} />
     </Suspense>
   );
 }
