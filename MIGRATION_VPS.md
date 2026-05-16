@@ -23,15 +23,14 @@
 
 ### Atualizar Documentação
 
-- [ ] `DEPLOY.md` — Novo IP e método Coolify
-- [ ] `DEPLOY_AUTOMATION.md` — Se usar GitHub Actions (agora é Coolify)
+- [ ] `DEPLOY.md` — Novo IP e fluxo GitHub Actions
+- [ ] `DEPLOY_AUTOMATION.md` — Fluxo principal de CI/CD
 - [ ] `README.md` — Se houver referência a VPS antigo
 - [ ] `baseinicial.md` — Atualizar referência VPS
 
 ### Atualizar Configurações
 
 - [ ] **Cloudflare DNS**: Novo IP do VPS
-- [ ] **Coolify**: Apontando para novo VPS
 - [ ] **GitHub Secrets** (se usar GitHub Actions):
   - `GEEF_VPS_HOST` = novo IP
   - `GEEF_VPS_USER` = novo usuário
@@ -96,13 +95,13 @@ curl -v https://geef.com.br 2>&1 | grep "Connected to"
 
 ### ❌ Erro 4: Dockerfile não existe
 
-**Sintoma**: Coolify não consegue fazer build  
+**Sintoma**: GitHub Actions não consegue fazer build  
 **Solução**: Commit do Dockerfile deve estar no repositório
 
-### ❌ Erro 5: Remover GitHub Actions sem testar Coolify
+### ❌ Erro 5: Remover GitHub Actions sem testar o novo fluxo
 
-**Sintoma**: Não consegue fazer deploy quando GitHub Actions é removido  
-**Solução**: Testar Coolify completamente ANTES de remover GitHub Actions
+**Sintoma**: Não consegue fazer deploy quando o workflow principal é removido  
+**Solução**: Testar o fluxo completo ANTES de remover GitHub Actions
 
 ---
 
@@ -121,7 +120,7 @@ Deploy: GitHub Actions + SSH
 ```
 Status: ✅ ATIVO
 Provedor: Hetzner (ou similar)
-Deploy: Coolify com Docker
+Deploy: GitHub Actions + SSH + Docker
 DNS: Apontado direto (sem Cloudflare Tunnel)
 ```
 
@@ -140,7 +139,7 @@ Ao migrar para outro VPS:
 2. **Fazer mudanças na ordem:**
    - Configurar novo VPS
    - Atualizar DNS
-   - Deploy em Coolify
+   - Rodar deploy via GitHub Actions
    - Testar site
    - Atualizar documentação
    - Desligar VPS antigo

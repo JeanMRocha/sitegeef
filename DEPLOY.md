@@ -137,8 +137,8 @@ Ver logs de erro e corrigir Dockerfile.
 | --- | --- |
 | `Dockerfile` | Build e deploy da aplicação |
 | `package.json` | Scripts: `build`, `start:standalone` |
-| `.github/workflows/deploy.yml` | Workflow antigo (pode remover) |
-| `deploy.sh` | Script antigo (pode remover) |
+| `.github/workflows/deploy.yml` | Workflow principal de validação e deploy |
+| `deploy.sh` | Script executado no VPS pelo workflow |
 
 ## Segurança
 
