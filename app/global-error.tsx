@@ -10,10 +10,6 @@ export default function GlobalError({
   reset: () => void;
 }) {
   return (
-    <html lang="pt-BR">
-      <body>
-        <ErrorCaptureCard error={error} reset={reset} scope="app/global-error" />
-      </body>
-    </html>
+    <ErrorCaptureCard error={error} reset={reset} scope="app/global-error" />
   );
 }

@@ -70,3 +70,60 @@ export async function getAnosDisponiveis() {
   const anoAtual = new Date().getFullYear();
   return [anoAtual - 1, anoAtual, anoAtual + 1];
 }
+
+export async function getFinancialDataByCenter(mes?: number, ano?: number) {
+  const supabase = await createClient();
+
+  const now = new Date();
+  const mesAtual = mes || now.getMonth() + 1;
+  const anoAtual = ano || now.getFullYear();
+
+  const { data: movimentos } = await supabase
+    .from('movimentos_financeiros')
+    .select(`
+      *,
+      centro_custo:centros_custo (nome),
+      conta:plano_contas (tipo)
+    `);
+
+  if (!movimentos) return null;
+
+  const filtered = movimentos.filter((m: any) => {
+    const mDate = new Date(m.data);
+    return (
+      mDate.getMonth() + 1 === mesAtual &&
+      mDate.getFullYear() === anoAtual
+    );
+  });
+
+  const receitas: Record<string, number> = {};
+  const despesas: Record<string, number> = {};
+
+  filtered.forEach((m: any) => {
+    const center = m.centro_custo?.nome || 'Sem Centro';
+    const valor = m.valor || 0;
+
+    if (m.tipo === 'entrada') {
+      receitas[center] = (receitas[center] || 0) + valor;
+    } else if (m.tipo === 'saida') {
+      despesas[center] = (despesas[center] || 0) + valor;
+    }
+  });
+
+  const totalReceita = Object.values(receitas).reduce((a, b) => a + b, 0);
+  const totalDespesa = Object.values(despesas).reduce((a, b) => a + b, 0);
+
+  return {
+    mes: mesAtual,
+    ano: anoAtual,
+    receitas: Object.entries(receitas)
+      .map(([nome, valor]) => ({ nome, valor }))
+      .sort((a, b) => b.valor - a.valor),
+    despesas: Object.entries(despesas)
+      .map(([nome, valor]) => ({ nome, valor }))
+      .sort((a, b) => b.valor - a.valor),
+    totalReceita,
+    totalDespesa,
+    resultado: totalReceita - totalDespesa,
+  };
+}
