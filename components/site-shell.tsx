@@ -1,8 +1,8 @@
 import { unstable_noStore as noStore } from "next/cache";
 import Link from "next/link";
-import { navItems, site } from "@/lib/site-data";
-import { HeaderCompact } from "@/components/header-compact";
-import { UserIcon } from "@/components/site-icons";
+import { site } from "@/lib/site-data";
+import { SiteHeader } from "@/components/site-header";
+import { UserMenu } from "@/components/user-menu";
 import { createClient } from "@/lib/supabase/server";
 
 export async function SiteShell({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -23,50 +23,7 @@ export async function SiteShell({ children }: Readonly<{ children: React.ReactNo
 
   return (
     <div className="site-shell">
-      <header className="site-header">
-        <Link href="/" className="brand" aria-label={site.name}>
-          <span className="brand-logo">
-            <img
-              src="/brand/logo-oficial-transparent.png"
-              alt=""
-              width={260}
-              height={112}
-              loading="eager"
-              decoding="async"
-            />
-          </span>
-        </Link>
-
-        <nav className="site-nav" aria-label="Navegação principal">
-          {navItems
-            .filter((item) => !item.icon)
-            .map((item) => (
-              <Link key={item.href} href={item.href}>
-                {item.label}
-              </Link>
-            ))}
-          {!user && (
-            <Link
-              href="/login?next=/perfil"
-              className="site-nav-icon"
-              aria-label="Perfil do usuário"
-              title="Perfil do usuário"
-            >
-              <UserIcon className="site-nav-icon-svg" />
-              <span className="sr-only">Perfil do usuário</span>
-            </Link>
-          )}
-        </nav>
-      </header>
-
-      {/* Compact Header Menu (quando autenticado) */}
-      {user && (
-        <HeaderCompact
-          userEmail={user.email}
-          nomeCompleto={profile?.nome_completo}
-          avatarUrl={profile?.avatar_url}
-        />
-      )}
+      <SiteHeader userEmail={user?.email} nomeCompleto={profile?.nome_completo} avatarUrl={profile?.avatar_url} />
 
       {children}
 

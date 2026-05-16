@@ -2,6 +2,8 @@ export type NavItem = {
   href: string;
   label: string;
   icon?: "user";
+  primary?: boolean;
+  group?: "institucional";
 };
 
 export type FeatureCard = {
@@ -57,16 +59,24 @@ export function publicHref(path: string) {
 }
 
 export const navItems: NavItem[] = [
+  // Primary navigation (visible in header bar on desktop)
+  { href: publicHref("/agenda"), label: "Agenda", primary: true },
+  { href: publicHref("/escalas"), label: "Escalas", primary: true },
+  { href: publicHref("/ao-vivo"), label: "Ao vivo", primary: true },
+  { href: publicHref("/atividades"), label: "Atividades", primary: true },
+
+  // Secondary navigation (in "Mais" dropdown)
   { href: publicHref("/quem-somos"), label: "Quem somos" },
-  { href: publicHref("/agenda"), label: "Agenda" },
-  { href: publicHref("/atividades"), label: "Atividades" },
   { href: publicHref("/estudos"), label: "Estudos" },
   { href: publicHref("/evangelizacao"), label: "Evangelização" },
   { href: publicHref("/atendimento-fraterno"), label: "Atendimento fraterno" },
-  { href: publicHref("/ao-vivo"), label: "Ao vivo" },
-  { href: publicHref("/escalas"), label: "Escalas" },
-  { href: publicHref("/institucional"), label: "Institucional" },
-  { href: publicHref("/contato"), label: "Contato" },
+
+  // Institutional group (in "Mais" dropdown, after divider)
+  { href: publicHref("/institucional"), label: "Credibilidade e Filiações", group: "institucional" },
+  { href: publicHref("/doacoes"), label: "Doações", group: "institucional" },
+  { href: publicHref("/contato"), label: "Contato", group: "institucional" },
+
+  // User profile (hidden from nav, used by site-header for button)
   { href: publicHref("/perfil"), label: "Perfil do usuário", icon: "user" },
 ];
 

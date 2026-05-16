@@ -4,7 +4,7 @@ import { SiteShell } from "@/components/site-shell";
 import { ThemeProvider } from "@/lib/theme/theme-provider";
 import "@/styles/theme.css";
 import "@/styles/globals.css";
-import "@/styles/header-compact.css";
+import "@/styles/site-header.css";
 
 const headingFont = Fredoka({
   subsets: ["latin"],
