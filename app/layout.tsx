@@ -3,6 +3,7 @@ import { Manrope, Fredoka } from "next/font/google";
 import { SiteShell } from "@/components/site-shell";
 import { ThemeProvider } from "@/lib/theme/theme-provider";
 import { createClient } from "@/lib/supabase/server";
+import { UserPersistenceWrapper } from "@/components/user-persistence-wrapper";
 import "@/styles/theme.css";
 import "@/styles/globals.css";
 import "@/styles/site-header.css";
@@ -39,7 +40,9 @@ export default async function RootLayout({
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={`${headingFont.variable} ${bodyFont.variable}`}>
         <ThemeProvider>
-          <SiteShell user={user}>{children}</SiteShell>
+          <UserPersistenceWrapper user={user}>
+            <SiteShell user={user}>{children}</SiteShell>
+          </UserPersistenceWrapper>
         </ThemeProvider>
       </body>
     </html>
