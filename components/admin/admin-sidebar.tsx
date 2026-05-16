@@ -289,6 +289,17 @@ export function AdminSidebar() {
           </Link>
         </div>
 
+        {/* Observabilidade */}
+        <div className="admin-nav-section">
+          <h3 className="admin-nav-title">Observabilidade</h3>
+          <Link
+            href="/admin/erros"
+            className={`admin-nav-item ${isActive('/admin/erros') ? 'active' : ''}`}
+          >
+            🧭 Erros e Debug
+          </Link>
+        </div>
+
         {/* Site */}
         <div className="admin-nav-section">
           <h3 className="admin-nav-title">Site</h3>

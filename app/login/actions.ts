@@ -1,8 +1,25 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+
+async function getAppOrigin() {
+  const requestHeaders = await headers();
+  const origin = requestHeaders.get("origin") || requestHeaders.get("x-forwarded-host");
+
+  if (origin?.startsWith("http://") || origin?.startsWith("https://")) {
+    return origin;
+  }
+
+  if (origin) {
+    const proto = requestHeaders.get("x-forwarded-proto") || "https";
+    return `${proto}://${origin}`;
+  }
+
+  return process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3500";
+}
 
 export async function signInWithEmail(email: string, password: string) {
   const supabase = await createClient();
@@ -42,10 +59,11 @@ export async function signUpWithEmail(email: string, password: string, nomeCompl
 
 export async function signInWithGoogle() {
   const supabase = await createClient();
+  const appOrigin = await getAppOrigin();
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+      redirectTo: `${appOrigin}/auth/callback`,
     },
   });
 
@@ -64,7 +82,7 @@ export async function signOut() {
   const { error } = await supabase.auth.signOut();
 
   if (error) {
-    return { error: error.message };
+    throw new Error(error.message);
   }
 
   revalidatePath("/", "layout");
@@ -78,7 +96,7 @@ export async function updateProfile(formData: FormData) {
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    return { error: "Não autenticado" };
+    throw new Error("Não autenticado");
   }
 
   const { error } = await supabase
@@ -90,11 +108,10 @@ export async function updateProfile(formData: FormData) {
     .eq("id", user.id);
 
   if (error) {
-    return { error: error.message };
+    throw new Error(error.message);
   }
 
   revalidatePath("/perfil");
-  return { success: true };
 }
 
 export async function uploadAvatar(formData: FormData) {
@@ -102,13 +119,13 @@ export async function uploadAvatar(formData: FormData) {
   const file = formData.get("avatar") as File;
 
   if (!file) {
-    return { error: "Nenhum arquivo selecionado" };
+    throw new Error("Nenhum arquivo selecionado");
   }
 
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    return { error: "Não autenticado" };
+    throw new Error("Não autenticado");
   }
 
   const fileName = `${user.id}/avatar-${Date.now()}`;
@@ -120,7 +137,7 @@ export async function uploadAvatar(formData: FormData) {
     });
 
   if (uploadError) {
-    return { error: uploadError.message };
+    throw new Error(uploadError.message);
   }
 
   const { data } = supabase.storage
@@ -136,9 +153,8 @@ export async function uploadAvatar(formData: FormData) {
     .eq("id", user.id);
 
   if (updateError) {
-    return { error: updateError.message };
+    throw new Error(updateError.message);
   }
 
   revalidatePath("/perfil");
-  return { success: true, url: data.publicUrl };
 }

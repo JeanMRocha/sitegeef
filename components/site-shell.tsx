@@ -1,20 +1,39 @@
+import { unstable_noStore as noStore } from "next/cache";
 import Link from "next/link";
 import { navItems, site } from "@/lib/site-data";
+import { SiteUserMenu } from "@/components/site-user-menu";
 import { UserIcon } from "@/components/site-icons";
 import { createClient } from "@/lib/supabase/server";
+import { getUserPermissions } from "@/lib/auth/permissions";
 
 export async function SiteShell({ children }: Readonly<{ children: React.ReactNode }>) {
+  noStore();
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   let profile = null;
+  let hasAdminAccess = false;
   if (user) {
     const { data } = await supabase
       .from("profiles")
       .select("nome_completo, avatar_url")
       .eq("id", user.id)
-      .single();
+      .maybeSingle();
     profile = data;
+
+    const permissions = await getUserPermissions();
+    hasAdminAccess = Boolean(
+      permissions?.pode_escalas ||
+        permissions?.pode_biblioteca ||
+        permissions?.pode_livraria ||
+        permissions?.pode_financeiro ||
+        permissions?.pode_pessoas ||
+        permissions?.pode_publicar ||
+        permissions?.pode_mediunidade ||
+        permissions?.pode_atendimento ||
+        permissions?.pode_apse,
+    );
   }
 
   return (
@@ -34,38 +53,31 @@ export async function SiteShell({ children }: Readonly<{ children: React.ReactNo
         </Link>
 
         <nav className="site-nav" aria-label="Navegação principal">
-          {navItems.map((item) => (
+          {navItems
+            .filter((item) => !item.icon)
+            .map((item) => (
+              <Link key={item.href} href={item.href}>
+                {item.label}
+              </Link>
+            ))}
+          {user ? (
+            <SiteUserMenu
+              userEmail={user.email}
+              nomeCompleto={profile?.nome_completo}
+              avatarUrl={profile?.avatar_url}
+              hasAdminAccess={hasAdminAccess}
+            />
+          ) : (
             <Link
-              key={item.href}
-              href={item.href}
-              className={item.icon ? "site-nav-icon" : undefined}
-              aria-label={item.icon ? item.label : undefined}
-              title={item.icon ? item.label : undefined}
+              href="/login?next=/perfil"
+              className="site-nav-icon"
+              aria-label="Perfil do usuário"
+              title="Perfil do usuário"
             >
-              {item.icon === "user" ? (
-                <>
-                  {user && profile?.avatar_url ? (
-                    <img
-                      src={profile.avatar_url}
-                      alt={profile.nome_completo || "Avatar"}
-                      className="site-nav-avatar"
-                      width={24}
-                      height={24}
-                    />
-                  ) : user ? (
-                    <span className="site-nav-avatar-initial">
-                      {profile?.nome_completo?.charAt(0) || user.email?.charAt(0)}
-                    </span>
-                  ) : (
-                    <UserIcon className="site-nav-icon-svg" />
-                  )}
-                  <span className="sr-only">{item.label}</span>
-                </>
-              ) : (
-                item.label
-              )}
+              <UserIcon className="site-nav-icon-svg" />
+              <span className="sr-only">Perfil do usuário</span>
             </Link>
-          ))}
+          )}
         </nav>
       </header>
       {children}
