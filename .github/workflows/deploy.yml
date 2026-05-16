@@ -149,6 +149,17 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H "$VPS_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
 
+      - name: Show Deployment Target
+        env:
+          VPS_USER: ${{ secrets.GEEF_VPS_USER }}
+          VPS_HOST: ${{ secrets.GEEF_VPS_HOST }}
+          VPS_PATH: ${{ secrets.GEEF_VPS_PATH }}
+        run: |
+          echo "🎯 Deployment target"
+          echo "Host: $VPS_HOST"
+          echo "User: $VPS_USER"
+          echo "Path: $VPS_PATH"
+
       - name: Deploy to VPS (Attempt ${{ matrix.attempt }})
         id: deploy
         env:
