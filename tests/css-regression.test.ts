@@ -75,14 +75,43 @@ async function testCSSOnPage(test: CSSTest): Promise<{
 
     const html = await response.text();
 
-    // Verificar classes CSS
+    // Verificar se CSS foi importado (arquivo externo Next.js)
+    const cssFileMatch = html.match(/href="(\/_next\/static\/css\/app\/layout\.css[^"]*?)"/);
+    if (!cssFileMatch) {
+      return {
+        page: test.page,
+        url: test.url,
+        passed: false,
+        missingClasses: [],
+        missingVariables: [],
+        error: 'CSS file not found in HTML',
+      };
+    }
+
+    // Fetch do arquivo CSS compilado
+    const cssFileUrl = cssFileMatch[1];
+    const cssResponse = await fetch(`${BASE_URL}${cssFileUrl}`);
+    if (!cssResponse.ok) {
+      return {
+        page: test.page,
+        url: test.url,
+        passed: false,
+        missingClasses: [],
+        missingVariables: [],
+        error: `CSS file HTTP ${cssResponse.status}`,
+      };
+    }
+
+    const cssContent = await cssResponse.text();
+
+    // Verificar classes CSS no arquivo CSS compilado
     const missingClasses = test.requiredClasses.filter(
-      (cssClass) => !html.includes(cssClass)
+      (cssClass) => !cssContent.includes(cssClass)
     );
 
-    // Verificar variáveis CSS
+    // Verificar variáveis CSS no arquivo CSS compilado
     const missingVariables = test.requiredCSSVariables
-      ? test.requiredCSSVariables.filter((varName) => !html.includes(varName))
+      ? test.requiredCSSVariables.filter((varName) => !cssContent.includes(varName))
       : [];
 
     const passed = missingClasses.length === 0 && missingVariables.length === 0;
