@@ -12,129 +12,83 @@ async function ReunioesvirtualaisContent() {
   const finalizadas = reunioes.filter((r: any) => r.status === 'finalizada');
 
   return (
-    <div>
-      <div className="admin-page-header">
-        <div>
-          <h1 className="admin-page-title">Reuniões Virtuais</h1>
-          <p className="admin-page-subtitle">Gestão de links, senhas e anfitriões</p>
-        </div>
-        <Link href="/admin/reunioes-virtuais/nova" className="admin-btn admin-btn-primary" style={{ width: 'auto' }}>
-          ➕ Nova Reunião
-        </Link>
-      </div>
-
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-        gap: '1rem',
-        marginBottom: '2rem',
-      }}>
-        <div style={{
-          padding: '1.5rem',
-          backgroundColor: '#fff',
-          border: '1px solid #e5e5e5',
-          borderRadius: '0.8rem',
-        }}>
-          <p style={{ margin: '0 0 0.5rem', fontSize: '0.9rem', color: '#999' }}>
-            Reuniões Planejadas
-          </p>
-          <p style={{ margin: 0, fontSize: '1.8rem', fontWeight: 700 }}>
-            {planejadas.length}
-          </p>
-        </div>
-        <div style={{
-          padding: '1.5rem',
-          backgroundColor: '#fff',
-          border: '1px solid #e5e5e5',
-          borderRadius: '0.8rem',
-        }}>
-          <p style={{ margin: '0 0 0.5rem', fontSize: '0.9rem', color: '#999' }}>
-            Finalizadas
-          </p>
-          <p style={{ margin: 0, fontSize: '1.8rem', fontWeight: 700 }}>
-            {finalizadas.length}
-          </p>
-        </div>
-        <div style={{
-          padding: '1.5rem',
-          backgroundColor: '#fff',
-          border: '1px solid #e5e5e5',
-          borderRadius: '0.8rem',
-        }}>
-          <p style={{ margin: '0 0 0.5rem', fontSize: '0.9rem', color: '#999' }}>
-            Total
-          </p>
-          <p style={{ margin: 0, fontSize: '1.8rem', fontWeight: 700 }}>
-            {reunioes.length}
-          </p>
-        </div>
-      </div>
-
-      <div className="admin-card">
-        <h2 style={{ margin: '0 0 1.5rem', fontSize: '1.1rem', fontWeight: 600 }}>Todas as Reuniões</h2>
-
-        {reunioes.length > 0 ? (
-          <div style={{ overflowX: 'auto' }}>
-            <table className="admin-table">
-              <thead>
-                <tr>
-                  <th>Título</th>
-                  <th>Plataforma</th>
-                  <th>Anfitrião</th>
-                  <th>Data/Hora</th>
-                  <th>Status</th>
-                  <th>Ação</th>
-                </tr>
-              </thead>
-              <tbody>
-                {reunioes.map((reuniao: any) => (
-                  <tr key={reuniao.id}>
-                    <td style={{ fontWeight: 500 }}>
-                      {reuniao.titulo}
-                    </td>
-                    <td style={{ fontSize: '0.9rem' }}>
-                      {reuniao.plataforma ? (
-                        <>
-                          {reuniao.plataforma === 'zoom' && '🎥 Zoom'}
-                          {reuniao.plataforma === 'google-meet' && '📹 Google Meet'}
-                          {reuniao.plataforma === 'teams' && '💬 Teams'}
-                          {reuniao.plataforma === 'jitsi' && '🔗 Jitsi'}
-                          {!['zoom', 'google-meet', 'teams', 'jitsi'].includes(reuniao.plataforma) && reuniao.plataforma}
-                        </>
-                      ) : '—'}
-                    </td>
-                    <td style={{ fontSize: '0.9rem' }}>
-                      {reuniao.anfitriao?.nome || '—'}
-                    </td>
-                    <td style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>
-                      {reuniao.data_hora ? new Date(reuniao.data_hora).toLocaleDateString('pt-BR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : '—'}
-                    </td>
-                    <td>
-                      <span style={{
-                        display: 'inline-block',
-                        padding: '0.25rem 0.6rem',
-                        backgroundColor: reuniao.status === 'planejada' ? 'rgba(59, 130, 246, 0.1)' : 'rgba(34, 197, 94, 0.1)',
-                        color: reuniao.status === 'planejada' ? '#3b82f6' : '#22c55e',
-                        borderRadius: '0.3rem',
-                        fontSize: '0.85rem',
-                      }}>
-                        {reuniao.status === 'planejada' ? '📋 Planejada' : '✓ Finalizada'}
-                      </span>
-                    </td>
-                    <td>
-                      <Link href={`/admin/reunioes-virtuais/${reuniao.id}`} className="admin-btn admin-btn-small">
-                        ✏️ Editar
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+    <div className="area-page">
+      <section className="area-hero">
+        <div className="area-hero-top">
+          <div>
+            <p className="area-subtitle">Encontros online</p>
+            <h1 className="area-hero-title">Reuniões Virtuais</h1>
           </div>
-        ) : (
-          <p style={{ color: 'var(--muted)', textAlign: 'center' }}>Nenhuma reunião cadastrada.</p>
-        )}
-      </div>
+          <Link href="/admin/reunioes-virtuais/nova" className="profile-form-btn profile-form-btn-primary">
+            Nova Reunião
+          </Link>
+        </div>
+        <p className="area-subtitle">Gestão de links, senhas, anfitriões e status.</p>
+      </section>
+
+      <section className="stat-grid">
+        <article className="stat-card">
+          <span className="stat-label">Planejadas</span>
+          <strong>{planejadas.length}</strong>
+        </article>
+        <article className="stat-card">
+          <span className="stat-label">Finalizadas</span>
+          <strong>{finalizadas.length}</strong>
+        </article>
+        <article className="stat-card">
+          <span className="stat-label">Total</span>
+          <strong>{reunioes.length}</strong>
+        </article>
+      </section>
+
+      <section className="area-section">
+        <div className="area-section-title">
+          <h2>Todas as reuniões</h2>
+          <p>Panorama dos encontros agendados e concluídos.</p>
+        </div>
+        <div className="table-surface">
+          {reunioes.length > 0 ? (
+            <div style={{ overflowX: 'auto' }}>
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>Título</th>
+                    <th>Plataforma</th>
+                    <th>Anfitrião</th>
+                    <th>Data/Hora</th>
+                    <th>Status</th>
+                    <th>Ação</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {reunioes.map((reuniao: any) => (
+                    <tr key={reuniao.id}>
+                      <td style={{ fontWeight: 500 }}>{reuniao.titulo}</td>
+                      <td>{reuniao.plataforma ? reuniao.plataforma : '—'}</td>
+                      <td>{reuniao.anfitriao?.nome || '—'}</td>
+                      <td style={{ color: 'var(--muted)' }}>
+                        {reuniao.data_hora ? new Date(reuniao.data_hora).toLocaleDateString('pt-BR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : '—'}
+                      </td>
+                      <td>
+                        <span className={reuniao.status === 'planejada' ? 'inline-status inline-status-warning' : 'inline-status inline-status-success'}>
+                          {reuniao.status === 'planejada' ? 'Planejada' : 'Finalizada'}
+                        </span>
+                      </td>
+                      <td>
+                        <Link href={`/admin/reunioes-virtuais/${reuniao.id}`} className="profile-form-btn profile-form-btn-secondary">
+                          Editar
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="area-empty">Nenhuma reunião cadastrada.</div>
+          )}
+        </div>
+      </section>
     </div>
   );
 }

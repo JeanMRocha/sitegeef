@@ -14,156 +14,126 @@ async function LivrariaList({ searchParams }: { searchParams: { page?: string; s
   const totalPages = Math.ceil(total / pageSize);
 
   return (
-    <div>
-      {/* Header */}
-      <div className="admin-page-header">
-        <div>
-          <h1 className="admin-page-title">Livraria</h1>
-          <p className="admin-page-subtitle">Gerenciamento de vendas e estoque</p>
-        </div>
-        <Link href="/admin/livraria/novo-produto" className="admin-btn admin-btn-primary">
-          ➕ Novo Produto
-        </Link>
-      </div>
-
-      {/* Search */}
-      <div className="admin-card" style={{ marginBottom: '2rem' }}>
-        <form method="get" style={{ display: 'flex', gap: '1rem' }}>
-          <input
-            type="text"
-            name="search"
-            placeholder="Buscar por título ou autor..."
-            defaultValue={search}
-            style={{
-              flex: 1,
-              padding: '0.65rem 0.85rem',
-              border: '1px solid var(--admin-border)',
-              borderRadius: '0.6rem',
-              fontFamily: 'var(--font-body)',
-              fontSize: '0.95rem',
-              color: 'var(--text)',
-            }}
-          />
-          <button
-            type="submit"
-            className="admin-btn admin-btn-primary"
-            style={{ width: 'auto' }}
-          >
-            🔍 Buscar
-          </button>
-          {search && (
-            <Link href="/admin/livraria" className="admin-btn admin-btn-secondary" style={{ width: 'auto' }}>
-              ✕ Limpar
-            </Link>
-          )}
-        </form>
-      </div>
-
-      {/* Table */}
-      <div className="admin-card" style={{ overflowX: 'auto' }}>
-        {produtos.length === 0 ? (
-          <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--muted)' }}>
-            <p>{search ? 'Nenhum produto encontrado.' : 'Nenhum produto cadastrado.'}</p>
-            <Link href="/admin/livraria/novo-produto" className="admin-btn admin-btn-primary" style={{ marginTop: '1rem' }}>
-              ➕ Adicionar primeiro produto
-            </Link>
+    <div className="area-page">
+      <section className="area-hero">
+        <div className="area-hero-top">
+          <div>
+            <p className="area-subtitle">Acervo e estoque</p>
+            <h1 className="area-hero-title">Livraria</h1>
           </div>
-        ) : (
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>Título</th>
-                <th>Autor</th>
-                <th>Categoria</th>
-                <th>Estoque</th>
-                <th>Preço Venda</th>
-                <th>Status</th>
-                <th>Ação</th>
-              </tr>
-            </thead>
-            <tbody>
-              {produtos.map((produto: any) => {
-                const baixoEstoque = produto.qtd_estoque <= produto.estoque_minimo;
-                return (
-                  <tr key={produto.id}>
-                    <td style={{ fontWeight: 500 }}>{produto.titulo}</td>
-                    <td style={{ fontSize: '0.9rem', color: 'var(--muted)' }}>
-                      {produto.autor || '—'}
-                    </td>
-                    <td style={{ fontSize: '0.9rem' }}>
-                      {produto.categoria ? (
-                        <span style={{
-                          display: 'inline-block',
-                          padding: '0.25rem 0.6rem',
-                          backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                          color: 'var(--primary)',
-                          borderRadius: '0.3rem',
-                          fontSize: '0.85rem',
-                        }}>
-                          {produto.categoria}
-                        </span>
-                      ) : '—'}
-                    </td>
-                    <td style={{
-                      fontWeight: 600,
-                      color: baixoEstoque ? '#ef4444' : 'var(--text)',
-                    }}>
-                      {produto.qtd_estoque}
-                      {baixoEstoque && ' ⚠️'}
-                    </td>
-                    <td style={{ fontSize: '0.9rem', fontWeight: 500 }}>
-                      {produto.valor_venda
-                        ? `R$ ${produto.valor_venda.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
-                        : '—'}
-                    </td>
-                    <td>
-                      <span style={{
-                        display: 'inline-block',
-                        padding: '0.35rem 0.7rem',
-                        backgroundColor: produto.status === 'disponivel' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(107, 114, 128, 0.1)',
-                        color: produto.status === 'disponivel' ? '#22c55e' : '#6b7280',
-                        borderRadius: '0.4rem',
-                        fontSize: '0.85rem',
-                      }}>
-                        {produto.status}
-                      </span>
-                    </td>
-                    <td>
-                      <Link href={`/admin/livraria/${produto.id}`} className="admin-btn admin-btn-small">
-                        ✏️ Editar
-                      </Link>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        )}
-      </div>
+          <Link href="/admin/livraria/novo-produto" className="profile-form-btn profile-form-btn-primary">
+            Novo Produto
+          </Link>
+        </div>
+        <p className="area-subtitle">Gerenciamento de vendas, estoque e catálogo.</p>
+      </section>
 
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', marginTop: '2rem' }}>
-          {page > 1 && (
-            <Link
-              href={`/admin/livraria?page=${page - 1}${search ? `&search=${search}` : ''}`}
-              className="admin-btn admin-btn-secondary"
-            >
-              ← Anterior
-            </Link>
-          )}
-          <span style={{ padding: '0.6rem 1.2rem', alignSelf: 'center', fontWeight: 600 }}>
-            Página {page} de {totalPages}
-          </span>
-          {page < totalPages && (
-            <Link
-              href={`/admin/livraria?page=${page + 1}${search ? `&search=${search}` : ''}`}
-              className="admin-btn admin-btn-secondary"
-            >
-              Próxima →
-            </Link>
+      <section className="area-section">
+        <div className="table-surface">
+          <form method="get" className="module-grid" style={{ alignItems: 'end' }}>
+            <label className="profile-form-field" style={{ gridColumn: '1 / -2' }}>
+              <span>Buscar</span>
+              <input
+                type="text"
+                name="search"
+                placeholder="Buscar por título ou autor..."
+                defaultValue={search}
+                className="profile-form-input"
+              />
+            </label>
+            <div className="area-panel-item">
+              <button type="submit" className="profile-form-btn profile-form-btn-primary">Buscar</button>
+              {search ? (
+                <Link href="/admin/livraria" className="profile-form-btn profile-form-btn-secondary">
+                  Limpar
+                </Link>
+              ) : null}
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section className="area-section">
+        <div className="area-section-title">
+          <h2>Produtos</h2>
+          <p>Controle de disponibilidade, categoria e preço de venda.</p>
+        </div>
+        <div className="table-surface">
+          {produtos.length === 0 ? (
+            <div className="area-empty">
+              <p>{search ? 'Nenhum produto encontrado.' : 'Nenhum produto cadastrado.'}</p>
+              <Link href="/admin/livraria/novo-produto" className="profile-form-btn profile-form-btn-primary">
+                Adicionar primeiro produto
+              </Link>
+            </div>
+          ) : (
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Título</th>
+                  <th>Autor</th>
+                  <th>Categoria</th>
+                  <th>Estoque</th>
+                  <th>Preço venda</th>
+                  <th>Status</th>
+                  <th>Ação</th>
+                </tr>
+              </thead>
+              <tbody>
+                {produtos.map((produto: any) => {
+                  const baixoEstoque = produto.qtd_estoque <= produto.estoque_minimo;
+                  return (
+                    <tr key={produto.id}>
+                      <td style={{ fontWeight: 500 }}>{produto.titulo}</td>
+                      <td style={{ color: 'var(--muted)' }}>{produto.autor || '—'}</td>
+                      <td>
+                        {produto.categoria ? <span className="tag">{produto.categoria}</span> : '—'}
+                      </td>
+                      <td style={{ fontWeight: 600, color: baixoEstoque ? 'var(--danger)' : 'var(--text)' }}>
+                        {produto.qtd_estoque}{baixoEstoque ? ' ⚠️' : ''}
+                      </td>
+                      <td style={{ fontWeight: 500 }}>
+                        {produto.valor_venda
+                          ? `R$ ${produto.valor_venda.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
+                          : '—'}
+                      </td>
+                      <td>
+                        <span className={produto.status === 'disponivel' ? 'inline-status inline-status-success' : 'inline-status'}>
+                          {produto.status}
+                        </span>
+                      </td>
+                      <td>
+                        <Link href={`/admin/livraria/${produto.id}`} className="profile-form-btn profile-form-btn-secondary">
+                          Editar
+                        </Link>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           )}
         </div>
+      </section>
+
+      {totalPages > 1 && (
+        <section className="area-section">
+          <div className="area-panel-grid" style={{ justifyContent: 'center' }}>
+            {page > 1 && (
+              <Link href={`/admin/livraria?page=${page - 1}${search ? `&search=${search}` : ''}`} className="profile-form-btn profile-form-btn-secondary">
+                Anterior
+              </Link>
+            )}
+            <span className="area-panel-item" style={{ alignSelf: 'center', fontWeight: 600 }}>
+              Página {page} de {totalPages}
+            </span>
+            {page < totalPages && (
+              <Link href={`/admin/livraria?page=${page + 1}${search ? `&search=${search}` : ''}`} className="profile-form-btn profile-form-btn-secondary">
+                Próxima
+              </Link>
+            )}
+          </div>
+        </section>
       )}
     </div>
   );
