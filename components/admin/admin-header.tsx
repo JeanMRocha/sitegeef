@@ -6,7 +6,7 @@ interface AdminHeaderProps {
     email?: string;
   };
   usuarioSistema: {
-    role: string;
+    perfil: string;
   };
 }
 
@@ -24,7 +24,7 @@ export function AdminHeader({ user, usuarioSistema }: AdminHeaderProps) {
       <div className="admin-header-right">
         <div className="admin-user-info">
           <span className="admin-user-email">{user.email}</span>
-          <span className="admin-user-role">{usuarioSistema.role}</span>
+          <span className="admin-user-role">{usuarioSistema.perfil}</span>
         </div>
 
         <button
