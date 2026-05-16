@@ -67,6 +67,22 @@ Verifique se estes secrets existem:
 | `GEEF_VPS_USER` | `ubuntu` |
 | `GEEF_VPS_PATH` | `/home/ubuntu/sitegeef` |
 | `GEEF_VPS_SSH_KEY` | Conteúdo de `~/.ssh/geef-deploy` |
+| `GEEF_SUPABASE_SERVICE_ROLE_KEY` | Valor de `SUPABASE_SERVICE_ROLE_KEY` do `.env` |
+
+### 3.1 Adicionar Secret do Supabase
+
+Se o secret `GEEF_SUPABASE_SERVICE_ROLE_KEY` não existe:
+
+```bash
+# Via CLI do GitHub (se tiver `gh` instalado):
+gh secret set GEEF_SUPABASE_SERVICE_ROLE_KEY --body "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+
+# Ou manualmente no GitHub:
+# 1. https://github.com/Geef-EliasFrancis/sitegeef/settings/secrets/actions
+# 2. Clique em "New repository secret"
+# 3. Nome: GEEF_SUPABASE_SERVICE_ROLE_KEY
+# 4. Valor: Cole o conteúdo de SUPABASE_SERVICE_ROLE_KEY do arquivo .env
+```
 
 ### 4. Garantir que deploy.sh tem permissão de execução
 
