@@ -34,140 +34,77 @@ async function EditarContent({ id }: { id: string }) {
   const categorias = ['Espiritismo', 'Religião', 'Filosofia', 'Autoajuda', 'Infantil', 'Juventude', 'Ficção', 'Outro'];
 
   return (
-    <div>
-      {/* Header */}
-      <div className="admin-page-header">
-        <div>
-          <h1 className="admin-page-title">Editar Produto</h1>
-          <p className="admin-page-subtitle">{produto.titulo}</p>
+    <div className="area-page">
+      <section className="area-hero">
+        <div className="area-hero-top">
+          <div>
+            <p className="area-subtitle">Cadastro de produto</p>
+            <h1 className="area-hero-title">Editar Produto</h1>
+          </div>
+          <div className="tag-list">
+            <span className="tag">{produto.titulo}</span>
+          </div>
         </div>
-      </div>
+        <p className="area-subtitle">{produto.autor || 'Autor desconhecido'}</p>
+      </section>
 
-      {/* Form */}
-      <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto' }}>
-        <form action={(formData) => handleSubmit(id, formData)}>
-          <div className="admin-form-group">
-            <label>Título *</label>
-            <input
-              type="text"
-              name="titulo"
-              placeholder="Ex: O Evangelho Segundo o Espiritismo"
-              defaultValue={produto.titulo}
-              required
-            />
-          </div>
+      <section className="area-section">
+        <div className="table-surface" style={{ maxWidth: '760px', margin: '0 auto' }}>
+          <form action={(formData) => handleSubmit(id, formData)}>
+            <div className="module-grid">
+              <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
+                <span>Título *</span>
+                <input type="text" name="titulo" placeholder="Ex: O Evangelho Segundo o Espiritismo" defaultValue={produto.titulo} required className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>Autor</span>
+                <input type="text" name="autor" placeholder="Ex: Allan Kardec" defaultValue={produto.autor || ''} className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>Categoria</span>
+                <select name="categoria" defaultValue={produto.categoria || ''} className="profile-form-input">
+                  <option value="">— Selecione —</option>
+                  {categorias.map((cat) => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="profile-form-field">
+                <span>Quantidade em estoque</span>
+                <input type="number" name="qtd_estoque" defaultValue={produto.qtd_estoque} min="0" className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>Estoque mínimo</span>
+                <input type="number" name="estoque_minimo" defaultValue={produto.estoque_minimo} min="0" className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>Valor de custo (R$)</span>
+                <input type="number" name="valor_custo" placeholder="0.00" defaultValue={produto.valor_custo || ''} step="0.01" min="0" className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>Valor de venda (R$)</span>
+                <input type="number" name="valor_venda" placeholder="0.00" defaultValue={produto.valor_venda || ''} step="0.01" min="0" className="profile-form-input" />
+              </label>
+              <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
+                <span>URL da capa</span>
+                <input type="url" name="capa_url" placeholder="https://..." defaultValue={produto.capa_url || ''} className="profile-form-input" />
+              </label>
+            </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-            <div className="admin-form-group">
-              <label>Autor</label>
-              <input
-                type="text"
-                name="autor"
-                placeholder="Ex: Allan Kardec"
-                defaultValue={produto.autor || ''}
-              />
-            </div>
-            <div className="admin-form-group">
-              <label>Categoria</label>
-              <select
-                name="categoria"
-                defaultValue={produto.categoria || ''}
-                style={{
-                  padding: '0.65rem 0.85rem',
-                  border: '1px solid var(--admin-border)',
-                  borderRadius: '0.6rem',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.95rem',
-                  color: 'var(--text)',
-                }}
-              >
-                <option value="">— Selecione —</option>
-                {categorias.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
+            {produto.capa_url && (
+              <div className="area-panel-item" style={{ marginTop: '1rem' }}>
+                <span className="stat-label">Prévia</span>
+                <img src={produto.capa_url} alt={produto.titulo} style={{ maxWidth: '200px', borderRadius: '0.8rem', marginTop: '0.5rem' }} />
+              </div>
+            )}
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-            <div className="admin-form-group">
-              <label>Quantidade em Estoque</label>
-              <input
-                type="number"
-                name="qtd_estoque"
-                defaultValue={produto.qtd_estoque}
-                min="0"
-              />
+            <div className="area-panel-grid" style={{ marginTop: '1.5rem' }}>
+              <button type="submit" className="profile-form-btn profile-form-btn-primary">Salvar alterações</button>
+              <Link href={`/admin/livraria/${id}`} className="profile-form-btn profile-form-btn-secondary">Cancelar</Link>
             </div>
-            <div className="admin-form-group">
-              <label>Estoque Mínimo</label>
-              <input
-                type="number"
-                name="estoque_minimo"
-                defaultValue={produto.estoque_minimo}
-                min="0"
-              />
-            </div>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-            <div className="admin-form-group">
-              <label>Valor de Custo (R$)</label>
-              <input
-                type="number"
-                name="valor_custo"
-                placeholder="0.00"
-                defaultValue={produto.valor_custo || ''}
-                step="0.01"
-                min="0"
-              />
-            </div>
-            <div className="admin-form-group">
-              <label>Valor de Venda (R$)</label>
-              <input
-                type="number"
-                name="valor_venda"
-                placeholder="0.00"
-                defaultValue={produto.valor_venda || ''}
-                step="0.01"
-                min="0"
-              />
-            </div>
-          </div>
-
-          <div className="admin-form-group">
-            <label>URL da Capa</label>
-            <input
-              type="url"
-              name="capa_url"
-              placeholder="https://..."
-              defaultValue={produto.capa_url || ''}
-            />
-          </div>
-
-          {produto.capa_url && (
-            <div style={{ marginBottom: '1.5rem' }}>
-              <p style={{ margin: '0.5rem 0', fontSize: '0.85rem', color: 'var(--muted)' }}>Prévia</p>
-              <img
-                src={produto.capa_url}
-                alt={produto.titulo}
-                style={{ maxWidth: '200px', borderRadius: '0.4rem', marginTop: '0.5rem' }}
-              />
-            </div>
-          )}
-
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
-            <button type="submit" className="admin-btn admin-btn-primary">
-              ✅ Salvar Alterações
-            </button>
-            <Link href={`/admin/livraria/${id}`} className="admin-btn admin-btn-secondary">
-              ❌ Cancelar
-            </Link>
-          </div>
-        </form>
-      </div>
+          </form>
+        </div>
+      </section>
     </div>
   );
 }

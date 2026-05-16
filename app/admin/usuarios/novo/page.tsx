@@ -75,138 +75,100 @@ export default async function NovoUsuarioPage() {
   const pessoasSemLogin = await getPessoasSemLogin();
 
   return (
-    <div>
-      {/* Header */}
-      <div className="admin-page-header">
-        <div>
-          <h1 className="admin-page-title">Novo Usuário</h1>
-          <p className="admin-page-subtitle">Criar login para uma pessoa</p>
-        </div>
-      </div>
-
-      {/* Form */}
-      <div className="admin-card" style={{ maxWidth: '800px', margin: '0 auto' }}>
-        {pessoasSemLogin.length === 0 ? (
-          <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--muted)' }}>
-            <p>Todas as pessoas já possuem login.</p>
-            <Link href="/admin/usuarios" className="admin-btn admin-btn-secondary" style={{ marginTop: '1rem' }}>
-              ← Voltar
-            </Link>
+    <div className="area-page">
+      <section className="area-hero">
+        <div className="area-hero-top">
+          <div>
+            <p className="area-subtitle">Acesso ao sistema</p>
+            <h1 className="area-hero-title">Novo Usuário</h1>
           </div>
-        ) : (
-          <form action={handleSubmit}>
-            {/* Seção 1: Pessoa */}
-            <h2 style={{ margin: '0 0 1.5rem', fontSize: '1.1rem', color: 'var(--text)' }}>👤 Pessoa</h2>
+        </div>
+        <p className="area-subtitle">Criar login para uma pessoa.</p>
+      </section>
 
-            <div className="admin-form-group">
-              <label>Selecione a Pessoa *</label>
-              <select name="pessoa_id" required style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-              }}>
-                <option value="">— Selecione uma pessoa —</option>
-                {pessoasSemLogin.map((p: any) => (
-                  <option key={p.id} value={p.id}>
-                    {p.nome} ({p.email || 'sem email'})
-                  </option>
-                ))}
-              </select>
+      <section className="area-section">
+        <div className="table-surface" style={{ maxWidth: '900px', margin: '0 auto' }}>
+          {pessoasSemLogin.length === 0 ? (
+            <div className="area-empty">
+              <p>Todas as pessoas já possuem login.</p>
+              <Link href="/admin/usuarios" className="profile-form-btn profile-form-btn-secondary">Voltar</Link>
             </div>
+          ) : (
+            <form action={handleSubmit}>
+              <div className="area-section-title">
+                <h2>Pessoa</h2>
+                <p>Selecione quem receberá o login.</p>
+              </div>
+              <label className="profile-form-field">
+                <span>Selecione a pessoa *</span>
+                <select name="pessoa_id" required className="profile-form-input">
+                  <option value="">— Selecione uma pessoa —</option>
+                  {pessoasSemLogin.map((p: any) => (
+                    <option key={p.id} value={p.id}>{p.nome} ({p.email || 'sem email'})</option>
+                  ))}
+                </select>
+              </label>
 
-            {/* Seção 2: Credenciais */}
-            <h2 style={{ margin: '2rem 0 1.5rem', fontSize: '1.1rem', color: 'var(--text)' }}>🔐 Credenciais</h2>
+              <div className="area-section-title" style={{ marginTop: '1.5rem' }}>
+                <h2>Credenciais</h2>
+                <p>Email e senha inicial.</p>
+              </div>
+              <div className="module-grid">
+                <label className="profile-form-field">
+                  <span>Email (login) *</span>
+                  <input type="email" name="email" required className="profile-form-input" />
+                </label>
+                <label className="profile-form-field">
+                  <span>Senha *</span>
+                  <input type="password" name="password" required minLength={8} className="profile-form-input" />
+                </label>
+              </div>
 
-            <div className="admin-form-group">
-              <label>Email (login) *</label>
-              <input type="email" name="email" required />
-            </div>
+              <div className="area-section-title" style={{ marginTop: '1.5rem' }}>
+                <h2>Perfil e permissões</h2>
+                <p>Defina o perfil base e os acessos específicos.</p>
+              </div>
+              <div className="module-grid">
+                <label className="profile-form-field">
+                  <span>Perfil do sistema *</span>
+                  <select name="perfil" required className="profile-form-input">
+                    <option value="">— Selecione um perfil —</option>
+                    {PERFIS.map((p) => (
+                      <option key={p} value={p}>{p}</option>
+                    ))}
+                  </select>
+                </label>
+                <div className="area-panel-item" style={{ gridColumn: '1 / -1' }}>
+                  <span className="stat-label">Permissões específicas</span>
+                  <div className="tag-list" style={{ flexWrap: 'wrap' }}>
+                    {[
+                      'pode_escalas',
+                      'pode_biblioteca',
+                      'pode_livraria',
+                      'pode_financeiro',
+                      'pode_pessoas',
+                      'pode_publicar',
+                      'pode_mediunidade',
+                      'pode_atendimento',
+                      'pode_apse',
+                    ].map((name) => (
+                      <label key={name} className="tag" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <input type="checkbox" name={name} />
+                        <span>{name.replace('pode_', '')}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
 
-            <div className="admin-form-group">
-              <label>Senha *</label>
-              <input type="password" name="password" required minLength={8} />
-            </div>
-
-            {/* Seção 3: Perfil e Permissões */}
-            <h2 style={{ margin: '2rem 0 1.5rem', fontSize: '1.1rem', color: 'var(--text)' }}>🎯 Perfil e Permissões</h2>
-
-            <div className="admin-form-group">
-              <label>Perfil do Sistema *</label>
-              <select name="perfil" required style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-              }}>
-                <option value="">— Selecione um perfil —</option>
-                {PERFIS.map((p) => (
-                  <option key={p} value={p}>
-                    {p}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <p style={{ marginBottom: '1rem', fontSize: '0.9rem', color: 'var(--muted)' }}>
-              Selecione as permissões específicas para este usuário:
-            </p>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
-                <input type="checkbox" name="pode_escalas" style={{ cursor: 'pointer' }} />
-                <span>Escalas</span>
-              </label>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
-                <input type="checkbox" name="pode_biblioteca" style={{ cursor: 'pointer' }} />
-                <span>Biblioteca</span>
-              </label>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
-                <input type="checkbox" name="pode_livraria" style={{ cursor: 'pointer' }} />
-                <span>Livraria</span>
-              </label>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
-                <input type="checkbox" name="pode_financeiro" style={{ cursor: 'pointer' }} />
-                <span>Financeiro</span>
-              </label>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
-                <input type="checkbox" name="pode_pessoas" style={{ cursor: 'pointer' }} />
-                <span>Pessoas</span>
-              </label>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
-                <input type="checkbox" name="pode_publicar" style={{ cursor: 'pointer' }} />
-                <span>Publicar</span>
-              </label>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
-                <input type="checkbox" name="pode_mediunidade" style={{ cursor: 'pointer' }} />
-                <span>Mediunidade</span>
-              </label>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
-                <input type="checkbox" name="pode_atendimento" style={{ cursor: 'pointer' }} />
-                <span>Atendimento</span>
-              </label>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
-                <input type="checkbox" name="pode_apse" style={{ cursor: 'pointer' }} />
-                <span>APSE</span>
-              </label>
-            </div>
-
-            {/* Botões */}
-            <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
-              <button type="submit" className="admin-btn admin-btn-primary">
-                ✅ Criar Usuário
-              </button>
-              <Link href="/admin/usuarios" className="admin-btn admin-btn-secondary">
-                ❌ Cancelar
-              </Link>
-            </div>
-          </form>
-        )}
-      </div>
+              <div className="area-panel-grid" style={{ marginTop: '1.5rem' }}>
+                <button type="submit" className="profile-form-btn profile-form-btn-primary">Criar Usuário</button>
+                <Link href="/admin/usuarios" className="profile-form-btn profile-form-btn-secondary">Cancelar</Link>
+              </div>
+            </form>
+          )}
+        </div>
+      </section>
     </div>
   );
 }

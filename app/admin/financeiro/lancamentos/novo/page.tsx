@@ -37,169 +37,85 @@ async function NovoLancamentoPage() {
   const hoje = new Date().toISOString().split('T')[0];
 
   return (
-    <div>
-      {/* Header */}
-      <div className="admin-page-header">
-        <div>
-          <h1 className="admin-page-title">Novo Lançamento</h1>
-          <p className="admin-page-subtitle">Registre uma entrada ou saída financeira</p>
+    <div className="area-page">
+      <section className="area-hero">
+        <div className="area-hero-top">
+          <div>
+            <p className="area-subtitle">Movimento financeiro</p>
+            <h1 className="area-hero-title">Novo Lançamento</h1>
+          </div>
         </div>
-      </div>
+        <p className="area-subtitle">Registre uma entrada ou saída financeira.</p>
+      </section>
 
-      {/* Form */}
-      <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto' }}>
-        <form action={handleSubmit}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-            <div className="admin-form-group">
-              <label>Tipo *</label>
-              <select
-                name="tipo"
-                required
-                style={{
-                  padding: '0.65rem 0.85rem',
-                  border: '1px solid var(--admin-border)',
-                  borderRadius: '0.6rem',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.95rem',
-                  color: 'var(--text)',
-                }}
-              >
-                <option value="">— Selecione —</option>
-                <option value="entrada">📥 Entrada</option>
-                <option value="saida">📤 Saída</option>
-              </select>
+      <section className="area-section">
+        <div className="table-surface" style={{ maxWidth: '760px', margin: '0 auto' }}>
+          <form action={handleSubmit}>
+            <div className="module-grid">
+              <label className="profile-form-field">
+                <span>Tipo *</span>
+                <select name="tipo" required className="profile-form-input">
+                  <option value="">— Selecione —</option>
+                  <option value="entrada">Entrada</option>
+                  <option value="saida">Saída</option>
+                </select>
+              </label>
+              <label className="profile-form-field">
+                <span>Data *</span>
+                <input type="date" name="data" defaultValue={hoje} required className="profile-form-input" />
+              </label>
+              <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
+                <span>Descrição *</span>
+                <input type="text" name="descricao" placeholder="Ex: Doação de Ana Silva" required className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>Conta contábil *</span>
+                <select name="conta_id" required className="profile-form-input">
+                  <option value="">— Selecione —</option>
+                  {contas.map((c: any) => (
+                    <option key={c.id} value={c.id}>{c.codigo} - {c.nome}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="profile-form-field">
+                <span>Valor (R$) *</span>
+                <input type="number" name="valor" placeholder="0.00" step="0.01" min="0" required className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>Centro de custo</span>
+                <select name="centro_custo_id" className="profile-form-input">
+                  <option value="">— Nenhum —</option>
+                  {centros.map((c: any) => (
+                    <option key={c.id} value={c.id}>{c.nome}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="profile-form-field">
+                <span>Pessoa</span>
+                <select name="pessoa_id" className="profile-form-input">
+                  <option value="">— Nenhuma —</option>
+                  {pessoas.map((p: any) => (
+                    <option key={p.id} value={p.id}>{p.nome}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="profile-form-field">
+                <span>Categoria *</span>
+                <input type="text" name="categoria" placeholder="Ex: Doação, Pagamento, Venda" required className="profile-form-input" />
+              </label>
+              <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
+                <span>URL do comprovante</span>
+                <input type="url" name="comprovante_url" placeholder="https://..." className="profile-form-input" />
+              </label>
             </div>
-            <div className="admin-form-group">
-              <label>Data *</label>
-              <input
-                type="date"
-                name="data"
-                defaultValue={hoje}
-                required
-              />
+
+            <div className="area-panel-grid" style={{ marginTop: '1.5rem' }}>
+              <button type="submit" className="profile-form-btn profile-form-btn-primary">Registrar Lançamento</button>
+              <Link href="/admin/financeiro/lancamentos" className="profile-form-btn profile-form-btn-secondary">Cancelar</Link>
             </div>
-          </div>
-
-          <div className="admin-form-group">
-            <label>Descrição *</label>
-            <input
-              type="text"
-              name="descricao"
-              placeholder="Ex: Doação de Ana Silva"
-              required
-            />
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-            <div className="admin-form-group">
-              <label>Conta Contábil *</label>
-              <select
-                name="conta_id"
-                required
-                style={{
-                  padding: '0.65rem 0.85rem',
-                  border: '1px solid var(--admin-border)',
-                  borderRadius: '0.6rem',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.95rem',
-                  color: 'var(--text)',
-                }}
-              >
-                <option value="">— Selecione —</option>
-                {contas.map((c: any) => (
-                  <option key={c.id} value={c.id}>
-                    {c.codigo} - {c.nome}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="admin-form-group">
-              <label>Valor (R$) *</label>
-              <input
-                type="number"
-                name="valor"
-                placeholder="0.00"
-                step="0.01"
-                min="0"
-                required
-              />
-            </div>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-            <div className="admin-form-group">
-              <label>Centro de Custo</label>
-              <select
-                name="centro_custo_id"
-                style={{
-                  padding: '0.65rem 0.85rem',
-                  border: '1px solid var(--admin-border)',
-                  borderRadius: '0.6rem',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.95rem',
-                  color: 'var(--text)',
-                }}
-              >
-                <option value="">— Nenhum —</option>
-                {centros.map((c: any) => (
-                  <option key={c.id} value={c.id}>
-                    {c.nome}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="admin-form-group">
-              <label>Pessoa</label>
-              <select
-                name="pessoa_id"
-                style={{
-                  padding: '0.65rem 0.85rem',
-                  border: '1px solid var(--admin-border)',
-                  borderRadius: '0.6rem',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.95rem',
-                  color: 'var(--text)',
-                }}
-              >
-                <option value="">— Nenhuma —</option>
-                {pessoas.map((p: any) => (
-                  <option key={p.id} value={p.id}>
-                    {p.nome}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div className="admin-form-group">
-            <label>Categoria *</label>
-            <input
-              type="text"
-              name="categoria"
-              placeholder="Ex: Doação, Pagamento, Venda"
-              required
-            />
-          </div>
-
-          <div className="admin-form-group">
-            <label>URL do Comprovante</label>
-            <input
-              type="url"
-              name="comprovante_url"
-              placeholder="https://..."
-            />
-          </div>
-
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
-            <button type="submit" className="admin-btn admin-btn-primary">
-              ✅ Registrar Lançamento
-            </button>
-            <Link href="/admin/financeiro/lancamentos" className="admin-btn admin-btn-secondary">
-              ❌ Cancelar
-            </Link>
-          </div>
-        </form>
-      </div>
+          </form>
+        </div>
+      </section>
     </div>
   );
 }
