@@ -13,12 +13,10 @@ RUN npm ci
 COPY . .
 
 # Create .env.local for build
-RUN cat > .env.local << 'EOF'
-NEXT_PUBLIC_SITE_URL=https://geef.com.br
-NEXT_PUBLIC_SUPABASE_URL=https://nycgpokqlmrfzegjlrwa.supabase.co
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_jDq5SX_k4spHMCCPVvlsrQ_-ZZybt8e
-SUPABASE_SERVICE_ROLE_KEY=default-for-build
-EOF
+RUN echo "NEXT_PUBLIC_SITE_URL=https://geef.com.br" > .env.local && \
+    echo "NEXT_PUBLIC_SUPABASE_URL=https://nycgpokqlmrfzegjlrwa.supabase.co" >> .env.local && \
+    echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_jDq5SX_k4spHMCCPVvlsrQ_-ZZybt8e" >> .env.local && \
+    echo "SUPABASE_SERVICE_ROLE_KEY=default-for-build" >> .env.local
 
 # Build Next.js application
 RUN npm run build
@@ -28,8 +26,8 @@ FROM node:22-alpine
 
 WORKDIR /app
 
-# Install dumb-init to handle signals properly
-RUN apk add --no-cache dumb-init
+# Install dumb-init and curl for healthcheck
+RUN apk add --no-cache dumb-init curl
 
 # Copy package files
 COPY package*.json ./
@@ -48,7 +46,7 @@ ENV PORT=3500
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:3500', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})"
+  CMD curl -f http://localhost:3500 || exit 1
 
 # Use dumb-init to properly handle signals
 ENTRYPOINT ["dumb-init", "--"]
