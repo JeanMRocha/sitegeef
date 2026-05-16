@@ -15,53 +15,41 @@ async function BibliotecaList({ searchParams }: { searchParams: { page?: string;
 
   return (
     <div className="area-page">
-      <div className="admin-page-header">
-        <div>
-          <span className="admin-dashboard-kicker">Biblioteca</span>
-          <h1 className="admin-page-title">Biblioteca</h1>
-          <p className="admin-page-subtitle">Gerenciamento de obras e exemplares</p>
+      <section className="area-hero">
+        <div className="area-hero-top">
+          <div>
+            <p className="area-subtitle">Acervo</p>
+            <h1 className="area-hero-title">Biblioteca</h1>
+          </div>
+          <Link href="/admin/biblioteca/nova-obra" className="profile-form-btn profile-form-btn-primary">
+            Nova Obra
+          </Link>
         </div>
-        <Link href="/admin/biblioteca/nova-obra" className="admin-btn admin-btn-primary">
-          ➕ Nova Obra
-        </Link>
-      </div>
+        <p className="area-subtitle">Gerenciamento de obras, exemplares e catálogo.</p>
+      </section>
 
       <section className="area-section">
-        <div className="admin-card">
-          <form method="get" style={{ display: "grid", gap: "1rem", gridTemplateColumns: "minmax(0, 1fr) auto auto", alignItems: "end" }}>
-            <div>
-              <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: 700, fontSize: "0.85rem", letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--muted)" }}>
-                Buscar por título ou autor
-              </label>
-              <input
-                type="text"
-                name="search"
-                placeholder="Buscar por título ou autor..."
-                defaultValue={search}
-                className="profile-form-input"
-              />
+        <div className="table-surface">
+          <form method="get" className="module-grid" style={{ alignItems: "end" }}>
+            <label className="profile-form-field" style={{ gridColumn: "1 / -2" }}>
+              <span>Buscar por título ou autor</span>
+              <input type="text" name="search" placeholder="Buscar por título ou autor..." defaultValue={search} className="profile-form-input" />
+            </label>
+            <div className="area-panel-item">
+              <button type="submit" className="profile-form-btn profile-form-btn-primary">Buscar</button>
+              {search ? <Link href="/admin/biblioteca" className="profile-form-btn profile-form-btn-secondary">Limpar</Link> : null}
             </div>
-            <button type="submit" className="admin-btn admin-btn-primary" style={{ width: "auto" }}>
-              🔍 Buscar
-            </button>
-            {search ? (
-              <Link href="/admin/biblioteca" className="admin-btn admin-btn-secondary" style={{ width: "auto" }}>
-                ✕ Limpar
-              </Link>
-            ) : (
-              <span />
-            )}
           </form>
         </div>
       </section>
 
       <section className="area-section">
-        <div className="admin-card table-surface">
+        <div className="table-surface">
           {obras.length === 0 ? (
-            <div style={{ padding: "2rem", textAlign: "center", color: "var(--muted)" }}>
+            <div className="area-empty">
               <p>{search ? "Nenhuma obra encontrada." : "Nenhuma obra cadastrada."}</p>
-              <Link href="/admin/biblioteca/nova-obra" className="admin-btn admin-btn-primary" style={{ marginTop: "1rem" }}>
-                ➕ Adicionar primeira obra
+              <Link href="/admin/biblioteca/nova-obra" className="profile-form-btn profile-form-btn-primary">
+                Adicionar primeira obra
               </Link>
             </div>
           ) : (
@@ -82,39 +70,17 @@ async function BibliotecaList({ searchParams }: { searchParams: { page?: string;
                     <td style={{ fontWeight: 500 }}>{obra.titulo}</td>
                     <td style={{ fontSize: "0.9rem", color: "var(--muted)" }}>{obra.autor || "—"}</td>
                     <td>
-                      {obra.categoria ? (
-                        <span className="inline-status" style={{ background: "rgba(59, 130, 246, 0.1)", color: "var(--uva-700)" }}>
-                          {obra.categoria}
-                        </span>
-                      ) : (
-                        "—"
-                      )}
+                      {obra.categoria ? <span className="tag">{obra.categoria}</span> : "—"}
                     </td>
                     <td>
-                      <span
-                        className="inline-status"
-                        style={{
-                          backgroundColor:
-                            obra.publico === "adulto"
-                              ? "rgba(59, 130, 246, 0.1)"
-                              : obra.publico === "jovem"
-                                ? "rgba(168, 85, 247, 0.1)"
-                                : "rgba(34, 197, 94, 0.1)",
-                          color:
-                            obra.publico === "adulto"
-                              ? "var(--uva-700)"
-                              : obra.publico === "jovem"
-                                ? "#a855f7"
-                                : "#22c55e",
-                        }}
-                      >
+                      <span className="inline-status inline-status-success">
                         {obra.publico}
                       </span>
                     </td>
                     <td style={{ fontWeight: 600, textAlign: "center" }}>{obra.exemplares?.length || 0}</td>
                     <td>
-                      <Link href={`/admin/biblioteca/${obra.id}`} className="admin-btn admin-btn-small">
-                        ✏️ Editar
+                      <Link href={`/admin/biblioteca/${obra.id}`} className="profile-form-btn profile-form-btn-secondary">
+                        Editar
                       </Link>
                     </td>
                   </tr>
@@ -126,18 +92,18 @@ async function BibliotecaList({ searchParams }: { searchParams: { page?: string;
       </section>
 
       {totalPages > 1 && (
-        <div style={{ display: "flex", gap: "0.5rem", justifyContent: "center", marginTop: "2rem", flexWrap: "wrap" }}>
+        <div className="area-panel-grid" style={{ justifyContent: "center", marginTop: "2rem" }}>
           {page > 1 && (
-            <Link href={`/admin/biblioteca?page=${page - 1}${search ? `&search=${search}` : ""}`} className="admin-btn admin-btn-secondary">
-              ← Anterior
+            <Link href={`/admin/biblioteca?page=${page - 1}${search ? `&search=${search}` : ""}`} className="profile-form-btn profile-form-btn-secondary">
+              Anterior
             </Link>
           )}
-          <span style={{ padding: "0.6rem 1.2rem", alignSelf: "center", fontWeight: 600 }}>
+          <span className="area-panel-item" style={{ alignSelf: "center", fontWeight: 600 }}>
             Página {page} de {totalPages}
           </span>
           {page < totalPages && (
-            <Link href={`/admin/biblioteca?page=${page + 1}${search ? `&search=${search}` : ""}`} className="admin-btn admin-btn-secondary">
-              Próxima →
+            <Link href={`/admin/biblioteca?page=${page + 1}${search ? `&search=${search}` : ""}`} className="profile-form-btn profile-form-btn-secondary">
+              Próxima
             </Link>
           )}
         </div>

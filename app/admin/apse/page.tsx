@@ -20,13 +20,15 @@ async function ApseContent() {
 
   return (
     <div className="area-page">
-      <div className="admin-page-header">
-        <div>
-          <span className="admin-dashboard-kicker">APSE</span>
-          <h1 className="admin-page-title">APSE - Assistência Social</h1>
-          <p className="admin-page-subtitle">Gestão de famílias assistidas e campanhas</p>
+      <section className="area-hero">
+        <div className="area-hero-top">
+          <div>
+            <p className="area-subtitle">APSE</p>
+            <h1 className="area-hero-title">Assistência Social</h1>
+          </div>
         </div>
-      </div>
+        <p className="area-subtitle">Gestão de famílias assistidas, campanhas e atendimentos.</p>
+      </section>
 
       <section className="area-section">
         <div className="stat-grid">
@@ -57,8 +59,11 @@ async function ApseContent() {
       </section>
 
       <section className="area-section">
-        <div className="admin-card">
-          <h2 style={{ margin: "0 0 1rem", fontSize: "1.1rem", color: "var(--text)" }}>Campanhas ativas</h2>
+        <div className="area-section-title">
+          <h2>Campanhas ativas</h2>
+          <p>Campanhas em planejamento ou andamento.</p>
+        </div>
+        <div className="table-surface">
 
           {campanhasAtivas.length > 0 ? (
             <div className="module-grid" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))" }}>
