@@ -1,6 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
+import { invalidateUserAreaCache } from '@/lib/areas/invalidate-user-area';
 
 export async function getProdutos(page = 1, search?: string) {
   const supabase = await createClient();
@@ -46,6 +47,7 @@ export async function getProdutoById(id: string) {
 
   if (error) throw error;
 
+  invalidateUserAreaCache();
   return data;
 }
 
@@ -110,6 +112,7 @@ export async function updateProduto(
 
   if (error) throw error;
 
+  invalidateUserAreaCache();
   return { success: true };
 }
 
@@ -123,6 +126,7 @@ export async function toggleProdutoStatus(id: string, ativo: boolean) {
 
   if (error) throw error;
 
+  invalidateUserAreaCache();
   return { success: true };
 }
 
@@ -187,6 +191,7 @@ export async function registrarMovimento(formData: {
 
   if (updateError) throw updateError;
 
+  invalidateUserAreaCache();
   return movimento;
 }
 

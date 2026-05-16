@@ -1,6 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
+import { invalidateUserAreaCache } from '@/lib/areas/invalidate-user-area';
 
 export async function getEmprestimos(page = 1) {
   const supabase = await createClient();
@@ -84,6 +85,7 @@ export async function createEmprestimo(formData: {
 
   if (exemplarError) throw exemplarError;
 
+  invalidateUserAreaCache();
   return emprestimo;
 }
 
@@ -105,6 +107,7 @@ export async function updateEmprestimo(
 
   if (error) throw error;
 
+  invalidateUserAreaCache();
   return { success: true };
 }
 
@@ -159,6 +162,7 @@ export async function devolverEmprestimo(id: string) {
       .eq('id', emprestimo.exemplar_id);
   }
 
+  invalidateUserAreaCache();
   return { success: true };
 }
 

@@ -1,6 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
+import { invalidateUserAreaCache } from '@/lib/areas/invalidate-user-area';
 
 export async function getUsuarios(page = 1) {
   const supabase = await createClient();
@@ -113,6 +114,7 @@ export async function grantLogin(
 
   if (error) throw error;
 
+  invalidateUserAreaCache();
   return { success: true };
 }
 
@@ -137,6 +139,7 @@ export async function updateUsuario(
 
   if (error) throw error;
 
+  invalidateUserAreaCache();
   return { success: true };
 }
 
@@ -147,5 +150,6 @@ export async function revokeLogin(id: string) {
 
   if (error) throw error;
 
+  invalidateUserAreaCache();
   return { success: true };
 }

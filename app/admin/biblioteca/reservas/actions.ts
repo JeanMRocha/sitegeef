@@ -1,6 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
+import { invalidateUserAreaCache } from '@/lib/areas/invalidate-user-area';
 
 export async function getReservas(page = 1) {
   const supabase = await createClient();
@@ -49,6 +50,7 @@ export async function getReservaById(id: string) {
 
   if (error) throw error;
 
+  invalidateUserAreaCache();
   return data;
 }
 
@@ -125,6 +127,7 @@ export async function cancelarReserva(id: string) {
     }
   }
 
+  invalidateUserAreaCache();
   return { success: true };
 }
 
@@ -147,6 +150,7 @@ export async function confirmarReserva(id: string, exemplar_id: string) {
 
   if (exemplarError) throw exemplarError;
 
+  invalidateUserAreaCache();
   return { success: true };
 }
 

@@ -5,6 +5,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getAppOrigin } from "@/lib/security";
+import { invalidateUserAreaCache } from "@/lib/areas/invalidate-user-area";
 
 async function getRequestHeadersOrigin() {
   const requestHeaders = await headers();
@@ -17,7 +18,7 @@ async function getRequestHeadersOrigin() {
   return getAppOrigin();
 }
 
-export async function signInWithEmail(email: string, password: string) {
+export async function signInWithEmail(email: string, password: string, nextUrl = "/minha-area") {
   const supabase = await createClient();
   const normalizedEmail = email.trim().toLowerCase();
 
@@ -31,7 +32,7 @@ export async function signInWithEmail(email: string, password: string) {
   }
 
   revalidatePath("/", "layout");
-  redirect("/minha-area");
+  redirect(nextUrl);
 }
 
 export async function signUpWithEmail(email: string, password: string, nomeCompleto: string) {
@@ -78,13 +79,13 @@ export async function signUpWithEmail(email: string, password: string, nomeCompl
   return { success: true };
 }
 
-export async function signInWithGoogle() {
+export async function signInWithGoogle(nextUrl = "/perfil") {
   const supabase = await createClient();
   const appOrigin = await getRequestHeadersOrigin();
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: `${appOrigin}/auth/callback`,
+      redirectTo: `${appOrigin}/auth/callback?next=${encodeURIComponent(nextUrl)}`,
     },
   });
 
@@ -138,6 +139,7 @@ export async function updateProfile(formData: FormData) {
   }
 
   revalidatePath("/perfil");
+  invalidateUserAreaCache();
 }
 
 export async function uploadAvatar(formData: FormData) {
@@ -183,4 +185,5 @@ export async function uploadAvatar(formData: FormData) {
   }
 
   revalidatePath("/perfil");
+  invalidateUserAreaCache();
 }

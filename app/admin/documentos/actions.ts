@@ -1,6 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
+import { invalidateUserAreaCache } from '@/lib/areas/invalidate-user-area';
 
 export async function getModelosDocumentos() {
   const supabase = await createClient();
@@ -27,6 +28,7 @@ export async function getModeloById(id: string) {
 
   if (error) throw error;
 
+  invalidateUserAreaCache();
   return data;
 }
 
@@ -77,6 +79,7 @@ export async function updateModelo(
 
   if (error) throw error;
 
+  invalidateUserAreaCache();
   return { success: true };
 }
 
@@ -90,6 +93,7 @@ export async function toggleModeloStatus(id: string, ativo: boolean) {
 
   if (error) throw error;
 
+  invalidateUserAreaCache();
   return { success: true };
 }
 
@@ -138,6 +142,7 @@ export async function getTermoById(id: string) {
 
   if (error) throw error;
 
+  invalidateUserAreaCache();
   return data;
 }
 
@@ -192,6 +197,7 @@ export async function updateTermo(
 
   if (error) throw error;
 
+  invalidateUserAreaCache();
   return { success: true };
 }
 
@@ -251,6 +257,7 @@ export async function getConsentimentoById(id: string) {
 
   if (error) throw error;
 
+  invalidateUserAreaCache();
   return data;
 }
 
@@ -291,6 +298,7 @@ export async function revogaConsentimento(id: string) {
 
   if (error) throw error;
 
+  invalidateUserAreaCache();
   return { success: true };
 }
 
@@ -397,6 +405,7 @@ export async function updateServico(
 
   if (error) throw error;
 
+  invalidateUserAreaCache();
   return { success: true };
 }
 

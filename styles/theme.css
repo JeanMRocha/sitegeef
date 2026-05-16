@@ -45,8 +45,8 @@
 
   /* Tema Light (padrão) */
   --bg: #f7f2fb;
-  --surface: rgba(249, 242, 255, 0.9);
-  --surface-hover: rgba(244, 233, 255, 0.96);
+  --surface: rgba(246, 237, 252, 0.96);
+  --surface-hover: rgba(239, 226, 249, 0.98);
   --text: #1c201f;
   --text-muted: #63586f;
   --border: #e1d4ee;
@@ -64,7 +64,7 @@
   /* Gradientes */
   --gradient-uva: linear-gradient(135deg, #8a005a 0%, #b82d8a 100%);
   --gradient-videira: linear-gradient(135deg, #4d9a6d 0%, #63c984 100%);
-  --gradient-light: linear-gradient(135deg, #f7f2fb 0%, #efe6f8 100%);
+  --gradient-light: linear-gradient(135deg, #f7f2fb 0%, #efe0fa 100%);
 }
 
 /* Dark Mode */

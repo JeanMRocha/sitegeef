@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { EnsureUserSystem } from "@/components/ensure-user-system";
+import { getCachedUserArea } from "@/lib/areas/user-area";
 
 export const metadata = {
   title: "Minha Área",
@@ -14,101 +15,8 @@ async function MinhaAreaContent() {
     redirect("/login?next=/minha-area");
   }
 
-  const { data: perfil } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", user.id)
-    .single();
-
-  const { data: usuario } = await supabase
-    .from("usuarios_sistema")
-    .select("*")
-    .eq("id", user.id)
-    .single();
-
-  const pessoaId = usuario?.pessoa_id;
-
-  let pessoa: any = null;
-  let emprestimos: any[] = [];
-  let reservas: any[] = [];
-  let movimentosLivraria: any[] = [];
-  let escalas: any[] = [];
-  let voluntariados: any[] = [];
-  let consentimentos: any[] = [];
-
-  if (pessoaId) {
-    const { data } = await supabase
-      .from("pessoas")
-      .select("*")
-      .eq("id", pessoaId)
-      .single();
-    pessoa = data;
-
-    if (usuario?.pode_biblioteca) {
-      const { data: emps } = await supabase
-        .from("emprestimos")
-        .select(`
-          id, data_retirada, prazo_devolucao, status,
-          exemplares (codigo, obra:obras (titulo, autor))
-        `)
-        .eq("pessoa_id", pessoaId)
-        .eq("status", "em_aberto")
-        .order("prazo_devolucao", { ascending: true });
-      emprestimos = emps || [];
-
-      const { data: reservas_data } = await supabase
-        .from("reservas")
-        .select(`
-          id, posicao_fila, criado_em,
-          obras (titulo, autor)
-        `)
-        .eq("pessoa_id", pessoaId)
-        .eq("status", "aguardando")
-        .order("posicao_fila", { ascending: true });
-      reservas = reservas_data || [];
-    }
-
-    if (usuario?.pode_livraria) {
-      const { data: movs } = await supabase
-        .from("movimentos_livraria")
-        .select(`
-          id, tipo, quantidade, valor_total, criado_em,
-          produtos_livraria (titulo, autor)
-        `)
-        .eq("pessoa_id", pessoaId)
-        .order("criado_em", { ascending: false })
-        .limit(10);
-      movimentosLivraria = movs || [];
-    }
-
-    if (usuario?.pode_escalas) {
-      const { data: esc } = await supabase
-        .from("escala_funcoes")
-        .select(`
-          id, observacao,
-          reunioes (data, escala:escalas_mensais (mes, ano)),
-          funcoes (nome)
-        `)
-        .eq("pessoa_id", pessoaId)
-        .order("reunioes(data)", { ascending: false })
-        .limit(10);
-      escalas = esc || [];
-    }
-
-    const { data: voluntarios } = await supabase
-      .from("servicos_voluntarios")
-      .select("*")
-      .eq("pessoa_id", pessoaId)
-      .eq("status", "ativo");
-    voluntariados = voluntarios || [];
-
-    const { data: consent } = await supabase
-      .from("consentimentos_lgpd")
-      .select("*")
-      .eq("pessoa_id", pessoaId)
-      .eq("status", "ativo");
-    consentimentos = consent || [];
-  }
+  const { usuario, pessoa, emprestimos, reservas, movimentosLivraria, escalas, voluntariados, consentimentos } =
+    await getCachedUserArea(user.id);
 
   const today = new Date().toISOString().split("T")[0];
   const emprestimosVencidos = emprestimos.filter((e: any) => e.prazo_devolucao < today);

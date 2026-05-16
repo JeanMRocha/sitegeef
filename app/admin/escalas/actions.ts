@@ -1,6 +1,15 @@
 'use server';
 
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
+import { invalidateUserAreaCache } from '@/lib/areas/invalidate-user-area';
+
+function invalidateEscalasCache() {
+  revalidateTag('public-escalas');
+  revalidatePath('/escalas');
+  revalidatePath('/admin/escalas');
+  invalidateUserAreaCache();
+}
 
 export async function getEscalas(page = 1) {
   const supabase = await createClient();
@@ -111,6 +120,7 @@ export async function createEscala(formData: {
 
   if (reunioesError) throw reunioesError;
 
+  invalidateEscalasCache();
   return escala;
 }
 
@@ -124,6 +134,7 @@ export async function updateEscalaStatus(id: string, status: string) {
 
   if (error) throw error;
 
+  invalidateEscalasCache();
   return { success: true };
 }
 
@@ -145,6 +156,7 @@ export async function addFuncao(reuniaoId: string, funcaoId: string, pessoaId: s
 
   if (error) throw error;
 
+  invalidateEscalasCache();
   return data;
 }
 
@@ -161,6 +173,7 @@ export async function updateFuncao(id: string, pessoaId: string, substitutoId?: 
 
   if (error) throw error;
 
+  invalidateEscalasCache();
   return { success: true };
 }
 
@@ -174,6 +187,7 @@ export async function removeFuncao(id: string) {
 
   if (error) throw error;
 
+  invalidateEscalasCache();
   return { success: true };
 }
 
@@ -194,6 +208,7 @@ export async function addPasseEscalon(reuniaoId: string, pessoaId: string, posic
 
   if (error) throw error;
 
+  invalidateEscalasCache();
   return data;
 }
 
@@ -210,6 +225,7 @@ export async function updatePasseEscalon(id: string, pessoaId: string, posicao: 
 
   if (error) throw error;
 
+  invalidateEscalasCache();
   return { success: true };
 }
 
@@ -223,6 +239,7 @@ export async function removePasseEscalon(id: string) {
 
   if (error) throw error;
 
+  invalidateEscalasCache();
   return { success: true };
 }
 

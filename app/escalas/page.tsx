@@ -1,265 +1,277 @@
-import { createClient } from '@/lib/supabase/server';
-import { Suspense } from 'react';
+import type { Metadata } from "next";
+import { schedule } from "@/lib/site-data";
+import { getPublicEscalas } from "@/lib/escalas/public-escalas";
 
-export const metadata = {
-  title: 'Escalas do GEEF',
+export const metadata: Metadata = {
+  title: "Escalas do GEEF",
+  description: "Agenda pública base das atividades e reuniões do GEEF.",
 };
 
 function getMonthName(mes: number): string {
   const months = [
-    'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro',
+    "Janeiro",
+    "Fevereiro",
+    "Março",
+    "Abril",
+    "Maio",
+    "Junho",
+    "Julho",
+    "Agosto",
+    "Setembro",
+    "Outubro",
+    "Novembro",
+    "Dezembro",
   ];
-  return months[mes - 1];
+
+  return months[mes - 1] ?? "Mês inválido";
 }
 
-async function EscalasContent() {
-  const supabase = await createClient();
-
-  // Get current year and month
-  const now = new Date();
-  const currentYear = now.getFullYear();
-  const currentMonth = now.getMonth() + 1;
-
-  // Get escalas for current and next 3 months
-  const { data: escalas, error } = await supabase
-    .from('escalas_mensais')
-    .select(
-      `
-      *,
-      reunioes (
-        id, data,
-        escala_funcoes (
-          funcao_id, pessoa_id, substituto_id,
-          funcoes (nome),
-          pessoas (nome),
-          substitutos:pessoas!substituto_id (nome)
-        ),
-        escala_passe (
-          pessoa_id, posicao,
-          pessoas (nome)
-        ),
-        escala_evangelizacao (
-          pessoa_id, tema_id, tema_livre, turma,
-          pessoas (nome),
-          temas_doutrinarios (titulo)
-        ),
-        escala_palestras (
-          expositor_id, tema_id, tema_livre, cidade_origem, tipo_palestra,
-          expositores:pessoas (nome),
-          temas_doutrinarios (titulo)
-        )
-      )
-    `
-    )
-    .eq('status', 'publicada')
-    .gte('ano', currentYear)
-    .order('ano', { ascending: true })
-    .order('mes', { ascending: true });
-
-  if (error) throw error;
-
-  const escalasatuais = escalas?.filter(
-    (e: any) => e.ano > currentYear || (e.ano === currentYear && e.mes >= currentMonth)
+function PublicFallback() {
+  return (
+    <section style={{ marginTop: "1rem", display: "grid", gap: "0.75rem" }}>
+      {schedule.map((item) => (
+        <article
+          key={item.title}
+          style={{
+            padding: "1rem",
+            borderRadius: "18px",
+            border: "1px solid rgba(225, 212, 238, 0.92)",
+            background:
+              "linear-gradient(180deg, rgba(249, 242, 255, 0.98), rgba(236, 223, 248, 0.96))",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "0.6rem",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <h3 style={{ margin: 0, fontSize: "1rem", fontWeight: 700, color: "var(--text)" }}>
+              {item.title}
+            </h3>
+            <span
+              style={{
+                padding: "0.3rem 0.65rem",
+                borderRadius: "999px",
+                background: "rgba(138, 0, 90, 0.08)",
+                color: "var(--uva-700)",
+                fontSize: "0.78rem",
+                fontWeight: 700,
+              }}
+            >
+              {item.when}
+            </span>
+          </div>
+          <p style={{ margin: "0.55rem 0 0", color: "var(--muted)", lineHeight: 1.6 }}>
+            {item.description}
+          </p>
+        </article>
+      ))}
+    </section>
   );
+}
+
+export default async function EscalasPage() {
+  let escalas: Awaited<ReturnType<typeof getPublicEscalas>>["escalas"] = [];
+
+  try {
+    const result = await getPublicEscalas();
+    escalas = result.escalas;
+  } catch (error) {
+    console.error("Falha ao carregar escalas públicas:", error);
+  }
 
   return (
-    <div>
-      {/* Header */}
-      <div style={{ paddingBottom: '2rem', borderBottom: '1px solid rgba(0,0,0,0.1)' }}>
-        <h1 style={{ margin: '0 0 0.5rem', fontSize: '2rem', fontWeight: 700 }}>Escalas do GEEF</h1>
-        <p style={{ margin: 0, fontSize: '1rem', color: '#666' }}>
-          Confira as escalas das reuniões e atividades
+    <main
+      style={{
+        width: "min(1080px, calc(100% - 1.5rem))",
+        margin: "0 auto",
+        padding: "1rem 0 2rem",
+      }}
+    >
+      <section
+        style={{
+          padding: "1.35rem",
+          borderRadius: "28px",
+          border: "1px solid rgba(225, 212, 238, 0.92)",
+          background:
+            "linear-gradient(180deg, rgba(248, 240, 255, 0.98), rgba(236, 223, 248, 0.96))",
+          boxShadow: "0 20px 48px rgba(124, 63, 163, 0.08)",
+        }}
+      >
+        <p
+          style={{
+            margin: 0,
+            display: "inline-flex",
+            padding: "0.35rem 0.7rem",
+            borderRadius: "999px",
+            background: "rgba(138, 0, 90, 0.1)",
+            color: "var(--uva-700)",
+            letterSpacing: "0.14em",
+            textTransform: "uppercase",
+            fontSize: "0.76rem",
+            fontWeight: 700,
+          }}
+        >
+          Escalas
         </p>
-      </div>
+        <h1
+          style={{
+            margin: "0.75rem 0 0",
+            fontFamily: "var(--font-heading)",
+            fontSize: "clamp(2rem, 5vw, 3.25rem)",
+            lineHeight: 0.95,
+            letterSpacing: "-0.05em",
+          }}
+        >
+          Agenda pública de atividades
+        </h1>
+        <p style={{ margin: "0.65rem 0 0", color: "var(--muted)", maxWidth: "44rem", lineHeight: 1.6 }}>
+          O conteúdo vem do Supabase com cache local. Quando o ERP atualizar uma escala, a página pública
+          é invalidada e recarrega a versão nova sem perder desempenho.
+        </p>
+      </section>
 
-      {/* Escalas */}
-      {escalasatuais && escalasatuais.length > 0 ? (
-        <div style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', gap: '3rem' }}>
-          {escalasatuais.map((escala: any) => (
-            <div key={escala.id}>
-              <h2 style={{
-                margin: '0 0 1.5rem',
-                fontSize: '1.5rem',
-                fontWeight: 600,
-                color: '#1a1a1a',
-              }}>
+      {escalas.length > 0 ? (
+        <section style={{ marginTop: "1rem", display: "grid", gap: "1rem" }}>
+          {escalas.map((escala) => (
+            <article
+              key={escala.id}
+              style={{
+                padding: "1rem",
+                borderRadius: "22px",
+                border: "1px solid rgba(225, 212, 238, 0.92)",
+                background: "rgba(247, 239, 252, 0.98)",
+              }}
+            >
+              <h2
+                style={{
+                  margin: 0,
+                  fontFamily: "var(--font-heading)",
+                  fontSize: "1.2rem",
+                  color: "var(--text)",
+                }}
+              >
                 {getMonthName(escala.mes)} de {escala.ano}
               </h2>
 
-              {/* Reuniões */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-                {escala.reunioes?.map((reuniao: any) => (
+              <div style={{ display: "grid", gap: "1rem", marginTop: "1rem" }}>
+                {escala.reunioes?.map((reuniao) => (
                   <div
                     key={reuniao.id}
                     style={{
-                      padding: '1.5rem',
-                      backgroundColor: '#f9f9f9',
-                      border: '1px solid #e5e5e5',
-                      borderRadius: '0.8rem',
+                      padding: "1rem",
+                      borderRadius: "18px",
+                      border: "1px solid rgba(225, 212, 238, 0.92)",
+                      background:
+                        "linear-gradient(180deg, rgba(249, 242, 255, 0.98), rgba(236, 223, 248, 0.96))",
                     }}
                   >
-                    <h3 style={{
-                      margin: '0 0 1.5rem',
-                      fontSize: '1.1rem',
-                      fontWeight: 600,
-                      color: '#1a1a1a',
-                    }}>
-                      Quinta-feira, {new Date(reuniao.data + 'T00:00:00').toLocaleDateString('pt-BR', {
-                        weekday: 'long',
-                        month: 'long',
-                        day: 'numeric',
+                    <h3
+                      style={{
+                        margin: "0 0 0.85rem",
+                        fontSize: "1rem",
+                        fontWeight: 700,
+                        color: "var(--text)",
+                      }}
+                    >
+                      Quinta-feira, {new Date(`${reuniao.data}T00:00:00`).toLocaleDateString("pt-BR", {
+                        weekday: "long",
+                        month: "long",
+                        day: "numeric",
                       })}
                     </h3>
 
-                    {/* Funções */}
-                    {reuniao.escala_funcoes && reuniao.escala_funcoes.length > 0 && (
-                      <div style={{ marginBottom: '1.5rem' }}>
-                        <h4 style={{ margin: '0 0 0.75rem', fontSize: '0.95rem', fontWeight: 600, color: '#333' }}>
-                          ⚙️ Funções
-                        </h4>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                          {reuniao.escala_funcoes.map((ef: any, idx: number) => (
-                            <div
-                              key={idx}
-                              style={{
-                                padding: '0.75rem',
-                                backgroundColor: '#fff',
-                                borderRadius: '0.4rem',
-                                fontSize: '0.9rem',
-                                display: 'grid',
-                                gridTemplateColumns: '120px 1fr 1fr',
-                                gap: '1rem',
-                              }}
-                            >
-                              <div>
-                                <strong>{ef.funcoes?.nome}</strong>
-                              </div>
-                              <div>
-                                {ef.pessoas?.nome}
-                              </div>
-                              <div style={{ color: '#666', fontSize: '0.85rem' }}>
-                                {ef.substitutos?.nome && `(Sub: ${ef.substitutos.nome})`}
-                              </div>
-                            </div>
-                          ))}
+                    <div style={{ display: "grid", gap: "0.65rem" }}>
+                      {(reuniao.escala_funcoes ?? []).slice(0, 3).map((ef) => (
+                        <div
+                          key={String(ef.id ?? `${ef.funcao_id}-${ef.pessoa_id}`)}
+                          style={{
+                            display: "grid",
+                            gap: "0.25rem",
+                            gridTemplateColumns: "minmax(130px, 0.7fr) 1fr 1fr",
+                            padding: "0.8rem",
+                            borderRadius: "14px",
+                            background: "rgba(247, 239, 252, 0.98)",
+                          }}
+                        >
+                          <strong>{ef.funcoes?.nome ?? "Função"}</strong>
+                          <span>{ef.pessoas?.nome ?? "Sem nome"}</span>
+                          <span style={{ color: "var(--muted)", fontSize: "0.86rem" }}>
+                            {ef.substitutos?.nome ? `Sub: ${ef.substitutos.nome}` : ""}
+                          </span>
                         </div>
-                      </div>
-                    )}
+                      ))}
 
-                    {/* Passe */}
-                    {reuniao.escala_passe && reuniao.escala_passe.length > 0 && (
-                      <div style={{ marginBottom: '1.5rem' }}>
-                        <h4 style={{ margin: '0 0 0.75rem', fontSize: '0.95rem', fontWeight: 600, color: '#333' }}>
-                          💫 Passe Magnético
-                        </h4>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                          {reuniao.escala_passe
-                            .sort((a: any, b: any) => a.posicao - b.posicao)
-                            .map((ep: any, idx: number) => (
-                              <div
-                                key={idx}
-                                style={{
-                                  padding: '0.75rem',
-                                  backgroundColor: '#fff',
-                                  borderRadius: '0.4rem',
-                                  fontSize: '0.9rem',
-                                  display: 'grid',
-                                  gridTemplateColumns: '60px 1fr',
-                                  gap: '1rem',
-                                }}
-                              >
-                                <div style={{ fontWeight: 600 }}>#{ep.posicao}</div>
-                                <div>{ep.pessoas?.nome}</div>
-                              </div>
-                            ))}
+                      {(reuniao.escala_passe ?? []).slice(0, 3).map((ep) => (
+                        <div
+                          key={String(ep.id ?? `${ep.posicao}-${ep.pessoa_id}`)}
+                          style={{
+                            display: "grid",
+                            gap: "0.25rem",
+                            gridTemplateColumns: "60px 1fr",
+                            padding: "0.8rem",
+                            borderRadius: "14px",
+                            background: "rgba(247, 239, 252, 0.98)",
+                          }}
+                        >
+                          <strong>#{ep.posicao}</strong>
+                          <span>{ep.pessoas?.nome ?? "Sem nome"}</span>
                         </div>
-                      </div>
-                    )}
+                      ))}
 
-                    {/* Evangelização */}
-                    {reuniao.escala_evangelizacao && reuniao.escala_evangelizacao.length > 0 && (
-                      <div style={{ marginBottom: '1.5rem' }}>
-                        <h4 style={{ margin: '0 0 0.75rem', fontSize: '0.95rem', fontWeight: 600, color: '#333' }}>
-                          ✝️ Evangelização
-                        </h4>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                          {reuniao.escala_evangelizacao.map((ee: any, idx: number) => (
-                            <div
-                              key={idx}
-                              style={{
-                                padding: '0.75rem',
-                                backgroundColor: '#fff',
-                                borderRadius: '0.4rem',
-                                fontSize: '0.9rem',
-                                display: 'grid',
-                                gridTemplateColumns: '1fr 1fr 120px',
-                                gap: '1rem',
-                              }}
-                            >
-                              <div>{ee.pessoas?.nome}</div>
-                              <div>{ee.temas_doutrinarios?.titulo || ee.tema_livre}</div>
-                              <div style={{ color: '#666', fontSize: '0.85rem' }}>
-                                {ee.turma && `(${ee.turma})`}
-                              </div>
-                            </div>
-                          ))}
+                      {(reuniao.escala_evangelizacao ?? []).slice(0, 3).map((ee) => (
+                        <div
+                          key={String(ee.id ?? `${ee.pessoa_id}-${ee.tema_id}`)}
+                          style={{
+                            display: "grid",
+                            gap: "0.25rem",
+                            gridTemplateColumns: "1fr 1fr 120px",
+                            padding: "0.8rem",
+                            borderRadius: "14px",
+                            background: "rgba(247, 239, 252, 0.98)",
+                          }}
+                        >
+                          <span>{ee.pessoas?.nome ?? "Sem nome"}</span>
+                          <span>{ee.temas_doutrinarios?.titulo ?? ee.tema_livre ?? "Tema"}</span>
+                          <span style={{ color: "var(--muted)", fontSize: "0.86rem" }}>
+                            {ee.turma ? `(${ee.turma})` : ""}
+                          </span>
                         </div>
-                      </div>
-                    )}
+                      ))}
 
-                    {/* Palestras */}
-                    {reuniao.escala_palestras && reuniao.escala_palestras.length > 0 && (
-                      <div>
-                        <h4 style={{ margin: '0 0 0.75rem', fontSize: '0.95rem', fontWeight: 600, color: '#333' }}>
-                          🎤 Palestras
-                        </h4>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                          {reuniao.escala_palestras.map((ep: any, idx: number) => (
-                            <div
-                              key={idx}
-                              style={{
-                                padding: '0.75rem',
-                                backgroundColor: '#fff',
-                                borderRadius: '0.4rem',
-                                fontSize: '0.9rem',
-                                display: 'grid',
-                                gridTemplateColumns: '120px 1fr 1fr',
-                                gap: '1rem',
-                              }}
-                            >
-                              <div style={{ fontWeight: 600 }}>{ep.expositores?.nome}</div>
-                              <div>{ep.temas_doutrinarios?.titulo || ep.tema_livre}</div>
-                              <div style={{ color: '#666', fontSize: '0.85rem' }}>
-                                {ep.cidade_origem && `${ep.cidade_origem}`}
-                                {ep.tipo_palestra && ` (${ep.tipo_palestra})`}
-                              </div>
-                            </div>
-                          ))}
+                      {(reuniao.escala_palestras ?? []).slice(0, 3).map((ep) => (
+                        <div
+                          key={String(ep.id ?? `${ep.expositor_id}-${ep.tema_id}`)}
+                          style={{
+                            display: "grid",
+                            gap: "0.25rem",
+                            gridTemplateColumns: "120px 1fr 1fr",
+                            padding: "0.8rem",
+                            borderRadius: "14px",
+                            background: "rgba(247, 239, 252, 0.98)",
+                          }}
+                        >
+                          <strong>{ep.expositores?.nome ?? "Expositor"}</strong>
+                          <span>{ep.temas_doutrinarios?.titulo ?? ep.tema_livre ?? "Tema"}</span>
+                          <span style={{ color: "var(--muted)", fontSize: "0.86rem" }}>
+                            {ep.cidade_origem ?? ep.tipo_palestra ?? ""}
+                          </span>
                         </div>
-                      </div>
-                    )}
+                      ))}
+                    </div>
                   </div>
                 ))}
               </div>
-            </div>
+            </article>
           ))}
-        </div>
+        </section>
       ) : (
-        <div style={{ padding: '2rem', textAlign: 'center', color: '#666' }}>
-          <p>Nenhuma escala publicada no momento.</p>
-        </div>
+        <PublicFallback />
       )}
-    </div>
-  );
-}
-
-export default function EscalasPage() {
-  return (
-    <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '2rem 1rem' }}>
-      <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando escalas...</div>}>
-        <EscalasContent />
-      </Suspense>
-    </div>
+    </main>
   );
 }

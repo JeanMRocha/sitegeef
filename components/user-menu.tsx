@@ -39,7 +39,7 @@ export function UserMenu({
   if (!userEmail) {
     return (
       <Link
-        href="/login?next=/minha-area"
+        href="/login?next=/minha-area&popup=1"
         className="site-header-user-btn site-header-user-login"
         title="Fazer login"
       >
