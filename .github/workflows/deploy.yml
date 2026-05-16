@@ -1,4 +1,4 @@
-name: Build and Validate
+name: Build and Deploy
 
 on:
   push:
@@ -21,11 +21,40 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Apply Supabase Migrations
-        run: |
-          echo "Note: Migrations in supabase/migrations/ are auto-applied by Supabase GitHub integration"
-          echo "If configured, Supabase will detect changes in supabase/migrations/"
-        continue-on-error: true
-
       - name: Build
         run: npm run build
+
+  deploy:
+    needs: build-and-validate
+    runs-on: ubuntu-latest
+    if: success()
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy to VPS
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_PATH: ${{ secrets.VPS_PATH }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/id_rsa
+          chmod 644 ~/.ssh/known_hosts
+
+          # Deploy script
+          ssh -i ~/.ssh/id_rsa $VPS_USER@$VPS_HOST "cd $VPS_PATH && bash deploy.sh"
+        continue-on-error: true
+
+      - name: Notify Deployment Status
+        if: always()
+        run: |
+          if [ "${{ job.status }}" = "success" ]; then
+            echo "✅ Deployment successful!"
+          else
+            echo "⚠️ Deployment completed with warnings or errors"
+          fi
