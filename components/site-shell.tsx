@@ -1,8 +1,7 @@
 import { unstable_noStore as noStore } from "next/cache";
 import Link from "next/link";
 import { navItems, site } from "@/lib/site-data";
-import { ProfileMenu } from "@/components/profile-menu";
-import { QuickNavSidebar } from "@/components/quick-nav-sidebar";
+import { HeaderCompact } from "@/components/header-compact";
 import { UserIcon } from "@/components/site-icons";
 import { createClient } from "@/lib/supabase/server";
 
@@ -59,19 +58,17 @@ export async function SiteShell({ children }: Readonly<{ children: React.ReactNo
           )}
         </nav>
       </header>
-      {children}
 
-      {/* Float Menus */}
+      {/* Compact Header Menu (quando autenticado) */}
       {user && (
-        <>
-          <QuickNavSidebar />
-          <ProfileMenu
-            userEmail={user.email}
-            nomeCompleto={profile?.nome_completo}
-            avatarUrl={profile?.avatar_url}
-          />
-        </>
+        <HeaderCompact
+          userEmail={user.email}
+          nomeCompleto={profile?.nome_completo}
+          avatarUrl={profile?.avatar_url}
+        />
       )}
+
+      {children}
 
       <footer className="site-footer">
         <div className="site-footer-content">
