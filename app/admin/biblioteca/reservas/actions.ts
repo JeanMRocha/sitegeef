@@ -1,10 +1,13 @@
 'use server';
 
+import { unstable_cache } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
+import { createServiceRoleClient } from '@/lib/supabase/service-role';
+import { invalidateAdminBibliotecaCache } from '@/lib/admin/cache';
 import { invalidateUserAreaCache } from '@/lib/areas/invalidate-user-area';
 
-export async function getReservas(page = 1) {
-  const supabase = await createClient();
+async function loadReservas(page = 1) {
+  const supabase = createServiceRoleClient();
   const pageSize = 20;
   const offset = (page - 1) * pageSize;
 
@@ -32,8 +35,13 @@ export async function getReservas(page = 1) {
   };
 }
 
+export const getReservas = unstable_cache(loadReservas, ['admin-biblioteca-reservas'], {
+  revalidate: 60,
+  tags: ['admin-biblioteca'],
+});
+
 export async function getReservaById(id: string) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { data, error } = await supabase
     .from('reservas')
@@ -58,7 +66,7 @@ export async function createReserva(formData: {
   pessoa_id: string;
   obra_id: string;
 }) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   // Get next position in queue
   const { data: lastReserva } = await supabase
@@ -87,11 +95,13 @@ export async function createReserva(formData: {
 
   if (error) throw error;
 
+  invalidateAdminBibliotecaCache();
+  invalidateUserAreaCache();
   return data;
 }
 
 export async function cancelarReserva(id: string) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   // Get the reservation details
   const { data: reserva, error: getError } = await supabase
@@ -127,12 +137,13 @@ export async function cancelarReserva(id: string) {
     }
   }
 
+  invalidateAdminBibliotecaCache();
   invalidateUserAreaCache();
   return { success: true };
 }
 
 export async function confirmarReserva(id: string, exemplar_id: string) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   // Update reservation status
   const { error: updateError } = await supabase
@@ -150,6 +161,7 @@ export async function confirmarReserva(id: string, exemplar_id: string) {
 
   if (exemplarError) throw exemplarError;
 
+  invalidateAdminBibliotecaCache();
   invalidateUserAreaCache();
   return { success: true };
 }

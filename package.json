@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "next dev -p 3500",
     "dev:watchdog": "node scripts/dev-watchdog.mjs",
+    "agent:lint": "node scripts/agent-lint.mjs",
+    "agent:map": "node scripts/generate-agent-map.mjs",
     "build": "next build",
     "postbuild": "node scripts/copy-standalone-assets.js",
     "start": "node .next/standalone/server.js",

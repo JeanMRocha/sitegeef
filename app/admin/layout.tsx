@@ -10,6 +10,8 @@ export const metadata = {
   description: 'Painel administrativo para gestão de escalas',
 };
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminLayout({
   children,
 }: {

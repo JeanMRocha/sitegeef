@@ -1,42 +1,27 @@
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/server';
 import { getQuintasFeiras, getNomeMes, getProximaQuinta } from '@/lib/escalas/datas';
 import { formatarDataLonga } from '@/lib/escalas/datas';
+import { getCachedAdminDashboardSummary } from '@/lib/admin/dashboard';
 
 export const metadata = {
   title: 'Dashboard - Admin GEEF',
 };
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminDashboard() {
-  const supabase = await createClient();
-
-  // Get stats
-  const [pessoasResult, funcoesResult, temasResult, escalasResult] = await Promise.all([
-    supabase.from('pessoas').select('id', { count: 'exact' }).eq('ativo', true),
-    supabase.from('funcoes').select('id', { count: 'exact' }).eq('ativo', true),
-    supabase.from('temas_doutrinarios').select('id', { count: 'exact' }).eq('ativo', true),
-    supabase.from('escalas_mensais').select('id', { count: 'exact' }).eq('status', 'publicada'),
-  ]);
-
-  const totalPessoas = pessoasResult.count || 0;
-  const totalFuncoes = funcoesResult.count || 0;
-  const totalTemas = temasResult.count || 0;
-  const totalEscalasPublicadas = escalasResult.count || 0;
+  const {
+    totalPessoas,
+    totalFuncoes,
+    totalTemas,
+    totalEscalasPublicadas,
+    escalaMesAtual,
+    mesAtual,
+    anoAtual,
+  } = await getCachedAdminDashboardSummary();
 
   // Get próxima quinta
   const proximaQuinta = getProximaQuinta();
-
-  // Get current month escalas
-  const agora = new Date();
-  const mesAtual = agora.getMonth() + 1;
-  const anoAtual = agora.getFullYear();
-
-  const { data: escalaMesAtual } = await supabase
-    .from('escalas_mensais')
-    .select('id, status')
-    .eq('mes', mesAtual)
-    .eq('ano', anoAtual)
-    .single();
 
   return (
     <div>

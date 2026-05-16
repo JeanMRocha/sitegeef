@@ -1,0 +1,576 @@
+{
+  "generatedAt": "2026-05-16T18:56:08.659Z",
+  "source": "scripts/agent-lint.mjs",
+  "modules": {
+    "public": {
+      "key": "public",
+      "title": "Public site",
+      "files": [
+        "app/page.tsx",
+        "app/[slug]/page.tsx",
+        "components/site-shell.tsx",
+        "components/site-header.tsx",
+        "components/content-page.tsx",
+        "styles/globals.css",
+        "styles/site-header.css"
+      ],
+      "layout": "app/layout.tsx -> components/site-shell.tsx",
+      "layoutChain": [],
+      "cache": "Public pages use short cache only where data is derived from Supabase.",
+      "owner": "site/public",
+      "mustInvalidate": [
+        "public-escalas",
+        "/escalas",
+        "/minha-area",
+        "/leitor"
+      ],
+      "css": [
+        "styles/globals.css",
+        "styles/site-header.css"
+      ],
+      "writeActions": [],
+      "docs": [
+        "HANDOFF.md",
+        "docs/AGENT_PLAYBOOK.md",
+        "docs/MODULE_MAP.md",
+        "docs/INDEX.md",
+        "THEME_SYSTEM.md"
+      ],
+      "relatedFiles": [
+        "app/page.tsx",
+        "app/[slug]/page.tsx",
+        "components/site-shell.tsx",
+        "components/site-header.tsx"
+      ],
+      "checklist": [
+        "Reusar site-geef-ui-ux para a mudanca visual.",
+        "Revisar header, hero e cards antes de mexer em componentes locais.",
+        "Evitar branco puro em cards e painéis.",
+        "Confirmar o arquivo raiz e o layout pai antes de editar.",
+        "Checar se existe helper em lib/ antes de duplicar leitura.",
+        "Validar se a mudanca afeta cache, paths ou permissao.",
+        "Executar npm run build no final."
+      ],
+      "recommendation": {
+        "nextFile": "components/site-shell.tsx",
+        "risk": "Mudar layout publico sem alinhar tokens e header pode piorar contraste e hierarquia."
+      },
+      "notes": [
+        "Use site-geef-ui-ux for visual changes.",
+        "Keep light theme readable; avoid pure white cards.",
+        "Do not pull admin auth/session logic into public shell."
+      ]
+    },
+    "auth": {
+      "key": "auth",
+      "title": "Auth",
+      "files": [
+        "app/login/page.tsx",
+        "components/auth/login-form.tsx",
+        "app/login/actions.ts",
+        "app/auth/callback/route.ts",
+        "components/user-menu.tsx"
+      ],
+      "layout": "app/layout.tsx -> app/login/layout? none -> app/login/page.tsx",
+      "layoutChain": [],
+      "cache": "Login is request-time; do not cache auth state.",
+      "owner": "auth/login",
+      "mustInvalidate": [
+        "/login",
+        "/perfil",
+        "/",
+        "layout"
+      ],
+      "css": [
+        "styles/globals.css"
+      ],
+      "writeActions": [
+        "app/login/actions.ts",
+        "app/auth/callback/route.ts"
+      ],
+      "docs": [
+        "HANDOFF.md",
+        "docs/AGENT_PLAYBOOK.md",
+        "docs/MODULE_MAP.md",
+        "GOOGLE_OAUTH_SETUP.md"
+      ],
+      "relatedFiles": [
+        "app/login/page.tsx",
+        "components/auth/login-form.tsx",
+        "app/login/actions.ts",
+        "app/auth/callback/route.ts"
+      ],
+      "checklist": [
+        "Confirmar o arquivo raiz e o layout pai antes de editar.",
+        "Checar se existe helper em lib/ antes de duplicar leitura.",
+        "Validar se a mudanca afeta cache, paths ou permissao.",
+        "Executar npm run build no final."
+      ],
+      "recommendation": {
+        "nextFile": "components/auth/login-form.tsx",
+        "risk": "Ajustar login sem preservar nextUrl e callback pode quebrar redirecionamento."
+      },
+      "notes": [
+        "Keep login compact and modal-like when possible.",
+        "Preserve nextUrl redirects and OAuth callback sanitation."
+      ]
+    },
+    "dashboard": {
+      "key": "dashboard",
+      "title": "Admin dashboard",
+      "files": [
+        "app/admin/page.tsx",
+        "lib/admin/dashboard.ts",
+        "lib/admin/cache.ts",
+        "app/admin/layout.tsx"
+      ],
+      "layout": "app/layout.tsx -> app/admin/layout.tsx",
+      "layoutChain": [],
+      "cache": "Dashboard uses lib/admin/dashboard.ts and lib/admin/cache.ts.",
+      "owner": "admin/dashboard",
+      "mustInvalidate": [
+        "admin-dashboard",
+        "/admin"
+      ],
+      "css": [
+        "styles/admin.css",
+        "styles/admin-sidebar.css"
+      ],
+      "writeActions": [
+        "app/admin/pessoas/actions.ts",
+        "app/admin/funcoes/actions.ts",
+        "app/admin/escalas/actions.ts"
+      ],
+      "docs": [
+        "HANDOFF.md",
+        "docs/AGENT_PLAYBOOK.md",
+        "docs/MODULE_MAP.md",
+        "docs/baseerp.md",
+        "STATUS.md"
+      ],
+      "relatedFiles": [
+        "app/admin/page.tsx",
+        "lib/admin/dashboard.ts",
+        "lib/admin/cache.ts",
+        "app/admin/layout.tsx"
+      ],
+      "checklist": [
+        "Ver se a stat vem de lib/admin/dashboard.ts.",
+        "Confirmar qual write action invalida o dashboard.",
+        "Checar se a pagina precisa continuar dinamica.",
+        "Confirmar o arquivo raiz e o layout pai antes de editar.",
+        "Checar se existe helper em lib/ antes de duplicar leitura.",
+        "Validar se a mudanca afeta cache, paths ou permissao.",
+        "Executar npm run build no final."
+      ],
+      "recommendation": {
+        "nextFile": "lib/admin/dashboard.ts",
+        "risk": "Mexer na pagina sem atualizar o helper cacheado pode causar dados inconsistentes."
+      },
+      "notes": [
+        "Dashboard data should use short cache only.",
+        "Invalidate dashboard on writes in pessoas, funcoes and escalas."
+      ]
+    },
+    "biblioteca": {
+      "key": "biblioteca",
+      "title": "Biblioteca",
+      "files": [
+        "app/admin/biblioteca/page.tsx",
+        "app/admin/biblioteca/actions.ts",
+        "app/admin/biblioteca/emprestimos/actions.ts",
+        "app/admin/biblioteca/reservas/actions.ts",
+        "lib/admin/cache.ts",
+        "app/admin/biblioteca/layout.tsx"
+      ],
+      "layout": "app/layout.tsx -> app/admin/layout.tsx -> app/admin/biblioteca/layout.tsx",
+      "layoutChain": [],
+      "cache": "List views use short cache. Form helpers stay request-time.",
+      "owner": "admin/biblioteca",
+      "mustInvalidate": [
+        "admin-biblioteca",
+        "/admin/biblioteca",
+        "/admin/biblioteca/emprestimos",
+        "/admin/biblioteca/reservas",
+        "/minha-area",
+        "/leitor"
+      ],
+      "css": [
+        "styles/admin.css",
+        "styles/admin-sidebar.css",
+        "styles/globals.css"
+      ],
+      "writeActions": [
+        "app/admin/biblioteca/actions.ts",
+        "app/admin/biblioteca/emprestimos/actions.ts",
+        "app/admin/biblioteca/reservas/actions.ts"
+      ],
+      "docs": [
+        "HANDOFF.md",
+        "docs/AGENT_PLAYBOOK.md",
+        "docs/MODULE_MAP.md",
+        "docs/baseerp.md",
+        "docs/INDEX.md"
+      ],
+      "relatedFiles": [
+        "app/admin/biblioteca/page.tsx",
+        "app/admin/biblioteca/actions.ts",
+        "app/admin/biblioteca/emprestimos/actions.ts",
+        "app/admin/biblioteca/reservas/actions.ts"
+      ],
+      "checklist": [
+        "Separar listagem, emprestimo e reserva antes de editar.",
+        "Verificar se o helper atual e listagem cacheada ou formulario request-time.",
+        "Conferir se a escrita invalida biblioteca e area do usuario.",
+        "Confirmar o arquivo raiz e o layout pai antes de editar.",
+        "Checar se existe helper em lib/ antes de duplicar leitura.",
+        "Validar se a mudanca afeta cache, paths ou permissao.",
+        "Executar npm run build no final."
+      ],
+      "recommendation": {
+        "nextFile": "app/admin/biblioteca/actions.ts",
+        "risk": "Separar listagem e formularios evita cachear selects sensiveis por engano."
+      },
+      "notes": [
+        "Cache list views only; keep form helpers request-time.",
+        "Invalidate on obra, exemplar, emprestimo and reserva writes."
+      ]
+    },
+    "documentos": {
+      "key": "documentos",
+      "title": "Documentos",
+      "files": [
+        "app/admin/documentos/page.tsx",
+        "app/admin/documentos/actions.ts",
+        "lib/admin/cache.ts",
+        "app/admin/documentos/layout.tsx"
+      ],
+      "layout": "app/layout.tsx -> app/admin/layout.tsx -> app/admin/documentos/layout.tsx",
+      "layoutChain": [],
+      "cache": "List views use short cache. Form selects stay request-time.",
+      "owner": "admin/documentos",
+      "mustInvalidate": [
+        "admin-documentos",
+        "/admin/documentos",
+        "/admin/documentos/termos",
+        "/admin/documentos/consentimentos",
+        "/admin/documentos/voluntariado",
+        "/minha-area"
+      ],
+      "css": [
+        "styles/admin.css",
+        "styles/admin-sidebar.css",
+        "styles/globals.css"
+      ],
+      "writeActions": [
+        "app/admin/documentos/actions.ts"
+      ],
+      "docs": [
+        "HANDOFF.md",
+        "docs/AGENT_PLAYBOOK.md",
+        "docs/MODULE_MAP.md",
+        "docs/baseerp.md",
+        "APPLY_MIGRATION.md"
+      ],
+      "relatedFiles": [
+        "app/admin/documentos/page.tsx",
+        "app/admin/documentos/actions.ts",
+        "lib/admin/cache.ts",
+        "app/admin/documentos/layout.tsx"
+      ],
+      "checklist": [
+        "Distinguir lista principal de selects de formulario.",
+        "Confirmar se a tela pode ser cacheada ou deve continuar dinamica.",
+        "Conferir invalidateAdminDocumentosCache e invalidateUserAreaCache.",
+        "Confirmar o arquivo raiz e o layout pai antes de editar.",
+        "Checar se existe helper em lib/ antes de duplicar leitura.",
+        "Validar se a mudanca afeta cache, paths ou permissao.",
+        "Executar npm run build no final."
+      ],
+      "recommendation": {
+        "nextFile": "app/admin/documentos/actions.ts",
+        "risk": "Nao cachear selects de formulario evita build quebrando e inconsistencias em listas sensiveis."
+      },
+      "notes": [
+        "Cache list views only; keep selects for forms dynamic.",
+        "Invalidate on modelo, termo, consentimento and servico writes."
+      ]
+    },
+    "pessoas": {
+      "key": "pessoas",
+      "title": "Pessoas",
+      "files": [
+        "app/admin/pessoas/page.tsx",
+        "app/admin/pessoas/actions.ts",
+        "lib/admin/cache.ts",
+        "lib/areas/invalidate-user-area.ts"
+      ],
+      "layout": "app/layout.tsx -> app/admin/layout.tsx",
+      "layoutChain": [],
+      "cache": "Writes affect dashboard, biblioteca, documentos and user area.",
+      "owner": "cadastro/pessoas",
+      "mustInvalidate": [
+        "admin-dashboard",
+        "admin-biblioteca",
+        "admin-documentos",
+        "user-area",
+        "/admin/pessoas"
+      ],
+      "css": [
+        "styles/admin.css",
+        "styles/admin-sidebar.css",
+        "styles/globals.css"
+      ],
+      "writeActions": [
+        "app/admin/pessoas/actions.ts"
+      ],
+      "docs": [
+        "HANDOFF.md",
+        "docs/AGENT_PLAYBOOK.md",
+        "docs/MODULE_MAP.md",
+        "docs/baseerp.md",
+        "README_TESTES.md"
+      ],
+      "relatedFiles": [
+        "app/admin/pessoas/page.tsx",
+        "app/admin/pessoas/actions.ts",
+        "lib/admin/cache.ts",
+        "lib/areas/invalidate-user-area.ts"
+      ],
+      "checklist": [
+        "Confirmar o arquivo raiz e o layout pai antes de editar.",
+        "Checar se existe helper em lib/ antes de duplicar leitura.",
+        "Validar se a mudanca afeta cache, paths ou permissao.",
+        "Executar npm run build no final."
+      ],
+      "recommendation": {
+        "nextFile": "app/admin/pessoas/actions.ts",
+        "risk": "Pessoas impactam dashboard, biblioteca, documentos e area do usuario ao mesmo tempo."
+      },
+      "notes": [
+        "Writes affect dashboard, biblioteca, documentos and user area."
+      ]
+    },
+    "funcoes": {
+      "key": "funcoes",
+      "title": "Funcoes e temas",
+      "files": [
+        "app/admin/funcoes/page.tsx",
+        "app/admin/funcoes/actions.ts",
+        "lib/admin/cache.ts"
+      ],
+      "layout": "app/layout.tsx -> app/admin/layout.tsx",
+      "layoutChain": [],
+      "cache": "Writes affect dashboard counters.",
+      "owner": "cadastro/funcoes",
+      "mustInvalidate": [
+        "admin-dashboard",
+        "/admin/funcoes",
+        "/admin/funcoes/temas"
+      ],
+      "css": [
+        "styles/admin.css",
+        "styles/admin-sidebar.css"
+      ],
+      "writeActions": [
+        "app/admin/funcoes/actions.ts"
+      ],
+      "docs": [
+        "HANDOFF.md",
+        "docs/AGENT_PLAYBOOK.md",
+        "docs/MODULE_MAP.md",
+        "docs/baseerp.md"
+      ],
+      "relatedFiles": [
+        "app/admin/funcoes/page.tsx",
+        "app/admin/funcoes/actions.ts",
+        "lib/admin/cache.ts"
+      ],
+      "checklist": [
+        "Confirmar o arquivo raiz e o layout pai antes de editar.",
+        "Checar se existe helper em lib/ antes de duplicar leitura.",
+        "Validar se a mudanca afeta cache, paths ou permissao.",
+        "Executar npm run build no final."
+      ],
+      "recommendation": {
+        "nextFile": "app/admin/funcoes/actions.ts",
+        "risk": "Funcoes e temas alimentam dashboard e escalas; cache local sem invalida pode atrasar a visibilidade."
+      },
+      "notes": [
+        "Writes affect dashboard counters."
+      ]
+    },
+    "escalas": {
+      "key": "escalas",
+      "title": "Escalas",
+      "files": [
+        "app/admin/escalas/page.tsx",
+        "app/admin/escalas/actions.ts",
+        "app/escalas/page.tsx",
+        "lib/escalas/public-escalas.ts",
+        "lib/admin/cache.ts",
+        "lib/areas/invalidate-user-area.ts"
+      ],
+      "layout": "app/layout.tsx -> app/admin/layout.tsx",
+      "layoutChain": [],
+      "cache": "Public escalas uses lib/escalas/public-escalas.ts; admin writes invalidate tags.",
+      "owner": "operacao/escalas",
+      "mustInvalidate": [
+        "public-escalas",
+        "admin-dashboard",
+        "user-area",
+        "/escalas",
+        "/admin/escalas"
+      ],
+      "css": [
+        "styles/admin.css",
+        "styles/admin-sidebar.css",
+        "styles/globals.css"
+      ],
+      "writeActions": [
+        "app/admin/escalas/actions.ts",
+        "lib/escalas/public-escalas.ts"
+      ],
+      "docs": [
+        "HANDOFF.md",
+        "docs/AGENT_PLAYBOOK.md",
+        "docs/MODULE_MAP.md",
+        "docs/baseerp.md",
+        "MIGRATION_GUIDE.md"
+      ],
+      "relatedFiles": [
+        "app/admin/escalas/page.tsx",
+        "app/admin/escalas/actions.ts",
+        "app/escalas/page.tsx",
+        "lib/escalas/public-escalas.ts"
+      ],
+      "checklist": [
+        "Separar rota publica de rota admin.",
+        "Checar tag public-escalas e invalida da area do usuario.",
+        "Conferir se a pagina precisa permanecer force-dynamic ou cacheada.",
+        "Confirmar o arquivo raiz e o layout pai antes de editar.",
+        "Checar se existe helper em lib/ antes de duplicar leitura.",
+        "Validar se a mudanca afeta cache, paths ou permissao.",
+        "Executar npm run build no final."
+      ],
+      "recommendation": {
+        "nextFile": "app/admin/escalas/actions.ts",
+        "risk": "Escalas precisam sincronizar publico, admin e area do usuario; um cache parcial quebra a consistencia."
+      },
+      "notes": [
+        "Public page uses cached helper with tag public-escalas.",
+        "Writes invalidate public, admin and user-area views."
+      ]
+    },
+    "theme": {
+      "key": "theme",
+      "title": "Theme and tokens",
+      "files": [
+        "styles/theme.css",
+        "styles/globals.css",
+        "styles/admin.css",
+        "styles/site-header.css",
+        "lib/theme/colors.ts",
+        "lib/theme/theme-provider.tsx"
+      ],
+      "layout": "styles/theme.css -> styles/globals.css -> styles/admin.css",
+      "layoutChain": [],
+      "cache": "Theme is global; changing tokens can affect public and admin surfaces.",
+      "owner": "design/theme",
+      "mustInvalidate": [
+        "all-surface-css"
+      ],
+      "css": [
+        "styles/theme.css",
+        "styles/globals.css",
+        "styles/admin.css",
+        "styles/site-header.css"
+      ],
+      "writeActions": [],
+      "docs": [
+        "HANDOFF.md",
+        "docs/AGENT_PLAYBOOK.md",
+        "docs/INDEX.md",
+        "THEME_SYSTEM.md"
+      ],
+      "relatedFiles": [
+        "styles/theme.css",
+        "styles/globals.css",
+        "styles/admin.css",
+        "styles/site-header.css"
+      ],
+      "checklist": [
+        "Confirmar o arquivo raiz e o layout pai antes de editar.",
+        "Checar se existe helper em lib/ antes de duplicar leitura.",
+        "Validar se a mudanca afeta cache, paths ou permissao.",
+        "Executar npm run build no final."
+      ],
+      "recommendation": {
+        "nextFile": "styles/globals.css",
+        "risk": "Tokens globais impactam tudo; uma mudanca pequena pode degradar contraste em varias telas."
+      },
+      "notes": [
+        "Prefer tokens over hardcoded colors.",
+        "In light theme, avoid pure white surfaces when possible."
+      ]
+    },
+    "supabase": {
+      "key": "supabase",
+      "title": "Supabase plumbing",
+      "files": [
+        "lib/supabase/server.ts",
+        "lib/supabase/client.ts",
+        "lib/supabase/service-role.ts",
+        "lib/admin/cache.ts",
+        "lib/areas/user-area.ts",
+        "lib/areas/invalidate-user-area.ts"
+      ],
+      "layout": "lib/supabase/server.ts | lib/supabase/service-role.ts",
+      "layoutChain": [],
+      "cache": "Server client is session-aware; service-role is for server-only cached reads.",
+      "owner": "infra/supabase",
+      "mustInvalidate": [
+        "admin-dashboard",
+        "admin-biblioteca",
+        "admin-documentos",
+        "user-area",
+        "public-escalas"
+      ],
+      "css": [],
+      "writeActions": [
+        "lib/admin/cache.ts",
+        "lib/areas/invalidate-user-area.ts",
+        "lib/escalas/public-escalas.ts",
+        "lib/areas/user-area.ts"
+      ],
+      "docs": [
+        "HANDOFF.md",
+        "docs/AGENT_PLAYBOOK.md",
+        "docs/INDEX.md",
+        "APPLY_MIGRATION.md",
+        "MIGRATION_GUIDE.md"
+      ],
+      "relatedFiles": [
+        "lib/supabase/server.ts",
+        "lib/supabase/client.ts",
+        "lib/supabase/service-role.ts",
+        "lib/admin/cache.ts"
+      ],
+      "checklist": [
+        "Confirmar o arquivo raiz e o layout pai antes de editar.",
+        "Checar se existe helper em lib/ antes de duplicar leitura.",
+        "Validar se a mudanca afeta cache, paths ou permissao.",
+        "Executar npm run build no final."
+      ],
+      "recommendation": {
+        "nextFile": "lib/admin/cache.ts",
+        "risk": "Trocar a estrategia de acesso sem separar sessão e service-role pode expor dados ou quebrar o SSR."
+      },
+      "notes": [
+        "Server client is for session-aware reads.",
+        "Service role is for cacheable server-only helpers.",
+        "Do not expose service_role in browser code."
+      ]
+    }
+  }
+}

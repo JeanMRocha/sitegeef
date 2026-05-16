@@ -1,6 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
+import { invalidateAdminDashboardCache } from '@/lib/admin/cache';
 
 export async function getFuncoes() {
   const supabase = await createClient();
@@ -27,6 +28,7 @@ export async function getFuncaoById(id: string) {
 
   if (error) throw error;
 
+  invalidateAdminDashboardCache();
   return data;
 }
 
@@ -71,6 +73,7 @@ export async function updateFuncao(
 
   if (error) throw error;
 
+  invalidateAdminDashboardCache();
   return { success: true };
 }
 
@@ -84,6 +87,7 @@ export async function toggleFuncaoStatus(id: string, ativo: boolean) {
 
   if (error) throw error;
 
+  invalidateAdminDashboardCache();
   return { success: true };
 }
 
@@ -112,6 +116,7 @@ export async function getTemaDoutrinarioById(id: string) {
 
   if (error) throw error;
 
+  invalidateAdminDashboardCache();
   return data;
 }
 
@@ -156,6 +161,7 @@ export async function updateTemaDoutrinario(
 
   if (error) throw error;
 
+  invalidateAdminDashboardCache();
   return { success: true };
 }
 
@@ -169,5 +175,6 @@ export async function toggleTemaDoutrinarioStatus(id: string, ativo: boolean) {
 
   if (error) throw error;
 
+  invalidateAdminDashboardCache();
   return { success: true };
 }

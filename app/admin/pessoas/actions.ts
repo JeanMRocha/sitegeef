@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { type tipo_vinculo, type status_pessoa } from '@/lib/supabase/types';
 import { invalidateUserAreaCache } from '@/lib/areas/invalidate-user-area';
+import { invalidateAdminDashboardCache, invalidateAdminBibliotecaCache, invalidateAdminDocumentosCache } from '@/lib/admin/cache';
 
 export async function getPessoas(
   page = 1,
@@ -147,6 +148,9 @@ export async function createPessoa(formData: {
     if (vinculosError) throw vinculosError;
   }
 
+  invalidateAdminDashboardCache();
+  invalidateAdminBibliotecaCache();
+  invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
   return pessoa;
 }
@@ -164,6 +168,9 @@ export async function updatePessoa(id: string, formData: Partial<typeof getPesso
 
   if (error) throw error;
 
+  invalidateAdminDashboardCache();
+  invalidateAdminBibliotecaCache();
+  invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
   return { success: true };
 }
@@ -181,6 +188,9 @@ export async function addVinculo(pessoaId: string, vinculo: tipo_vinculo) {
 
   if (error) throw error;
 
+  invalidateAdminDashboardCache();
+  invalidateAdminBibliotecaCache();
+  invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
   return { success: true };
 }
@@ -196,6 +206,9 @@ export async function removeVinculo(pessoaId: string, vinculo: tipo_vinculo) {
 
   if (error) throw error;
 
+  invalidateAdminDashboardCache();
+  invalidateAdminBibliotecaCache();
+  invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
   return { success: true };
 }
@@ -213,6 +226,9 @@ export async function togglePessoaStatus(id: string, novoStatus: status_pessoa) 
 
   if (error) throw error;
 
+  invalidateAdminDashboardCache();
+  invalidateAdminBibliotecaCache();
+  invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
   return { success: true };
 }

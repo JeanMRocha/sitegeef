@@ -3,6 +3,7 @@
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { invalidateUserAreaCache } from '@/lib/areas/invalidate-user-area';
+import { invalidateAdminDashboardCache } from '@/lib/admin/cache';
 
 function invalidateEscalasCache() {
   revalidateTag('public-escalas');
@@ -121,6 +122,7 @@ export async function createEscala(formData: {
   if (reunioesError) throw reunioesError;
 
   invalidateEscalasCache();
+  invalidateAdminDashboardCache();
   return escala;
 }
 
@@ -135,6 +137,7 @@ export async function updateEscalaStatus(id: string, status: string) {
   if (error) throw error;
 
   invalidateEscalasCache();
+  invalidateAdminDashboardCache();
   return { success: true };
 }
 

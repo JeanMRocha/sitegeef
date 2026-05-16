@@ -1,6 +1,13 @@
 # sitegeef
 Site do GEEF
 
+## Documentacao de manutencao
+
+- `HANDOFF.md`
+- `docs/AGENT_PLAYBOOK.md`
+- `docs/MODULE_MAP.md`
+- `agente.md`
+
 ## Execucao local
 
 ```powershell

@@ -1,9 +1,12 @@
 'use server';
 
-import { createClient } from '@/lib/supabase/server';
+import { unstable_cache } from "next/cache";
+import { createServiceRoleClient } from '@/lib/supabase/service-role';
+import { invalidateAdminBibliotecaCache } from "@/lib/admin/cache";
+import { invalidateUserAreaCache } from '@/lib/areas/invalidate-user-area';
 
-export async function getObras(page = 1, search?: string) {
-  const supabase = await createClient();
+async function loadObras(page = 1, search?: string) {
+  const supabase = createServiceRoleClient();
   const pageSize = 20;
   const offset = (page - 1) * pageSize;
 
@@ -30,8 +33,13 @@ export async function getObras(page = 1, search?: string) {
   };
 }
 
+export const getObras = unstable_cache(loadObras, ["admin-biblioteca-obras"], {
+  revalidate: 60,
+  tags: ["admin-biblioteca"],
+});
+
 export async function getObraById(id: string) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { data, error } = await supabase
     .from('obras')
@@ -59,7 +67,7 @@ export async function createObra(formData: {
   capa_url?: string;
   publico?: string;
 }) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { data, error } = await supabase
     .from('obras')
@@ -81,6 +89,8 @@ export async function createObra(formData: {
 
   if (error) throw error;
 
+  invalidateAdminBibliotecaCache();
+  invalidateUserAreaCache();
   return data;
 }
 
@@ -97,7 +107,7 @@ export async function updateObra(
     publico?: string;
   }
 ) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { error } = await supabase
     .from('obras')
@@ -108,11 +118,13 @@ export async function updateObra(
 
   if (error) throw error;
 
+  invalidateAdminBibliotecaCache();
+  invalidateUserAreaCache();
   return { success: true };
 }
 
 export async function toggleObraStatus(id: string, ativo: boolean) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { error } = await supabase
     .from('obras')
@@ -121,11 +133,13 @@ export async function toggleObraStatus(id: string, ativo: boolean) {
 
   if (error) throw error;
 
+  invalidateAdminBibliotecaCache();
+  invalidateUserAreaCache();
   return { success: true };
 }
 
 export async function getExemplarById(id: string) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { data, error } = await supabase
     .from('exemplares')
@@ -151,7 +165,7 @@ export async function createExemplar(formData: {
   localizacao?: string;
   origem?: string;
 }) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { data, error } = await supabase
     .from('exemplares')
@@ -170,6 +184,8 @@ export async function createExemplar(formData: {
 
   if (error) throw error;
 
+  invalidateAdminBibliotecaCache();
+  invalidateUserAreaCache();
   return data;
 }
 
@@ -182,7 +198,7 @@ export async function updateExemplar(
     situacao?: string;
   }
 ) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { error } = await supabase
     .from('exemplares')
@@ -193,11 +209,13 @@ export async function updateExemplar(
 
   if (error) throw error;
 
+  invalidateAdminBibliotecaCache();
+  invalidateUserAreaCache();
   return { success: true };
 }
 
 export async function deleteExemplar(id: string) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { error } = await supabase
     .from('exemplares')
@@ -206,5 +224,7 @@ export async function deleteExemplar(id: string) {
 
   if (error) throw error;
 
+  invalidateAdminBibliotecaCache();
+  invalidateUserAreaCache();
   return { success: true };
 }

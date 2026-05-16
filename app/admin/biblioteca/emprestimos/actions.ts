@@ -1,10 +1,13 @@
 'use server';
 
+import { unstable_cache } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
+import { createServiceRoleClient } from '@/lib/supabase/service-role';
+import { invalidateAdminBibliotecaCache } from '@/lib/admin/cache';
 import { invalidateUserAreaCache } from '@/lib/areas/invalidate-user-area';
 
-export async function getEmprestimos(page = 1) {
-  const supabase = await createClient();
+async function loadEmprestimos(page = 1) {
+  const supabase = createServiceRoleClient();
   const pageSize = 20;
   const offset = (page - 1) * pageSize;
 
@@ -32,8 +35,13 @@ export async function getEmprestimos(page = 1) {
   };
 }
 
+export const getEmprestimos = unstable_cache(loadEmprestimos, ['admin-biblioteca-emprestimos-ativos'], {
+  revalidate: 60,
+  tags: ['admin-biblioteca'],
+});
+
 export async function getEmprestimoById(id: string) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { data, error } = await supabase
     .from('emprestimos')
@@ -58,7 +66,7 @@ export async function createEmprestimo(formData: {
   data_retirada?: string;
   prazo_devolucao: string;
 }) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   // Create emprestimo
   const { data: emprestimo, error: emprestimoError } = await supabase
@@ -85,6 +93,7 @@ export async function createEmprestimo(formData: {
 
   if (exemplarError) throw exemplarError;
 
+  invalidateAdminBibliotecaCache();
   invalidateUserAreaCache();
   return emprestimo;
 }
@@ -96,7 +105,7 @@ export async function updateEmprestimo(
     observacao?: string;
   }
 ) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { error } = await supabase
     .from('emprestimos')
@@ -107,12 +116,13 @@ export async function updateEmprestimo(
 
   if (error) throw error;
 
+  invalidateAdminBibliotecaCache();
   invalidateUserAreaCache();
   return { success: true };
 }
 
 export async function devolverEmprestimo(id: string) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   // Get emprestimo details
   const { data: emprestimo, error: emprestimoError } = await supabase
@@ -162,6 +172,7 @@ export async function devolverEmprestimo(id: string) {
       .eq('id', emprestimo.exemplar_id);
   }
 
+  invalidateAdminBibliotecaCache();
   invalidateUserAreaCache();
   return { success: true };
 }
@@ -199,8 +210,8 @@ export async function getExemplaresdisponveisParaEmprestimo() {
   return data || [];
 }
 
-export async function getHistoricoEmprestimos(page = 1) {
-  const supabase = await createClient();
+async function loadHistoricoEmprestimos(page = 1) {
+  const supabase = createServiceRoleClient();
   const pageSize = 20;
   const offset = (page - 1) * pageSize;
 
@@ -227,3 +238,12 @@ export async function getHistoricoEmprestimos(page = 1) {
     pageSize,
   };
 }
+
+export const getHistoricoEmprestimos = unstable_cache(
+  loadHistoricoEmprestimos,
+  ['admin-biblioteca-emprestimos-historico'],
+  {
+    revalidate: 60,
+    tags: ['admin-biblioteca'],
+  }
+);

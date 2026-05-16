@@ -1,10 +1,13 @@
 'use server';
 
+import { unstable_cache } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
+import { createServiceRoleClient } from '@/lib/supabase/service-role';
+import { invalidateAdminDocumentosCache } from '@/lib/admin/cache';
 import { invalidateUserAreaCache } from '@/lib/areas/invalidate-user-area';
 
-export async function getModelosDocumentos() {
-  const supabase = await createClient();
+async function loadModelosDocumentos() {
+  const supabase = createServiceRoleClient();
 
   const { data, error } = await supabase
     .from('documentos_modelo')
@@ -17,8 +20,13 @@ export async function getModelosDocumentos() {
   return data || [];
 }
 
+export const getModelosDocumentos = unstable_cache(loadModelosDocumentos, ['admin-documentos-modelos'], {
+  revalidate: 60,
+  tags: ['admin-documentos'],
+});
+
 export async function getModeloById(id: string) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { data, error } = await supabase
     .from('documentos_modelo')
@@ -28,7 +36,6 @@ export async function getModeloById(id: string) {
 
   if (error) throw error;
 
-  invalidateUserAreaCache();
   return data;
 }
 
@@ -38,7 +45,7 @@ export async function createModelo(formData: {
   versao?: string;
   conteudo?: string;
 }) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { data, error } = await supabase
     .from('documentos_modelo')
@@ -56,6 +63,8 @@ export async function createModelo(formData: {
 
   if (error) throw error;
 
+  invalidateAdminDocumentosCache();
+  invalidateUserAreaCache();
   return data;
 }
 
@@ -68,7 +77,7 @@ export async function updateModelo(
     conteudo?: string;
   }
 ) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { error } = await supabase
     .from('documentos_modelo')
@@ -79,12 +88,13 @@ export async function updateModelo(
 
   if (error) throw error;
 
+  invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
   return { success: true };
 }
 
 export async function toggleModeloStatus(id: string, ativo: boolean) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { error } = await supabase
     .from('documentos_modelo')
@@ -93,12 +103,13 @@ export async function toggleModeloStatus(id: string, ativo: boolean) {
 
   if (error) throw error;
 
+  invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
   return { success: true };
 }
 
-export async function getTermosAssinados(page = 1) {
-  const supabase = await createClient();
+async function loadTermosAssinados(page = 1) {
+  const supabase = createServiceRoleClient();
   const pageSize = 20;
   const offset = (page - 1) * pageSize;
 
@@ -125,8 +136,13 @@ export async function getTermosAssinados(page = 1) {
   };
 }
 
+export const getTermosAssinados = unstable_cache(loadTermosAssinados, ['admin-documentos-termos'], {
+  revalidate: 60,
+  tags: ['admin-documentos'],
+});
+
 export async function getTermoById(id: string) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { data, error } = await supabase
     .from('termos_assinados')
@@ -142,7 +158,6 @@ export async function getTermoById(id: string) {
 
   if (error) throw error;
 
-  invalidateUserAreaCache();
   return data;
 }
 
@@ -154,7 +169,7 @@ export async function createTermo(formData: {
   arquivo_url?: string;
   responsavel_id?: string;
 }) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { data, error } = await supabase
     .from('termos_assinados')
@@ -174,6 +189,8 @@ export async function createTermo(formData: {
 
   if (error) throw error;
 
+  invalidateAdminDocumentosCache();
+  invalidateUserAreaCache();
   return data;
 }
 
@@ -186,7 +203,7 @@ export async function updateTermo(
     status?: string;
   }
 ) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { error } = await supabase
     .from('termos_assinados')
@@ -197,12 +214,13 @@ export async function updateTermo(
 
   if (error) throw error;
 
+  invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
   return { success: true };
 }
 
 export async function revogaTermo(id: string) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { error } = await supabase
     .from('termos_assinados')
@@ -211,11 +229,13 @@ export async function revogaTermo(id: string) {
 
   if (error) throw error;
 
+  invalidateAdminDocumentosCache();
+  invalidateUserAreaCache();
   return { success: true };
 }
 
-export async function getConsentimentosLGPD(page = 1) {
-  const supabase = await createClient();
+async function loadConsentimentosLGPD(page = 1) {
+  const supabase = createServiceRoleClient();
   const pageSize = 20;
   const offset = (page - 1) * pageSize;
 
@@ -241,8 +261,13 @@ export async function getConsentimentosLGPD(page = 1) {
   };
 }
 
+export const getConsentimentosLGPD = unstable_cache(loadConsentimentosLGPD, ['admin-documentos-consentimentos'], {
+  revalidate: 60,
+  tags: ['admin-documentos'],
+});
+
 export async function getConsentimentoById(id: string) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { data, error } = await supabase
     .from('consentimentos_lgpd')
@@ -257,7 +282,6 @@ export async function getConsentimentoById(id: string) {
 
   if (error) throw error;
 
-  invalidateUserAreaCache();
   return data;
 }
 
@@ -267,7 +291,7 @@ export async function createConsentimento(formData: {
   base_legal?: string;
   canal_autorizado?: string;
 }) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { data, error } = await supabase
     .from('consentimentos_lgpd')
@@ -285,11 +309,13 @@ export async function createConsentimento(formData: {
 
   if (error) throw error;
 
+  invalidateAdminDocumentosCache();
+  invalidateUserAreaCache();
   return data;
 }
 
 export async function revogaConsentimento(id: string) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { error } = await supabase
     .from('consentimentos_lgpd')
@@ -298,12 +324,13 @@ export async function revogaConsentimento(id: string) {
 
   if (error) throw error;
 
+  invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
   return { success: true };
 }
 
-export async function getServicosVoluntarios(page = 1) {
-  const supabase = await createClient();
+async function loadServicosVoluntarios(page = 1) {
+  const supabase = createServiceRoleClient();
   const pageSize = 20;
   const offset = (page - 1) * pageSize;
 
@@ -331,8 +358,13 @@ export async function getServicosVoluntarios(page = 1) {
   };
 }
 
+export const getServicosVoluntarios = unstable_cache(loadServicosVoluntarios, ['admin-documentos-servicos'], {
+  revalidate: 60,
+  tags: ['admin-documentos'],
+});
+
 export async function getServicoById(id: string) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { data, error } = await supabase
     .from('servicos_voluntarios')
@@ -360,7 +392,7 @@ export async function createServico(formData: {
   data_inicio?: string;
   data_fim?: string;
 }) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { data, error } = await supabase
     .from('servicos_voluntarios')
@@ -381,6 +413,8 @@ export async function createServico(formData: {
 
   if (error) throw error;
 
+  invalidateAdminDocumentosCache();
+  invalidateUserAreaCache();
   return data;
 }
 
@@ -394,7 +428,7 @@ export async function updateServico(
     data_fim?: string;
   }
 ) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { error } = await supabase
     .from('servicos_voluntarios')
@@ -405,12 +439,13 @@ export async function updateServico(
 
   if (error) throw error;
 
+  invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
   return { success: true };
 }
 
 export async function encerraServico(id: string, data_fim: string) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { error } = await supabase
     .from('servicos_voluntarios')
@@ -419,6 +454,8 @@ export async function encerraServico(id: string, data_fim: string) {
 
   if (error) throw error;
 
+  invalidateAdminDocumentosCache();
+  invalidateUserAreaCache();
   return { success: true };
 }
 

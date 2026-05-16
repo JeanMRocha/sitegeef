@@ -1,0 +1,37 @@
+# Docs Index
+
+## Entrada rapida
+
+- [Handoff rapido](../HANDOFF.md)
+- [Agent Playbook](./AGENT_PLAYBOOK.md)
+- [Mapa de modulos](./MODULE_MAP.md)
+- [Agent map JSON](../agent-map.json)
+- [Documento base do ERP](./baseerp.md)
+- [Sistema de tema](../THEME_SYSTEM.md)
+
+## Por assunto
+
+### Visual
+
+- [Agent Playbook](./AGENT_PLAYBOOK.md)
+- [Sistema de tema](../THEME_SYSTEM.md)
+- [CSS correction summary](../CSS_CORRECTION_SUMMARY.md)
+
+### Cache e Supabase
+
+- [Mapa de modulos](./MODULE_MAP.md)
+- [Agent Playbook](./AGENT_PLAYBOOK.md)
+- [Aplicar migracao](../APPLY_MIGRATION.md)
+- [Status de deploy](../DEPLOYMENT_STATUS.md)
+
+### Operacao
+
+- [Testing guide](../TESTING_GUIDE.md)
+- [Testing report](../TESTING_REPORT.md)
+- [Session summary](../SESSION_SUMMARY.md)
+- [Status](../STATUS.md)
+
+### Dominios
+
+- [Notifications](./NOTIFICATIONS.md)
+- [Base ERP](./baseerp.md)
