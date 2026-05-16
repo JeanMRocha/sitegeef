@@ -40,46 +40,83 @@ export default async function AdminDashboard() {
 
   return (
     <div>
-      {/* Header */}
       <div className="admin-page-header">
         <div>
+          <span className="admin-dashboard-kicker">ERP GEEF</span>
           <h1 className="admin-page-title">Dashboard</h1>
           <p className="admin-page-subtitle">
-            Bem-vindo ao painel administrativo do GEEF
+            Visão geral da operação, com acesso rápido às rotinas mais usadas.
           </p>
         </div>
-      </div>
 
-      {/* Stats Cards */}
-      <div className="admin-card-grid">
-        <div className="admin-card admin-stat-card">
-          <p className="admin-stat-value">{totalPessoas}</p>
-          <p className="admin-stat-label">Pessoas Ativas</p>
-        </div>
-
-        <div className="admin-card admin-stat-card">
-          <p className="admin-stat-value">{totalFuncoes}</p>
-          <p className="admin-stat-label">Funções</p>
-        </div>
-
-        <div className="admin-card admin-stat-card">
-          <p className="admin-stat-value">{totalTemas}</p>
-          <p className="admin-stat-label">Temas Doutrinários</p>
-        </div>
-
-        <div className="admin-card admin-stat-card">
-          <p className="admin-stat-value">{totalEscalasPublicadas}</p>
-          <p className="admin-stat-label">Escalas Publicadas</p>
+        <div className="admin-actions">
+          <Link href="/admin/pessoas/nova" className="admin-btn admin-btn-primary">
+            ➕ Nova pessoa
+          </Link>
+          <Link href="/admin/escalas/nova" className="admin-btn admin-btn-secondary">
+            📅 Nova escala
+          </Link>
         </div>
       </div>
 
-      {/* Quick Actions */}
-      <div className="admin-card" style={{ marginBottom: '2rem' }}>
-        <h2 style={{ margin: '0 0 1rem', fontSize: '1.2rem', color: 'var(--text)' }}>
-          Ações Rápidas
-        </h2>
+      <section className="admin-dashboard-hero">
+        <div className="admin-card admin-dashboard-panel admin-dashboard-panel--highlight">
+          <div className="admin-dashboard-status">Operação ativa</div>
+          <h2>Gestão com leitura rápida e ações diretas.</h2>
+          <p>
+            O painel concentra os indicadores mais usados, mantendo a navegação
+            pronta para rotina administrativa e atualização de conteúdo.
+          </p>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+          <div className="admin-dashboard-actions">
+            <Link href="/admin/pessoas" className="admin-btn admin-btn-secondary">
+              👥 Ver pessoas
+            </Link>
+            <Link href="/admin/escalas" className="admin-btn admin-btn-secondary">
+              📋 Ver escalas
+            </Link>
+            <Link href="/admin/funcoes" className="admin-btn admin-btn-secondary">
+              🎯 Funções
+            </Link>
+            <Link href="/admin/financeiro" className="admin-btn admin-btn-secondary">
+              💰 Financeiro
+            </Link>
+          </div>
+        </div>
+
+        <div className="admin-card admin-dashboard-panel admin-subtle-card">
+          <span className="admin-inline-pill">Resumo do mês</span>
+          <div className="admin-card-grid" style={{ marginBottom: 0 }}>
+            <div className="admin-card admin-stat-card">
+              <p className="admin-stat-value">{totalPessoas}</p>
+              <p className="admin-stat-label">Pessoas ativas</p>
+            </div>
+
+            <div className="admin-card admin-stat-card">
+              <p className="admin-stat-value">{totalFuncoes}</p>
+              <p className="admin-stat-label">Funções</p>
+            </div>
+
+            <div className="admin-card admin-stat-card">
+              <p className="admin-stat-value">{totalTemas}</p>
+              <p className="admin-stat-label">Temas doutrinários</p>
+            </div>
+
+            <div className="admin-card admin-stat-card">
+              <p className="admin-stat-value">{totalEscalasPublicadas}</p>
+              <p className="admin-stat-label">Escalas publicadas</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="admin-dashboard-section">
+        <div className="admin-card">
+          <h2 style={{ margin: '0 0 1rem', fontSize: '1.2rem', color: 'var(--text)' }}>
+            Ações rápidas
+          </h2>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: '0.85rem' }}>
           <Link href="/admin/pessoas/nova" className="admin-btn admin-btn-primary">
             ➕ Adicionar Pessoa
           </Link>
@@ -88,7 +125,7 @@ export default async function AdminDashboard() {
             🎯 Gerenciar Funções
           </Link>
 
-          <Link href="/admin/temas" className="admin-btn admin-btn-secondary">
+          <Link href="/admin/funcoes/temas" className="admin-btn admin-btn-secondary">
             📚 Gerenciar Temas
           </Link>
 
@@ -96,16 +133,17 @@ export default async function AdminDashboard() {
             📅 Nova Escala
           </Link>
         </div>
-      </div>
+        </div>
+      </section>
 
-      {/* Current Month */}
-      <div className="admin-card" style={{ marginBottom: '2rem' }}>
+      <section className="admin-dashboard-section">
+        <div className="admin-card">
         <h2 style={{ margin: '0 0 1rem', fontSize: '1.2rem', color: 'var(--text)' }}>
           {getNomeMes(mesAtual)} / {anoAtual}
         </h2>
 
         {escalaMesAtual ? (
-          <div style={{ padding: '1rem', background: 'var(--bg-alt)', borderRadius: '0.6rem' }}>
+          <div style={{ padding: '1rem', background: 'rgba(138, 0, 90, 0.04)', borderRadius: '1rem', border: '1px solid rgba(138, 0, 90, 0.08)' }}>
             <p style={{ margin: '0 0 0.5rem' }}>
               <strong>Status:</strong>{' '}
               <span
@@ -142,7 +180,7 @@ export default async function AdminDashboard() {
             </Link>
           </div>
         ) : (
-          <div style={{ padding: '1rem', background: 'rgba(99, 213, 31, 0.06)', borderRadius: '0.6rem' }}>
+          <div style={{ padding: '1rem', background: 'rgba(99, 213, 31, 0.08)', borderRadius: '1rem', border: '1px solid rgba(99, 213, 31, 0.16)' }}>
             <p style={{ margin: '0 0 0.75rem', color: 'var(--muted)' }}>
               Nenhuma escala criada para este mês.
             </p>
@@ -151,15 +189,16 @@ export default async function AdminDashboard() {
             </Link>
           </div>
         )}
-      </div>
+        </div>
+      </section>
 
-      {/* Próxima Reunião */}
-      <div className="admin-card">
+      <section className="admin-dashboard-section">
+        <div className="admin-card">
         <h2 style={{ margin: '0 0 1rem', fontSize: '1.2rem', color: 'var(--text)' }}>
           Próxima Reunião
         </h2>
 
-        <div style={{ padding: '1rem', background: 'var(--bg-alt)', borderRadius: '0.6rem', textAlign: 'center' }}>
+        <div style={{ padding: '1rem', background: 'rgba(255, 255, 255, 0.82)', borderRadius: '1rem', border: '1px solid rgba(14, 36, 8, 0.08)', textAlign: 'center' }}>
           <p style={{ margin: 0, fontSize: '1.1rem', fontWeight: 600, color: 'var(--uva)' }}>
             {formatarDataLonga(proximaQuinta)}
           </p>
@@ -176,7 +215,8 @@ export default async function AdminDashboard() {
             👥 Ver Pessoas
           </Link>
         </div>
-      </div>
+        </div>
+      </section>
     </div>
   );
 }

@@ -34,10 +34,10 @@ async function UsuariosList({ searchParams }: { searchParams: { page?: string } 
   };
 
   return (
-    <div>
-      {/* Header */}
+    <div className="area-page">
       <div className="admin-page-header">
         <div>
+          <span className="admin-dashboard-kicker">Usuários</span>
           <h1 className="admin-page-title">Usuários e Permissões</h1>
           <p className="admin-page-subtitle">Pessoas com acesso ao sistema</p>
         </div>
@@ -46,8 +46,7 @@ async function UsuariosList({ searchParams }: { searchParams: { page?: string } 
         </Link>
       </div>
 
-      {/* Table */}
-      <div className="admin-card" style={{ overflowX: 'auto' }}>
+      <div className="admin-card table-surface">
         {usuarios.length === 0 ? (
           <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--muted)' }}>
             <p>Nenhum usuário cadastrado.</p>
@@ -86,14 +85,10 @@ async function UsuariosList({ searchParams }: { searchParams: { page?: string } 
                     <td style={{ fontSize: '0.9rem', color: 'var(--muted)' }}>{usuario.pessoas?.email || '—'}</td>
                     <td>
                       <span
+                        className="inline-status"
                         style={{
-                          display: 'inline-block',
-                          padding: '0.25rem 0.6rem',
-                          borderRadius: '999px',
-                          fontSize: '0.8rem',
-                          fontWeight: 600,
-                          backgroundColor: perfilColor[usuario.perfil] || '#999',
-                          color: 'white',
+                          backgroundColor: `${perfilColor[usuario.perfil] || '#999'}22`,
+                          color: perfilColor[usuario.perfil] || '#666',
                         }}
                       >
                         {usuario.perfil}
@@ -101,19 +96,9 @@ async function UsuariosList({ searchParams }: { searchParams: { page?: string } 
                     </td>
                     <td style={{ fontSize: '0.85rem' }}>
                       {perms.length > 0 ? (
-                        <div style={{ display: 'flex', gap: '0.25rem', flexWrap: 'wrap' }}>
+                        <div className="tag-list">
                           {perms.slice(0, 3).map((p) => (
-                            <span
-                              key={p}
-                              style={{
-                                padding: '0.15rem 0.4rem',
-                                borderRadius: '0.3rem',
-                                backgroundColor: 'rgba(99, 213, 31, 0.15)',
-                                color: 'var(--leaf)',
-                                fontSize: '0.75rem',
-                                fontWeight: 600,
-                              }}
-                            >
+                            <span key={p} className="tag">
                               {p}
                             </span>
                           ))}
@@ -140,7 +125,7 @@ async function UsuariosList({ searchParams }: { searchParams: { page?: string } 
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', marginTop: '2rem' }}>
+        <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', marginTop: '2rem', flexWrap: 'wrap' }}>
           {page > 1 && (
             <Link href={`/admin/usuarios?page=${page - 1}`} className="admin-btn admin-btn-secondary">
               ← Anterior

@@ -114,134 +114,195 @@ async function MinhaAreaContent() {
   const emprestimosVencidos = emprestimos.filter((e: any) => e.prazo_devolucao < today);
   const emprestimosAtivos = emprestimos.filter((e: any) => e.prazo_devolucao >= today);
 
-  return (
-    <div style={{ maxWidth: "1000px", margin: "0 auto", padding: "2rem 1rem" }}>
-      <EnsureUserSystem />
-      <h1 style={{ margin: "0 0 2rem", fontSize: "2rem", fontWeight: 700 }}>
-        👤 Minha Área
-      </h1>
+  const summaryCards = [
+    { label: "Empréstimos ativos", value: emprestimosAtivos.length, note: "Biblioteca" },
+    { label: "Reservas", value: reservas.length, note: "Fila de espera" },
+    { label: "Movimentos", value: movimentosLivraria.length, note: "Livraria" },
+    { label: "Escalas", value: escalas.length, note: "Compromissos" },
+    { label: "Serviços", value: voluntariados.length, note: "Voluntariado" },
+    { label: "LGPD", value: consentimentos.length, note: "Consentimentos" },
+  ];
 
-      {/* Dados Pessoais */}
-      <section style={{ marginBottom: "2rem", padding: "1.5rem", backgroundColor: "#fff", border: "1px solid #e5e5e5", borderRadius: "0.8rem" }}>
-        <h2 style={{ margin: "0 0 1rem", fontSize: "1.3rem", fontWeight: 600 }}>Dados Pessoais</h2>
-        {pessoa ? (
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", fontSize: "0.95rem" }}>
-            <div>
-              <span style={{ color: "#666" }}>Nome:</span> {pessoa.nome}
-            </div>
-            <div>
-              <span style={{ color: "#666" }}>Email:</span> {user.email}
-            </div>
-            <div>
-              <span style={{ color: "#666" }}>CPF:</span> {pessoa.cpf || "Não informado"}
-            </div>
-            <div>
-              <span style={{ color: "#666" }}>Telefone:</span> {pessoa.telefone || "Não informado"}
-            </div>
-            <div>
-              <span style={{ color: "#666" }}>Status:</span> {pessoa.status}
-            </div>
-            <div>
-              <span style={{ color: "#666" }}>Perfil:</span> {usuario?.perfil || "Público"}
-            </div>
+  return (
+    <main className="area-page">
+      <EnsureUserSystem />
+      <section className="area-hero">
+        <div className="area-hero-top">
+          <div>
+            <p className="eyebrow">Área do usuário</p>
+            <h1 className="area-hero-title">Minha Área</h1>
+            <p className="area-subtitle">
+              Centralizada para consultar dados pessoais, biblioteca, livraria,
+              escalas, voluntariado e consentimentos.
+            </p>
           </div>
-        ) : (
-          <p style={{ color: "#999" }}>Dados pessoais não encontrados</p>
-        )}
+        </div>
+
+        <div className="area-summary-grid">
+          {summaryCards.map((item) => (
+            <div key={item.label} className="area-summary-card">
+              <strong>{item.value}</strong>
+              <span>
+                {item.label}
+                <br />
+                {item.note}
+              </span>
+            </div>
+          ))}
+        </div>
       </section>
 
-      {/* Biblioteca */}
+      <section className="area-section">
+        <h2 className="area-section-title">Dados pessoais</h2>
+        <div className="admin-card">
+          {pessoa ? (
+            <div className="stat-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))" }}>
+              <div className="area-panel-item">
+                <strong>Nome</strong>
+                <p>{pessoa.nome}</p>
+              </div>
+              <div className="area-panel-item">
+                <strong>Email</strong>
+                <p>{user.email}</p>
+              </div>
+              <div className="area-panel-item">
+                <strong>CPF</strong>
+                <p>{pessoa.cpf || "Não informado"}</p>
+              </div>
+              <div className="area-panel-item">
+                <strong>Telefone</strong>
+                <p>{pessoa.telefone || "Não informado"}</p>
+              </div>
+              <div className="area-panel-item">
+                <strong>Status</strong>
+                <p>{pessoa.status}</p>
+              </div>
+              <div className="area-panel-item">
+                <strong>Perfil</strong>
+                <p>{usuario?.perfil || "Público"}</p>
+              </div>
+            </div>
+          ) : (
+            <div className="area-empty">Dados pessoais não encontrados</div>
+          )}
+        </div>
+      </section>
+
       {usuario?.pode_biblioteca && (
-        <section style={{ marginBottom: "2rem", padding: "1.5rem", backgroundColor: "#fff", border: "1px solid #e5e5e5", borderRadius: "0.8rem" }}>
-          <h2 style={{ margin: "0 0 1rem", fontSize: "1.3rem", fontWeight: 600 }}>📚 Biblioteca</h2>
-
-          {emprestimosVencidos.length > 0 && (
-            <div style={{ marginBottom: "1.5rem", padding: "1rem", backgroundColor: "#fee2e2", borderRadius: "0.5rem", border: "1px solid #fca5a5" }}>
-              <h3 style={{ margin: "0 0 0.5rem", color: "#b91c1c", fontSize: "1rem" }}>⚠️ Empréstimos Vencidos ({emprestimosVencidos.length})</h3>
-              {emprestimosVencidos.map((e: any) => (
-                <div key={e.id} style={{ marginBottom: "0.5rem", color: "#991b1b", fontSize: "0.9rem" }}>
-                  {e.exemplares?.obra?.titulo} - Vence em {e.prazo_devolucao}
+        <section className="area-section">
+          <h2 className="area-section-title">Biblioteca</h2>
+          <div className="admin-card">
+            {emprestimosVencidos.length > 0 && (
+              <div className="area-panel-item" style={{ marginBottom: "1rem", background: "rgba(239, 68, 68, 0.05)" }}>
+                <strong className="inline-status inline-status-danger">Empréstimos vencidos ({emprestimosVencidos.length})</strong>
+                <div className="area-panel-grid" style={{ marginTop: "0.85rem" }}>
+                  {emprestimosVencidos.map((e: any) => (
+                    <div key={e.id} className="area-panel-item">
+                      <strong>{e.exemplares?.obra?.titulo}</strong>
+                      <p>Vence em {e.prazo_devolucao}</p>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          )}
+              </div>
+            )}
 
-          {emprestimosAtivos.length > 0 && (
-            <div style={{ marginBottom: "1rem" }}>
-              <h3 style={{ margin: "0 0 0.5rem", fontSize: "1rem", color: "#333" }}>Empréstimos Ativos ({emprestimosAtivos.length})</h3>
-              {emprestimosAtivos.map((e: any) => (
-                <div key={e.id} style={{ padding: "0.5rem", marginBottom: "0.5rem", backgroundColor: "#f3f4f6", borderRadius: "0.4rem", fontSize: "0.9rem" }}>
-                  {e.exemplares?.obra?.titulo} - Devolve em {e.prazo_devolucao}
-                </div>
-              ))}
-            </div>
-          )}
+            {emprestimosAtivos.length > 0 && (
+              <div className="area-panel-grid" style={{ marginBottom: "1rem" }}>
+                <strong className="area-section-title" style={{ fontSize: "1rem" }}>Empréstimos ativos ({emprestimosAtivos.length})</strong>
+                {emprestimosAtivos.map((e: any) => (
+                  <div key={e.id} className="area-panel-item">
+                    <strong>{e.exemplares?.obra?.titulo}</strong>
+                    <p>Devolve em {e.prazo_devolucao}</p>
+                  </div>
+                ))}
+              </div>
+            )}
 
-          {reservas.length > 0 && (
-            <div>
-              <h3 style={{ margin: "0 0 0.5rem", fontSize: "1rem", color: "#333" }}>Reservas ({reservas.length})</h3>
-              {reservas.map((r: any) => (
-                <div key={r.id} style={{ padding: "0.5rem", marginBottom: "0.5rem", backgroundColor: "#f3f4f6", borderRadius: "0.4rem", fontSize: "0.9rem" }}>
-                  {r.obras?.titulo} - Posição na fila: {r.posicao_fila}
-                </div>
-              ))}
-            </div>
-          )}
+            {reservas.length > 0 && (
+              <div className="area-panel-grid">
+                <strong className="area-section-title" style={{ fontSize: "1rem" }}>Reservas ({reservas.length})</strong>
+                {reservas.map((r: any) => (
+                  <div key={r.id} className="area-panel-item">
+                    <strong>{r.obras?.titulo}</strong>
+                    <p>Posição na fila: {r.posicao_fila}</p>
+                  </div>
+                ))}
+              </div>
+            )}
 
-          {emprestimos.length === 0 && reservas.length === 0 && (
-            <p style={{ color: "#999", margin: 0 }}>Nenhum empréstimo ou reserva ativo</p>
-          )}
+            {emprestimos.length === 0 && reservas.length === 0 && (
+              <div className="area-empty">Nenhum empréstimo ou reserva ativo</div>
+            )}
+          </div>
         </section>
       )}
 
-      {/* Livraria */}
       {usuario?.pode_livraria && movimentosLivraria.length > 0 && (
-        <section style={{ marginBottom: "2rem", padding: "1.5rem", backgroundColor: "#fff", border: "1px solid #e5e5e5", borderRadius: "0.8rem" }}>
-          <h2 style={{ margin: "0 0 1rem", fontSize: "1.3rem", fontWeight: 600 }}>🛒 Livraria</h2>
-          {movimentosLivraria.map((m: any) => (
-            <div key={m.id} style={{ padding: "0.5rem", marginBottom: "0.5rem", backgroundColor: "#f3f4f6", borderRadius: "0.4rem", fontSize: "0.9rem" }}>
-              {m.produtos_livraria?.titulo} ({m.tipo}) - {new Date(m.criado_em).toLocaleDateString("pt-BR")}
+        <section className="area-section">
+          <h2 className="area-section-title">Livraria</h2>
+          <div className="admin-card">
+            <div className="area-panel-grid">
+              {movimentosLivraria.map((m: any) => (
+                <div key={m.id} className="area-panel-item">
+                  <strong>{m.produtos_livraria?.titulo}</strong>
+                  <p>
+                    {m.tipo} · {new Date(m.criado_em).toLocaleDateString("pt-BR")}
+                  </p>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </section>
       )}
 
-      {/* Escalas */}
       {usuario?.pode_escalas && escalas.length > 0 && (
-        <section style={{ marginBottom: "2rem", padding: "1.5rem", backgroundColor: "#fff", border: "1px solid #e5e5e5", borderRadius: "0.8rem" }}>
-          <h2 style={{ margin: "0 0 1rem", fontSize: "1.3rem", fontWeight: 600 }}>📅 Escalas</h2>
-          {escalas.map((e: any) => (
-            <div key={e.id} style={{ padding: "0.5rem", marginBottom: "0.5rem", backgroundColor: "#f3f4f6", borderRadius: "0.4rem", fontSize: "0.9rem" }}>
-              {e.funcoes?.nome} - {e.reunioes?.data}
+        <section className="area-section">
+          <h2 className="area-section-title">Escalas</h2>
+          <div className="admin-card">
+            <div className="area-panel-grid">
+              {escalas.map((e: any) => (
+                <div key={e.id} className="area-panel-item">
+                  <strong>{e.funcoes?.nome}</strong>
+                  <p>{e.reunioes?.data}</p>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </section>
       )}
 
-      {/* Voluntariado */}
       {voluntariados.length > 0 && (
-        <section style={{ marginBottom: "2rem", padding: "1.5rem", backgroundColor: "#fff", border: "1px solid #e5e5e5", borderRadius: "0.8rem" }}>
-          <h2 style={{ margin: "0 0 1rem", fontSize: "1.3rem", fontWeight: 600 }}>🤝 Voluntariado</h2>
-          {voluntariados.map((v: any) => (
-            <div key={v.id} style={{ padding: "0.5rem", marginBottom: "0.5rem", backgroundColor: "#f3f4f6", borderRadius: "0.4rem", fontSize: "0.9rem" }}>
-              {v.servico} - {v.horarios}
+        <section className="area-section">
+          <h2 className="area-section-title">Voluntariado</h2>
+          <div className="admin-card">
+            <div className="area-panel-grid">
+              {voluntariados.map((v: any) => (
+                <div key={v.id} className="area-panel-item">
+                  <strong>{v.servico}</strong>
+                  <p>{v.horarios}</p>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </section>
       )}
 
-      {/* LGPD */}
       {consentimentos.length > 0 && (
-        <section style={{ marginBottom: "2rem", padding: "1.5rem", backgroundColor: "#fff", border: "1px solid #e5e5e5", borderRadius: "0.8rem" }}>
-          <h2 style={{ margin: "0 0 1rem", fontSize: "1.3rem", fontWeight: 600 }}>🔒 Consentimentos LGPD</h2>
-          {consentimentos.map((c: any) => (
-            <div key={c.id} style={{ padding: "0.5rem", marginBottom: "0.5rem", backgroundColor: "#f3f4f6", borderRadius: "0.4rem", fontSize: "0.9rem" }}>
-              {c.finalidade} - Consentido em {new Date(c.data_consentimento).toLocaleDateString("pt-BR")}
+        <section className="area-section">
+          <h2 className="area-section-title">Consentimentos LGPD</h2>
+          <div className="admin-card">
+            <div className="area-panel-grid">
+              {consentimentos.map((c: any) => (
+                <div key={c.id} className="area-panel-item">
+                  <strong>{c.finalidade}</strong>
+                  <p>Consentido em {new Date(c.data_consentimento).toLocaleDateString("pt-BR")}</p>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </section>
       )}
-    </div>
+    </main>
   );
 }
 

@@ -30,8 +30,8 @@ export default function Home() {
           <h1>{site.name}</h1>
           <p className="hero-lead">
             Casa de estudo, acolhimento e serviço fraterno. Um ponto de contato
-            simples para quem busca informação, agenda, atendimento e
-            transmissões.
+            claro para agenda, atendimento, transmissão e informação
+            institucional.
           </p>
           <div className="hero-actions">
             <Link href={publicHref("/contato")} className="button button-primary">
@@ -81,6 +81,25 @@ export default function Home() {
             </ul>
           </div>
         </aside>
+      </section>
+
+      <section className="public-trust-grid" aria-label="Resumo institucional">
+        <div className="public-trust-item">
+          <strong>01</strong>
+          <span>Identidade visual consistente em todas as páginas públicas.</span>
+        </div>
+        <div className="public-trust-item">
+          <strong>02</strong>
+          <span>Conteúdo pensado para leitura rápida em celular e desktop.</span>
+        </div>
+        <div className="public-trust-item">
+          <strong>03</strong>
+          <span>Atalhos diretos para o que o visitante mais procura.</span>
+        </div>
+        <div className="public-trust-item">
+          <strong>04</strong>
+          <span>Base visual pronta para crescer sem perder coerência.</span>
+        </div>
       </section>
 
       <section className="section" aria-labelledby="services-title">

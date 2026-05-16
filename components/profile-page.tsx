@@ -23,7 +23,6 @@ export async function ProfilePageView() {
   return (
     <main className="profile-page-compact">
       <div className="profile-compact-container">
-        {/* Header */}
         <header className="profile-compact-header">
           <div className="profile-compact-avatar">
             {profile?.avatar_url ? (
@@ -44,7 +43,6 @@ export async function ProfilePageView() {
           </div>
         </header>
 
-        {/* Forms */}
         <div className="profile-compact-forms">
           <form action={updateProfile} className="profile-compact-form">
             <div className="profile-form-field">
@@ -84,7 +82,6 @@ export async function ProfilePageView() {
           </form>
         </div>
 
-        {/* Info */}
         <div className="profile-compact-info">
           <p>💡 Use o menu flutuante no canto superior direito para configurações, tema e logout.</p>
         </div>

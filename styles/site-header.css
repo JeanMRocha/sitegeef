@@ -1,18 +1,22 @@
-/* Site Header — Public Navigation with Glassmorphism */
+/* Site Header - Public Navigation with Glassmorphism */
 
 .site-header {
   position: sticky;
-  top: 0;
+  top: 0.85rem;
   z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
-  padding: var(--space-3) var(--space-6);
-  background: rgba(248, 244, 236, 0.8);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
+  padding: 0.85rem 1rem;
+  margin-bottom: 1.5rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(255, 255, 255, 0.68)),
+    rgba(248, 244, 236, 0.82);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(14, 36, 8, 0.08);
+  border-radius: 999px;
+  box-shadow: 0 18px 40px rgba(28, 32, 31, 0.08);
 }
 
 /* Brand Logo */
@@ -26,7 +30,7 @@
 .site-header-brand-logo {
   display: block;
   width: auto;
-  height: 44px;
+  height: 42px;
 }
 
 .site-header-brand-logo img {
@@ -39,24 +43,25 @@
 .site-nav-primary {
   display: none;
   align-items: center;
-  gap: var(--space-4);
+  gap: 0.2rem;
   flex: 1;
   margin: 0;
 }
 
 .site-nav-link {
-  color: var(--text);
+  color: var(--muted);
   text-decoration: none;
-  font-size: var(--text-base);
-  font-weight: 500;
-  transition: color var(--transition-fast);
-  padding: var(--space-2) var(--space-3);
+  font-size: 0.92rem;
+  font-weight: 600;
+  transition: background-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+  padding: 0.55rem 0.85rem;
   border-radius: var(--radius-md);
 }
 
 .site-nav-link:hover {
-  color: var(--uva-500);
-  background: rgba(138, 0, 90, 0.05);
+  color: var(--text);
+  background: rgba(138, 0, 90, 0.07);
+  transform: translateY(-1px);
 }
 
 /* Right side (More & User) */
@@ -76,21 +81,22 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  padding: var(--space-2) var(--space-3);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
+  padding: 0.55rem 0.85rem;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(14, 36, 8, 0.08);
+  border-radius: 999px;
   color: var(--text);
-  font-size: var(--text-sm);
-  font-weight: 500;
+  font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all var(--transition-fast);
 }
 
 .site-nav-more-btn:hover {
-  border-color: var(--uva-500);
-  color: var(--uva-500);
-  box-shadow: var(--shadow-sm);
+  border-color: rgba(138, 0, 90, 0.2);
+  color: var(--uva-700);
+  box-shadow: 0 10px 24px rgba(138, 0, 90, 0.08);
+  transform: translateY(-1px);
 }
 
 .site-nav-more-arrow {
@@ -103,10 +109,12 @@
   position: absolute;
   top: calc(100% + var(--space-2));
   right: 0;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-lg);
+  min-width: 220px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(14, 36, 8, 0.08);
+  border-radius: 20px;
+  box-shadow: 0 24px 60px rgba(28, 32, 31, 0.12);
+  backdrop-filter: blur(16px);
   min-width: 200px;
   overflow: hidden;
   animation: slideDown 150ms ease;
@@ -133,19 +141,20 @@
 
 .site-nav-dropdown-item {
   display: block;
-  padding: var(--space-3) var(--space-4);
+  padding: 0.8rem 1rem;
   color: var(--text);
   text-decoration: none;
-  font-size: var(--text-sm);
+  font-size: 0.9rem;
+  font-weight: 500;
   transition: all var(--transition-fast);
   border-left: 3px solid transparent;
   text-align: left;
 }
 
 .site-nav-dropdown-item:hover {
-  background: var(--surface-hover);
+  background: rgba(138, 0, 90, 0.06);
   border-left-color: var(--uva-500);
-  padding-left: calc(var(--space-4) + var(--space-1));
+  padding-left: calc(1rem + 0.25rem);
 }
 
 .site-nav-divider {
@@ -163,8 +172,8 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  border: 2px solid var(--border);
-  background: var(--surface);
+  border: 1px solid rgba(14, 36, 8, 0.1);
+  background: rgba(255, 255, 255, 0.88);
   color: var(--text);
   font-size: 1.4rem;
   cursor: pointer;
@@ -172,7 +181,7 @@
   align-items: center;
   justify-content: center;
   padding: 0;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 12px 28px rgba(28, 32, 31, 0.08);
   transition: all var(--transition-fast);
   overflow: hidden;
   flex-shrink: 0;
@@ -180,8 +189,8 @@
 
 .site-header-user-btn:hover {
   transform: scale(1.05);
-  border-color: var(--uva-500);
-  box-shadow: var(--shadow);
+  border-color: rgba(138, 0, 90, 0.22);
+  box-shadow: 0 16px 30px rgba(138, 0, 90, 0.12);
 }
 
 .site-header-user-login {
@@ -200,7 +209,7 @@
 .site-header-user-initial-lg {
   width: 100%;
   height: 100%;
-  background: var(--gradient-uva);
+  background: linear-gradient(135deg, var(--uva-700), var(--uva-500));
   color: white;
   display: flex;
   align-items: center;
@@ -221,10 +230,12 @@
   position: absolute;
   top: calc(100% + var(--space-2));
   right: 0;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-lg);
+  min-width: 260px;
+  background: rgba(255, 255, 255, 0.97);
+  border: 1px solid rgba(14, 36, 8, 0.08);
+  border-radius: 22px;
+  box-shadow: 0 24px 60px rgba(28, 32, 31, 0.14);
+  backdrop-filter: blur(16px);
   min-width: 260px;
   overflow: hidden;
   animation: slideDown 150ms ease;
@@ -237,7 +248,7 @@
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-4);
-  background: linear-gradient(135deg, var(--uva-100), var(--videira-100));
+  background: linear-gradient(135deg, rgba(138, 0, 90, 0.08), rgba(99, 213, 31, 0.08));
   border-bottom: 1px solid var(--border);
 }
 
@@ -277,13 +288,14 @@
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
+  padding: 0.8rem 1rem;
   color: var(--text);
   text-decoration: none;
   background: transparent;
   border: none;
   font-family: inherit;
-  font-size: var(--text-sm);
+  font-size: 0.9rem;
+  font-weight: 500;
   cursor: pointer;
   transition: all var(--transition-fast);
   border-left: 3px solid transparent;
@@ -292,9 +304,9 @@
 }
 
 .site-header-user-item:hover {
-  background: var(--surface-hover);
+  background: rgba(138, 0, 90, 0.06);
   border-left-color: var(--uva-500);
-  padding-left: calc(var(--space-4) + var(--space-1));
+  padding-left: calc(1rem + 0.25rem);
 }
 
 .site-header-user-item span {
@@ -337,12 +349,12 @@
   align-items: center;
   gap: var(--space-3);
   width: 100%;
-  padding: var(--space-3) var(--space-4);
+  padding: 0.8rem 1rem;
   background: transparent;
   border: none;
   color: #ef4444;
   font-family: inherit;
-  font-size: var(--text-sm);
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition: all var(--transition-fast);
@@ -354,7 +366,7 @@
 .site-header-user-logout:hover {
   background: rgba(239, 68, 68, 0.05);
   border-left-color: #ef4444;
-  padding-left: calc(var(--space-4) + var(--space-1));
+  padding-left: calc(1rem + 0.25rem);
 }
 
 .site-header-user-logout span {
@@ -368,7 +380,7 @@
 /* Responsive — Desktop (1024px+) */
 @media (min-width: 1024px) {
   .site-header {
-    padding: var(--space-3) var(--space-6);
+    padding: 0.9rem 1.2rem;
   }
 
   .site-nav-primary {
@@ -381,14 +393,14 @@
 
   .site-nav-link {
     font-size: 0.9rem;
-    padding: var(--space-1) var(--space-2);
+    padding: 0.5rem 0.8rem;
   }
 }
 
 /* Responsive — Tablet (768px-1023px) */
 @media (min-width: 768px) and (max-width: 1023px) {
   .site-header {
-    padding: var(--space-3) var(--space-4);
+    padding: 0.85rem 1rem;
   }
 
   .site-nav-primary {
@@ -398,15 +410,16 @@
   .site-nav-more-btn {
     display: flex;
     font-size: 0.85rem;
-    padding: var(--space-1) var(--space-2);
+    padding: 0.5rem 0.75rem;
   }
 }
 
 /* Responsive — Mobile (< 768px) */
 @media (max-width: 767px) {
   .site-header {
-    padding: var(--space-2) var(--space-3);
+    padding: 0.75rem 0.85rem;
     gap: var(--space-2);
+    border-radius: 24px;
   }
 
   .site-header-brand-logo {
@@ -418,7 +431,7 @@
   }
 
   .site-nav-more-btn {
-    padding: var(--space-2) var(--space-2);
+    padding: 0.5rem 0.7rem;
     font-size: var(--text-xs);
   }
 
@@ -436,7 +449,7 @@
   .site-nav-more-dropdown,
   .site-header-user-dropdown {
     min-width: 250px;
-    right: -10px;
+    right: -8px;
   }
 }
 
