@@ -15,6 +15,3 @@ major_version = 15
 [studio]
 enabled = true
 
-[functions]
-import_map = "./functions/import_map.json"
-verify_jwt = true
