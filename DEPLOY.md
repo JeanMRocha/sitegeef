@@ -1,23 +1,21 @@
-# 🚀 Deploy Automático - Coolify
+# 🚀 Deploy Automático - GitHub Actions
 
-O site GEEF agora possui deploy automático via Coolify ao fazer push para `main`.
+O site GEEF usa GitHub Actions para validar e publicar automaticamente ao fazer push para `main`.
 
 ## Como funciona?
 
 ```mermaid
 git push origin main
     ↓
-GitHub dispara webhook no Coolify
+1. GitHub Actions valida o build
     ↓
-1. Coolify faz clone do repositório
+2. GitHub Actions faz o deploy via SSH para o VPS
     ↓
-2. Build Docker (Dockerfile)
+3. O VPS executa `deploy.sh`
     ↓
-3. Deploy no VPS (78.142.242.236)
+4. Build Docker / restart do container
     ↓
-4. Container inicia automaticamente
-    ↓
-5. Healthcheck verifica aplicação
+5. Healthcheck valida a aplicação
     ↓
 ✅ Site geef.com.br atualizado!
 ```
@@ -32,24 +30,7 @@ GitHub dispara webhook no Coolify
 - Mova repositório para lá
 - Adicione você como **Owner/Proprietário**
 
-### 2. GitHub App no Coolify
-
-1. Vá para: [https://github.com/organizations/[SUA-ORG]/settings/apps](https://github.com/organizations/[SUA-ORG]/settings/apps)
-2. Clique em **"New GitHub App"**
-3. Preencha:
-   - **GitHub App name**: `Coolify Deploy`
-   - **Homepage URL**: `https://coolify.io`
-   - **Webhook active**: ❌ Desmarque
-
-4. **Permissões necessárias**:
-   - Repository → `Contents` (Read & write)
-   - Repository → `Metadata` (Read-only)
-   - Organization → `Members` (Read-only)
-
-5. Clique em **"Create GitHub App"**
-6. No Coolify: Settings → Git Providers → "Add GitHub App"
-
-### 3. Configurar DNS no Cloudflare
+### 2. Configurar DNS no Cloudflare
 
 **Importante:** Deve apontar direto para o novo IP do VPS, não usar Cloudflare Tunnel.
 
@@ -66,7 +47,7 @@ GitHub dispara webhook no Coolify
 | **TTL** | Auto |
 | **Proxy** | Cinza (DNS only) |
 
-### 4. VPS Setup (78.142.242.236)
+### 3. VPS Setup (78.142.242.236)
 
 ```bash
 # SSH no VPS
@@ -79,15 +60,15 @@ sudo apt update && sudo apt upgrade -y
 curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
 sudo apt-get install -y nodejs
 
-# Instalar Docker (para Coolify)
+# Instalar Docker (para o VPS)
 curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
 sudo usermod -aG docker $USER
 ```
 
-### 5. Adicionar Secrets no Coolify
+### 4. Adicionar Secrets no GitHub Actions
 
-Na aplicação no Coolify, vá para **Environment Variables** e adicione:
+No repositório, adicione os secrets usados pelo workflow:
 
 ```
 NEXT_PUBLIC_SITE_URL=https://geef.com.br
@@ -106,11 +87,11 @@ echo "# Deploy teste" >> README.md
 
 # 2. Commit e push
 git add README.md
-git commit -m "test: verify Coolify deployment"
+git commit -m "test: verify GitHub Actions deployment"
 git push origin main
 
-# 3. Monitore no Coolify
-# Vá para: Aplicação → Deployment → Logs
+# 3. Monitore no GitHub Actions
+# Vá para: Actions → Build, Validate & Deploy
 
 # 4. Verifique o site
 # Acesse: https://geef.com.br
@@ -134,11 +115,12 @@ docker logs [container-id] -f
 docker restart [container-id]
 ```
 
-### Coolify não faz deploy ao fazer push
+### GitHub Actions não faz deploy ao fazer push
 
-1. Verificar se GitHub App está corretamente instalado
-2. Verificar webhook no GitHub: `Settings → Webhooks`
-3. No Coolify: Applications → Redeploy manualmente
+1. Verificar se o workflow `Build, Validate & Deploy` está ativo
+2. Verificar se os secrets `GEEF_VPS_*` estão configurados
+3. Verificar se o `deploy.sh` existe e está executável no VPS
+4. Verificar logs na aba `Actions`
 
 ### Construção do Docker falha
 
@@ -161,8 +143,8 @@ Ver logs de erro e corrigir Dockerfile.
 ## Segurança
 
 ✅ **Implementado:**
-- Variáveis de ambiente em Coolify (não em git)
-- GitHub App com permissões mínimas
+- Variáveis de ambiente em GitHub Secrets e no runtime do VPS
+- Deploy controlado por GitHub Actions
 - DNS direto (sem Cloudflare Tunnel)
 - Healthcheck configurado
 
@@ -181,4 +163,4 @@ Ver logs de erro e corrigir Dockerfile.
 ---
 
 **Última atualização**: 2026-05-16  
-**Status**: ✅ Totalmente operacional com Coolify
+**Status**: ✅ Totalmente operacional com GitHub Actions
