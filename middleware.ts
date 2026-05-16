@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient, type CookieMethodsServer } from "@supabase/ssr";
 
-const protectedRoutes = ["/perfil", "/admin"];
+const protectedRoutes = ["/perfil", "/admin", "/minha-area"];
 
 function isProtectedRoute(pathname: string): boolean {
   return protectedRoutes.some(route => pathname.startsWith(route));
