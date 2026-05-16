@@ -15,8 +15,7 @@ COPY . .
 # Create .env.local for build
 RUN echo "NEXT_PUBLIC_SITE_URL=https://geef.com.br" > .env.local && \
     echo "NEXT_PUBLIC_SUPABASE_URL=https://nycgpokqlmrfzegjlrwa.supabase.co" >> .env.local && \
-    echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_jDq5SX_k4spHMCCPVvlsrQ_-ZZybt8e" >> .env.local && \
-    echo "SUPABASE_SERVICE_ROLE_KEY=default-for-build" >> .env.local
+    echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_jDq5SX_k4spHMCCPVvlsrQ_-ZZybt8e" >> .env.local
 
 # Build Next.js application
 RUN npm run build
