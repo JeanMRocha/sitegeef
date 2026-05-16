@@ -89,196 +89,177 @@ async function EditPessoaContent({ id }: { id: string }) {
 
   return (
     <form action={(formData) => handleUpdatePessoa(id, formData)}>
-      {/* Header */}
-      <div className="admin-page-header">
-        <div>
-          <h1 className="admin-page-title">Editar Pessoa</h1>
-          <p className="admin-page-subtitle">{pessoa.nome}</p>
-        </div>
-      </div>
-
-      {/* Form */}
-      <div className="admin-card" style={{ maxWidth: '800px', margin: '0 auto' }}>
-        {/* Seção 1: Identificação */}
-        <h2 style={{ margin: '0 0 1.5rem', fontSize: '1.1rem', color: 'var(--text)' }}>📋 Identificação</h2>
-
-        <div className="admin-form-group">
-          <label>Nome Completo *</label>
-          <input type="text" name="nome" defaultValue={pessoa.nome} required />
-        </div>
-
-        <div className="admin-form-group">
-          <label>Nome Social</label>
-          <input type="text" name="nome_social" defaultValue={pessoa.nome_social || ''} />
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-          <div className="admin-form-group">
-            <label>CPF</label>
-            <input type="text" name="cpf" defaultValue={pessoa.cpf || ''} />
+      <div className="area-page">
+        <section className="area-hero">
+          <div className="area-hero-top">
+            <div>
+              <p className="area-subtitle">Cadastro de pessoa</p>
+              <h1 className="area-hero-title">Editar Pessoa</h1>
+            </div>
+            <div className="tag-list">
+              <span className="tag">{pessoa.status}</span>
+            </div>
           </div>
-          <div className="admin-form-group">
-            <label>RG</label>
-            <input type="text" name="rg" defaultValue={pessoa.rg || ''} />
+          <p className="area-subtitle">{pessoa.nome}</p>
+        </section>
+
+        <section className="area-section">
+          <div className="area-section-title">
+            <h2>Identificação</h2>
+            <p>Dados principais da pessoa cadastrada.</p>
           </div>
-        </div>
-
-        <div className="admin-form-group">
-          <label>Data de Nascimento</label>
-          <input type="date" name="data_nascimento" defaultValue={pessoa.data_nascimento || ''} />
-        </div>
-
-        <div className="admin-form-group">
-          <label>Status</label>
-          <select
-            name="status"
-            defaultValue={pessoa.status}
-            style={{
-              padding: '0.65rem 0.85rem',
-              border: '1px solid var(--admin-border)',
-              borderRadius: '0.6rem',
-              fontFamily: 'var(--font-body)',
-              fontSize: '0.95rem',
-              color: 'var(--text)',
-            }}
-          >
-            <option value="ativo">✅ Ativo</option>
-            <option value="inativo">⏸️ Inativo</option>
-            <option value="afastado">⏳ Afastado</option>
-            <option value="falecido">† Falecido</option>
-          </select>
-        </div>
-
-        {/* Seção 2: Contato */}
-        <h2 style={{ margin: '2rem 0 1.5rem', fontSize: '1.1rem', color: 'var(--text)' }}>📞 Contato</h2>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-          <div className="admin-form-group">
-            <label>Telefone</label>
-            <input type="tel" name="telefone" defaultValue={pessoa.telefone || ''} />
+          <div className="table-surface">
+            <div className="module-grid">
+              <label className="profile-form-field">
+                <span>Nome completo *</span>
+                <input type="text" name="nome" defaultValue={pessoa.nome} required className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>Nome social</span>
+                <input type="text" name="nome_social" defaultValue={pessoa.nome_social || ''} className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>CPF</span>
+                <input type="text" name="cpf" defaultValue={pessoa.cpf || ''} className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>RG</span>
+                <input type="text" name="rg" defaultValue={pessoa.rg || ''} className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>Data de nascimento</span>
+                <input type="date" name="data_nascimento" defaultValue={pessoa.data_nascimento || ''} className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>Status</span>
+                <select name="status" defaultValue={pessoa.status} className="profile-form-input">
+                  <option value="ativo">Ativo</option>
+                  <option value="inativo">Inativo</option>
+                  <option value="afastado">Afastado</option>
+                  <option value="falecido">Falecido</option>
+                </select>
+              </label>
+            </div>
           </div>
-          <div className="admin-form-group">
-            <label>WhatsApp</label>
-            <input type="tel" name="whatsapp" defaultValue={pessoa.whatsapp || ''} />
+        </section>
+
+        <section className="area-section">
+          <div className="area-section-title">
+            <h2>Contato</h2>
+            <p>Informações para retorno e emergência.</p>
           </div>
-        </div>
-
-        <div className="admin-form-group">
-          <label>Email</label>
-          <input type="email" name="email" defaultValue={pessoa.email || ''} />
-        </div>
-
-        <div className="admin-form-group">
-          <label>Contato de Emergência</label>
-          <input type="text" name="contato_emergencia" defaultValue={pessoa.contato_emergencia || ''} />
-        </div>
-
-        {/* Seção 3: Endereço */}
-        <h2 style={{ margin: '2rem 0 1.5rem', fontSize: '1.1rem', color: 'var(--text)' }}>🏠 Endereço</h2>
-
-        <div className="admin-form-group">
-          <label>Logradouro</label>
-          <input type="text" name="logradouro" defaultValue={pessoa.logradouro || ''} />
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-          <div className="admin-form-group">
-            <label>Bairro</label>
-            <input type="text" name="bairro" defaultValue={pessoa.bairro || ''} />
+          <div className="table-surface">
+            <div className="module-grid">
+              <label className="profile-form-field">
+                <span>Telefone</span>
+                <input type="tel" name="telefone" defaultValue={pessoa.telefone || ''} className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>WhatsApp</span>
+                <input type="tel" name="whatsapp" defaultValue={pessoa.whatsapp || ''} className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>Email</span>
+                <input type="email" name="email" defaultValue={pessoa.email || ''} className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>Contato de emergência</span>
+                <input type="text" name="contato_emergencia" defaultValue={pessoa.contato_emergencia || ''} className="profile-form-input" />
+              </label>
+            </div>
           </div>
-          <div className="admin-form-group">
-            <label>Número</label>
-            <input type="text" name="numero" defaultValue={pessoa.numero || ''} />
+        </section>
+
+        <section className="area-section">
+          <div className="area-section-title">
+            <h2>Endereço</h2>
+            <p>Localização residencial e complementar.</p>
           </div>
-          <div className="admin-form-group">
-            <label>Complemento</label>
-            <input type="text" name="complemento" defaultValue={pessoa.complemento || ''} />
+          <div className="table-surface">
+            <div className="module-grid">
+              <label className="profile-form-field">
+                <span>Logradouro</span>
+                <input type="text" name="logradouro" defaultValue={pessoa.logradouro || ''} className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>Bairro</span>
+                <input type="text" name="bairro" defaultValue={pessoa.bairro || ''} className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>Número</span>
+                <input type="text" name="numero" defaultValue={pessoa.numero || ''} className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>Complemento</span>
+                <input type="text" name="complemento" defaultValue={pessoa.complemento || ''} className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>Cidade</span>
+                <input type="text" name="cidade" defaultValue={pessoa.cidade || ''} className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>Estado</span>
+                <input type="text" name="estado" defaultValue={pessoa.estado || ''} maxLength={2} className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>CEP</span>
+                <input type="text" name="cep" defaultValue={pessoa.cep || ''} className="profile-form-input" />
+              </label>
+            </div>
           </div>
-        </div>
+        </section>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-          <div className="admin-form-group">
-            <label>Cidade</label>
-            <input type="text" name="cidade" defaultValue={pessoa.cidade || ''} />
+        <section className="area-section">
+          <div className="area-section-title">
+            <h2>Vínculos</h2>
+            <p>Marcadores de participação e relação com a instituição.</p>
           </div>
-          <div className="admin-form-group">
-            <label>Estado</label>
-            <input type="text" name="estado" defaultValue={pessoa.estado || ''} maxLength={2} />
+          <div className="table-surface">
+            <div className="tag-list" style={{ flexWrap: 'wrap' }}>
+              {TIPOS_VINCULO.map((vinculo) => (
+                <label key={vinculo} className="tag" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <input
+                    type="checkbox"
+                    name={`vinculo_${vinculo}`}
+                    defaultChecked={vinculosSet.has(vinculo)}
+                    style={{ cursor: 'pointer' }}
+                  />
+                  <span>{vinculo}</span>
+                </label>
+              ))}
+            </div>
           </div>
-          <div className="admin-form-group">
-            <label>CEP</label>
-            <input type="text" name="cep" defaultValue={pessoa.cep || ''} />
+        </section>
+
+        <section className="area-section">
+          <div className="area-section-title">
+            <h2>Configurações</h2>
+            <p>Autorização e observações internas.</p>
           </div>
-        </div>
+          <div className="table-surface">
+            <div className="module-grid">
+              <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
+                <span>Observações</span>
+                <textarea name="observacoes" defaultValue={pessoa.observacoes || ''} rows={4} className="profile-form-input" />
+              </label>
+              <label className="tag" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+                <input type="checkbox" name="autoriza_notificacao" defaultChecked={pessoa.autoriza_notificacao} />
+                <span>Autoriza notificações</span>
+              </label>
+              <label className="tag" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+                <input type="checkbox" name="autoriza_imagem_voz" defaultChecked={pessoa.autoriza_imagem_voz} />
+                <span>Autoriza imagem/voz</span>
+              </label>
+            </div>
+          </div>
+        </section>
 
-        {/* Seção 4: Vínculos */}
-        <h2 style={{ margin: '2rem 0 1.5rem', fontSize: '1.1rem', color: 'var(--text)' }}>🔗 Vínculos</h2>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
-          {TIPOS_VINCULO.map((vinculo) => (
-            <label key={vinculo} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
-              <input
-                type="checkbox"
-                name={`vinculo_${vinculo}`}
-                defaultChecked={vinculosSet.has(vinculo)}
-                style={{ cursor: 'pointer' }}
-              />
-              <span style={{ fontSize: '0.9rem' }}>{vinculo}</span>
-            </label>
-          ))}
-        </div>
-
-        {/* Seção 5: Observações e Permissões */}
-        <h2 style={{ margin: '2rem 0 1.5rem', fontSize: '1.1rem', color: 'var(--text)' }}>⚙️ Configurações</h2>
-
-        <div className="admin-form-group">
-          <label>Observações</label>
-          <textarea
-            name="observacoes"
-            defaultValue={pessoa.observacoes || ''}
-            rows={4}
-            style={{
-              padding: '0.65rem 0.85rem',
-              border: '1px solid var(--admin-border)',
-              borderRadius: '0.6rem',
-              fontFamily: 'var(--font-body)',
-              fontSize: '0.95rem',
-              color: 'var(--text)',
-              resize: 'vertical',
-            }}
-          />
-        </div>
-
-        <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem' }}>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
-            <input
-              type="checkbox"
-              name="autoriza_notificacao"
-              defaultChecked={pessoa.autoriza_notificacao}
-              style={{ cursor: 'pointer' }}
-            />
-            <span>Autoriza notificações</span>
-          </label>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
-            <input
-              type="checkbox"
-              name="autoriza_imagem_voz"
-              defaultChecked={pessoa.autoriza_imagem_voz}
-              style={{ cursor: 'pointer' }}
-            />
-            <span>Autoriza uso de imagem/voz</span>
-          </label>
-        </div>
-
-        {/* Botões */}
-        <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
-          <button type="submit" className="admin-btn admin-btn-primary">
-            ✅ Salvar
-          </button>
-          <Link href="/admin/pessoas" className="admin-btn admin-btn-secondary">
-            ❌ Cancelar
-          </Link>
-        </div>
+        <section className="area-section">
+          <div className="area-panel-grid">
+            <button type="submit" className="profile-form-btn profile-form-btn-primary">Salvar</button>
+            <Link href="/admin/pessoas" className="profile-form-btn profile-form-btn-secondary">Cancelar</Link>
+          </div>
+        </section>
       </div>
     </form>
   );

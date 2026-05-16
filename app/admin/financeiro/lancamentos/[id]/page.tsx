@@ -50,216 +50,119 @@ async function LancamentoContent({ id }: { id: string }) {
   const { pessoas } = await getPessoas();
 
   return (
-    <div>
-      {/* Header */}
-      <div className="admin-page-header">
-        <div>
-          <h1 className="admin-page-title">{movimento.descricao}</h1>
-          <p className="admin-page-subtitle">
-            {new Date(movimento.data).toLocaleDateString('pt-BR')}
-          </p>
-        </div>
-        <form action={() => handleDelete(id)} style={{ display: 'inline' }}>
-          <button
-            type="submit"
-            className="admin-btn"
-            style={{
-              backgroundColor: 'rgba(239, 68, 68, 0.1)',
-              color: '#ef4444',
-              border: '1px solid rgba(239, 68, 68, 0.3)',
-            }}
-            onClick={(e) => {
-              if (!confirm('Tem certeza que deseja deletar este lançamento?')) {
-                e.preventDefault();
-              }
-            }}
-          >
-            ✕ Deletar
-          </button>
-        </form>
-      </div>
-
-      {/* Info Box */}
-      <div className="admin-card" style={{ marginBottom: '2rem', backgroundColor: 'rgba(59, 130, 246, 0.05)', borderLeft: '4px solid var(--primary)' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem' }}>
+    <div className="area-page">
+      <section className="area-hero">
+        <div className="area-hero-top">
           <div>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.85rem', color: 'var(--muted)', textTransform: 'uppercase' }}>Tipo</p>
-            <p style={{ margin: '0.5rem 0', fontSize: '1rem', fontWeight: 600 }}>
-              {movimento.tipo === 'entrada' ? '📥 Entrada' : '📤 Saída'}
-            </p>
+            <p className="area-subtitle">Lançamento financeiro</p>
+            <h1 className="area-hero-title">{movimento.descricao}</h1>
           </div>
-          <div>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.85rem', color: 'var(--muted)', textTransform: 'uppercase' }}>Valor</p>
-            <p style={{ margin: '0.5rem 0', fontSize: '1.2rem', fontWeight: 600, color: movimento.tipo === 'entrada' ? '#22c55e' : '#ef4444' }}>
-              {movimento.tipo === 'entrada' ? '+' : '-'} R$ {movimento.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-            </p>
-          </div>
-          <div>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.85rem', color: 'var(--muted)', textTransform: 'uppercase' }}>Conta</p>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.95rem' }}>
-              {movimento.plano_contas?.codigo} - {movimento.plano_contas?.nome}
-            </p>
+          <div className="tag-list">
+            <span className="tag">{movimento.tipo === 'entrada' ? 'Entrada' : 'Saída'}</span>
+            <span className="tag">R$ {movimento.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
           </div>
         </div>
-      </div>
-
-      {/* Form */}
-      <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto', marginBottom: '2rem' }}>
-        <form action={(formData) => handleSubmit(id, formData)}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-            <div className="admin-form-group">
-              <label>Tipo *</label>
-              <select
-                name="tipo"
-                defaultValue={movimento.tipo}
-                required
-                style={{
-                  padding: '0.65rem 0.85rem',
-                  border: '1px solid var(--admin-border)',
-                  borderRadius: '0.6rem',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.95rem',
-                  color: 'var(--text)',
-                }}
-              >
-                <option value="entrada">📥 Entrada</option>
-                <option value="saida">📤 Saída</option>
-              </select>
-            </div>
-            <div className="admin-form-group">
-              <label>Data *</label>
-              <input
-                type="date"
-                name="data"
-                defaultValue={movimento.data}
-                required
-              />
-            </div>
-          </div>
-
-          <div className="admin-form-group">
-            <label>Descrição *</label>
-            <input
-              type="text"
-              name="descricao"
-              defaultValue={movimento.descricao}
-              required
-            />
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-            <div className="admin-form-group">
-              <label>Conta Contábil *</label>
-              <select
-                name="conta_id"
-                defaultValue={movimento.plano_contas?.id}
-                required
-                style={{
-                  padding: '0.65rem 0.85rem',
-                  border: '1px solid var(--admin-border)',
-                  borderRadius: '0.6rem',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.95rem',
-                  color: 'var(--text)',
-                }}
-              >
-                <option value="">— Selecione —</option>
-                {contas.map((c: any) => (
-                  <option key={c.id} value={c.id}>
-                    {c.codigo} - {c.nome}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="admin-form-group">
-              <label>Valor (R$) *</label>
-              <input
-                type="number"
-                name="valor"
-                defaultValue={movimento.valor}
-                step="0.01"
-                min="0"
-                required
-              />
-            </div>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-            <div className="admin-form-group">
-              <label>Centro de Custo</label>
-              <select
-                name="centro_custo_id"
-                defaultValue={movimento.centros_custo?.id || ''}
-                style={{
-                  padding: '0.65rem 0.85rem',
-                  border: '1px solid var(--admin-border)',
-                  borderRadius: '0.6rem',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.95rem',
-                  color: 'var(--text)',
-                }}
-              >
-                <option value="">— Nenhum —</option>
-                {centros.map((c: any) => (
-                  <option key={c.id} value={c.id}>
-                    {c.nome}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="admin-form-group">
-              <label>Pessoa</label>
-              <select
-                name="pessoa_id"
-                defaultValue={movimento.pessoas?.id || ''}
-                style={{
-                  padding: '0.65rem 0.85rem',
-                  border: '1px solid var(--admin-border)',
-                  borderRadius: '0.6rem',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.95rem',
-                  color: 'var(--text)',
-                }}
-              >
-                <option value="">— Nenhuma —</option>
-                {pessoas.map((p: any) => (
-                  <option key={p.id} value={p.id}>
-                    {p.nome}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div className="admin-form-group">
-            <label>Categoria *</label>
-            <input
-              type="text"
-              name="categoria"
-              defaultValue={movimento.categoria}
-              required
-            />
-          </div>
-
-          <div className="admin-form-group">
-            <label>URL do Comprovante</label>
-            <input
-              type="url"
-              name="comprovante_url"
-              defaultValue={movimento.comprovante_url || ''}
-            />
-          </div>
-
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
-            <button type="submit" className="admin-btn admin-btn-primary">
-              ✅ Salvar Alterações
+        <p className="area-subtitle">{new Date(movimento.data).toLocaleDateString('pt-BR')}</p>
+        <div className="area-panel-grid">
+          <form action={() => handleDelete(id)}>
+            <button type="submit" className="profile-form-btn profile-form-btn-secondary" style={{ color: 'var(--danger)', borderColor: 'rgba(239, 68, 68, 0.25)' }}>
+              Deletar
             </button>
-            <Link href="/admin/financeiro/lancamentos" className="admin-btn admin-btn-secondary">
-              ← Voltar
-            </Link>
-          </div>
-        </form>
-      </div>
+          </form>
+          <Link href="/admin/financeiro/lancamentos" className="profile-form-btn profile-form-btn-secondary">
+            Voltar
+          </Link>
+        </div>
+      </section>
+
+      <section className="stat-grid">
+        <article className="stat-card">
+          <span className="stat-label">Tipo</span>
+          <strong>{movimento.tipo === 'entrada' ? 'Entrada' : 'Saída'}</strong>
+        </article>
+        <article className="stat-card">
+          <span className="stat-label">Valor</span>
+          <strong style={{ color: movimento.tipo === 'entrada' ? 'var(--success)' : 'var(--danger)' }}>
+            {movimento.tipo === 'entrada' ? '+' : '-'} R$ {movimento.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+          </strong>
+        </article>
+        <article className="stat-card">
+          <span className="stat-label">Conta</span>
+          <strong>{movimento.plano_contas?.codigo} - {movimento.plano_contas?.nome}</strong>
+        </article>
+      </section>
+
+      <section className="area-section">
+        <div className="area-section-title">
+          <h2>Editar lançamento</h2>
+          <p>Atualize tipo, conta, centro de custo e anexos.</p>
+        </div>
+        <div className="table-surface" style={{ maxWidth: '760px', margin: '0 auto' }}>
+          <form action={(formData) => handleSubmit(id, formData)}>
+            <div className="module-grid">
+              <label className="profile-form-field">
+                <span>Tipo *</span>
+                <select name="tipo" defaultValue={movimento.tipo} required className="profile-form-input">
+                  <option value="entrada">Entrada</option>
+                  <option value="saida">Saída</option>
+                </select>
+              </label>
+              <label className="profile-form-field">
+                <span>Data *</span>
+                <input type="date" name="data" defaultValue={movimento.data} required className="profile-form-input" />
+              </label>
+              <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
+                <span>Descrição *</span>
+                <input type="text" name="descricao" defaultValue={movimento.descricao} required className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>Conta contábil *</span>
+                <select name="conta_id" defaultValue={movimento.plano_contas?.id} required className="profile-form-input">
+                  <option value="">— Selecione —</option>
+                  {contas.map((c: any) => (
+                    <option key={c.id} value={c.id}>{c.codigo} - {c.nome}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="profile-form-field">
+                <span>Valor (R$) *</span>
+                <input type="number" name="valor" defaultValue={movimento.valor} step="0.01" min="0" required className="profile-form-input" />
+              </label>
+              <label className="profile-form-field">
+                <span>Centro de custo</span>
+                <select name="centro_custo_id" defaultValue={movimento.centros_custo?.id || ''} className="profile-form-input">
+                  <option value="">— Nenhum —</option>
+                  {centros.map((c: any) => (
+                    <option key={c.id} value={c.id}>{c.nome}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="profile-form-field">
+                <span>Pessoa</span>
+                <select name="pessoa_id" defaultValue={movimento.pessoas?.id || ''} className="profile-form-input">
+                  <option value="">— Nenhuma —</option>
+                  {pessoas.map((p: any) => (
+                    <option key={p.id} value={p.id}>{p.nome}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="profile-form-field">
+                <span>Categoria *</span>
+                <input type="text" name="categoria" defaultValue={movimento.categoria} required className="profile-form-input" />
+              </label>
+              <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
+                <span>URL do comprovante</span>
+                <input type="url" name="comprovante_url" defaultValue={movimento.comprovante_url || ''} className="profile-form-input" />
+              </label>
+            </div>
+
+            <div className="area-panel-grid" style={{ marginTop: '1.5rem' }}>
+              <button type="submit" className="profile-form-btn profile-form-btn-primary">Salvar alterações</button>
+              <Link href="/admin/financeiro/lancamentos" className="profile-form-btn profile-form-btn-secondary">Cancelar</Link>
+            </div>
+          </form>
+        </div>
+      </section>
     </div>
   );
 }

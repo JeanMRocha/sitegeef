@@ -56,10 +56,8 @@ async function handleRevoke(userId: string) {
   'use server';
 
   try {
-    if (confirm('Tem certeza? Isso removerá o acesso de login desta pessoa.')) {
-      await revokeLogin(userId);
-      redirect('/admin/usuarios');
-    }
+    await revokeLogin(userId);
+    redirect('/admin/usuarios');
   } catch (error) {
     console.error('Erro ao remover login:', error);
     throw error;
@@ -71,141 +69,90 @@ async function EditUsuarioContent({ id }: { id: string }) {
 
   return (
     <form action={(formData) => handleUpdate(id, formData)}>
-      {/* Header */}
-      <div className="admin-page-header">
-        <div>
-          <h1 className="admin-page-title">Editar Usuário</h1>
-          <p className="admin-page-subtitle">{usuario.pessoas?.nome}</p>
-        </div>
-      </div>
+      <div className="area-page">
+        <section className="area-hero">
+          <div className="area-hero-top">
+            <div>
+              <p className="area-subtitle">Acesso ao sistema</p>
+              <h1 className="area-hero-title">Editar Usuário</h1>
+            </div>
+            <div className="tag-list">
+              <span className="tag">{usuario.perfil}</span>
+            </div>
+          </div>
+          <p className="area-subtitle">{usuario.pessoas?.nome}</p>
+        </section>
 
-      {/* Form */}
-      <div className="admin-card" style={{ maxWidth: '800px', margin: '0 auto' }}>
-        {/* Seção 1: Informações */}
-        <h2 style={{ margin: '0 0 1.5rem', fontSize: '1.1rem', color: 'var(--text)' }}>👤 Informações</h2>
+        <section className="area-section">
+          <div className="area-section-title">
+            <h2>Informações</h2>
+            <p>Identificação do usuário vinculado à pessoa.</p>
+          </div>
+          <div className="table-surface">
+            <div className="area-panel-grid">
+              <div className="area-panel-item">
+                <p><strong>Pessoa:</strong> {usuario.pessoas?.nome}</p>
+                <p><strong>Email:</strong> {usuario.pessoas?.email || '—'}</p>
+                <p><strong>ID:</strong> <code>{id}</code></p>
+              </div>
+            </div>
+          </div>
+        </section>
 
-        <div style={{ padding: '1rem', backgroundColor: 'var(--admin-bg)', borderRadius: '0.6rem', marginBottom: '1.5rem' }}>
-          <p style={{ margin: 0, marginBottom: '0.5rem' }}>
-            <strong>Pessoa:</strong> {usuario.pessoas?.nome}
-          </p>
-          <p style={{ margin: 0, marginBottom: '0.5rem' }}>
-            <strong>Email:</strong> {usuario.pessoas?.email || '—'}
-          </p>
-          <p style={{ margin: 0 }}>
-            <strong>ID do Usuário:</strong> <code style={{ fontSize: '0.8rem' }}>{id}</code>
-          </p>
-        </div>
+        <section className="area-section">
+          <div className="area-section-title">
+            <h2>Perfil e permissões</h2>
+            <p>Defina o perfil e os acessos granulares.</p>
+          </div>
+          <div className="table-surface">
+            <div className="module-grid">
+              <label className="profile-form-field">
+                <span>Perfil do sistema</span>
+                <select name="perfil" defaultValue={usuario.perfil} className="profile-form-input">
+                  {PERFIS.map((p) => (
+                    <option key={p} value={p}>{p}</option>
+                  ))}
+                </select>
+              </label>
+              <div className="area-panel-item" style={{ gridColumn: '1 / -1' }}>
+                <span className="stat-label">Permissões específicas</span>
+                <div className="tag-list" style={{ flexWrap: 'wrap' }}>
+                  {[
+                    ['pode_escalas', 'Escalas', usuario.pode_escalas],
+                    ['pode_biblioteca', 'Biblioteca', usuario.pode_biblioteca],
+                    ['pode_livraria', 'Livraria', usuario.pode_livraria],
+                    ['pode_financeiro', 'Financeiro', usuario.pode_financeiro],
+                    ['pode_pessoas', 'Pessoas', usuario.pode_pessoas],
+                    ['pode_publicar', 'Publicar', usuario.pode_publicar],
+                    ['pode_mediunidade', 'Mediunidade', usuario.pode_mediunidade],
+                    ['pode_atendimento', 'Atendimento', usuario.pode_atendimento],
+                    ['pode_apse', 'APSE', usuario.pode_apse],
+                  ].map(([name, label, checked]) => (
+                    <label key={name as string} className="tag" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <input type="checkbox" name={name as string} defaultChecked={Boolean(checked)} />
+                      <span>{label as string}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
-        {/* Seção 2: Perfil e Permissões */}
-        <h2 style={{ margin: '2rem 0 1.5rem', fontSize: '1.1rem', color: 'var(--text)' }}>🎯 Perfil e Permissões</h2>
-
-        <div className="admin-form-group">
-          <label>Perfil do Sistema</label>
-          <select
-            name="perfil"
-            defaultValue={usuario.perfil}
-            style={{
-              padding: '0.65rem 0.85rem',
-              border: '1px solid var(--admin-border)',
-              borderRadius: '0.6rem',
-              fontFamily: 'var(--font-body)',
-              fontSize: '0.95rem',
-              color: 'var(--text)',
-            }}
-          >
-            {PERFIS.map((p) => (
-              <option key={p} value={p}>
-                {p}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <p style={{ marginBottom: '1rem', fontSize: '0.9rem', color: 'var(--muted)' }}>
-          Permissões específicas:
-        </p>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
-            <input type="checkbox" name="pode_escalas" defaultChecked={usuario.pode_escalas} style={{ cursor: 'pointer' }} />
-            <span>Escalas</span>
-          </label>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
-            <input
-              type="checkbox"
-              name="pode_biblioteca"
-              defaultChecked={usuario.pode_biblioteca}
-              style={{ cursor: 'pointer' }}
-            />
-            <span>Biblioteca</span>
-          </label>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
-            <input type="checkbox" name="pode_livraria" defaultChecked={usuario.pode_livraria} style={{ cursor: 'pointer' }} />
-            <span>Livraria</span>
-          </label>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
-            <input
-              type="checkbox"
-              name="pode_financeiro"
-              defaultChecked={usuario.pode_financeiro}
-              style={{ cursor: 'pointer' }}
-            />
-            <span>Financeiro</span>
-          </label>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
-            <input type="checkbox" name="pode_pessoas" defaultChecked={usuario.pode_pessoas} style={{ cursor: 'pointer' }} />
-            <span>Pessoas</span>
-          </label>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
-            <input type="checkbox" name="pode_publicar" defaultChecked={usuario.pode_publicar} style={{ cursor: 'pointer' }} />
-            <span>Publicar</span>
-          </label>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
-            <input
-              type="checkbox"
-              name="pode_mediunidade"
-              defaultChecked={usuario.pode_mediunidade}
-              style={{ cursor: 'pointer' }}
-            />
-            <span>Mediunidade</span>
-          </label>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
-            <input
-              type="checkbox"
-              name="pode_atendimento"
-              defaultChecked={usuario.pode_atendimento}
-              style={{ cursor: 'pointer' }}
-            />
-            <span>Atendimento</span>
-          </label>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
-            <input type="checkbox" name="pode_apse" defaultChecked={usuario.pode_apse} style={{ cursor: 'pointer' }} />
-            <span>APSE</span>
-          </label>
-        </div>
-
-        {/* Botões */}
-        <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
-          <button type="submit" className="admin-btn admin-btn-primary">
-            ✅ Salvar
-          </button>
-          <Link href="/admin/usuarios" className="admin-btn admin-btn-secondary">
-            ❌ Cancelar
-          </Link>
-          <form action={() => handleRevoke(id)} style={{ marginLeft: 'auto' }}>
+        <section className="area-section">
+          <div className="area-panel-grid">
+            <button type="submit" className="profile-form-btn profile-form-btn-primary">Salvar</button>
+            <Link href="/admin/usuarios" className="profile-form-btn profile-form-btn-secondary">Cancelar</Link>
             <button
               type="submit"
-              className="admin-btn"
-              style={{
-                backgroundColor: 'rgba(200, 0, 0, 0.15)',
-                color: '#c00',
-                border: '1px solid rgba(200, 0, 0, 0.3)',
-              }}
+              formAction={handleRevoke.bind(null, id)}
+              className="profile-form-btn profile-form-btn-secondary"
+              style={{ color: 'var(--danger)', borderColor: 'rgba(239, 68, 68, 0.25)' }}
             >
-              🔓 Revogar Acesso
+              Revogar acesso
             </button>
-          </form>
-        </div>
+          </div>
+        </section>
       </div>
     </form>
   );
