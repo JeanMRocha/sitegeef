@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useTheme } from "@/hooks/useTheme";
 import { signOut } from "@/app/login/actions";
+import { createClient } from "@/lib/supabase/client";
 
 type UserMenuProps = {
   userEmail?: string | null;
@@ -19,8 +20,52 @@ export function UserMenu({
   hasAdminAccess,
 }: UserMenuProps) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [clientUserEmail, setClientUserEmail] = useState<string | null>(userEmail ?? null);
+  const [clientNomeCompleto, setClientNomeCompleto] = useState<string | null>(nomeCompleto ?? null);
+  const [clientAvatarUrl, setClientAvatarUrl] = useState<string | null>(avatarUrl ?? null);
   const menuRef = useRef<HTMLDivElement>(null);
   const { theme, toggleTheme } = useTheme();
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadSession() {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (cancelled) {
+        return;
+      }
+
+      if (!user) {
+        setClientUserEmail(null);
+        setClientNomeCompleto(null);
+        setClientAvatarUrl(null);
+        return;
+      }
+
+      setClientUserEmail(user.email ?? null);
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("nome_completo, avatar_url")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      if (cancelled) {
+        return;
+      }
+
+      setClientNomeCompleto(profile?.nome_completo ?? null);
+      setClientAvatarUrl(profile?.avatar_url ?? null);
+    }
+
+    void loadSession();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -35,8 +80,12 @@ export function UserMenu({
     }
   }, [menuOpen]);
 
+  const effectiveUserEmail = clientUserEmail ?? userEmail ?? null;
+  const effectiveNomeCompleto = clientNomeCompleto ?? nomeCompleto ?? null;
+  const effectiveAvatarUrl = clientAvatarUrl ?? avatarUrl ?? null;
+
   // Not authenticated
-  if (!userEmail) {
+  if (!effectiveUserEmail) {
     return (
       <Link
         href="/login?next=/minha-area"
@@ -49,7 +98,7 @@ export function UserMenu({
   }
 
   // Authenticated
-  const initial = (nomeCompleto?.charAt(0) || userEmail?.charAt(0) || "U").toUpperCase();
+  const initial = (effectiveNomeCompleto?.charAt(0) || effectiveUserEmail?.charAt(0) || "U").toUpperCase();
 
   return (
     <div ref={menuRef} className="site-header-user">
@@ -60,8 +109,8 @@ export function UserMenu({
         aria-label="Menu de usuário"
         aria-expanded={menuOpen}
       >
-        {avatarUrl ? (
-          <img src={avatarUrl} alt="Avatar" className="site-header-user-avatar" />
+        {effectiveAvatarUrl ? (
+          <img src={effectiveAvatarUrl} alt="Avatar" className="site-header-user-avatar" />
         ) : (
           <div className="site-header-user-initial">{initial}</div>
         )}
@@ -71,14 +120,14 @@ export function UserMenu({
         <div className="site-header-user-dropdown">
           {/* User Info */}
           <div className="site-header-user-info">
-            {avatarUrl ? (
-              <img src={avatarUrl} alt="Avatar" className="site-header-user-avatar-lg" />
+            {effectiveAvatarUrl ? (
+              <img src={effectiveAvatarUrl} alt="Avatar" className="site-header-user-avatar-lg" />
             ) : (
               <div className="site-header-user-initial-lg">{initial}</div>
             )}
             <div className="site-header-user-details">
-              <strong>{nomeCompleto || "Usuário"}</strong>
-              <span>{userEmail}</span>
+              <strong>{effectiveNomeCompleto || "Usuário"}</strong>
+              <span>{effectiveUserEmail}</span>
             </div>
           </div>
 

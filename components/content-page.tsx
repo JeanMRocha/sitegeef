@@ -32,14 +32,9 @@ export function ContentPageView({ page }: Readonly<{ page: ContentPage }>) {
                 <span className="mini-dot" aria-hidden="true" />
                 Estrutura compatível com celular e desktop
               </li>
-              <li>
-                <span className="mini-dot" aria-hidden="true" />
-                Identidade visual alinhada ao manual
-              </li>
             </ul>
           </div>
         </div>
-
       </section>
 
       <section className="content-grid" aria-label={`Seções de ${page.title}`}>

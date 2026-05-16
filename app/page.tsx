@@ -29,14 +29,12 @@ export default function Home() {
           <p className="eyebrow">GEEF · site público</p>
           <h1>{site.name}</h1>
           <p className="hero-lead">
-            Casa de estudo, acolhimento e serviço fraterno. Um ponto de contato
-            claro para agenda, atendimento, transmissão e informação
-            institucional.
+            Casa de estudo, acolhimento e serviço fraterno. Um ponto de
+            contato claro para agenda, atendimento, transmissão e informação.
           </p>
           <ul className="hero-highlights" aria-label="Destaques da página">
             <li>Agenda, estudos e atendimento em foco</li>
             <li>Leitura rápida no celular e no desktop</li>
-            <li>Identidade institucional sem excesso visual</li>
           </ul>
           <div className="hero-actions">
             <Link href={publicHref("/contato")} className="button button-primary">
@@ -55,10 +53,9 @@ export default function Home() {
               <span className="pill pill-primary">Site público</span>
               <span className="pill">Visão rápida</span>
             </div>
-            <h2>Uma entrada clara para quem chega pela primeira vez.</h2>
+            <h2>Entrada clara para quem chega pela primeira vez.</h2>
             <p>
-              A home organiza informação essencial sem competir com a leitura
-              principal.
+              A home organiza o essencial sem competir com a leitura principal.
             </p>
             <ul className="hero-panel-list">
               <li>
@@ -72,10 +69,6 @@ export default function Home() {
               <li>
                 <span className="mini-dot" aria-hidden="true" />
                 Vídeos e transmissões
-              </li>
-              <li>
-                <span className="mini-dot" aria-hidden="true" />
-                Contato e informações institucionais
               </li>
             </ul>
           </div>

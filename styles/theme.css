@@ -44,16 +44,16 @@
   --light-50: #f8f9fa;
 
   /* Tema Light (padrão) */
-  --bg: #f8f4ec;
-  --surface: rgba(255, 255, 255, 0.84);
-  --surface-hover: rgba(255, 255, 255, 0.92);
+  --bg: #f7f2fb;
+  --surface: rgba(249, 242, 255, 0.9);
+  --surface-hover: rgba(244, 233, 255, 0.96);
   --text: #1c201f;
-  --text-muted: #6b7580;
-  --border: #dfe3e8;
-  --line: #dfe3e8;
-  --shadow: 0 24px 60px rgba(138, 0, 90, 0.08);
-  --shadow-lg: 0 40px 100px rgba(138, 0, 90, 0.12);
-  --shadow-sm: 0 4px 12px rgba(138, 0, 90, 0.06);
+  --text-muted: #63586f;
+  --border: #e1d4ee;
+  --line: #e1d4ee;
+  --shadow: 0 24px 60px rgba(124, 63, 163, 0.08);
+  --shadow-lg: 0 40px 100px rgba(124, 63, 163, 0.12);
+  --shadow-sm: 0 4px 12px rgba(124, 63, 163, 0.06);
 
   /* Cores de Estado */
   --success: #63c984;
@@ -64,7 +64,7 @@
   /* Gradientes */
   --gradient-uva: linear-gradient(135deg, #8a005a 0%, #b82d8a 100%);
   --gradient-videira: linear-gradient(135deg, #4d9a6d 0%, #63c984 100%);
-  --gradient-light: linear-gradient(135deg, #f8f4ec 0%, #f0f2f5 100%);
+  --gradient-light: linear-gradient(135deg, #f7f2fb 0%, #efe6f8 100%);
 }
 
 /* Dark Mode */
@@ -72,21 +72,21 @@
   color-scheme: dark;
 
   /* Tema Dark */
-  --bg: #1a1818;
-  --surface: #2d2a2a;
-  --surface-hover: #3d3a3a;
-  --text: #f5f5f0;
-  --text-muted: #a8b5c4;
-  --border: #3d4449;
-  --line: #3d4449;
-  --shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 40px 100px rgba(0, 0, 0, 0.4);
-  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.2);
+  --bg: #11100f;
+  --surface: #221f1d;
+  --surface-hover: #2d2926;
+  --text: #f4efe7;
+  --text-muted: #b7ada2;
+  --border: #453f3a;
+  --line: #453f3a;
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.38);
+  --shadow-lg: 0 40px 100px rgba(0, 0, 0, 0.5);
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.25);
 
   /* Cores primárias ajustadas para dark */
-  --uva-primary: #d058aa;
+  --uva-primary: #d06aa8;
   --uva-hover: #e08ac4;
-  --videira-primary: #9ae5b0;
+  --videira-primary: #8fd4a2;
   --videira-hover: #b5f0c9;
 }
 
@@ -192,6 +192,11 @@ select {
   box-shadow: var(--shadow-lg);
   background: linear-gradient(135deg, var(--uva-100), var(--videira-100));
   border-color: var(--uva-500);
+}
+
+:root.dark .theme-toggle:hover {
+  background: linear-gradient(135deg, rgba(68, 56, 52, 0.96), rgba(40, 36, 33, 0.96));
+  border-color: var(--uva-400);
 }
 
 @media (max-width: 640px) {

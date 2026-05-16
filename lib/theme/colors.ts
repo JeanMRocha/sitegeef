@@ -53,9 +53,9 @@ export const colors = {
 
   // Contexto
   bg: "#f8f4ec", // Bege claro (fundo light)
-  bgDark: "#1a1818", // Fundo dark
+  bgDark: "#11100f", // Fundo dark
   text: "#1c201f", // Texto light
-  textDark: "#f5f5f0", // Texto dark
+  textDark: "#f4efe7", // Texto dark
 
   // Estados
   success: "#63c984",
@@ -82,14 +82,14 @@ export const themes = {
   },
   dark: {
     bg: colors.bgDark,
-    surface: colors.light[900],
-    surfaceHover: colors.light[800],
+    surface: "#221f1d",
+    surfaceHover: "#2d2926",
     text: colors.textDark,
-    textMuted: colors.light[400],
-    border: colors.light[800],
-    primary: colors.uva[400],
+    textMuted: "#b7ada2",
+    border: "#453f3a",
+    primary: "#d06aa8",
     primaryHover: colors.uva[300],
-    secondary: colors.videira[400],
+    secondary: "#8fd4a2",
     secondaryHover: colors.videira[300],
   },
 } as const;
