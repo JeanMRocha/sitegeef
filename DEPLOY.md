@@ -55,27 +55,20 @@ chmod 600 ~/.ssh/authorized_keys
 
 ### 3. Configurar Secrets no GitHub
 
+**NOTA:** Os secrets já estão configurados no GitHub com os nomes corretos abaixo.
+
 Vá para: https://github.com/Geef-EliasFrancis/sitegeef/settings/secrets/actions
 
-Adicione estes secrets:
+Verifique se estes secrets existem:
 
 | Nome | Valor |
 |------|-------|
-| `VPS_HOST` | `204.216.166.12` |
-| `VPS_USER` | `ubuntu` |
-| `VPS_PATH` | `/home/ubuntu/sitegeef` |
-| `SSH_PRIVATE_KEY` | Conteúdo de `~/.ssh/geef-deploy` |
-| `SSH_KNOWN_HOSTS` | Saída de `ssh-keyscan -H 204.216.166.12` |
+| `GEEF_VPS_HOST` | `204.216.166.12` |
+| `GEEF_VPS_USER` | `ubuntu` |
+| `GEEF_VPS_PATH` | `/home/ubuntu/sitegeef` |
+| `GEEF_VPS_SSH_KEY` | Conteúdo de `~/.ssh/geef-deploy` |
 
-### 4. Gerar SSH_KNOWN_HOSTS
-
-```bash
-ssh-keyscan -H 204.216.166.12 >> ~/.ssh/known_hosts
-cat ~/.ssh/known_hosts | grep 204.216.166.12
-# Copie a saída para o secret SSH_KNOWN_HOSTS
-```
-
-### 5. Garantir que deploy.sh tem permissão de execução
+### 4. Garantir que deploy.sh tem permissão de execução
 
 ```bash
 # No VPS:

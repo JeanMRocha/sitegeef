@@ -103,11 +103,10 @@ git push origin main
 
 | Secret | Valor | Exemplo |
 |--------|-------|---------|
-| `VPS_HOST` | IP do servidor | `204.216.166.12` |
-| `VPS_USER` | Usuário SSH | `ubuntu` |
-| `VPS_PATH` | Caminho do projeto | `/home/ubuntu/sitegeef` |
-| `SSH_PRIVATE_KEY` | Chave privada RSA | `-----BEGIN RSA...` |
-| `SSH_KNOWN_HOSTS` | Host keys | `204.216.166.12 ssh-rsa AAAA...` |
+| `GEEF_VPS_HOST` | IP do servidor | `204.216.166.12` |
+| `GEEF_VPS_USER` | Usuário SSH | `ubuntu` |
+| `GEEF_VPS_PATH` | Caminho do projeto | `/home/ubuntu/sitegeef` |
+| `GEEF_VPS_SSH_KEY` | Chave privada RSA | `-----BEGIN RSA...` |
 
 ### VPS Setup
 
