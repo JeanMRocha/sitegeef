@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createConsentimento, getPessoasDisponiveis } from '../../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Novo Consentimento LGPD - Admin GEEF',
@@ -17,9 +18,10 @@ async function handleSubmit(formData: FormData) {
       canal_autorizado: (formData.get('canal_autorizado') as string) || undefined,
     });
 
-    redirect(`/admin/documentos/consentimentos/${consentimento.id}`);
+    redirect(buildFlashNoticeUrl(`/admin/documentos/consentimentos/${consentimento.id}`, { variant: 'success', message: 'Consentimento criado.' }));
   } catch (error) {
     console.error('Erro ao criar consentimento:', error);
+    redirect(buildFlashNoticeUrl('/admin/documentos/consentimentos', { variant: 'error', message: 'Não foi possível criar o consentimento.' }));
     return;
   }
 }

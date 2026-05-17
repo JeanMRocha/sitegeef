@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getServicoById, updateServico, encerraServico } from '../../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Serviço Voluntário - Admin GEEF',
@@ -19,9 +20,10 @@ async function handleUpdate(id: string, formData: FormData) {
       data_fim: (formData.get('data_fim') as string) || undefined,
     });
 
-    redirect(`/admin/documentos/voluntariado/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/documentos/voluntariado/${id}`, { variant: 'success', message: 'Serviço salvo.' }));
   } catch (error) {
     console.error('Erro ao atualizar serviço:', error);
+    redirect(buildFlashNoticeUrl(`/admin/documentos/voluntariado/${id}`, { variant: 'error', message: 'Não foi possível salvar o serviço.' }));
     return;
   }
 }
@@ -32,9 +34,10 @@ async function handleEncerrar(id: string, formData: FormData) {
   try {
     const data_fim = formData.get('data_fim') as string;
     await encerraServico(id, data_fim || new Date().toISOString().split('T')[0]);
-    redirect(`/admin/documentos/voluntariado/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/documentos/voluntariado/${id}`, { variant: 'success', message: 'Serviço encerrado.' }));
   } catch (error) {
     console.error('Erro ao encerrar serviço:', error);
+    redirect(buildFlashNoticeUrl(`/admin/documentos/voluntariado/${id}`, { variant: 'error', message: 'Não foi possível encerrar o serviço.' }));
     return;
   }
 }

@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createModelo } from '../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Novo Modelo de Documento - Admin GEEF',
@@ -17,9 +18,10 @@ async function handleSubmit(formData: FormData) {
       conteudo: (formData.get('conteudo') as string) || undefined,
     });
 
-    redirect(`/admin/documentos/${modelo.id}`);
+    redirect(buildFlashNoticeUrl(`/admin/documentos/${modelo.id}`, { variant: 'success', message: 'Modelo criado.' }));
   } catch (error) {
     console.error('Erro ao criar modelo:', error);
+    redirect(buildFlashNoticeUrl('/admin/documentos', { variant: 'error', message: 'Não foi possível criar o modelo.' }));
     return;
   }
 }

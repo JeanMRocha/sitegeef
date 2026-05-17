@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createTermo, getPessoasDisponiveis, getModelosDocumentos } from '../../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Novo Termo Assinado - Admin GEEF',
@@ -19,9 +20,10 @@ async function handleSubmit(formData: FormData) {
       responsavel_id: (formData.get('responsavel_id') as string) || undefined,
     });
 
-    redirect(`/admin/documentos/termos/${termo.id}`);
+    redirect(buildFlashNoticeUrl(`/admin/documentos/termos/${termo.id}`, { variant: 'success', message: 'Termo criado.' }));
   } catch (error) {
     console.error('Erro ao criar termo:', error);
+    redirect(buildFlashNoticeUrl('/admin/documentos/termos', { variant: 'error', message: 'Não foi possível criar o termo.' }));
     return;
   }
 }

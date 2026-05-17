@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getConsentimentoById, revogaConsentimento } from '../../actions';
 import { Suspense } from 'react';
 import { redirect } from 'next/navigation';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Consentimento LGPD - Admin GEEF',
@@ -12,9 +13,10 @@ async function handleRevoke(id: string) {
 
   try {
     await revogaConsentimento(id);
-    redirect(`/admin/documentos/consentimentos/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/documentos/consentimentos/${id}`, { variant: 'success', message: 'Consentimento revogado.' }));
   } catch (error) {
     console.error('Erro ao revogar consentimento:', error);
+    redirect(buildFlashNoticeUrl(`/admin/documentos/consentimentos/${id}`, { variant: 'error', message: 'Não foi possível revogar o consentimento.' }));
     return;
   }
 }

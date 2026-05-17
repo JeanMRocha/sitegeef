@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getTermoById, updateTermo, revogaTermo, getPessoasDisponiveis } from '../../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Editar Termo Assinado - Admin GEEF',
@@ -17,9 +18,10 @@ async function handleUpdate(id: string, formData: FormData) {
       arquivo_url: (formData.get('arquivo_url') as string) || undefined,
     });
 
-    redirect(`/admin/documentos/termos/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/documentos/termos/${id}`, { variant: 'success', message: 'Termo salvo.' }));
   } catch (error) {
     console.error('Erro ao atualizar termo:', error);
+    redirect(buildFlashNoticeUrl(`/admin/documentos/termos/${id}`, { variant: 'error', message: 'Não foi possível salvar o termo.' }));
     return;
   }
 }
@@ -29,9 +31,10 @@ async function handleRevoke(id: string) {
 
   try {
     await revogaTermo(id);
-    redirect(`/admin/documentos/termos/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/documentos/termos/${id}`, { variant: 'success', message: 'Termo revogado.' }));
   } catch (error) {
     console.error('Erro ao revogar termo:', error);
+    redirect(buildFlashNoticeUrl(`/admin/documentos/termos/${id}`, { variant: 'error', message: 'Não foi possível revogar o termo.' }));
     return;
   }
 }

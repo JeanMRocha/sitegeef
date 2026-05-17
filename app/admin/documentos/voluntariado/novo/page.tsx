@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createServico, getPessoasDisponiveis, getDepartamentosDisponiveis } from '../../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Novo Serviço Voluntário - Admin GEEF',
@@ -20,9 +21,10 @@ async function handleSubmit(formData: FormData) {
       data_fim: (formData.get('data_fim') as string) || undefined,
     });
 
-    redirect(`/admin/documentos/voluntariado/${servico.id}`);
+    redirect(buildFlashNoticeUrl(`/admin/documentos/voluntariado/${servico.id}`, { variant: 'success', message: 'Serviço voluntário criado.' }));
   } catch (error) {
     console.error('Erro ao criar serviço voluntário:', error);
+    redirect(buildFlashNoticeUrl('/admin/documentos/voluntariado', { variant: 'error', message: 'Não foi possível criar o serviço voluntário.' }));
     return;
   }
 }
