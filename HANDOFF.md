@@ -72,6 +72,7 @@ Atalhos locais:
 - `npm run skills:search "termo"`
 - `npm run skills:recommend "frase da tarefa"`
 - `npm run skills:index`
+- `npm run dev:watchdog` para subir o `next dev` com restart e health check automáticos
 
 Quando o Autoreflex voltar a responder, rodar primeiro:
 
@@ -94,6 +95,12 @@ Quando o Autoreflex voltar a responder, rodar primeiro:
 - `app/admin/funcoes/*` -> funcoes e temas
 - `app/admin/escalas/*` -> escalas publicas e operacao mensal
 - `app/admin/relatorios/*` -> visão analítica e consolidação por módulo
+
+## Subida local
+
+- Preferir `npm run dev:watchdog` para o trabalho diário no checkout local.
+- Usar `npm run dev` apenas quando precisar isolar o `next dev` sem o supervisor.
+- Se o navegador mostrar erro de chunk/CSS depois de build, reiniciar pelo watchdog antes de investigar o browser.
 
 ## Mudancas recentes para nao regredir
 
