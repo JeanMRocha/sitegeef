@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createRecepcao } from '../../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Novo Atendimento Recepção - Admin GEEF',
@@ -18,9 +19,10 @@ async function handleSubmit(formData: FormData) {
       observacoes: (formData.get('observacoes') as string) || undefined,
     });
 
-    redirect(`/admin/atendimento/recepcao/${recepcao.id}`);
+    redirect(buildFlashNoticeUrl(`/admin/atendimento/recepcao/${recepcao.id}`, { variant: 'success', message: 'Atendimento de recepção criado.' }));
   } catch (error) {
     console.error('Erro ao criar atendimento:', error);
+    redirect(buildFlashNoticeUrl('/admin/atendimento/recepcao', { variant: 'error', message: 'Não foi possível criar o atendimento.' }));
     return;
   }
 }

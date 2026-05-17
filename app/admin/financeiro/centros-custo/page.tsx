@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getCentrosCusto, toggleCentroCustoStatus } from '../actions';
 import { redirect } from 'next/navigation';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Centros de Custo - Admin GEEF',
@@ -10,7 +11,7 @@ async function handleToggle(id: string, ativo: boolean) {
   'use server';
   const { toggleCentroCustoStatus: toggle } = await import('../actions');
   await toggle(id, ativo);
-  redirect('/admin/financeiro/centros-custo');
+  redirect(buildFlashNoticeUrl('/admin/financeiro/centros-custo', { variant: 'success', message: 'Status do centro de custo atualizado.' }));
 }
 
 async function CentrosCustoPage() {

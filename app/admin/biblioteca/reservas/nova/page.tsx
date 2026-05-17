@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createReserva, getPessoasDisponiveis, getObrasDisponiveis } from '../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Nova Reserva - Admin GEEF',
@@ -15,9 +16,10 @@ async function handleSubmit(formData: FormData) {
       obra_id: formData.get('obra_id') as string,
     });
 
-    redirect('/admin/biblioteca/reservas');
+    redirect(buildFlashNoticeUrl('/admin/biblioteca/reservas', { variant: 'success', message: 'Reserva criada.' }));
   } catch (error) {
     console.error('Erro ao criar reserva:', error);
+    redirect(buildFlashNoticeUrl('/admin/biblioteca/reservas', { variant: 'error', message: 'Não foi possível criar a reserva.' }));
     return;
   }
 }

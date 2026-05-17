@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getIrradiacoes, toggleIrradiacaoStatus } from '../actions';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Irradiação - Admin GEEF',
@@ -11,7 +12,7 @@ async function handleToggle(id: string, ativa: boolean) {
   'use server';
   const { toggleIrradiacaoStatus: toggle } = await import('../actions');
   await toggle(id, ativa);
-  redirect('/admin/atendimento/irradiacao');
+  redirect(buildFlashNoticeUrl('/admin/atendimento/irradiacao', { variant: 'success', message: 'Status da irradiação atualizado.' }));
 }
 
 async function IrradiacaoContent() {

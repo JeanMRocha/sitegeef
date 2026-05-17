@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getPlanoContas, toggleContaStatus } from '../actions';
 import { redirect } from 'next/navigation';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Plano de Contas - Admin GEEF',
@@ -10,7 +11,7 @@ async function handleToggle(id: string, ativo: boolean) {
   'use server';
   const { toggleContaStatus: toggle } = await import('../actions');
   await toggle(id, ativo);
-  redirect('/admin/financeiro/plano-contas');
+  redirect(buildFlashNoticeUrl('/admin/financeiro/plano-contas', { variant: 'success', message: 'Status da conta atualizado.' }));
 }
 
 async function PlanoContasPage() {
