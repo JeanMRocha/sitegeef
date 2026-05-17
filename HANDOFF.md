@@ -9,6 +9,7 @@
 5. `docs/MCP_SUPABASE_GEEF.md` quando a tarefa envolver MCP ou Supabase via Codex
 6. `docs/ADMIN_REGRESSION_NOTES.md` quando a tarefa tocar admin, permissões, pessoas, governança, assets do Next ou SEO/fallback de layout
 7. `tests/admin-smoke.mjs` para validar rotas admin principais antes de abrir o browser
+8. `docs/ADMIN_MODULE_CHECKLIST.md` quando a tarefa for criar ou alterar qualquer módulo admin
 
 ## Regra de trabalho
 
@@ -37,6 +38,39 @@
 - `lib/areas/invalidate-user-area.ts` = invalida area do usuario/leitor.
 - `lib/escalas/public-escalas.ts` = cache publico das escalas.
 - `docs/MCP_SUPABASE_GEEF.md` = recuperar e validar o MCP `supabase-geef`.
+
+## Ordem das skills
+
+Use esta ordem quando a tarefa envolver estrutura/admin, actions, banco ou segurança:
+
+1. `skills/padrao-modulo-admin.md`
+2. `skills/padrao-actions-ts.md`
+3. `skills/supabase-patterns.md`
+4. `skills/auth-permissions.md`
+5. `skills/migrations-workflow.md` quando houver mudança de schema
+6. `skills/roteamento-operacional-autoreflex.md` quando a tarefa for misturada, repetitiva ou duvidosa
+
+Árvore rápida de decisão:
+
+- CRUD/admin, lista, novo, editar, detalhe -> `skills/padrao-modulo-admin.md`
+- Getter/mutação/cache/revalidate/error fallback -> `skills/padrao-actions-ts.md`
+- Supabase, RLS, server role, browser client -> `skills/supabase-patterns.md`
+- RBAC, `requirePermission`, `usuarios_sistema` -> `skills/auth-permissions.md`
+- Tabela, coluna, índice, policy, rollout -> `skills/migrations-workflow.md`
+- Se a tarefa toca mais de uma camada e você quer a decisão certa primeiro -> `skills/roteamento-operacional-autoreflex.md`
+
+Atalhos locais:
+
+- `npm run skills:health`
+- `npm run skills:list`
+- `npm run skills:search "termo"`
+- `npm run skills:recommend "frase da tarefa"`
+- `npm run skills:index`
+
+Quando o Autoreflex voltar a responder, rodar primeiro:
+
+- `npm run skills:index`
+- `npm run skills:list`
 
 ## Quando mexer em cache
 
@@ -103,3 +137,4 @@ Use estes regex/padroes para revisar o console e os logs quando mexer nesses flu
 4. Confirmar que os assets `/_next/static/css/app/layout.css` e `/_next/static/chunks/main-app.js` respondem `200`.
 5. Se tiver rodado `next build` antes, repetir o passo 1.
 6. `npm run test:admin-smoke` para checar overlay e assets antes de abrir o browser.
+7. Se a tarefa mexer em módulo novo ou alterado, conferir o checklist em `docs/ADMIN_MODULE_CHECKLIST.md`.

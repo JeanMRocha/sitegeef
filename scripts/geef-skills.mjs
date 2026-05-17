@@ -11,6 +11,14 @@
 
 const AUTOREFLEX_URL = 'http://127.0.0.1:8090';
 const SKILLS_DIR = './skills';
+const SKILL_PRIORITY = [
+  { key: 'admin', skillPath: 'skills/padrao-modulo-admin.md', label: 'Padrão de Módulo Admin GEEF' },
+  { key: 'action', skillPath: 'skills/padrao-actions-ts.md', label: 'Padrão de Server Actions GEEF' },
+  { key: 'supabase', skillPath: 'skills/supabase-patterns.md', label: 'Padrões Supabase GEEF' },
+  { key: 'permission', skillPath: 'skills/auth-permissions.md', label: 'Sistema de Permissões GEEF' },
+  { key: 'migration', skillPath: 'skills/migrations-workflow.md', label: 'Workflow de Migrações GEEF' },
+  { key: 'orchestration', skillPath: 'skills/roteamento-operacional-autoreflex.md', label: 'Roteamento Operacional de Skills GEEF' },
+];
 
 async function api(endpoint, method, body = null) {
   const url = `${AUTOREFLEX_URL}${endpoint}`;
@@ -114,6 +122,90 @@ async function list() {
   });
 }
 
+function tokenize(text) {
+  return text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .split(/[^a-z0-9]+/g)
+    .filter(Boolean);
+}
+
+async function loadLocalSkills() {
+  const fs = await import('node:fs/promises');
+  const path = await import('node:path');
+  const entries = await fs.readdir(SKILLS_DIR, { withFileTypes: true });
+  const metas = [];
+
+  for (const entry of entries) {
+    if (!entry.isFile() || !entry.name.endsWith('.meta.json')) {
+      continue;
+    }
+
+    const metaPath = path.join(SKILLS_DIR, entry.name);
+    const raw = await fs.readFile(metaPath, 'utf8');
+    metas.push(JSON.parse(raw));
+  }
+
+  return metas;
+}
+
+async function recommend(query) {
+  const tokens = tokenize(query);
+  if (tokens.length === 0) {
+    console.error('❌ Forneça uma frase para recomendação.');
+    process.exit(1);
+  }
+
+  const metas = await loadLocalSkills();
+  const scored = metas.map((meta) => {
+    const haystack = tokenize(
+      [
+        meta.name,
+        meta.title,
+        meta.summary,
+        ...(meta.tags || []),
+      ].join(' ')
+    );
+
+    let score = 0;
+    for (const token of tokens) {
+      if (haystack.includes(token)) {
+        score += 2;
+      }
+      for (const part of SKILL_PRIORITY) {
+        if (meta.source_skill_path === part.skillPath && query.toLowerCase().includes(part.key)) {
+          score += 3;
+        }
+      }
+    }
+
+    return { meta, score };
+  }).sort((a, b) => b.score - a.score);
+
+  const ranked = scored.filter((item) => item.score > 0);
+  const best = ranked[0] || scored[0];
+
+  if (!best) {
+    console.log('Nenhuma skill local disponível para recomendação.');
+    return;
+  }
+
+  console.log(`🧭 Recomendação para: "${query}"`);
+  console.log();
+  console.log(`1. ${best.meta.title}`);
+  console.log(`   Caminho: ${best.meta.source_skill_path}`);
+  console.log(`   Motivo: melhor correspondência local entre título, resumo e tags.`);
+  console.log();
+
+  if (ranked.length > 1) {
+    console.log('Alternativas próximas:');
+    ranked.slice(1, 4).forEach((item, idx) => {
+      console.log(`  ${idx + 2}. ${item.meta.title} (${item.meta.source_skill_path})`);
+    });
+  }
+}
+
 async function health() {
   try {
     const res = await fetch(`${AUTOREFLEX_URL}/health`);
@@ -137,6 +229,7 @@ async function main() {
 
 Uso:
   node scripts/geef-skills.mjs search "<query>"    Buscar skills
+  node scripts/geef-skills.mjs recommend "<frase>"  Sugerir a melhor skill local
   node scripts/geef-skills.mjs read "<skill-path>" Ler skill completa
   node scripts/geef-skills.mjs list                Listar todas as skills
   node scripts/geef-skills.mjs index               Reindexar todas as skills
@@ -151,7 +244,7 @@ Exemplos:
   }
 
   // Verificar se Autoreflex está rodando (exceto para help)
-  if (command !== 'help' && command !== 'health') {
+  if (command !== 'help' && command !== 'health' && command !== 'recommend') {
     const running = await health();
     if (!running) {
       console.error('\n❌ Autoreflex não está respondendo.');
@@ -171,6 +264,12 @@ Exemplos:
         process.exit(1);
       }
       await search(query);
+      break;
+    }
+
+    case 'recommend': {
+      const query = args.slice(1).join(' ') || '';
+      await recommend(query);
       break;
     }
 
@@ -206,11 +305,12 @@ Exemplos:
     }
 
     case 'help': {
-      console.log(`
+  console.log(`
 🎓 Autoreflex Skills Manager — GEEF ERP
 
 Uso:
   node scripts/geef-skills.mjs search "<query>"    Buscar skills
+  node scripts/geef-skills.mjs recommend "<frase>"  Sugerir a melhor skill local
   node scripts/geef-skills.mjs read "<skill-path>" Ler skill completa
   node scripts/geef-skills.mjs list                Listar todas as skills
   node scripts/geef-skills.mjs index               Reindexar todas as skills
@@ -226,7 +326,7 @@ Exemplos:
 
     default: {
       console.error(`❌ Comando desconhecido: ${command}`);
-      console.error('   Use: help, search, read, list, index, health');
+    console.error('   Use: help, search, recommend, read, list, index, health');
       process.exit(1);
     }
   }

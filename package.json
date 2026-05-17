@@ -23,6 +23,7 @@
     "geef:migrations": "node scripts/geef-migrations.mjs",
     "geef:sql": "node scripts/copy-and-open-sql.mjs",
     "skills:search": "node scripts/geef-skills.mjs search",
+    "skills:recommend": "node scripts/geef-skills.mjs recommend",
     "skills:list": "node scripts/geef-skills.mjs list",
     "skills:index": "node scripts/geef-skills.mjs index",
     "skills:health": "node scripts/geef-skills.mjs health"

@@ -282,6 +282,31 @@
   pointer-events: none;
 }
 
+.admin-info-hint {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 999px;
+  border: 1px solid rgba(138, 0, 90, 0.18);
+  background: rgba(138, 0, 90, 0.08);
+  color: var(--uva-700);
+  font-size: 0.68rem;
+  font-weight: 800;
+  line-height: 1;
+  cursor: help;
+  padding: 0;
+  flex: 0 0 auto;
+}
+
+.admin-info-hint:hover,
+.admin-info-hint:focus-visible {
+  background: rgba(138, 0, 90, 0.14);
+  border-color: rgba(138, 0, 90, 0.28);
+  outline: none;
+}
+
 .admin-card {
   width: 100%;
   box-sizing: border-box;
