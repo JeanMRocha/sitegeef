@@ -2,13 +2,10 @@ import Link from "next/link";
 import { getInstituicao, getEnderecos, getContatos, getContasBancarias } from "./actions";
 import { Suspense } from "react";
 import { contentPages, site } from "@/lib/site-data";
-import { NotificationNoticeHydrator } from "@/components/notification-notice-hydrator";
 
 export const metadata = {
   title: "Instituição - Admin GEEF",
 };
-
-type SaveNotice = 'success' | 'error';
 
 const QUEM_SOMOS = contentPages["quem-somos"];
 
@@ -44,7 +41,7 @@ function formatDate(value: string | undefined) {
   return value;
 }
 
-async function InstituicaoContent({ searchParams }: { searchParams?: { notice?: SaveNotice } }) {
+async function InstituicaoContent() {
   const instituicao = await getInstituicao();
   const enderecos = await getEnderecos();
   const contatos = await getContatos();
@@ -52,7 +49,6 @@ async function InstituicaoContent({ searchParams }: { searchParams?: { notice?: 
 
   const endereco = enderecos[0];
   const instituicaoBase = instituicao ?? FALLBACK_INSTITUICAO;
-  const notice = searchParams?.notice;
 
   return (
     <div className="area-page">
@@ -73,8 +69,6 @@ async function InstituicaoContent({ searchParams }: { searchParams?: { notice?: 
 
       <section className="area-section">
         <div className="table-surface">
-          <NotificationNoticeHydrator notice={notice} />
-
           <div className="area-section-title">
             <h2>Dados básicos</h2>
           </div>
@@ -220,10 +214,10 @@ async function InstituicaoContent({ searchParams }: { searchParams?: { notice?: 
   );
 }
 
-export default function InstituicaoPage({ searchParams }: { searchParams?: { notice?: SaveNotice } }) {
+export default function InstituicaoPage() {
   return (
     <Suspense fallback={<div style={{ padding: "2rem", textAlign: "center" }}>Carregando...</div>}>
-      <InstituicaoContent searchParams={searchParams} />
+      <InstituicaoContent />
     </Suspense>
   );
 }

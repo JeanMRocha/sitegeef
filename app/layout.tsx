@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/lib/theme/theme-provider";
 import { createClient } from "@/lib/supabase/server";
 import { UserPersistenceWrapper } from "@/components/user-persistence-wrapper";
 import { NotificationProvider } from "@/components/providers/NotificationProvider";
+import { NotificationFlashBridge } from "@/components/notification-flash-bridge";
 import "@/styles/theme.css";
 import "@/styles/globals.css";
 import "@/styles/site-header.css";
@@ -45,6 +46,7 @@ export default async function RootLayout({
       <body className={`${headingFont.variable} ${bodyFont.variable}`}>
         <ThemeProvider>
           <NotificationProvider>
+            <NotificationFlashBridge />
             <UserPersistenceWrapper user={user}>
               <SiteShell user={user}>{children}</SiteShell>
             </UserPersistenceWrapper>

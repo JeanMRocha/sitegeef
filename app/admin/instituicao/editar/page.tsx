@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 import {
   addContaBancaria,
   addContato,
@@ -15,7 +16,6 @@ import {
   updateInstituicao,
 } from '../actions';
 import { contentPages, site } from '@/lib/site-data';
-import { NotificationNoticeHydrator } from '@/components/notification-notice-hydrator';
 
 export const metadata = {
   title: 'Editar Instituição - Admin GEEF',
@@ -32,8 +32,6 @@ const INSTITUICAO_STEPS = [
 ] as const;
 
 type InstituicaoStep = (typeof INSTITUICAO_STEPS)[number]['key'];
-type SaveNotice = 'success' | 'error';
-
 const QUEM_SOMOS = contentPages['quem-somos'];
 
 const FALLBACK_INSTITUICAO = {
@@ -75,25 +73,6 @@ function buildHref(step: InstituicaoStep) {
   const params = new URLSearchParams();
   params.set('tab', step);
   return `/admin/instituicao/editar?${params.toString()}`;
-}
-
-function buildEditUrl(step: InstituicaoStep, notice?: SaveNotice) {
-  const params = new URLSearchParams();
-  params.set('tab', step);
-  if (notice) {
-    params.set('notice', notice);
-  }
-  return `/admin/instituicao/editar?${params.toString()}`;
-}
-
-function buildOverviewUrl(notice?: SaveNotice) {
-  if (!notice) {
-    return '/admin/instituicao';
-  }
-
-  const params = new URLSearchParams();
-  params.set('notice', notice);
-  return `/admin/instituicao?${params.toString()}`;
 }
 
 function textValue(formData: FormData, name: string) {
@@ -247,12 +226,12 @@ async function handleAddContato(formData: FormData) {
   });
 
   if (!result.success) {
-    redirect(buildEditUrl('contatos', 'error'));
+    redirect(buildFlashNoticeUrl('/admin/instituicao/editar?tab=contatos', { variant: 'error', message: 'Não foi possível salvar o contato.' }));
   }
 
   revalidatePath('/admin/instituicao');
   revalidatePath('/admin/instituicao/editar');
-  redirect(buildEditUrl('contatos', 'success'));
+  redirect(buildFlashNoticeUrl('/admin/instituicao/editar?tab=contatos', { variant: 'success', message: 'Contato salvo.' }));
 }
 
 async function handleDeleteContato(formData: FormData) {
@@ -262,13 +241,13 @@ async function handleDeleteContato(formData: FormData) {
   if (typeof id === 'string' && id) {
     const result = await deleteContato(id);
     if (!result.success) {
-      redirect(buildEditUrl('contatos', 'error'));
+      redirect(buildFlashNoticeUrl('/admin/instituicao/editar?tab=contatos', { variant: 'error', message: 'Não foi possível remover o contato.' }));
     }
   }
 
   revalidatePath('/admin/instituicao');
   revalidatePath('/admin/instituicao/editar');
-  redirect(buildEditUrl('contatos', 'success'));
+  redirect(buildFlashNoticeUrl('/admin/instituicao/editar?tab=contatos', { variant: 'success', message: 'Contato removido.' }));
 }
 
 async function handleAddConta(formData: FormData) {
@@ -289,12 +268,12 @@ async function handleAddConta(formData: FormData) {
   });
 
   if (!result.success) {
-    redirect(buildEditUrl('contas', 'error'));
+    redirect(buildFlashNoticeUrl('/admin/instituicao/editar?tab=contas', { variant: 'error', message: 'Não foi possível salvar a conta.' }));
   }
 
   revalidatePath('/admin/instituicao');
   revalidatePath('/admin/instituicao/editar');
-  redirect(buildEditUrl('contas', 'success'));
+  redirect(buildFlashNoticeUrl('/admin/instituicao/editar?tab=contas', { variant: 'success', message: 'Conta salva.' }));
 }
 
 async function handleDeleteConta(formData: FormData) {
@@ -304,13 +283,13 @@ async function handleDeleteConta(formData: FormData) {
   if (typeof id === 'string' && id) {
     const result = await deleteContaBancaria(id);
     if (!result.success) {
-      redirect(buildEditUrl('contas', 'error'));
+      redirect(buildFlashNoticeUrl('/admin/instituicao/editar?tab=contas', { variant: 'error', message: 'Não foi possível remover a conta.' }));
     }
   }
 
   revalidatePath('/admin/instituicao');
   revalidatePath('/admin/instituicao/editar');
-  redirect(buildEditUrl('contas', 'success'));
+  redirect(buildFlashNoticeUrl('/admin/instituicao/editar?tab=contas', { variant: 'success', message: 'Conta removida.' }));
 }
 
 async function saveInstituicaoStep(formData: FormData) {
@@ -326,70 +305,70 @@ async function saveInstituicaoStep(formData: FormData) {
   if (step === 'identificacao') {
     const nomeOficial = snapshot.nome_oficial;
     if (!nomeOficial) {
-      redirect(buildEditUrl(step, 'error'));
+      redirect(buildFlashNoticeUrl(`/admin/instituicao/editar?tab=${step}`, { variant: 'error', message: 'Nome oficial é obrigatório.' }));
     }
 
     const result = await updateInstituicao(snapshot);
 
     if (!result.success) {
-      redirect(buildEditUrl(step, 'error'));
+      redirect(buildFlashNoticeUrl(`/admin/instituicao/editar?tab=${step}`, { variant: 'error', message: 'Não foi possível salvar a instituição.' }));
     }
 
     revalidatePath('/admin/instituicao');
     revalidatePath('/admin/instituicao/editar');
-    redirect(buildOverviewUrl('success'));
+    redirect(buildFlashNoticeUrl('/admin/instituicao', { variant: 'success', message: 'Instituição salva.' }));
   }
 
   if (step === 'endereco') {
     const result = await updateEndereco(enderecoSnapshot);
 
     if (!result?.success) {
-      redirect(buildEditUrl(step, 'error'));
+      redirect(buildFlashNoticeUrl(`/admin/instituicao/editar?tab=${step}`, { variant: 'error', message: 'Não foi possível salvar o endereço.' }));
     }
 
     revalidatePath('/admin/instituicao');
     revalidatePath('/admin/instituicao/editar');
-    redirect(buildOverviewUrl('success'));
+    redirect(buildFlashNoticeUrl('/admin/instituicao', { variant: 'success', message: 'Endereço salvo.' }));
   }
 
   if (step === 'descritivo') {
     const result = await updateInstituicao(snapshot);
 
     if (!result.success) {
-      redirect(buildEditUrl(step, 'error'));
+      redirect(buildFlashNoticeUrl(`/admin/instituicao/editar?tab=${step}`, { variant: 'error', message: 'Não foi possível salvar a descrição.' }));
     }
 
     revalidatePath('/admin/instituicao');
     revalidatePath('/admin/instituicao/editar');
-    redirect(buildOverviewUrl('success'));
+    redirect(buildFlashNoticeUrl('/admin/instituicao', { variant: 'success', message: 'Descrição salva.' }));
   }
 
   if (step === 'valores') {
     const result = await updateInstituicao(snapshot);
 
     if (!result.success) {
-      redirect(buildEditUrl(step, 'error'));
+      redirect(buildFlashNoticeUrl(`/admin/instituicao/editar?tab=${step}`, { variant: 'error', message: 'Não foi possível salvar as informações.' }));
     }
 
     revalidatePath('/admin/instituicao');
     revalidatePath('/admin/instituicao/editar');
-    redirect(buildOverviewUrl('success'));
+    redirect(buildFlashNoticeUrl('/admin/instituicao', { variant: 'success', message: 'Informações salvas.' }));
   }
 
   if (step === 'documentos') {
     const result = await updateInstituicao(snapshot);
 
     if (!result.success) {
-      redirect(buildEditUrl(step, 'error'));
+      redirect(buildFlashNoticeUrl(`/admin/instituicao/editar?tab=${step}`, { variant: 'error', message: 'Não foi possível salvar os documentos.' }));
     }
 
     revalidatePath('/admin/instituicao');
     revalidatePath('/admin/instituicao/editar');
-    redirect(buildOverviewUrl('success'));
+    redirect(buildFlashNoticeUrl('/admin/instituicao', { variant: 'success', message: 'Documentos salvos.' }));
   }
 }
 
-async function EditInstituicaoContent({ searchParams }: { searchParams: { tab?: string; notice?: SaveNotice } }) {
+async function EditInstituicaoContent({ searchParams }: { searchParams: { tab?: string } }) {
   const instituicao = await getInstituicao();
   const enderecos = await getEnderecos();
   const contatos = await getContatos();
@@ -400,8 +379,6 @@ async function EditInstituicaoContent({ searchParams }: { searchParams: { tab?: 
 
   const requestedStep = isInstituicaoStep(searchParams.tab) ? searchParams.tab : 'identificacao';
   const activeStep = requestedStep;
-  const notice = searchParams.notice;
-
   const renderTabLink = (step: InstituicaoStep) => {
     const isActive = activeStep === step;
     const className = `admin-step-tab ${isActive ? 'active' : ''}`;
@@ -434,8 +411,6 @@ async function EditInstituicaoContent({ searchParams }: { searchParams: { tab?: 
 
       <section className="area-section">
         <div className="admin-card admin-step-card">
-          <NotificationNoticeHydrator notice={notice} />
-
           <form id="instituicao-step-form" action={saveInstituicaoStep}>
             <input type="hidden" name="step" value={activeStep} />
             {activeStep !== 'identificacao' ? (

@@ -13,7 +13,7 @@ export function useNotification() {
     return error(summary || 'Verifique os campos informados.', duration);
   };
 
-  const useSessionWarning = (message = 'Sua sessão está prestes a expirar.') => {
+  const sessionWarning = (message = 'Sua sessão está prestes a expirar.') => {
     return warning(message, 8000);
   };
 
@@ -25,6 +25,6 @@ export function useNotification() {
     info,
     dismiss,
     validationErrors,
-    useSessionWarning,
+    sessionWarning,
   };
 }
