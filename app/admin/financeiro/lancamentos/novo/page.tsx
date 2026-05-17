@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createMovimento, getPlanoContas, getCentrosCusto } from '../../actions';
 import { getPessoas } from '../../../pessoas/actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Novo Lançamento - Admin GEEF',
@@ -23,9 +24,10 @@ async function handleSubmit(formData: FormData) {
       comprovante_url: (formData.get('comprovante_url') as string) || undefined,
     });
 
-    redirect(`/admin/financeiro/lancamentos/${movimento.id}`);
+    redirect(buildFlashNoticeUrl(`/admin/financeiro/lancamentos/${movimento.id}`, { variant: 'success', message: 'Lançamento criado.' }));
   } catch (error) {
     console.error('Erro ao criar lançamento:', error);
+    redirect(buildFlashNoticeUrl('/admin/financeiro/lancamentos', { variant: 'error', message: 'Não foi possível criar o lançamento.' }));
     return;
   }
 }

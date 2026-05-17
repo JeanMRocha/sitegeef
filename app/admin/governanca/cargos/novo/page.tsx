@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createCargo } from '../../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Novo Cargo - Admin GEEF',
@@ -16,9 +17,10 @@ async function handleSubmit(formData: FormData) {
       nivel: (formData.get('nivel') as string) || undefined,
     });
 
-    redirect(`/admin/governanca/cargos/${cargo.id}`);
+    redirect(buildFlashNoticeUrl(`/admin/governanca/cargos/${cargo.id}`, { variant: 'success', message: 'Cargo criado.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl('/admin/governanca/cargos', { variant: 'error', message: 'Não foi possível criar o cargo.' }));
     return;
   }
 }

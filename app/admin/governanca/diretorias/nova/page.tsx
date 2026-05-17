@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createDiretoria } from '../../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Nova Diretoria - Admin GEEF',
@@ -16,9 +17,10 @@ async function handleSubmit(formData: FormData) {
       data_fim: (formData.get('data_fim') as string) || undefined,
     });
 
-    redirect(`/admin/governanca/diretorias/${diretoria.id}`);
+    redirect(buildFlashNoticeUrl(`/admin/governanca/diretorias/${diretoria.id}`, { variant: 'success', message: 'Diretoria criada.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl('/admin/governanca/diretorias', { variant: 'error', message: 'Não foi possível criar a diretoria.' }));
     return;
   }
 }

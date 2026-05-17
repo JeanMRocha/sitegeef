@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createConta } from '../../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Nova Conta - Admin GEEF',
@@ -16,9 +17,10 @@ async function handleSubmit(formData: FormData) {
       tipo: formData.get('tipo') as string,
     });
 
-    redirect(`/admin/financeiro/plano-contas/${conta.id}`);
+    redirect(buildFlashNoticeUrl(`/admin/financeiro/plano-contas/${conta.id}`, { variant: 'success', message: 'Conta criada.' }));
   } catch (error) {
     console.error('Erro ao criar conta:', error);
+    redirect(buildFlashNoticeUrl('/admin/financeiro/plano-contas', { variant: 'error', message: 'Não foi possível criar a conta.' }));
     return;
   }
 }

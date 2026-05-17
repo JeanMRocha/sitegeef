@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createCentroCusto } from '../../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Novo Centro de Custo - Admin GEEF',
@@ -14,9 +15,10 @@ async function handleSubmit(formData: FormData) {
       nome: formData.get('nome') as string,
     });
 
-    redirect(`/admin/financeiro/centros-custo/${centro.id}`);
+    redirect(buildFlashNoticeUrl(`/admin/financeiro/centros-custo/${centro.id}`, { variant: 'success', message: 'Centro de custo criado.' }));
   } catch (error) {
     console.error('Erro ao criar centro:', error);
+    redirect(buildFlashNoticeUrl('/admin/financeiro/centros-custo', { variant: 'error', message: 'Não foi possível criar o centro de custo.' }));
     return;
   }
 }

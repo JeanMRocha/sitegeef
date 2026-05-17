@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createReuniao, getPessoasDisponiveis } from '../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Nova Reunião Virtual - Admin GEEF',
@@ -19,9 +20,10 @@ async function handleSubmit(formData: FormData) {
       data_hora: (formData.get('data_hora') as string) || undefined,
     });
 
-    redirect(`/admin/reunioes-virtuais/${reuniao.id}`);
+    redirect(buildFlashNoticeUrl(`/admin/reunioes-virtuais/${reuniao.id}`, { variant: 'success', message: 'Reunião criada.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl('/admin/reunioes-virtuais', { variant: 'error', message: 'Não foi possível criar a reunião.' }));
     return;
   }
 }

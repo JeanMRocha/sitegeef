@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createAssembleia } from '../../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Nova Assembleia - Admin GEEF',
@@ -16,9 +17,10 @@ async function handleSubmit(formData: FormData) {
       pauta: (formData.get('pauta') as string) || undefined,
     });
 
-    redirect(`/admin/governanca/assembleias/${assembleia.id}`);
+    redirect(buildFlashNoticeUrl(`/admin/governanca/assembleias/${assembleia.id}`, { variant: 'success', message: 'Assembleia criada.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl('/admin/governanca/assembleias', { variant: 'error', message: 'Não foi possível criar a assembleia.' }));
     return;
   }
 }

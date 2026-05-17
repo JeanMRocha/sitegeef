@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createEmprestimo, getPessoasDisponiveis, getExemplaresdisponveisParaEmprestimo } from '../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Novo Empréstimo - Admin GEEF',
@@ -17,9 +18,10 @@ async function handleSubmit(formData: FormData) {
       prazo_devolucao: formData.get('prazo_devolucao') as string,
     });
 
-    redirect(`/admin/biblioteca/emprestimos/${emprestimo.id}`);
+    redirect(buildFlashNoticeUrl(`/admin/biblioteca/emprestimos/${emprestimo.id}`, { variant: 'success', message: 'Empréstimo criado.' }));
   } catch (error) {
     console.error('Erro ao criar empréstimo:', error);
+    redirect(buildFlashNoticeUrl('/admin/biblioteca/emprestimos', { variant: 'error', message: 'Não foi possível criar o empréstimo.' }));
     return;
   }
 }

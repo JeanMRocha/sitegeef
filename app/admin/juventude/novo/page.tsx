@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createGrupo, getPessoasDisponiveis } from '../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Novo Grupo - Admin GEEF',
@@ -16,9 +17,10 @@ async function handleSubmit(formData: FormData) {
       descricao: (formData.get('descricao') as string) || undefined,
     });
 
-    redirect(`/admin/juventude/${grupo.id}`);
+    redirect(buildFlashNoticeUrl(`/admin/juventude/${grupo.id}`, { variant: 'success', message: 'Grupo criado.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl('/admin/juventude', { variant: 'error', message: 'Não foi possível criar o grupo.' }));
     return;
   }
 }

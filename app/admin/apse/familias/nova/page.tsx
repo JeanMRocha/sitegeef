@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createFamilia, getPessoasDisponiveis } from '../../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Nova Família - Admin GEEF',
@@ -17,9 +18,10 @@ async function handleSubmit(formData: FormData) {
       situacao: formData.get('situacao') as string,
     });
 
-    redirect(`/admin/apse/familias/${familia.id}`);
+    redirect(buildFlashNoticeUrl(`/admin/apse/familias/${familia.id}`, { variant: 'success', message: 'Família criada.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl('/admin/apse/familias', { variant: 'error', message: 'Não foi possível criar a família.' }));
     return;
   }
 }
