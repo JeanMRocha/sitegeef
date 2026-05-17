@@ -23,6 +23,9 @@ const bodyFont = Manrope({
 export const metadata: Metadata = {
   title: "GEEF",
   description: "Site público do Grupo Espírita Elias Francis.",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default async function RootLayout({

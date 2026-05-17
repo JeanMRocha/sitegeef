@@ -225,20 +225,6 @@ async function MinhaAreaContent() {
         </section>
       )}
 
-      {hasAdminAccess && (
-        <section className="area-section">
-          <h2 className="area-section-title">Acesso administrativo</h2>
-          <div className="admin-card">
-            <div className="area-panel-item">
-              <strong>Conta com permissão de administração</strong>
-              <p>Use o menu superior para acessar o painel administrativo e testar módulos internos.</p>
-              <div style={{ marginTop: "1rem" }}>
-                <a href="/admin" className="profile-form-btn profile-form-btn-primary">Abrir Admin</a>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
     </main>
   );
 }
