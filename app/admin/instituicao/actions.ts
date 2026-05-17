@@ -2,6 +2,15 @@
 
 import { createClient } from '@/lib/supabase/server';
 
+function hasMeaningfulError(error: unknown) {
+  if (!error || typeof error !== 'object') {
+    return false;
+  }
+
+  const record = error as Record<string, unknown>;
+  return Boolean(record.code || record.message || record.details || record.hint);
+}
+
 export async function getInstituicao() {
   const supabase = await createClient();
 
@@ -11,14 +20,14 @@ export async function getInstituicao() {
       .select('*')
       .maybeSingle();
 
-    if (error?.code && error.code !== 'PGRST116') {
+    if (error?.code && error.code !== 'PGRST116' && hasMeaningfulError(error)) {
       console.error('Falha ao carregar instituicao:', error);
       return null;
     }
 
     return data;
   } catch (error) {
-    if (error) {
+    if (hasMeaningfulError(error)) {
       console.error('Exceção ao carregar instituicao:', error);
     }
     return null;
@@ -32,7 +41,7 @@ export async function getEnderecos() {
     const { data, error } = await supabase.from('instituicao_enderecos').select('*');
 
     if (error) {
-      if (Object.keys(error).length > 0) {
+      if (hasMeaningfulError(error)) {
         console.error('Falha ao carregar instituicao_enderecos:', error);
       }
       return [];
@@ -40,7 +49,9 @@ export async function getEnderecos() {
 
     return data || [];
   } catch (error) {
-    console.error('Exceção ao carregar instituicao_enderecos:', error);
+    if (hasMeaningfulError(error)) {
+      console.error('Exceção ao carregar instituicao_enderecos:', error);
+    }
     return [];
   }
 }
@@ -59,7 +70,7 @@ export async function getContatos() {
       );
 
     if (error) {
-      if (Object.keys(error).length > 0) {
+      if (hasMeaningfulError(error)) {
         console.error('Falha ao carregar instituicao_contatos:', error);
       }
       return [];
@@ -67,7 +78,9 @@ export async function getContatos() {
 
     return data || [];
   } catch (error) {
-    console.error('Exceção ao carregar instituicao_contatos:', error);
+    if (hasMeaningfulError(error)) {
+      console.error('Exceção ao carregar instituicao_contatos:', error);
+    }
     return [];
   }
 }
@@ -79,7 +92,7 @@ export async function getContasBancarias() {
     const { data, error } = await supabase.from('contas_bancarias').select('*');
 
     if (error) {
-      if (Object.keys(error).length > 0) {
+      if (hasMeaningfulError(error)) {
         console.error('Falha ao carregar contas_bancarias:', error);
       }
       return [];
@@ -87,7 +100,9 @@ export async function getContasBancarias() {
 
     return data || [];
   } catch (error) {
-    console.error('Exceção ao carregar contas_bancarias:', error);
+    if (hasMeaningfulError(error)) {
+      console.error('Exceção ao carregar contas_bancarias:', error);
+    }
     return [];
   }
 }
@@ -117,13 +132,13 @@ export async function updateInstituicao(formData: {
       .select('id')
       .maybeSingle();
 
-    if (error?.code && error.code !== 'PGRST116') {
+    if (error?.code && error.code !== 'PGRST116' && hasMeaningfulError(error)) {
       console.error('Falha ao verificar instituicao existente:', error);
     } else {
       existing = data;
     }
   } catch (error) {
-    if (error) {
+    if (hasMeaningfulError(error)) {
       console.error('Exceção ao verificar instituicao existente:', error);
     }
   }
@@ -171,13 +186,13 @@ export async function updateEndereco(formData: {
 
   try {
     const { data, error } = await supabase.from('instituicao_enderecos').select('id').limit(1).maybeSingle();
-    if (error?.code && error.code !== 'PGRST116') {
+    if (error?.code && error.code !== 'PGRST116' && hasMeaningfulError(error)) {
       console.error('Falha ao verificar endereco existente:', error);
     } else {
       existing = data;
     }
   } catch (error) {
-    if (error) {
+    if (hasMeaningfulError(error)) {
       console.error('Exceção ao verificar endereco existente:', error);
     }
   }

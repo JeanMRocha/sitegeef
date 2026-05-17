@@ -45,15 +45,11 @@ export default async function AdminLayout({
       .eq('id', user.id)
       .maybeSingle();
 
-    if (error?.code) {
-      console.error('Falha ao ler usuarios_sistema em AdminLayout:', error);
-    } else {
+    if (!error) {
       usuarioSistema = data;
     }
   } catch (error) {
-    if (error) {
-      console.error('Exceção ao ler usuarios_sistema em AdminLayout:', error);
-    }
+    usuarioSistema = null;
   }
 
   if (!usuarioSistema && !isAdminViaAuth) {

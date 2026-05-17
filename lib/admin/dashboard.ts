@@ -11,54 +11,71 @@ export type AdminDashboardSummary = {
   anoAtual: number;
 };
 
+async function safeCount(
+  supabase: ReturnType<typeof createServiceRoleClient>,
+  table: string,
+  filters: Array<[string, string, unknown]> = [],
+) {
+  let query = supabase.from(table).select("id", { count: "exact" });
+
+  for (const [column, operator, value] of filters) {
+    query = query.filter(column, operator, value);
+  }
+
+  const result = await query;
+
+  if (result.error) {
+    return 0;
+  }
+
+  return result.count || 0;
+}
+
+async function safeMaybeSingle(
+  query: PromiseLike<{
+    data: { id: string; status: string } | null;
+    error: { code?: string; message?: string } | null;
+  }>,
+) {
+  const result = await query;
+
+  if (result.error) {
+    return null;
+  }
+
+  return result.data ?? null;
+}
+
 async function loadAdminDashboardSummary(): Promise<AdminDashboardSummary> {
   const supabase = createServiceRoleClient();
   const agora = new Date();
   const mesAtual = agora.getMonth() + 1;
   const anoAtual = agora.getFullYear();
 
-  try {
-    const [pessoasResult, funcoesResult, temasResult, escalasResult, escalaMesAtualResult] = await Promise.all([
-      supabase.from("pessoas").select("id", { count: "exact" }).eq("ativo", true),
-      supabase.from("funcoes").select("id", { count: "exact" }).eq("ativo", true),
-      supabase.from("temas_doutrinarios").select("id", { count: "exact" }).eq("ativo", true),
-      supabase.from("escalas_mensais").select("id", { count: "exact" }).eq("status", "publicada"),
+  const [totalPessoas, totalFuncoes, totalTemas, totalEscalasPublicadas, escalaMesAtual] = await Promise.all([
+    safeCount(supabase, "pessoas", [["ativo", "eq", true]]),
+    safeCount(supabase, "funcoes", [["ativo", "eq", true]]),
+    safeCount(supabase, "temas_doutrinarios", [["ativo", "eq", true]]),
+    safeCount(supabase, "escalas_mensais", [["status", "eq", "publicada"]]),
+    safeMaybeSingle(
       supabase
         .from("escalas_mensais")
         .select("id, status")
         .eq("mes", mesAtual)
         .eq("ano", anoAtual)
         .maybeSingle(),
-    ]);
+    ),
+  ]);
 
-    if (pessoasResult.error) throw pessoasResult.error;
-    if (funcoesResult.error) throw funcoesResult.error;
-    if (temasResult.error) throw temasResult.error;
-    if (escalasResult.error) throw escalasResult.error;
-    if (escalaMesAtualResult.error) throw escalaMesAtualResult.error;
-
-    return {
-      totalPessoas: pessoasResult.count || 0,
-      totalFuncoes: funcoesResult.count || 0,
-      totalTemas: temasResult.count || 0,
-      totalEscalasPublicadas: escalasResult.count || 0,
-      escalaMesAtual: escalaMesAtualResult.data ?? null,
-      mesAtual,
-      anoAtual,
-    };
-  } catch (error) {
-    console.error("Falha ao carregar resumo do admin:", error);
-
-    return {
-      totalPessoas: 0,
-      totalFuncoes: 0,
-      totalTemas: 0,
-      totalEscalasPublicadas: 0,
-      escalaMesAtual: null,
-      mesAtual,
-      anoAtual,
-    };
-  }
+  return {
+    totalPessoas,
+    totalFuncoes,
+    totalTemas,
+    totalEscalasPublicadas,
+    escalaMesAtual,
+    mesAtual,
+    anoAtual,
+  };
 }
 
 export const getCachedAdminDashboardSummary = unstable_cache(
