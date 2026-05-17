@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getFamiliaById, updateFamilia, getAtendimentos, createAtendimento, getPessoasDisponiveis } from '../../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Família - Admin GEEF',
@@ -18,9 +19,10 @@ async function handleSubmitFamilia(id: string, formData: FormData) {
       status: (formData.get('status') as string) || undefined,
     });
 
-    redirect(`/admin/apse/familias/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/apse/familias/${id}`, { variant: 'success', message: 'Família salva.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/apse/familias/${id}`, { variant: 'error', message: 'Não foi possível salvar a família.' }));
     return;
   }
 }
@@ -38,9 +40,10 @@ async function handleRegistrarAtendimento(id: string, formData: FormData) {
       responsavel_id: formData.get('responsavel_id') as string,
     });
 
-    redirect(`/admin/apse/familias/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/apse/familias/${id}`, { variant: 'success', message: 'Atendimento registrado.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/apse/familias/${id}`, { variant: 'error', message: 'Não foi possível registrar o atendimento.' }));
     return;
   }
 }

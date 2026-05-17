@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createCampanha } from '../../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Nova Campanha - Admin GEEF',
@@ -18,9 +19,10 @@ async function handleSubmit(formData: FormData) {
       meta: (formData.get('meta') as string) || undefined,
     });
 
-    redirect(`/admin/apse/campanhas/${campanha.id}`);
+    redirect(buildFlashNoticeUrl(`/admin/apse/campanhas/${campanha.id}`, { variant: 'success', message: 'Campanha criada.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl('/admin/apse/campanhas', { variant: 'error', message: 'Não foi possível criar a campanha.' }));
     return;
   }
 }

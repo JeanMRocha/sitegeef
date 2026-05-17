@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createAtendimentoFraterno, getPessoasDisponiveis } from '../../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Novo Atendimento Fraterno - Admin GEEF',
@@ -22,9 +23,10 @@ async function handleSubmit(formData: FormData) {
       sigilo: formData.get('sigilo') === 'on',
     });
 
-    redirect(`/admin/atendimento/fraterno/${atend.id}`);
+    redirect(buildFlashNoticeUrl(`/admin/atendimento/fraterno/${atend.id}`, { variant: 'success', message: 'Atendimento fraterno criado.' }));
   } catch (error) {
     console.error('Erro ao criar atendimento:', error);
+    redirect(buildFlashNoticeUrl('/admin/atendimento/fraterno', { variant: 'error', message: 'Não foi possível criar o atendimento.' }));
     return;
   }
 }

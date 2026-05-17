@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createEvangelhoNoLar, getPessoasDisponiveis } from '../../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Novo Evangelho no Lar - Admin GEEF',
@@ -19,9 +20,10 @@ async function handleSubmit(formData: FormData) {
       observacoes: (formData.get('observacoes') as string) || undefined,
     });
 
-    redirect(`/admin/atendimento/evangelhos-lar/${ev.id}`);
+    redirect(buildFlashNoticeUrl(`/admin/atendimento/evangelhos-lar/${ev.id}`, { variant: 'success', message: 'Evangelho no Lar criado.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl('/admin/atendimento/evangelhos-lar', { variant: 'error', message: 'Não foi possível criar o Evangelho no Lar.' }));
     return;
   }
 }
