@@ -51,5 +51,6 @@ Use este checklist antes de considerar um módulo admin pronto.
 3. `skills/supabase-patterns.md`
 4. `skills/auth-permissions.md`
 5. `skills/notificacoes-timers-avisos.md` quando a tela precisar de feedback, validação ou aviso de sessão
-6. `skills/migrations-workflow.md` quando houver schema
-7. `skills/roteamento-operacional-autoreflex.md` para decidir a skill certa antes de criar nova tela
+6. `skills/livraria-biblioteca-hibrida.md` quando o módulo for de catálogo, exemplares, venda ou empréstimo de livros
+7. `skills/migrations-workflow.md` quando houver schema
+8. `skills/roteamento-operacional-autoreflex.md` para decidir a skill certa antes de criar nova tela

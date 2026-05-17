@@ -18,6 +18,9 @@ const SKILL_PRIORITY = [
   { key: 'permission', skillPath: 'skills/auth-permissions.md', label: 'Sistema de Permissões GEEF' },
   { key: 'migration', skillPath: 'skills/migrations-workflow.md', label: 'Workflow de Migrações GEEF' },
   { key: 'notification', skillPath: 'skills/notificacoes-timers-avisos.md', label: 'Notificações, Timers e Avisos (OpnForm)' },
+  { key: 'livraria', skillPath: 'skills/livraria-biblioteca-hibrida.md', label: 'Livraria + Biblioteca Híbrida GEEF' },
+  { key: 'biblioteca', skillPath: 'skills/livraria-biblioteca-hibrida.md', label: 'Livraria + Biblioteca Híbrida GEEF' },
+  { key: 'livros', skillPath: 'skills/livraria-biblioteca-hibrida.md', label: 'Livraria + Biblioteca Híbrida GEEF' },
   { key: 'orchestration', skillPath: 'skills/roteamento-operacional-autoreflex.md', label: 'Roteamento Operacional de Skills GEEF' },
 ];
 

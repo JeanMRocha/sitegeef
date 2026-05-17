@@ -23,7 +23,9 @@ Definir qual skill consultar primeiro em tarefas do GEEF para reduzir exploraç�
    - Use `skills/auth-permissions.md`
 5. Tarefa envolve feedback visual de salvar, validação de formulário, `useNotification()`, `NotificationProvider` ou aviso de sessão?
    - Use `skills/notificacoes-timers-avisos.md`
-6. Tarefa envolve schema, tabela, índice, policy, migração ou rollback?
+6. Tarefa envolve catálogo de livros, exemplares físicos, vendas, empréstimos, reservas, multas ou telas de livraria/biblioteca?
+   - Use `skills/livraria-biblioteca-hibrida.md`
+7. Tarefa envolve schema, tabela, índice, policy, migração ou rollback?
    - Use `skills/migrations-workflow.md`
 
 ## Regras de operação
