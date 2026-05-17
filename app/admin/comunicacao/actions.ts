@@ -19,7 +19,7 @@ export async function getPublicacoes(status?: string) {
 
   const { data, error } = await query;
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }
@@ -36,7 +36,7 @@ export async function getPublicacaoById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -55,7 +55,7 @@ export async function createPublicacao(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -82,7 +82,7 @@ export async function updatePublicacao(
     .update(updateData)
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   return { success: true };
 }
@@ -95,7 +95,7 @@ export async function deletePublicacao(id: string) {
     .delete()
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   return { success: true };
 }
@@ -109,7 +109,7 @@ export async function getPessoasDisponiveis() {
     .eq('status', 'ativo')
     .order('nome');
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }

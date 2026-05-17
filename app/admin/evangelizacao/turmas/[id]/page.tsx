@@ -23,7 +23,7 @@ async function handleSubmit(id: string, formData: FormData) {
     redirect(`/admin/evangelizacao/turmas/${id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 
@@ -35,7 +35,7 @@ async function handleAddEvangelizador(id: string, formData: FormData) {
     redirect(`/admin/evangelizacao/turmas/${id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 
@@ -47,7 +47,7 @@ async function handleRemoveEvangelizador(id: string) {
     redirect(`/admin/evangelizacao/turmas/${(await getTurmaById(id)).id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 

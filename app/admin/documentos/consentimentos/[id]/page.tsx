@@ -15,7 +15,7 @@ async function handleRevoke(id: string) {
     redirect(`/admin/documentos/consentimentos/${id}`);
   } catch (error) {
     console.error('Erro ao revogar consentimento:', error);
-    throw error;
+    return;
   }
 }
 

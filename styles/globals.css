@@ -722,7 +722,7 @@ img {
 .area-page {
   display: grid;
   gap: 1rem;
-  width: min(1060px, calc(100% - 2rem));
+  width: min(1320px, calc(100% - 2rem));
   margin: 0 auto;
   padding: 1rem 0 2rem;
 }

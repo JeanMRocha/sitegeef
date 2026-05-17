@@ -18,7 +18,7 @@ async function handleSubmit(formData: FormData) {
     redirect(`/admin/funcoes/${funcao.id}`);
   } catch (error) {
     console.error('Erro ao criar função:', error);
-    throw error;
+    return;
   }
 }
 

@@ -1,0 +1,11 @@
+{
+  "name": "auth-permissions",
+  "title": "Sistema de Permissões GEEF",
+  "summary": "Verificar permissões (requirePermission, checkPermission); atribuir via usuarios_sistema ou app_metadata; RBAC; proteger actions e componentes",
+  "tags": ["permissões", "auth", "rbac", "segurança", "usuarios_sistema"],
+  "language": "pt-BR",
+  "source_skill_path": "skills/auth-permissions.md",
+  "created_at": "2025-05-17T12:00:00-03:00",
+  "updated_at": "2025-05-17T12:00:00-03:00",
+  "version": 1
+}

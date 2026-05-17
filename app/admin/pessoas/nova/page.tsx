@@ -89,7 +89,7 @@ async function savePessoaStep(formData: FormData) {
     };
 
     if (!identificacao.nome) {
-      throw new Error('O nome completo é obrigatório.');
+      return;
     }
 
     if (!pessoaId) {
@@ -195,7 +195,7 @@ async function NovaPessoaContent({ searchParams }: { searchParams: { id?: string
         </div>
 
         <section className="area-section">
-          <div className="admin-card" style={{ maxWidth: '900px', margin: '0 auto' }}>
+          <div className="admin-card">
             <p style={{ margin: 0, color: 'var(--muted)' }}>
               Não foi possível carregar a pessoa selecionada.
             </p>
@@ -248,7 +248,7 @@ async function NovaPessoaContent({ searchParams }: { searchParams: { id?: string
       </nav>
 
       <section className="area-section">
-        <div className="admin-card admin-step-card" style={{ maxWidth: '980px', margin: '0 auto' }}>
+        <div className="admin-card admin-step-card">
           <form id="pessoa-step-form" action={savePessoaStep}>
             <input type="hidden" name="step" value={activeStep} />
             {pessoaId ? <input type="hidden" name="pessoa_id" value={pessoaId} /> : null}

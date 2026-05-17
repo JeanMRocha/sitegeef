@@ -20,7 +20,7 @@ async function handleSubmit(formData: FormData) {
     redirect(`/admin/apse/familias/${familia.id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 

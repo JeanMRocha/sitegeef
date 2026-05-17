@@ -22,7 +22,7 @@ async function handleSubmit(id: string, formData: FormData) {
     redirect(`/admin/atendimento/recepcao/${id}`);
   } catch (error) {
     console.error('Erro ao atualizar:', error);
-    throw error;
+    return;
   }
 }
 
@@ -34,7 +34,7 @@ async function handleDelete(id: string) {
     redirect('/admin/atendimento/recepcao');
   } catch (error) {
     console.error('Erro ao deletar:', error);
-    throw error;
+    return;
   }
 }
 

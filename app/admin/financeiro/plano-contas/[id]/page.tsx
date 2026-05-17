@@ -20,7 +20,7 @@ async function handleSubmit(id: string, formData: FormData) {
     redirect(`/admin/financeiro/plano-contas/${id}`);
   } catch (error) {
     console.error('Erro ao atualizar conta:', error);
-    throw error;
+    return;
   }
 }
 
@@ -32,7 +32,7 @@ async function handleToggle(id: string, ativo: boolean) {
     redirect(`/admin/financeiro/plano-contas/${id}`);
   } catch (error) {
     console.error('Erro ao alternar status:', error);
-    throw error;
+    return;
   }
 }
 

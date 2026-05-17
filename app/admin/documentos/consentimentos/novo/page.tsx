@@ -20,7 +20,7 @@ async function handleSubmit(formData: FormData) {
     redirect(`/admin/documentos/consentimentos/${consentimento.id}`);
   } catch (error) {
     console.error('Erro ao criar consentimento:', error);
-    throw error;
+    return;
   }
 }
 

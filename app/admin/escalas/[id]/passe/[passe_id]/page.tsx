@@ -20,7 +20,7 @@ async function handleUpdate(formData: FormData, escalaId: string, passeId: strin
     redirect(`/admin/escalas/${escalaId}`);
   } catch (error) {
     console.error('Erro ao atualizar passe:', error);
-    throw error;
+    return;
   }
 }
 
@@ -32,7 +32,7 @@ async function handleRemove(escalaId: string, passeId: string) {
     redirect(`/admin/escalas/${escalaId}`);
   } catch (error) {
     console.error('Erro ao remover passe:', error);
-    throw error;
+    return;
   }
 }
 

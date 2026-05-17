@@ -24,7 +24,7 @@ async function handleSubmit(formData: FormData) {
     redirect(`/admin/livraria/${produto.id}`);
   } catch (error) {
     console.error('Erro ao criar produto:', error);
-    throw error;
+    return;
   }
 }
 

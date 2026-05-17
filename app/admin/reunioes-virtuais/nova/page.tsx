@@ -22,7 +22,7 @@ async function handleSubmit(formData: FormData) {
     redirect(`/admin/reunioes-virtuais/${reuniao.id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 

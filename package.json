@@ -8,6 +8,7 @@
     "agent:lint": "node scripts/agent-lint.mjs",
     "agent:map": "node scripts/generate-agent-map.mjs",
     "build": "next build",
+    "test:admin-smoke": "node tests/admin-smoke.mjs",
     "postbuild": "node scripts/copy-standalone-assets.js",
     "start": "node .next/standalone/server.js",
     "start:standalone": "node .next/standalone/server.js",
@@ -20,7 +21,11 @@
     "db:push": "npx supabase db push",
     "db:pull": "npx supabase db pull",
     "geef:migrations": "node scripts/geef-migrations.mjs",
-    "geef:sql": "node scripts/copy-and-open-sql.mjs"
+    "geef:sql": "node scripts/copy-and-open-sql.mjs",
+    "skills:search": "node scripts/geef-skills.mjs search",
+    "skills:list": "node scripts/geef-skills.mjs list",
+    "skills:index": "node scripts/geef-skills.mjs index",
+    "skills:health": "node scripts/geef-skills.mjs health"
   },
   "dependencies": {
     "@supabase/ssr": "^0.6.1",

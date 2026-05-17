@@ -1,0 +1,11 @@
+{
+  "name": "migrations-workflow",
+  "title": "Workflow de Migrações GEEF",
+  "summary": "Como criar, testar, aplicar migrações SQL; RLS em migrações; scripts helper (apply-migration, check-migration); deploy em produção",
+  "tags": ["migrações", "sql", "supabase", "rls", "deploy"],
+  "language": "pt-BR",
+  "source_skill_path": "skills/migrations-workflow.md",
+  "created_at": "2025-05-17T12:00:00-03:00",
+  "updated_at": "2025-05-17T12:00:00-03:00",
+  "version": 1
+}

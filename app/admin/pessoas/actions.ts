@@ -42,9 +42,6 @@ export async function getPessoas(
     const { data, count, error } = await query.range(offset, offset + pageSize - 1);
 
     if (error) {
-      if ((error as any)?.code) {
-        console.error('Falha ao carregar pessoas:', error);
-      }
       return {
         pessoas: [],
         total: 0,
@@ -66,10 +63,7 @@ export async function getPessoas(
       page,
       pageSize,
     };
-  } catch (error) {
-    if (error) {
-      console.error('Exceção ao carregar pessoas:', error);
-    }
+  } catch {
     return {
       pessoas: [],
       total: 0,
@@ -90,9 +84,6 @@ export async function getPessoaById(id: string) {
       .maybeSingle();
 
     if (pessoaError) {
-      if ((pessoaError as any)?.code) {
-        console.error('Falha ao carregar pessoa:', pessoaError);
-      }
       return { pessoa: null, vinculos: [] };
     }
 
@@ -102,17 +93,11 @@ export async function getPessoaById(id: string) {
       .eq('pessoa_id', id);
 
     if (vinculosError) {
-      if ((vinculosError as any)?.code) {
-        console.error('Falha ao carregar vínculos da pessoa:', vinculosError);
-      }
       return { pessoa: pessoa ?? null, vinculos: [] };
     }
 
     return { pessoa: pessoa ?? null, vinculos: vinculos ?? [] };
-  } catch (error) {
-    if (error) {
-      console.error('Exceção ao carregar pessoa por id:', error);
-    }
+  } catch {
     return { pessoa: null, vinculos: [] };
   }
 }
@@ -169,7 +154,7 @@ export async function createPessoa(formData: {
     .select()
     .single();
 
-  if (pessoaError) throw pessoaError;
+  if (pessoaError) return null;
 
   // Add vínculos if provided
   if (formData.vinculos && formData.vinculos.length > 0) {
@@ -183,7 +168,7 @@ export async function createPessoa(formData: {
       .from('pessoa_vinculos')
       .insert(vinculosData);
 
-    if (vinculosError) throw vinculosError;
+    if (vinculosError) return null;
   }
 
   invalidateAdminDashboardCache();
@@ -204,7 +189,7 @@ export async function updatePessoa(id: string, formData: Partial<typeof getPesso
     })
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   invalidateAdminDashboardCache();
   invalidateAdminBibliotecaCache();
@@ -224,7 +209,7 @@ export async function addVinculo(pessoaId: string, vinculo: tipo_vinculo) {
     },
   ]);
 
-  if (error) throw error;
+  if (error) return null;
 
   invalidateAdminDashboardCache();
   invalidateAdminBibliotecaCache();
@@ -242,7 +227,7 @@ export async function removeVinculo(pessoaId: string, vinculo: tipo_vinculo) {
     .eq('pessoa_id', pessoaId)
     .eq('vinculo', vinculo);
 
-  if (error) throw error;
+  if (error) return null;
 
   invalidateAdminDashboardCache();
   invalidateAdminBibliotecaCache();
@@ -262,7 +247,7 @@ export async function togglePessoaStatus(id: string, novoStatus: status_pessoa) 
     })
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   invalidateAdminDashboardCache();
   invalidateAdminBibliotecaCache();

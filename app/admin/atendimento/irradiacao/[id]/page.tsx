@@ -22,7 +22,7 @@ async function handleSubmit(id: string, formData: FormData) {
     redirect(`/admin/atendimento/irradiacao/${id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 
@@ -34,7 +34,7 @@ async function handleToggle(id: string, ativa: boolean) {
     redirect(`/admin/atendimento/irradiacao/${id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 

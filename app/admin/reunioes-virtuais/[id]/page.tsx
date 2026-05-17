@@ -24,7 +24,7 @@ async function handleSubmit(id: string, formData: FormData) {
     redirect(`/admin/reunioes-virtuais/${id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 
@@ -36,7 +36,7 @@ async function handleDelete(id: string) {
     redirect('/admin/reunioes-virtuais');
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 

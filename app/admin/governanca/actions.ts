@@ -6,28 +6,40 @@ import { createClient } from '@/lib/supabase/server';
 export async function getDiretorias() {
   const supabase = await createClient();
 
-  const { data, error } = await supabase
-    .from('diretorias')
-    .select('*')
-    .order('data_inicio', { ascending: false });
+  try {
+    const { data, error } = await supabase
+      .from('diretorias')
+      .select('*')
+      .order('data_inicio', { ascending: false });
 
-  if (error) throw error;
+    if (error) {
+      return [];
+    }
 
-  return data || [];
+    return data || [];
+  } catch {
+    return [];
+  }
 }
 
 export async function getDiretoriaById(id: string) {
   const supabase = await createClient();
 
-  const { data, error } = await supabase
-    .from('diretorias')
-    .select('*')
-    .eq('id', id)
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from('diretorias')
+      .select('*')
+      .eq('id', id)
+      .single();
 
-  if (error) throw error;
+    if (error) {
+      return null;
+    }
 
-  return data;
+    return data;
+  } catch {
+    return null;
+  }
 }
 
 export async function createDiretoria(formData: {
@@ -43,7 +55,7 @@ export async function createDiretoria(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) return [];
 
   return data;
 }
@@ -67,7 +79,7 @@ export async function updateDiretoria(
     .update(formData)
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return null;
 
   return { success: true };
 }
@@ -76,28 +88,40 @@ export async function updateDiretoria(
 export async function getCargos() {
   const supabase = await createClient();
 
-  const { data, error } = await supabase
-    .from('cargos')
-    .select('*')
-    .order('nome');
+  try {
+    const { data, error } = await supabase
+      .from('cargos')
+      .select('*')
+      .order('nome');
 
-  if (error) throw error;
+    if (error) {
+      return [];
+    }
 
-  return data || [];
+    return data || [];
+  } catch {
+    return [];
+  }
 }
 
 export async function getCargoById(id: string) {
   const supabase = await createClient();
 
-  const { data, error } = await supabase
-    .from('cargos')
-    .select('*')
-    .eq('id', id)
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from('cargos')
+      .select('*')
+      .eq('id', id)
+      .single();
 
-  if (error) throw error;
+    if (error) {
+      return null;
+    }
 
-  return data;
+    return data;
+  } catch {
+    return null;
+  }
 }
 
 export async function createCargo(formData: {
@@ -113,7 +137,7 @@ export async function createCargo(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -133,7 +157,7 @@ export async function updateCargo(
     .update(formData)
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   return { success: true };
 }
@@ -142,25 +166,31 @@ export async function updateCargo(
 export async function getCargoOcupacoes(diretoria_id?: string) {
   const supabase = await createClient();
 
-  let query = supabase
-    .from('cargo_ocupacoes')
-    .select(`
-      *,
-      pessoa:pessoas (nome),
-      cargo:cargos (nome),
-      diretoria:diretorias (nome)
-    `)
-    .order('data_inicio', { ascending: false });
+  try {
+    let query = supabase
+      .from('cargo_ocupacoes')
+      .select(`
+        *,
+        pessoa:pessoas (nome),
+        cargo:cargos (nome),
+        diretoria:diretorias (nome)
+      `)
+      .order('data_inicio', { ascending: false });
 
-  if (diretoria_id) {
-    query = query.eq('diretoria_id', diretoria_id);
+    if (diretoria_id) {
+      query = query.eq('diretoria_id', diretoria_id);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      return [];
+    }
+
+    return data || [];
+  } catch {
+    return [];
   }
-
-  const { data, error } = await query;
-
-  if (error) throw error;
-
-  return data || [];
 }
 
 export async function createCargoOcupacao(formData: {
@@ -177,7 +207,7 @@ export async function createCargoOcupacao(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) return [];
 
   return data;
 }
@@ -197,7 +227,7 @@ export async function updateCargoOcupacao(
     .update(formData)
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return null;
 
   return { success: true };
 }
@@ -206,28 +236,40 @@ export async function updateCargoOcupacao(
 export async function getAssembleias() {
   const supabase = await createClient();
 
-  const { data, error } = await supabase
-    .from('assembleias')
-    .select('*')
-    .order('data', { ascending: false });
+  try {
+    const { data, error } = await supabase
+      .from('assembleias')
+      .select('*')
+      .order('data', { ascending: false });
 
-  if (error) throw error;
+    if (error) {
+      return [];
+    }
 
-  return data || [];
+    return data || [];
+  } catch {
+    return [];
+  }
 }
 
 export async function getAssembleiaById(id: string) {
   const supabase = await createClient();
 
-  const { data, error } = await supabase
-    .from('assembleias')
-    .select('*')
-    .eq('id', id)
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from('assembleias')
+      .select('*')
+      .eq('id', id)
+      .single();
 
-  if (error) throw error;
+    if (error) {
+      return null;
+    }
 
-  return data;
+    return data;
+  } catch {
+    return null;
+  }
 }
 
 export async function createAssembleia(formData: {
@@ -243,7 +285,7 @@ export async function createAssembleia(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -264,7 +306,7 @@ export async function updateAssembleia(
     .update(formData)
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   return { success: true };
 }
@@ -272,13 +314,19 @@ export async function updateAssembleia(
 export async function getPessoasDisponiveis() {
   const supabase = await createClient();
 
-  const { data, error } = await supabase
-    .from('pessoas')
-    .select('id, nome')
-    .eq('status', 'ativo')
-    .order('nome');
+  try {
+    const { data, error } = await supabase
+      .from('pessoas')
+      .select('id, nome')
+      .eq('status', 'ativo')
+      .order('nome');
 
-  if (error) throw error;
+    if (error) {
+      return [];
+    }
 
-  return data || [];
+    return data || [];
+  } catch {
+    return [];
+  }
 }

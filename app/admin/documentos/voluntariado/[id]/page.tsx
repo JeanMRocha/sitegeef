@@ -22,7 +22,7 @@ async function handleUpdate(id: string, formData: FormData) {
     redirect(`/admin/documentos/voluntariado/${id}`);
   } catch (error) {
     console.error('Erro ao atualizar serviço:', error);
-    throw error;
+    return;
   }
 }
 
@@ -35,7 +35,7 @@ async function handleEncerrar(id: string, formData: FormData) {
     redirect(`/admin/documentos/voluntariado/${id}`);
   } catch (error) {
     console.error('Erro ao encerrar serviço:', error);
-    throw error;
+    return;
   }
 }
 

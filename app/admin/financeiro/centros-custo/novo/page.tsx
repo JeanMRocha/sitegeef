@@ -17,7 +17,7 @@ async function handleSubmit(formData: FormData) {
     redirect(`/admin/financeiro/centros-custo/${centro.id}`);
   } catch (error) {
     console.error('Erro ao criar centro:', error);
-    throw error;
+    return;
   }
 }
 

@@ -11,7 +11,9 @@ export async function getCursos() {
     .select('*')
     .order('nome');
 
-  if (error) throw error;
+  if (error) {
+    return [];
+  }
 
   return data || [];
 }
@@ -25,7 +27,9 @@ export async function getCursoById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) throw error;
+  if (error) {
+    return null;
+  }
 
   return data;
 }
@@ -39,7 +43,9 @@ export async function createCurso(formData: { nome: string; descricao?: string }
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {
+    return null;
+  }
 
   return data;
 }
@@ -52,7 +58,9 @@ export async function updateCurso(id: string, formData: { nome?: string; descric
     .update(formData)
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) {
+    return { success: false };
+  }
 
   return { success: true };
 }
@@ -76,7 +84,9 @@ export async function getTurmas(curso_id?: string) {
 
   const { data, error } = await query;
 
-  if (error) throw error;
+  if (error) {
+    return [];
+  }
 
   return data || [];
 }
@@ -94,7 +104,9 @@ export async function getTurmaById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) throw error;
+  if (error) {
+    return null;
+  }
 
   return data;
 }
@@ -114,7 +126,9 @@ export async function createTurma(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {
+    return null;
+  }
 
   return data;
 }
@@ -136,7 +150,9 @@ export async function updateTurma(
     .update(formData)
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) {
+    return { success: false };
+  }
 
   return { success: true };
 }
@@ -154,7 +170,9 @@ export async function getFrequencias(turma_id: string) {
     .eq('turma_id', turma_id)
     .order('data');
 
-  if (error) throw error;
+  if (error) {
+    return [];
+  }
 
   return data || [];
 }
@@ -173,7 +191,9 @@ export async function registrarFrequencia(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {
+    return { success: false };
+  }
 
   return data;
 }
@@ -186,7 +206,9 @@ export async function updateFrequencia(id: string, presente: boolean) {
     .update({ presente })
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) {
+    return { success: false };
+  }
 
   return { success: true };
 }
@@ -200,7 +222,9 @@ export async function getPessoasDisponiveis() {
     .eq('status', 'ativo')
     .order('nome');
 
-  if (error) throw error;
+  if (error) {
+    return [];
+  }
 
   return data || [];
 }

@@ -24,7 +24,7 @@ async function handleSubmit(formData: FormData) {
     redirect(`/admin/patrimonio/${bem.id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 

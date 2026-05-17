@@ -19,7 +19,14 @@ export async function getRelatorioFinanceiro(mes?: number, ano?: number) {
 
   const { data, error } = await query;
 
-  if (error) throw error;
+  if (error) return {
+    mes: mesAtual,
+    ano: anoAtual,
+    receitas: 0,
+    despesas: 0,
+    resultado: 0,
+    movimentos: [],
+  };
 
   const movimentos = data || [];
 

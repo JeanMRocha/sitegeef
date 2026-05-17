@@ -20,7 +20,7 @@ async function handleSubmit(formData: FormData) {
     redirect(`/admin/biblioteca/emprestimos/${emprestimo.id}`);
   } catch (error) {
     console.error('Erro ao criar empréstimo:', error);
-    throw error;
+    return;
   }
 }
 

@@ -23,7 +23,7 @@ async function handleSubmit(formData: FormData) {
     redirect(`/admin/documentos/voluntariado/${servico.id}`);
   } catch (error) {
     console.error('Erro ao criar serviço voluntário:', error);
-    throw error;
+    return;
   }
 }
 

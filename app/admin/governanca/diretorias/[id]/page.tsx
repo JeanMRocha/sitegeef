@@ -22,7 +22,7 @@ async function handleSubmitDiretoria(id: string, formData: FormData) {
     redirect(`/admin/governanca/diretorias/${id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 
@@ -40,7 +40,7 @@ async function handleAssignarCargo(id: string, formData: FormData) {
     redirect(`/admin/governanca/diretorias/${id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 

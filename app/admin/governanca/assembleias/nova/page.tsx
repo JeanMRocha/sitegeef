@@ -19,7 +19,7 @@ async function handleSubmit(formData: FormData) {
     redirect(`/admin/governanca/assembleias/${assembleia.id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 

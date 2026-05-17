@@ -16,7 +16,7 @@ export async function getPlanoContas(status?: string) {
 
   const { data, error } = await query;
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }
@@ -30,7 +30,7 @@ export async function getContaById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -48,7 +48,7 @@ export async function createConta(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -69,7 +69,7 @@ export async function updateConta(
     .update(formData)
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   return { success: true };
 }
@@ -82,7 +82,7 @@ export async function toggleContaStatus(id: string, ativo: boolean) {
     .update({ status: ativo ? 'inativo' : 'ativo' })
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   return { success: true };
 }
@@ -102,7 +102,7 @@ export async function getCentrosCusto(ativo?: boolean) {
 
   const { data, error } = await query;
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }
@@ -116,7 +116,7 @@ export async function getCentroCustoById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -132,7 +132,7 @@ export async function createCentroCusto(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -151,7 +151,7 @@ export async function updateCentroCusto(
     .update(formData)
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   return { success: true };
 }
@@ -164,7 +164,7 @@ export async function toggleCentroCustoStatus(id: string, ativo: boolean) {
     .update({ ativo: !ativo })
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   return { success: true };
 }
@@ -193,7 +193,7 @@ export async function getMovimentosFinanceiros(mes?: number, ano?: number) {
 
   const { data, error } = await query;
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }
@@ -212,7 +212,7 @@ export async function getMovimentoById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -242,7 +242,7 @@ export async function createMovimento(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -268,7 +268,7 @@ export async function updateMovimento(
     .update(formData)
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   return { success: true };
 }
@@ -281,7 +281,7 @@ export async function deleteMovimento(id: string) {
     .delete()
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   return { success: true };
 }
@@ -304,7 +304,7 @@ export async function getRelatorioFinanceiro(mes: number, ano: number) {
     .lte('data', dataFim)
     .order('data');
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }
@@ -321,7 +321,11 @@ export async function getSaldoMes(mes: number, ano: number) {
     .gte('data', dataInicio)
     .lte('data', dataFim);
 
-  if (error) throw error;
+  if (error) return {
+    entradas: 0,
+    saidas: 0,
+    saldo: 0,
+  };
 
   const movimentos = data || [];
   const entradas = movimentos

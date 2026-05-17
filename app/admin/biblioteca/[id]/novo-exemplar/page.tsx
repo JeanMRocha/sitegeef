@@ -21,7 +21,7 @@ async function handleSubmit(formData: FormData, obraId: string) {
     redirect(`/admin/biblioteca/${obraId}`);
   } catch (error) {
     console.error('Erro ao criar exemplar:', error);
-    throw error;
+    return;
   }
 }
 

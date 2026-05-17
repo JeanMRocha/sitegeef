@@ -25,7 +25,7 @@ async function handleUpdate(id: string, formData: FormData) {
     redirect(`/admin/biblioteca/${id}`);
   } catch (error) {
     console.error('Erro ao atualizar obra:', error);
-    throw error;
+    return;
   }
 }
 
@@ -37,7 +37,7 @@ async function handleToggleStatus(id: string, novoStatus: boolean) {
     redirect(`/admin/biblioteca/${id}`);
   } catch (error) {
     console.error('Erro ao atualizar status:', error);
-    throw error;
+    return;
   }
 }
 
@@ -49,7 +49,7 @@ async function handleDeleteExemplar(obraId: string, exemplarId: string) {
     redirect(`/admin/biblioteca/${obraId}`);
   } catch (error) {
     console.error('Erro ao deletar exemplar:', error);
-    throw error;
+    return;
   }
 }
 

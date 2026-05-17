@@ -26,7 +26,7 @@ async function handleSubmit(id: string, formData: FormData) {
     redirect(`/admin/patrimonio/${id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 
@@ -38,7 +38,7 @@ async function handleDelete(id: string) {
     redirect('/admin/patrimonio');
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 

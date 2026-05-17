@@ -24,7 +24,12 @@ export async function getEscalas(page = 1) {
     .order('mes', { ascending: false })
     .range(offset, offset + pageSize - 1);
 
-  if (error) throw error;
+  if (error) return {
+    escalas: [],
+    total: 0,
+    page,
+    pageSize,
+  };
 
   return {
     escalas: data || [],
@@ -70,7 +75,7 @@ export async function getEscalaById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -96,7 +101,7 @@ export async function createEscala(formData: {
     .select()
     .single();
 
-  if (escalaError) throw escalaError;
+  if (escalaError) return null;
 
   // Generate Thursday dates for the month
   const firstDay = new Date(formData.ano, formData.mes - 1, 1);
@@ -119,7 +124,7 @@ export async function createEscala(formData: {
     .from('reunioes')
     .insert(reunioesData);
 
-  if (reunioesError) throw reunioesError;
+  if (reunioesError) return null;
 
   invalidateEscalasCache();
   invalidateAdminDashboardCache();
@@ -134,7 +139,7 @@ export async function updateEscalaStatus(id: string, status: string) {
     .update({ status, atualizado_em: new Date().toISOString() })
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   invalidateEscalasCache();
   invalidateAdminDashboardCache();
@@ -157,7 +162,7 @@ export async function addFuncao(reuniaoId: string, funcaoId: string, pessoaId: s
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   invalidateEscalasCache();
   return data;
@@ -174,7 +179,7 @@ export async function updateFuncao(id: string, pessoaId: string, substitutoId?: 
     })
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   invalidateEscalasCache();
   return { success: true };
@@ -188,7 +193,7 @@ export async function removeFuncao(id: string) {
     .delete()
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   invalidateEscalasCache();
   return { success: true };
@@ -209,7 +214,7 @@ export async function addPasseEscalon(reuniaoId: string, pessoaId: string, posic
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   invalidateEscalasCache();
   return data;
@@ -226,7 +231,7 @@ export async function updatePasseEscalon(id: string, pessoaId: string, posicao: 
     })
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   invalidateEscalasCache();
   return { success: true };
@@ -240,7 +245,7 @@ export async function removePasseEscalon(id: string) {
     .delete()
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   invalidateEscalasCache();
   return { success: true };
@@ -255,7 +260,7 @@ export async function getPessoasDisponiveis() {
     .eq('status', 'ativo')
     .order('nome');
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }
@@ -269,7 +274,7 @@ export async function getFuncoes() {
     .eq('ativo', true)
     .order('nome');
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }
@@ -283,7 +288,7 @@ export async function getTemas() {
     .eq('ativo', true)
     .order('titulo');
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }
@@ -304,7 +309,7 @@ export async function getEscalaFuncaoById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -324,7 +329,7 @@ export async function getPasseById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }

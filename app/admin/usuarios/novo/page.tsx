@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getPessoasSemLogin, grantLogin } from '../actions';
-import { createClient } from '@/lib/supabase/server';
+import { createServiceRoleClient } from '@/lib/supabase/service-role';
 
 export const metadata = {
   title: 'Novo Usuário - Admin GEEF',
@@ -38,7 +38,7 @@ async function handleSubmit(formData: FormData) {
     const password = formData.get('password') as string;
 
     // Create auth user
-    const supabase = await createClient();
+    const supabase = createServiceRoleClient();
     const { data: authData, error: authError } = await supabase.auth.admin.createUser({
       email,
       password,
@@ -67,12 +67,12 @@ async function handleSubmit(formData: FormData) {
     redirect('/admin/usuarios');
   } catch (error) {
     console.error('Erro ao criar usuário:', error);
-    throw error;
+    return;
   }
 }
 
 export default async function NovoUsuarioPage() {
-  const pessoasSemLogin = await getPessoasSemLogin();
+  const { pessoas: pessoasSemLogin, erro } = await getPessoasSemLogin();
 
   return (
     <div className="area-page">
@@ -88,9 +88,14 @@ export default async function NovoUsuarioPage() {
 
       <section className="area-section">
         <div className="table-surface" style={{ maxWidth: '900px', margin: '0 auto' }}>
+          {erro ? (
+            <div className="area-empty" style={{ marginBottom: '1rem' }}>
+              {erro}
+            </div>
+          ) : null}
           {pessoasSemLogin.length === 0 ? (
             <div className="area-empty">
-              <p>Todas as pessoas já possuem login.</p>
+              <p>{erro ? 'Não foi possível carregar as pessoas disponíveis.' : 'Todas as pessoas já possuem login.'}</p>
               <Link href="/admin/usuarios" className="profile-form-btn profile-form-btn-secondary">Voltar</Link>
             </div>
           ) : (

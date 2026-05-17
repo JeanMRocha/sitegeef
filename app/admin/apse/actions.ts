@@ -18,11 +18,12 @@ async function loadFamilias() {
       `)
       .order('criado_em', { ascending: false });
 
-    if (error) throw error;
+    if (error) {
+      return [];
+    }
 
     return data || [];
-  } catch (error) {
-    console.error('Falha ao carregar famílias APSE:', error);
+  } catch {
     return [];
   }
 }
@@ -45,11 +46,12 @@ async function loadFamiliaById(id: string) {
       .eq('id', id)
       .single();
 
-    if (error) throw error;
+    if (error) {
+      return null;
+    }
 
     return data;
-  } catch (error) {
-    console.error('Falha ao carregar família APSE:', error);
+  } catch {
     return null;
   }
 }
@@ -73,7 +75,9 @@ export async function createFamilia(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {
+    return null;
+  }
 
   invalidateAdminApseCache();
   return data;
@@ -96,7 +100,9 @@ export async function updateFamilia(
     .update(formData)
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) {
+    return { success: false };
+  }
 
   invalidateAdminApseCache();
   return { success: true };
@@ -112,11 +118,12 @@ async function loadCampanhas() {
       .select('*')
       .order('data_inicio', { ascending: false });
 
-    if (error) throw error;
+    if (error) {
+      return [];
+    }
 
     return data || [];
-  } catch (error) {
-    console.error('Falha ao carregar campanhas APSE:', error);
+  } catch {
     return [];
   }
 }
@@ -136,11 +143,12 @@ async function loadCampanhaById(id: string) {
       .eq('id', id)
       .single();
 
-    if (error) throw error;
+    if (error) {
+      return null;
+    }
 
     return data;
-  } catch (error) {
-    console.error('Falha ao carregar campanha APSE:', error);
+  } catch {
     return null;
   }
 }
@@ -165,7 +173,9 @@ export async function createCampanha(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {
+    return null;
+  }
 
   invalidateAdminApseCache();
   return data;
@@ -189,7 +199,9 @@ export async function updateCampanha(
     .update(formData)
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) {
+    return { success: false };
+  }
 
   invalidateAdminApseCache();
   return { success: true };
@@ -216,11 +228,12 @@ async function loadAtendimentos(familia_id?: string) {
 
     const { data, error } = await query;
 
-    if (error) throw error;
+    if (error) {
+      return [];
+    }
 
     return data || [];
-  } catch (error) {
-    console.error('Falha ao carregar atendimentos APSE:', error);
+  } catch {
     return [];
   }
 }
@@ -245,11 +258,12 @@ async function loadAtendimentoById(id: string) {
       .eq('id', id)
       .single();
 
-    if (error) throw error;
+    if (error) {
+      return null;
+    }
 
     return data;
-  } catch (error) {
-    console.error('Falha ao carregar atendimento APSE:', error);
+  } catch {
     return null;
   }
 }
@@ -275,7 +289,9 @@ export async function createAtendimento(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {
+    return null;
+  }
 
   invalidateAdminApseCache();
   return data;
@@ -296,7 +312,9 @@ export async function updateAtendimento(
     .update(formData)
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) {
+    return { success: false };
+  }
 
   invalidateAdminApseCache();
   return { success: true };
@@ -312,11 +330,12 @@ async function loadPessoasDisponiveis() {
       .eq('status', 'ativo')
       .order('nome');
 
-    if (error) throw error;
+    if (error) {
+      return [];
+    }
 
     return data || [];
-  } catch (error) {
-    console.error('Falha ao carregar pessoas APSE:', error);
+  } catch {
     return [];
   }
 }

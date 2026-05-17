@@ -19,7 +19,6 @@ export async function getUserPermissions() {
     const authResult = await supabase.auth.getUser();
     user = authResult.data.user;
   } catch (error) {
-    console.error('Falha ao obter usuário autenticado em getUserPermissions:', error);
     return null;
   }
 
@@ -34,13 +33,11 @@ export async function getUserPermissions() {
       .eq('id', user.id)
       .maybeSingle();
 
-    if (error) {
-      console.error('Falha ao ler usuarios_sistema em getUserPermissions:', error);
-    } else if (usuarioSistema) {
+    if (usuarioSistema) {
       return usuarioSistema;
     }
   } catch (error) {
-    console.error('Exceção ao ler usuarios_sistema em getUserPermissions:', error);
+    void error;
   }
 
   const appMetadata = (user.app_metadata ?? {}) as Record<string, unknown>;

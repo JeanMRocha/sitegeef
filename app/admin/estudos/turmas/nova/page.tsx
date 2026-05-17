@@ -21,7 +21,7 @@ async function handleSubmit(formData: FormData) {
     redirect(`/admin/estudos/turmas/${turma.id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 

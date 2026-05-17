@@ -48,7 +48,7 @@ async function handleUpdate(userId: string, formData: FormData) {
     redirect('/admin/usuarios');
   } catch (error) {
     console.error('Erro ao atualizar usuário:', error);
-    throw error;
+    return;
   }
 }
 
@@ -60,12 +60,35 @@ async function handleRevoke(userId: string) {
     redirect('/admin/usuarios');
   } catch (error) {
     console.error('Erro ao remover login:', error);
-    throw error;
+    return;
   }
 }
 
 async function EditUsuarioContent({ id }: { id: string }) {
   const usuario = await getUsuarioById(id);
+
+  if (!usuario) {
+    return (
+      <div className="area-page">
+        <section className="area-hero">
+          <div className="area-hero-top">
+            <div>
+              <p className="area-subtitle">Acesso ao sistema</p>
+              <h1 className="area-hero-title">Editar Usuário</h1>
+            </div>
+          </div>
+          <p className="area-subtitle">Não foi possível carregar o usuário selecionado.</p>
+        </section>
+
+        <section className="area-section">
+          <div className="area-empty">
+            <p>O registro pode ter sido removido ou o acesso falhou temporariamente.</p>
+            <Link href="/admin/usuarios" className="profile-form-btn profile-form-btn-secondary">Voltar</Link>
+          </div>
+        </section>
+      </div>
+    );
+  }
 
   return (
     <form action={(formData) => handleUpdate(id, formData)}>
@@ -80,7 +103,7 @@ async function EditUsuarioContent({ id }: { id: string }) {
               <span className="tag">{usuario.perfil}</span>
             </div>
           </div>
-          <p className="area-subtitle">{usuario.pessoas?.nome}</p>
+          <p className="area-subtitle">{usuario.nome || usuario.email || usuario.pessoas?.nome}</p>
         </section>
 
         <section className="area-section">
@@ -91,8 +114,8 @@ async function EditUsuarioContent({ id }: { id: string }) {
           <div className="table-surface">
             <div className="area-panel-grid">
               <div className="area-panel-item">
-                <p><strong>Pessoa:</strong> {usuario.pessoas?.nome}</p>
-                <p><strong>Email:</strong> {usuario.pessoas?.email || '—'}</p>
+                <p><strong>Pessoa:</strong> {usuario.nome || usuario.pessoas?.nome || '—'}</p>
+                <p><strong>Email:</strong> {usuario.email || usuario.pessoas?.email || '—'}</p>
                 <p><strong>ID:</strong> <code>{id}</code></p>
               </div>
             </div>

@@ -23,7 +23,7 @@ async function handleSubmit(id: string, formData: FormData) {
     redirect(`/admin/apse/campanhas/${id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 

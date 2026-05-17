@@ -21,7 +21,7 @@ async function handleSubmit(formData: FormData) {
     redirect(`/admin/atendimento/recepcao/${recepcao.id}`);
   } catch (error) {
     console.error('Erro ao criar atendimento:', error);
-    throw error;
+    return;
   }
 }
 

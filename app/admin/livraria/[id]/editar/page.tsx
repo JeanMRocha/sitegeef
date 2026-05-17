@@ -25,7 +25,7 @@ async function handleSubmit(id: string, formData: FormData) {
     redirect(`/admin/livraria/${id}`);
   } catch (error) {
     console.error('Erro ao atualizar produto:', error);
-    throw error;
+    return;
   }
 }
 

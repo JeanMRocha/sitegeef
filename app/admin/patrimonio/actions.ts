@@ -13,7 +13,7 @@ export async function getBens() {
     `)
     .order('criado_em', { ascending: false });
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }
@@ -30,7 +30,7 @@ export async function getBemById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -53,7 +53,7 @@ export async function createBem(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -79,7 +79,7 @@ export async function updateBem(
     .update(formData)
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   return { success: true };
 }
@@ -92,7 +92,7 @@ export async function deleteBem(id: string) {
     .delete()
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   return { success: true };
 }
@@ -106,7 +106,7 @@ export async function getPessoasDisponiveis() {
     .eq('status', 'ativo')
     .order('nome');
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }

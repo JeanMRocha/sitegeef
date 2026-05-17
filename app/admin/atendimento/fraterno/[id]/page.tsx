@@ -25,7 +25,7 @@ async function handleSubmit(id: string, formData: FormData) {
     redirect(`/admin/atendimento/fraterno/${id}`);
   } catch (error) {
     console.error('Erro ao atualizar:', error);
-    throw error;
+    return;
   }
 }
 
@@ -37,7 +37,7 @@ async function handleDelete(id: string) {
     redirect('/admin/atendimento/fraterno');
   } catch (error) {
     console.error('Erro ao deletar:', error);
-    throw error;
+    return;
   }
 }
 

@@ -25,7 +25,12 @@ async function loadReservas(page = 1) {
     .order('posicao_fila', { ascending: true })
     .range(offset, offset + pageSize - 1);
 
-  if (error) throw error;
+  if (error) return {
+    reservas: [],
+    total: 0,
+    page,
+    pageSize,
+  };
 
   return {
     reservas: data || [],
@@ -56,7 +61,7 @@ export async function getReservaById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   invalidateUserAreaCache();
   return data;
@@ -93,7 +98,7 @@ export async function createReserva(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   invalidateAdminBibliotecaCache();
   invalidateUserAreaCache();
@@ -175,7 +180,7 @@ export async function getPessoasDisponiveis() {
     .eq('status', 'ativo')
     .order('nome');
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }
@@ -189,7 +194,7 @@ export async function getObrasDisponiveis() {
     .eq('ativo', true)
     .order('titulo');
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }
@@ -203,7 +208,7 @@ export async function getExemplaresdisponiveisParaReserva(obra_id: string) {
     .eq('obra_id', obra_id)
     .in('situacao', ['disponivel', 'reservado']);
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }

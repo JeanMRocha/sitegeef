@@ -20,7 +20,7 @@ async function handleSubmit(formData: FormData) {
     redirect(`/admin/comunicacao/${publicacao.id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 

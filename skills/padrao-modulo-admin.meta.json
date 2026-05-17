@@ -1,0 +1,11 @@
+{
+  "name": "padrao-modulo-admin",
+  "title": "Padrão de Módulo Admin GEEF",
+  "summary": "Arquitetura e convenções para criar/modificar módulos admin (CRUD com page, novo, [id], actions)",
+  "tags": ["admin", "crud", "page.tsx", "next.js", "padrão"],
+  "language": "pt-BR",
+  "source_skill_path": "skills/padrao-modulo-admin.md",
+  "created_at": "2025-05-17T12:00:00-03:00",
+  "updated_at": "2025-05-17T12:00:00-03:00",
+  "version": 1
+}

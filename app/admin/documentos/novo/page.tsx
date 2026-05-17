@@ -20,7 +20,7 @@ async function handleSubmit(formData: FormData) {
     redirect(`/admin/documentos/${modelo.id}`);
   } catch (error) {
     console.error('Erro ao criar modelo:', error);
-    throw error;
+    return;
   }
 }
 

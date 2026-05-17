@@ -25,7 +25,7 @@ async function handleSubmit(formData: FormData) {
     redirect(`/admin/atendimento/fraterno/${atend.id}`);
   } catch (error) {
     console.error('Erro ao criar atendimento:', error);
-    throw error;
+    return;
   }
 }
 

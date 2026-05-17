@@ -18,7 +18,7 @@ async function handleSubmit(formData: FormData) {
     redirect('/admin/biblioteca/reservas');
   } catch (error) {
     console.error('Erro ao criar reserva:', error);
-    throw error;
+    return;
   }
 }
 

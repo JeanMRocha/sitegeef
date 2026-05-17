@@ -21,7 +21,7 @@ async function handleSubmitFamilia(id: string, formData: FormData) {
     redirect(`/admin/apse/familias/${id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 
@@ -41,7 +41,7 @@ async function handleRegistrarAtendimento(id: string, formData: FormData) {
     redirect(`/admin/apse/familias/${id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 

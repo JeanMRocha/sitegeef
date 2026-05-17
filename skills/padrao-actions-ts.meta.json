@@ -1,0 +1,11 @@
+{
+  "name": "padrao-actions-ts",
+  "title": "Padrão de Server Actions GEEF",
+  "summary": "Convenções para server actions: getters, create, update, delete, cache invalidation, permissões e tratamento de erros",
+  "tags": ["server-actions", "supabase", "revalidatePath", "permissões", "cache"],
+  "language": "pt-BR",
+  "source_skill_path": "skills/padrao-actions-ts.md",
+  "created_at": "2025-05-17T12:00:00-03:00",
+  "updated_at": "2025-05-17T12:00:00-03:00",
+  "version": 1
+}

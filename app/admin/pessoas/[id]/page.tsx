@@ -78,7 +78,7 @@ async function handleUpdatePessoa(pessoaId: string, formData: FormData) {
     redirect('/admin/pessoas');
   } catch (error) {
     console.error('Erro ao atualizar pessoa:', error);
-    throw error;
+    return;
   }
 }
 

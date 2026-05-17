@@ -18,7 +18,7 @@ async function handleSubmit(id: string, formData: FormData) {
     redirect(`/admin/financeiro/centros-custo/${id}`);
   } catch (error) {
     console.error('Erro ao atualizar centro:', error);
-    throw error;
+    return;
   }
 }
 
@@ -30,7 +30,7 @@ async function handleToggle(id: string, ativo: boolean) {
     redirect(`/admin/financeiro/centros-custo/${id}`);
   } catch (error) {
     console.error('Erro ao alternar status:', error);
-    throw error;
+    return;
   }
 }
 

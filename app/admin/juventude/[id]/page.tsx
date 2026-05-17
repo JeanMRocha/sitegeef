@@ -21,7 +21,7 @@ async function handleSubmit(id: string, formData: FormData) {
     redirect(`/admin/juventude/${id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 
@@ -33,7 +33,7 @@ async function handleToggle(id: string, ativo: boolean) {
     redirect(`/admin/juventude/${id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 

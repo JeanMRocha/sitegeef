@@ -22,7 +22,7 @@ async function handleSubmitTurma(id: string, formData: FormData) {
     redirect(`/admin/estudos/turmas/${id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 
@@ -40,7 +40,7 @@ async function handleRegistrarFrequencia(id: string, formData: FormData) {
     redirect(`/admin/estudos/turmas/${id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 
@@ -52,7 +52,7 @@ async function handleToggleFrequencia(id: string, presente: boolean) {
     redirect(new URL(document.referrer).pathname);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 

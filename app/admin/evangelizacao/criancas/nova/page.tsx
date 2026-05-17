@@ -21,7 +21,7 @@ async function handleSubmit(formData: FormData) {
     redirect(`/admin/evangelizacao/criancas/${crianca.id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 

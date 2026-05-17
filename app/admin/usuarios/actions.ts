@@ -1,80 +1,223 @@
 'use server';
 
-import { createClient } from '@/lib/supabase/server';
+import { createServiceRoleClient } from '@/lib/supabase/service-role';
 import { invalidateUserAreaCache } from '@/lib/areas/invalidate-user-area';
 
+const TEST_EMAIL_PATTERNS = [/^codex-profile-/i, /^codex-test-/i];
+
+function isTestAuthUser(user: any) {
+  const email = String(user?.email || '').toLowerCase();
+
+  if (!email) return false;
+
+  if (TEST_EMAIL_PATTERNS.some((pattern) => pattern.test(email))) {
+    return true;
+  }
+
+  if (user?.user_metadata?.is_test === true || user?.user_metadata?.test_account === true) {
+    return true;
+  }
+
+  return false;
+}
+
+async function listAllAuthUsers(supabase: ReturnType<typeof createServiceRoleClient>) {
+  const pageSize = 100;
+  let page = 1;
+  let allUsers: any[] = [];
+  let lastPage = 1;
+
+  while (page <= lastPage) {
+    const { data, error } = await supabase.auth.admin.listUsers({
+      page,
+      perPage: pageSize,
+    });
+
+    if (error) return [];
+
+    const pageUsers = data?.users || [];
+    allUsers = allUsers.concat(pageUsers);
+    lastPage = data?.lastPage || page;
+
+    if (!data?.nextPage) break;
+    page = data.nextPage;
+  }
+
+  return allUsers.filter((user) => !isTestAuthUser(user));
+}
+
 export async function getUsuarios(page = 1) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
   const pageSize = 20;
-  const offset = (page - 1) * pageSize;
 
-  const { data, count, error } = await supabase
-    .from('usuarios_sistema')
-    .select(
-      `
-      id,
-      perfil,
-      pessoa_id,
-      pode_escalas,
-      pode_biblioteca,
-      pode_livraria,
-      pode_financeiro,
-      pode_pessoas,
-      pode_publicar,
-      pode_mediunidade,
-      pode_atendimento,
-      pode_apse,
-      pessoas (nome, email)
-    `,
-      { count: 'exact' }
-    )
-    .range(offset, offset + pageSize - 1);
+  try {
+    const authRows = await listAllAuthUsers(supabase);
+    const authIds = authRows.map((user) => user.id);
 
-  if (error) throw error;
+    let adminRows: any[] = [];
 
-  return {
-    usuarios: data || [],
-    total: count || 0,
-    page,
-    pageSize,
-  };
+    if (authIds.length > 0) {
+      const { data, error } = await supabase
+        .from('usuarios_sistema')
+        .select(
+          `
+          id,
+          perfil,
+          pessoa_id,
+          pode_escalas,
+          pode_biblioteca,
+          pode_livraria,
+          pode_financeiro,
+          pode_pessoas,
+          pode_publicar,
+          pode_mediunidade,
+          pode_atendimento,
+          pode_apse,
+          pessoas (nome, email)
+        `
+        )
+        .in('id', authIds);
+
+      adminRows = data || [];
+    }
+
+    const adminMap = new Map(adminRows.map((row: any) => [row.id, row]));
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    const pageUsers = authRows.slice(startIndex, endIndex);
+
+    const usuarios = pageUsers.map((user: any) => {
+      const adminRow = adminMap.get(user.id);
+      const pessoa = adminRow?.pessoas ?? null;
+
+      return {
+        id: user.id,
+        email: user.email || pessoa?.email || null,
+        nome:
+          pessoa?.nome ||
+          user.user_metadata?.full_name ||
+          user.user_metadata?.name ||
+          user.email ||
+          'Sem nome',
+        perfil: adminRow?.perfil || 'publico',
+        pessoa_id: adminRow?.pessoa_id || null,
+        pode_escalas: Boolean(adminRow?.pode_escalas),
+        pode_biblioteca: Boolean(adminRow?.pode_biblioteca),
+        pode_livraria: Boolean(adminRow?.pode_livraria),
+        pode_financeiro: Boolean(adminRow?.pode_financeiro),
+        pode_pessoas: Boolean(adminRow?.pode_pessoas),
+        pode_publicar: Boolean(adminRow?.pode_publicar),
+        pode_mediunidade: Boolean(adminRow?.pode_mediunidade),
+        pode_atendimento: Boolean(adminRow?.pode_atendimento),
+        pode_apse: Boolean(adminRow?.pode_apse),
+        created_at: user.created_at,
+        confirmed_at: user.confirmed_at,
+        has_admin_record: Boolean(adminRow),
+        pessoas: pessoa,
+      };
+    });
+
+    return {
+      usuarios,
+      total: authRows.length,
+      page,
+      pageSize,
+      erro: null,
+    };
+  } catch {
+    return {
+      usuarios: [],
+      total: 0,
+      page,
+      pageSize,
+      erro: 'Não foi possível carregar a lista de usuários.',
+    };
+  }
 }
 
 export async function getUsuarioById(id: string) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
-  const { data, error } = await supabase
-    .from('usuarios_sistema')
-    .select(
-      `
-      *,
-      pessoas (*)
-    `
-    )
-    .eq('id', id)
-    .single();
+  try {
+    const [{ data: authUser, error: authError }, { data: adminRecord, error: adminError }] = await Promise.all([
+      supabase.auth.admin.getUserById(id),
+      supabase
+        .from('usuarios_sistema')
+        .select(
+          `
+          *,
+          pessoas (*)
+        `
+        )
+        .eq('id', id)
+        .maybeSingle(),
+    ]);
 
-  if (error) throw error;
+    if (authError) throw authError;
+    if (!authUser?.user && !adminRecord) {
+      return null;
+    }
 
-  return data;
+    const user = authUser?.user;
+
+    if (user && isTestAuthUser(user)) {
+      return null;
+    }
+
+    return {
+      id: user?.id || adminRecord?.id || id,
+      email: user?.email || adminRecord?.pessoas?.email || null,
+      nome:
+        adminRecord?.pessoas?.nome ||
+        user?.user_metadata?.full_name ||
+        user?.user_metadata?.name ||
+        user?.email ||
+        'Sem nome',
+      perfil: adminRecord?.perfil || 'publico',
+      pessoa_id: adminRecord?.pessoa_id || null,
+      pode_escalas: Boolean(adminRecord?.pode_escalas),
+      pode_biblioteca: Boolean(adminRecord?.pode_biblioteca),
+      pode_livraria: Boolean(adminRecord?.pode_livraria),
+      pode_financeiro: Boolean(adminRecord?.pode_financeiro),
+      pode_pessoas: Boolean(adminRecord?.pode_pessoas),
+      pode_publicar: Boolean(adminRecord?.pode_publicar),
+      pode_mediunidade: Boolean(adminRecord?.pode_mediunidade),
+      pode_atendimento: Boolean(adminRecord?.pode_atendimento),
+      pode_apse: Boolean(adminRecord?.pode_apse),
+      pessoas: adminRecord?.pessoas || null,
+      auth_user: user || null,
+    };
+  } catch {
+    return null;
+  }
 }
 
 export async function getPessoasSemLogin() {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
-  const { data: todasPessoas, error: erroTodas } = await supabase.from('pessoas').select('id, nome, email');
+  try {
+    const { data: todasPessoas, error: erroTodas } = await supabase.from('pessoas').select('id, nome, email');
 
-  if (erroTodas) throw erroTodas;
+    if (erroTodas) throw erroTodas;
 
-  const { data: usuariosExistentes, error: erroUsuarios } = await supabase
-    .from('usuarios_sistema')
-    .select('pessoa_id');
+    const { data: usuariosExistentes, error: erroUsuarios } = await supabase
+      .from('usuarios_sistema')
+      .select('pessoa_id');
 
-  if (erroUsuarios) throw erroUsuarios;
+    if (erroUsuarios) throw erroUsuarios;
 
-  const pessoasComLogin = new Set(usuariosExistentes?.map((u: any) => u.pessoa_id) || []);
+    const pessoasComLogin = new Set(usuariosExistentes?.map((u: any) => u.pessoa_id) || []);
 
-  return (todasPessoas || []).filter((p: any) => !pessoasComLogin.has(p.id));
+    return {
+      pessoas: (todasPessoas || []).filter((p: any) => !pessoasComLogin.has(p.id)),
+      erro: null,
+    };
+  } catch {
+    return {
+      pessoas: [],
+      erro: 'Não foi possível carregar as pessoas disponíveis.',
+    };
+  }
 }
 
 export async function grantLogin(
@@ -93,7 +236,7 @@ export async function grantLogin(
     pode_apse?: boolean;
   } = {}
 ) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { error } = await supabase.from('usuarios_sistema').insert([
     {
@@ -112,7 +255,7 @@ export async function grantLogin(
     },
   ]);
 
-  if (error) throw error;
+  if (error) return null;
 
   invalidateUserAreaCache();
   return { success: true };
@@ -133,22 +276,22 @@ export async function updateUsuario(
     pode_apse?: boolean;
   }
 ) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { error } = await supabase.from('usuarios_sistema').update(data).eq('id', id);
 
-  if (error) throw error;
+  if (error) return null;
 
   invalidateUserAreaCache();
   return { success: true };
 }
 
 export async function revokeLogin(id: string) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { error } = await supabase.from('usuarios_sistema').delete().eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   invalidateUserAreaCache();
   return { success: true };

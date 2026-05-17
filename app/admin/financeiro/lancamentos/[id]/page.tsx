@@ -27,7 +27,7 @@ async function handleSubmit(id: string, formData: FormData) {
     redirect(`/admin/financeiro/lancamentos/${id}`);
   } catch (error) {
     console.error('Erro ao atualizar lançamento:', error);
-    throw error;
+    return;
   }
 }
 
@@ -39,7 +39,7 @@ async function handleDelete(id: string) {
     redirect('/admin/financeiro/lancamentos');
   } catch (error) {
     console.error('Erro ao deletar lançamento:', error);
-    throw error;
+    return;
   }
 }
 

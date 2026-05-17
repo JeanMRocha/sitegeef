@@ -25,11 +25,12 @@ async function loadRecepcoes(mes?: number, ano?: number) {
 
     const { data, error } = await query;
 
-    if (error) throw error;
+    if (error) {
+      return [];
+    }
 
     return data || [];
-  } catch (error) {
-    console.error('Falha ao carregar recepções:', error);
+  } catch {
     return [];
   }
 }
@@ -49,11 +50,12 @@ async function loadRecepcaoById(id: string) {
       .eq('id', id)
       .single();
 
-    if (error) throw error;
+    if (error) {
+      return null;
+    }
 
     return data;
-  } catch (error) {
-    console.error('Falha ao carregar recepção:', error);
+  } catch {
     return null;
   }
 }
@@ -78,7 +80,9 @@ export async function createRecepcao(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {
+    return null;
+  }
 
   invalidateAdminAtendimentoCache();
   return data;
@@ -101,7 +105,9 @@ export async function updateRecepcao(
     .update(formData)
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) {
+    return { success: false };
+  }
 
   invalidateAdminAtendimentoCache();
   return { success: true };
@@ -115,7 +121,9 @@ export async function deleteRecepcao(id: string) {
     .delete()
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) {
+    return { success: false };
+  }
 
   invalidateAdminAtendimentoCache();
   return { success: true };
@@ -145,11 +153,12 @@ async function loadAtendimentosFraterno(mes?: number, ano?: number) {
 
     const { data, error } = await query;
 
-    if (error) throw error;
+    if (error) {
+      return [];
+    }
 
     return data || [];
-  } catch (error) {
-    console.error('Falha ao carregar atendimentos fraterno:', error);
+  } catch {
     return [];
   }
 }
@@ -173,11 +182,12 @@ async function loadAtendimentoFraternoById(id: string) {
       .eq('id', id)
       .single();
 
-    if (error) throw error;
+    if (error) {
+      return null;
+    }
 
     return data;
-  } catch (error) {
-    console.error('Falha ao carregar atendimento fraterno:', error);
+  } catch {
     return null;
   }
 }
@@ -204,7 +214,9 @@ export async function createAtendimentoFraterno(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {
+    return null;
+  }
 
   invalidateAdminAtendimentoCache();
   return data;
@@ -230,7 +242,9 @@ export async function updateAtendimentoFraterno(
     .update(formData)
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) {
+    return { success: false };
+  }
 
   invalidateAdminAtendimentoCache();
   return { success: true };
@@ -244,7 +258,9 @@ export async function deleteAtendimentoFraterno(id: string) {
     .delete()
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) {
+    return { success: false };
+  }
 
   invalidateAdminAtendimentoCache();
   return { success: true };
@@ -263,11 +279,12 @@ async function loadEvangelhasNoLar() {
       `)
       .order('data', { ascending: false });
 
-    if (error) throw error;
+    if (error) {
+      return [];
+    }
 
     return data || [];
-  } catch (error) {
-    console.error('Falha ao carregar evangelhos no lar:', error);
+  } catch {
     return [];
   }
 }
@@ -290,11 +307,12 @@ async function loadEvangelhoNoLarById(id: string) {
       .eq('id', id)
       .single();
 
-    if (error) throw error;
+    if (error) {
+      return null;
+    }
 
     return data;
-  } catch (error) {
-    console.error('Falha ao carregar evangelho no lar:', error);
+  } catch {
     return null;
   }
 }
@@ -320,7 +338,9 @@ export async function createEvangelhoNoLar(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {
+    return null;
+  }
 
   invalidateAdminAtendimentoCache();
   return data;
@@ -344,7 +364,9 @@ export async function updateEvangelhoNoLar(
     .update(formData)
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) {
+    return { success: false };
+  }
 
   invalidateAdminAtendimentoCache();
   return { success: true };
@@ -358,7 +380,9 @@ export async function deleteEvangelhoNoLar(id: string) {
     .delete()
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) {
+    return { success: false };
+  }
 
   invalidateAdminAtendimentoCache();
   return { success: true };
@@ -383,11 +407,12 @@ async function loadIrradiacoes(ativas?: boolean) {
 
     const { data, error } = await query;
 
-    if (error) throw error;
+    if (error) {
+      return [];
+    }
 
     return data || [];
-  } catch (error) {
-    console.error('Falha ao carregar irradiações:', error);
+  } catch {
     return [];
   }
 }
@@ -410,11 +435,12 @@ async function loadIrradiacaoById(id: string) {
       .eq('id', id)
       .single();
 
-    if (error) throw error;
+    if (error) {
+      return null;
+    }
 
     return data;
-  } catch (error) {
-    console.error('Falha ao carregar irradiação:', error);
+  } catch {
     return null;
   }
 }
@@ -439,7 +465,9 @@ export async function createIrradiacao(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {
+    return null;
+  }
 
   invalidateAdminAtendimentoCache();
   return data;
@@ -462,7 +490,9 @@ export async function updateIrradiacao(
     .update(formData)
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) {
+    return { success: false };
+  }
 
   invalidateAdminAtendimentoCache();
   return { success: true };
@@ -476,7 +506,9 @@ export async function toggleIrradiacaoStatus(id: string, ativa: boolean) {
     .update({ status: ativa ? 'encerrada' : 'ativa' })
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) {
+    return { success: false };
+  }
 
   invalidateAdminAtendimentoCache();
   return { success: true };
@@ -492,11 +524,12 @@ async function loadPessoasDisponiveis() {
       .eq('status', 'ativo')
       .order('nome');
 
-    if (error) throw error;
+    if (error) {
+      return [];
+    }
 
     return data || [];
-  } catch (error) {
-    console.error('Falha ao carregar pessoas de atendimento:', error);
+  } catch {
     return [];
   }
 }

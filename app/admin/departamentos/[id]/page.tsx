@@ -20,8 +20,8 @@ async function handleUpdate(deptId: string, formData: FormData) {
 
     redirect(`/admin/departamentos/${deptId}`);
   } catch (error) {
-    console.error('Erro ao atualizar departamento:', error);
-    throw error;
+    void error;
+    return;
   }
 }
 
@@ -38,8 +38,8 @@ async function handleAddMembro(deptId: string, formData: FormData) {
 
     redirect(`/admin/departamentos/${deptId}`);
   } catch (error) {
-    console.error('Erro ao adicionar membro:', error);
-    throw error;
+    void error;
+    return;
   }
 }
 
@@ -50,14 +50,36 @@ async function handleRemoveMembro(membroId: string, deptId: string) {
     await removeMembro(membroId);
     redirect(`/admin/departamentos/${deptId}`);
   } catch (error) {
-    console.error('Erro ao remover membro:', error);
-    throw error;
+    void error;
+    return;
   }
 }
 
 async function EditDepartamentoContent({ id }: { id: string }) {
   const departamento = await getDepartamentoById(id);
   const pessoas = await getPessoasDisponiveis();
+
+  if (!departamento) {
+    return (
+      <div className="area-page">
+        <div className="admin-page-header">
+          <div>
+            <h1 className="admin-page-title">Departamento não encontrado</h1>
+            <p className="admin-page-subtitle">O registro pode não existir ou a tabela não estar disponível no ambiente.</p>
+          </div>
+        </div>
+
+        <div className="admin-card">
+          <p style={{ marginTop: 0, color: 'var(--muted)' }}>
+            A tela foi carregada em modo seguro para evitar erro de aplicação.
+          </p>
+          <Link href="/admin/departamentos" className="admin-btn admin-btn-secondary">
+            ← Voltar para departamentos
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>

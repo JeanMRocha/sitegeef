@@ -1,0 +1,11 @@
+{
+  "name": "supabase-patterns",
+  "title": "Padrões Supabase GEEF",
+  "summary": "Uso de server client, browser client, service role; RLS; integração com APIs externas; tipos TypeScript",
+  "tags": ["supabase", "rls", "server-client", "service-role", "auth"],
+  "language": "pt-BR",
+  "source_skill_path": "skills/supabase-patterns.md",
+  "created_at": "2025-05-17T12:00:00-03:00",
+  "updated_at": "2025-05-17T12:00:00-03:00",
+  "version": 1
+}

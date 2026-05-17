@@ -12,7 +12,7 @@ export async function getFuncoes() {
     .eq('ativo', true)
     .order('nome');
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }
@@ -26,7 +26,7 @@ export async function getFuncaoById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   invalidateAdminDashboardCache();
   return data;
@@ -50,7 +50,7 @@ export async function createFuncao(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -71,7 +71,7 @@ export async function updateFuncao(
     })
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   invalidateAdminDashboardCache();
   return { success: true };
@@ -85,7 +85,7 @@ export async function toggleFuncaoStatus(id: string, ativo: boolean) {
     .update({ ativo })
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   invalidateAdminDashboardCache();
   return { success: true };
@@ -100,7 +100,7 @@ export async function getTemasDourinarios() {
     .eq('ativo', true)
     .order('titulo');
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }
@@ -114,7 +114,7 @@ export async function getTemaDoutrinarioById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   invalidateAdminDashboardCache();
   return data;
@@ -138,7 +138,7 @@ export async function createTemaDoutrinario(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -159,7 +159,7 @@ export async function updateTemaDoutrinario(
     })
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   invalidateAdminDashboardCache();
   return { success: true };
@@ -173,7 +173,7 @@ export async function toggleTemaDoutrinarioStatus(id: string, ativo: boolean) {
     .update({ ativo })
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   invalidateAdminDashboardCache();
   return { success: true };

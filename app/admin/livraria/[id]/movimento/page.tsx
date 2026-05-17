@@ -34,7 +34,7 @@ async function handleSubmit(produto_id: string, formData: FormData) {
     redirect(`/admin/livraria/${produto_id}`);
   } catch (error) {
     console.error('Erro ao registrar movimento:', error);
-    throw error;
+    return;
   }
 }
 

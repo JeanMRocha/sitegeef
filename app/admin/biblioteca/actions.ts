@@ -23,7 +23,9 @@ async function loadObras(page = 1, search?: string) {
     .order('titulo')
     .range(offset, offset + pageSize - 1);
 
-  if (error) throw error;
+  if (error) {
+    return { obras: [], total: 0, page, pageSize };
+  }
 
   return {
     obras: data || [],
@@ -52,7 +54,9 @@ export async function getObraById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) throw error;
+  if (error) {
+    return null;
+  }
 
   return data;
 }
@@ -87,7 +91,9 @@ export async function createObra(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {
+    return null;
+  }
 
   invalidateAdminBibliotecaCache();
   invalidateUserAreaCache();
@@ -116,7 +122,9 @@ export async function updateObra(
     })
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) {
+    return { success: false };
+  }
 
   invalidateAdminBibliotecaCache();
   invalidateUserAreaCache();
@@ -131,7 +139,9 @@ export async function toggleObraStatus(id: string, ativo: boolean) {
     .update({ ativo })
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) {
+    return { success: false };
+  }
 
   invalidateAdminBibliotecaCache();
   invalidateUserAreaCache();
@@ -153,7 +163,9 @@ export async function getExemplarById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) throw error;
+  if (error) {
+    return null;
+  }
 
   return data;
 }
@@ -182,7 +194,9 @@ export async function createExemplar(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {
+    return null;
+  }
 
   invalidateAdminBibliotecaCache();
   invalidateUserAreaCache();
@@ -207,7 +221,9 @@ export async function updateExemplar(
     })
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) {
+    return { success: false };
+  }
 
   invalidateAdminBibliotecaCache();
   invalidateUserAreaCache();
@@ -222,7 +238,9 @@ export async function deleteExemplar(id: string) {
     .delete()
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) {
+    return { success: false };
+  }
 
   invalidateAdminBibliotecaCache();
   invalidateUserAreaCache();

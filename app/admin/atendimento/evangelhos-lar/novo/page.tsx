@@ -22,7 +22,7 @@ async function handleSubmit(formData: FormData) {
     redirect(`/admin/atendimento/evangelhos-lar/${ev.id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 

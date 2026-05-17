@@ -15,7 +15,7 @@ async function handleToggleStatus(id: string, ativo: boolean) {
     redirect(`/admin/livraria/${id}`);
   } catch (error) {
     console.error('Erro ao alternar status:', error);
-    throw error;
+    return;
   }
 }
 

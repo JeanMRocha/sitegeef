@@ -18,7 +18,7 @@ async function handleSubmit(formData: FormData) {
     redirect(`/admin/funcoes/temas/${tema.id}`);
   } catch (error) {
     console.error('Erro ao criar tema:', error);
-    throw error;
+    return;
   }
 }
 

@@ -23,7 +23,7 @@ async function handleSubmit(formData: FormData) {
     redirect(`/admin/planejamento/${meta.id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 

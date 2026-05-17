@@ -21,7 +21,7 @@ async function handleSubmit(formData: FormData) {
     redirect(`/admin/apse/campanhas/${campanha.id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 

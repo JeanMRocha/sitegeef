@@ -15,7 +15,7 @@ async function handleCancel(id: string) {
     redirect('/admin/biblioteca/reservas');
   } catch (error) {
     console.error('Erro ao cancelar reserva:', error);
-    throw error;
+    return;
   }
 }
 
@@ -28,7 +28,7 @@ async function handleConfirm(id: string, formData: FormData) {
     redirect('/admin/biblioteca/reservas');
   } catch (error) {
     console.error('Erro ao confirmar reserva:', error);
-    throw error;
+    return;
   }
 }
 

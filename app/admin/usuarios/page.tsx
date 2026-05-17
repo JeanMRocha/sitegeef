@@ -9,7 +9,7 @@ export const metadata = {
 async function UsuariosList({ searchParams }: { searchParams: { page?: string } }) {
   const page = parseInt(searchParams.page || '1');
 
-  const { usuarios, total, pageSize } = await getUsuarios(page);
+  const { usuarios, total, pageSize, erro } = await getUsuarios(page);
   const totalPages = Math.ceil(total / pageSize);
 
   const perfilColor: Record<string, string> = {
@@ -47,6 +47,11 @@ async function UsuariosList({ searchParams }: { searchParams: { page?: string } 
       </div>
 
       <div className="admin-card table-surface">
+        {erro ? (
+          <div className="area-empty" style={{ marginBottom: '1rem' }}>
+            {erro}
+          </div>
+        ) : null}
         {usuarios.length === 0 ? (
           <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--muted)' }}>
             <p>Nenhum usuário cadastrado.</p>
@@ -81,8 +86,8 @@ async function UsuariosList({ searchParams }: { searchParams: { page?: string } 
 
                 return (
                   <tr key={usuario.id}>
-                    <td style={{ fontWeight: 600 }}>{usuario.pessoas?.nome || 'N/A'}</td>
-                    <td style={{ fontSize: '0.9rem', color: 'var(--muted)' }}>{usuario.pessoas?.email || '—'}</td>
+                    <td style={{ fontWeight: 600 }}>{usuario.nome || usuario.email || 'N/A'}</td>
+                    <td style={{ fontSize: '0.9rem', color: 'var(--muted)' }}>{usuario.email || usuario.pessoas?.email || '—'}</td>
                     <td>
                       <span
                         className="inline-status"

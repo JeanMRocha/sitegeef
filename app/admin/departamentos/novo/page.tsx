@@ -17,10 +17,14 @@ async function handleSubmit(formData: FormData) {
       vice_id: (formData.get('vice_id') as string) || undefined,
     });
 
+    if (!dept) {
+      return;
+    }
+
     redirect(`/admin/departamentos/${dept.id}`);
   } catch (error) {
     console.error('Erro ao criar departamento:', error);
-    throw error;
+    return;
   }
 }
 

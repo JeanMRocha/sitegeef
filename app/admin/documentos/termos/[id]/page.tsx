@@ -20,7 +20,7 @@ async function handleUpdate(id: string, formData: FormData) {
     redirect(`/admin/documentos/termos/${id}`);
   } catch (error) {
     console.error('Erro ao atualizar termo:', error);
-    throw error;
+    return;
   }
 }
 
@@ -32,7 +32,7 @@ async function handleRevoke(id: string) {
     redirect(`/admin/documentos/termos/${id}`);
   } catch (error) {
     console.error('Erro ao revogar termo:', error);
-    throw error;
+    return;
   }
 }
 

@@ -20,7 +20,7 @@ async function handleUpdate(formData: FormData, escalaId: string, funcaoId: stri
     redirect(`/admin/escalas/${escalaId}`);
   } catch (error) {
     console.error('Erro ao atualizar função:', error);
-    throw error;
+    return;
   }
 }
 
@@ -32,7 +32,7 @@ async function handleRemove(escalaId: string, funcaoId: string) {
     redirect(`/admin/escalas/${escalaId}`);
   } catch (error) {
     console.error('Erro ao remover função:', error);
-    throw error;
+    return;
   }
 }
 

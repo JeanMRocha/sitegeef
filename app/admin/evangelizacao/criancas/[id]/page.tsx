@@ -21,7 +21,7 @@ async function handleSubmit(id: string, formData: FormData) {
     redirect(`/admin/evangelizacao/criancas/${id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 
@@ -33,7 +33,7 @@ async function handleDelete(id: string) {
     redirect('/admin/evangelizacao/criancas');
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 

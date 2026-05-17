@@ -23,7 +23,7 @@ async function handlePublish(id: string) {
     redirect(`/admin/escalas/${id}`);
   } catch (error) {
     console.error('Erro ao publicar escala:', error);
-    throw error;
+    return;
   }
 }
 

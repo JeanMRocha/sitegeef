@@ -15,7 +15,7 @@ async function loadModelosDocumentos() {
     .eq('ativo', true)
     .order('tipo');
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }
@@ -34,7 +34,7 @@ export async function getModeloById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -61,7 +61,7 @@ export async function createModelo(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
@@ -86,7 +86,7 @@ export async function updateModelo(
     })
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
@@ -101,7 +101,7 @@ export async function toggleModeloStatus(id: string, ativo: boolean) {
     .update({ ativo })
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
@@ -126,7 +126,12 @@ async function loadTermosAssinados(page = 1) {
     .order('data_assinatura', { ascending: false })
     .range(offset, offset + pageSize - 1);
 
-  if (error) throw error;
+  if (error) return {
+    termos: [],
+    total: 0,
+    page,
+    pageSize,
+  };
 
   return {
     termos: data || [],
@@ -156,7 +161,7 @@ export async function getTermoById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -187,7 +192,7 @@ export async function createTermo(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
@@ -212,7 +217,7 @@ export async function updateTermo(
     })
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
@@ -227,7 +232,7 @@ export async function revogaTermo(id: string) {
     .update({ status: 'revogado' })
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
@@ -251,7 +256,12 @@ async function loadConsentimentosLGPD(page = 1) {
     .order('data_consentimento', { ascending: false })
     .range(offset, offset + pageSize - 1);
 
-  if (error) throw error;
+  if (error) return {
+    consentimentos: [],
+    total: 0,
+    page,
+    pageSize,
+  };
 
   return {
     consentimentos: data || [],
@@ -280,7 +290,7 @@ export async function getConsentimentoById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -307,7 +317,7 @@ export async function createConsentimento(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
@@ -322,7 +332,7 @@ export async function revogaConsentimento(id: string) {
     .update({ status: 'revogado', data_revogacao: new Date().toISOString() })
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
@@ -348,7 +358,12 @@ async function loadServicosVoluntarios(page = 1) {
     .order('data_inicio', { ascending: false })
     .range(offset, offset + pageSize - 1);
 
-  if (error) throw error;
+  if (error) return {
+    servicos: [],
+    total: 0,
+    page,
+    pageSize,
+  };
 
   return {
     servicos: data || [],
@@ -378,7 +393,7 @@ export async function getServicoById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -411,7 +426,7 @@ export async function createServico(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
@@ -437,7 +452,7 @@ export async function updateServico(
     })
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
@@ -452,7 +467,7 @@ export async function encerraServico(id: string, data_fim: string) {
     .update({ status: 'finalizado', data_fim })
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
@@ -468,7 +483,7 @@ export async function getPessoasDisponiveis() {
     .eq('status', 'ativo')
     .order('nome');
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }
@@ -482,7 +497,7 @@ export async function getDepartamentosDisponiveis() {
     .eq('ativo', true)
     .order('nome');
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }

@@ -42,7 +42,7 @@ async function handleSubmit(formData: FormData) {
     redirect('/admin/instituicao');
   } catch (error) {
     console.error('Erro ao atualizar instituição:', error);
-    throw error;
+    return;
   }
 }
 

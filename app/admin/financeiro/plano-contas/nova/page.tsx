@@ -19,7 +19,7 @@ async function handleSubmit(formData: FormData) {
     redirect(`/admin/financeiro/plano-contas/${conta.id}`);
   } catch (error) {
     console.error('Erro ao criar conta:', error);
-    throw error;
+    return;
   }
 }
 

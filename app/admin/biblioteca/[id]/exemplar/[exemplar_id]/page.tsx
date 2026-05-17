@@ -21,7 +21,7 @@ async function handleUpdate(formData: FormData, obraId: string, exemplarId: stri
     redirect(`/admin/biblioteca/${obraId}`);
   } catch (error) {
     console.error('Erro ao atualizar exemplar:', error);
-    throw error;
+    return;
   }
 }
 

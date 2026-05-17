@@ -24,7 +24,7 @@ async function handleSubmit(formData: FormData) {
     redirect(`/admin/biblioteca/${obra.id}`);
   } catch (error) {
     console.error('Erro ao criar obra:', error);
-    throw error;
+    return;
   }
 }
 

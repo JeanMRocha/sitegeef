@@ -11,7 +11,7 @@ export async function getTurmas() {
     .select('*')
     .order('nome');
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }
@@ -25,7 +25,7 @@ export async function getTurmaById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -45,7 +45,7 @@ export async function createTurma(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -68,7 +68,7 @@ export async function updateTurma(
     .update(formData)
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return [];
 
   return { success: true };
 }
@@ -93,7 +93,7 @@ export async function getCriancas(turma_id?: string) {
 
   const { data, error } = await query;
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }
@@ -112,7 +112,7 @@ export async function getCriancaById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -132,7 +132,7 @@ export async function createCrianca(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -153,7 +153,7 @@ export async function updateCrianca(
     .update(formData)
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return [];
 
   return { success: true };
 }
@@ -166,7 +166,7 @@ export async function deleteCrianca(id: string) {
     .delete()
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   return { success: true };
 }
@@ -181,7 +181,7 @@ export async function getAulas(turma_id: string) {
     .eq('turma_id', turma_id)
     .order('data', { ascending: false });
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }
@@ -195,7 +195,7 @@ export async function getAulaById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -216,7 +216,7 @@ export async function createAula(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -238,7 +238,7 @@ export async function updateAula(
     .update(formData)
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   return { success: true };
 }
@@ -251,7 +251,7 @@ export async function deleteAula(id: string) {
     .delete()
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   return { success: true };
 }
@@ -269,7 +269,7 @@ export async function getEvangelizadores(turma_id: string) {
     .eq('turma_id', turma_id)
     .order('pessoa.nome');
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }
@@ -283,7 +283,7 @@ export async function addEvangelizador(turma_id: string, pessoa_id: string) {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -296,7 +296,7 @@ export async function removeEvangelizador(id: string) {
     .delete()
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return null;
 
   return { success: true };
 }
@@ -310,7 +310,7 @@ export async function getPessoasDisponiveis() {
     .eq('status', 'ativo')
     .order('nome');
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }

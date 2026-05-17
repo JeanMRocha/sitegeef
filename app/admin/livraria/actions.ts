@@ -21,7 +21,12 @@ export async function getProdutos(page = 1, search?: string) {
     .order('titulo')
     .range(offset, offset + pageSize - 1);
 
-  if (error) throw error;
+  if (error) return {
+    produtos: [],
+    total: 0,
+    page,
+    pageSize,
+  };
 
   return {
     produtos: data || [],
@@ -45,7 +50,7 @@ export async function getProdutoById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   invalidateUserAreaCache();
   return data;
@@ -82,7 +87,7 @@ export async function createProduto(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -110,7 +115,7 @@ export async function updateProduto(
     })
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   invalidateUserAreaCache();
   return { success: true };
@@ -124,7 +129,7 @@ export async function toggleProdutoStatus(id: string, ativo: boolean) {
     .update({ ativo })
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   invalidateUserAreaCache();
   return { success: true };
@@ -163,7 +168,7 @@ export async function registrarMovimento(formData: {
     .select()
     .single();
 
-  if (movimentoError) throw movimentoError;
+  if (movimentoError) return null;
 
   // Update produto estoque
   const { data: produto } = await supabase
@@ -173,7 +178,7 @@ export async function registrarMovimento(formData: {
     .single();
 
   if (!produto) {
-    throw new Error('Produto não encontrado');
+    return null;
   }
 
   let novoEstoque = produto.qtd_estoque;
@@ -189,7 +194,7 @@ export async function registrarMovimento(formData: {
     .update({ qtd_estoque: novoEstoque })
     .eq('id', formData.produto_id);
 
-  if (updateError) throw updateError;
+  if (updateError) return null;
 
   invalidateUserAreaCache();
   return movimento;
@@ -204,7 +209,7 @@ export async function getPessoasDisponiveis() {
     .eq('status', 'ativo')
     .order('nome');
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }
@@ -228,7 +233,7 @@ export async function getRelatorioVendas(mes: number, ano: number) {
     .lte('criado_em', `${dataFim}T23:59:59`)
     .order('criado_em', { ascending: false });
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }

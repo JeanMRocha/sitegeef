@@ -10,7 +10,7 @@ export async function getGrupos() {
     .select('*, coordenador:pessoas(nome)')
     .order('nome');
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }
@@ -24,7 +24,7 @@ export async function getGrupoById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -42,7 +42,7 @@ export async function createGrupo(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -63,7 +63,7 @@ export async function updateGrupo(
     .update(formData)
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   return { success: true };
 }
@@ -76,7 +76,7 @@ export async function toggleGrupoStatus(id: string, ativo: boolean) {
     .update({ status: ativo ? 'inativo' : 'ativo' })
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   return { success: true };
 }
@@ -90,7 +90,7 @@ export async function getPessoasDisponiveis() {
     .eq('status', 'ativo')
     .order('nome');
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }

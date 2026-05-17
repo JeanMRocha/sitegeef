@@ -20,7 +20,7 @@ async function handleSubmit(id: string, formData: FormData) {
     redirect(`/admin/estudos/cursos/${id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 

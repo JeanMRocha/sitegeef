@@ -18,7 +18,7 @@ async function handleSubmit(formData: FormData) {
     redirect(`/admin/mediunidade/${grupo.id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 

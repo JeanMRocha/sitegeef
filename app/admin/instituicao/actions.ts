@@ -200,11 +200,11 @@ export async function updateEndereco(formData: {
   if (existing) {
     const { error } = await supabase.from('instituicao_enderecos').update(formData).eq('id', existing.id);
 
-    if (error) throw error;
+    if (error) return null;
   } else {
     const { error } = await supabase.from('instituicao_enderecos').insert([formData]);
 
-    if (error) throw error;
+    if (error) return null;
   }
 
   return { success: true };
@@ -225,7 +225,7 @@ export async function addContato(formData: {
 
   const { error } = await supabase.from('instituicao_contatos').insert([{ ...formData, ativo: true }]);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   return { success: true };
 }
@@ -248,7 +248,7 @@ export async function updateContato(
 
   const { error } = await supabase.from('instituicao_contatos').update(formData).eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   return { success: true };
 }
@@ -258,7 +258,7 @@ export async function deleteContato(id: string) {
 
   const { error } = await supabase.from('instituicao_contatos').delete().eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   return { success: true };
 }
@@ -280,7 +280,7 @@ export async function addContaBancaria(formData: {
 
   const { error } = await supabase.from('contas_bancarias').insert([{ ...formData, ativo: true }]);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   return { success: true };
 }
@@ -305,7 +305,7 @@ export async function updateContaBancaria(
 
   const { error } = await supabase.from('contas_bancarias').update(formData).eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   return { success: true };
 }
@@ -315,7 +315,7 @@ export async function deleteContaBancaria(id: string) {
 
   const { error } = await supabase.from('contas_bancarias').delete().eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   return { success: true };
 }

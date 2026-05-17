@@ -26,7 +26,7 @@ async function handleSubmit(formData: FormData) {
     redirect(`/admin/financeiro/lancamentos/${movimento.id}`);
   } catch (error) {
     console.error('Erro ao criar lançamento:', error);
-    throw error;
+    return;
   }
 }
 

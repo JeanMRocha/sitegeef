@@ -15,7 +15,7 @@ async function handleMarcarLida(id: string) {
     redirect(`/admin/notificacoes/${id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 
@@ -27,7 +27,7 @@ async function handleDeletar(id: string) {
     redirect('/admin/notificacoes');
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 

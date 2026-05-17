@@ -20,7 +20,7 @@ async function handleSubmitGrupo(id: string, formData: FormData) {
     redirect(`/admin/mediunidade/${id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 
@@ -38,7 +38,7 @@ async function handleAdicionarMembro(id: string, formData: FormData) {
     redirect(`/admin/mediunidade/${id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 
@@ -55,7 +55,7 @@ async function handleCriarReuniao(id: string, formData: FormData) {
     redirect(`/admin/mediunidade/${id}`);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 
@@ -67,7 +67,7 @@ async function handleRemoverMembro(id: string) {
     redirect(new URL(document.referrer).pathname);
   } catch (error) {
     console.error('Erro:', error);
-    throw error;
+    return;
   }
 }
 

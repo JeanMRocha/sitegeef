@@ -19,7 +19,7 @@ async function handleUpdate(id: string, formData: FormData) {
     redirect(`/admin/biblioteca/emprestimos/${id}`);
   } catch (error) {
     console.error('Erro ao atualizar empréstimo:', error);
-    throw error;
+    return;
   }
 }
 
@@ -31,7 +31,7 @@ async function handleDevolver(id: string) {
     redirect('/admin/biblioteca/emprestimos');
   } catch (error) {
     console.error('Erro ao devolver exemplar:', error);
-    throw error;
+    return;
   }
 }
 

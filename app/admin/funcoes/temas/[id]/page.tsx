@@ -19,7 +19,7 @@ async function handleUpdate(id: string, formData: FormData) {
     redirect(`/admin/funcoes/temas/${id}`);
   } catch (error) {
     console.error('Erro ao atualizar tema:', error);
-    throw error;
+    return;
   }
 }
 
@@ -31,7 +31,7 @@ async function handleToggleStatus(id: string, novoStatus: boolean) {
     redirect(`/admin/funcoes/temas/${id}`);
   } catch (error) {
     console.error('Erro ao atualizar status:', error);
-    throw error;
+    return;
   }
 }
 

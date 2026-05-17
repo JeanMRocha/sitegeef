@@ -25,7 +25,12 @@ async function loadEmprestimos(page = 1) {
     .order('prazo_devolucao', { ascending: true })
     .range(offset, offset + pageSize - 1);
 
-  if (error) throw error;
+  if (error) return {
+    emprestimos: [],
+    total: 0,
+    page,
+    pageSize,
+  };
 
   return {
     emprestimos: data || [],
@@ -55,7 +60,7 @@ export async function getEmprestimoById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -83,7 +88,7 @@ export async function createEmprestimo(formData: {
     .select()
     .single();
 
-  if (emprestimoError) throw emprestimoError;
+  if (emprestimoError) return null;
 
   // Update exemplar status to emprestado
   const { error: exemplarError } = await supabase
@@ -91,7 +96,7 @@ export async function createEmprestimo(formData: {
     .update({ situacao: 'emprestado' })
     .eq('id', formData.exemplar_id);
 
-  if (exemplarError) throw exemplarError;
+  if (exemplarError) return null;
 
   invalidateAdminBibliotecaCache();
   invalidateUserAreaCache();
@@ -114,7 +119,7 @@ export async function updateEmprestimo(
     })
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   invalidateAdminBibliotecaCache();
   invalidateUserAreaCache();
@@ -131,7 +136,7 @@ export async function devolverEmprestimo(id: string) {
     .eq('id', id)
     .single();
 
-  if (emprestimoError) throw emprestimoError;
+  if (emprestimoError) return { success: false };
 
   // Update emprestimo status
   const { error: updateError } = await supabase
@@ -142,7 +147,7 @@ export async function devolverEmprestimo(id: string) {
     })
     .eq('id', id);
 
-  if (updateError) throw updateError;
+  if (updateError) return { success: false };
 
   // Check if there are reservas for this exemplar
   const { data: exemplar, error: exemplarError } = await supabase
@@ -156,7 +161,7 @@ export async function devolverEmprestimo(id: string) {
     .eq('id', emprestimo.exemplar_id)
     .single();
 
-  if (exemplarError) throw exemplarError;
+  if (exemplarError) return { success: false };
 
   if (exemplar.reservas && exemplar.reservas.length > 0) {
     // Set exemplar as reserved
@@ -186,7 +191,7 @@ export async function getPessoasDisponiveis() {
     .eq('status', 'ativo')
     .order('nome');
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }
@@ -205,7 +210,7 @@ export async function getExemplaresdisponveisParaEmprestimo() {
     .eq('situacao', 'disponivel')
     .order('codigo');
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }
@@ -229,7 +234,12 @@ async function loadHistoricoEmprestimos(page = 1) {
     .order('data_devolucao', { ascending: false })
     .range(offset, offset + pageSize - 1);
 
-  if (error) throw error;
+  if (error) return {
+    historico: [],
+    total: 0,
+    page,
+    pageSize,
+  };
 
   return {
     historico: data || [],

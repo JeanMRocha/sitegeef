@@ -14,7 +14,7 @@ export async function getGrupos() {
     `)
     .order('nome');
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }
@@ -31,7 +31,7 @@ export async function getGrupoById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -48,7 +48,7 @@ export async function createGrupo(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -68,7 +68,7 @@ export async function updateGrupo(
     .update(formData)
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return [];
 
   return { success: true };
 }
@@ -86,7 +86,7 @@ export async function getGrupoMembros(grupo_id: string) {
     .eq('grupo_id', grupo_id)
     .order('desde', { ascending: false });
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }
@@ -105,7 +105,7 @@ export async function adicionarMembro(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -123,7 +123,7 @@ export async function updateMembroStatus(
     .update(formData)
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return null;
 
   return { success: true };
 }
@@ -136,7 +136,7 @@ export async function removerMembro(id: string) {
     .delete()
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return null;
 
   return { success: true };
 }
@@ -151,7 +151,7 @@ export async function getReunioes(grupo_id: string) {
     .eq('grupo_id', grupo_id)
     .order('data', { ascending: false });
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }
@@ -165,7 +165,7 @@ export async function getReuniaoById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -183,7 +183,7 @@ export async function criarReuniao(formData: {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -201,7 +201,7 @@ export async function atualizarReuniao(
     .update(formData)
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return null;
 
   return { success: true };
 }
@@ -215,7 +215,7 @@ export async function getPessoasDisponiveis() {
     .eq('status', 'ativo')
     .order('nome');
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }

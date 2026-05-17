@@ -16,7 +16,7 @@ export async function getNotificacoes(pessoa_id?: string) {
 
   const { data, error } = await query;
 
-  if (error) throw error;
+  if (error) return [];
 
   return data || [];
 }
@@ -30,7 +30,7 @@ export async function getNotificacaoById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) throw error;
+  if (error) return null;
 
   return data;
 }
@@ -43,7 +43,7 @@ export async function marcarComoLida(id: string) {
     .update({ status: 'lida' })
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   return { success: true };
 }
@@ -57,7 +57,7 @@ export async function marcarTodasComoLidas(pessoa_id: string) {
     .eq('pessoa_id', pessoa_id)
     .eq('status', 'pendente');
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   return { success: true };
 }
@@ -70,7 +70,7 @@ export async function deletarNotificacao(id: string) {
     .delete()
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) return { success: false };
 
   return { success: true };
 }

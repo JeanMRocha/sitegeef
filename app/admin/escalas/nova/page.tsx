@@ -18,7 +18,7 @@ async function handleSubmit(formData: FormData) {
     redirect(`/admin/escalas/${escala.id}`);
   } catch (error) {
     console.error('Erro ao criar escala:', error);
-    throw error;
+    return;
   }
 }
 

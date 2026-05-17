@@ -22,7 +22,7 @@ async function handleSubmit(formData: FormData) {
     redirect(`/admin/documentos/termos/${termo.id}`);
   } catch (error) {
     console.error('Erro ao criar termo:', error);
-    throw error;
+    return;
   }
 }
 

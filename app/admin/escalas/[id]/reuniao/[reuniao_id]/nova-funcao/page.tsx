@@ -20,7 +20,7 @@ async function handleSubmit(formData: FormData, escalaId: string, reuniaoId: str
     redirect(`/admin/escalas/${escalaId}`);
   } catch (error) {
     console.error('Erro ao adicionar função:', error);
-    throw error;
+    return;
   }
 }
 
