@@ -22,7 +22,7 @@ const PERFIS = [
   'coord_apse',
   'comunicacao',
   'patrimonio',
-  'tarafeiro',
+  'tarefeiro',
   'leitor',
   'voluntario',
   'publico',

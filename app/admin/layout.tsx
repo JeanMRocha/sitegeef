@@ -24,6 +24,9 @@ export default async function AdminLayout({
     redirect('/login?next=/admin');
   }
 
+  const appMetadata = (user.app_metadata ?? {}) as Record<string, unknown>;
+  const isAdminViaAuth = appMetadata.site_role === 'administrador';
+
   // Verificar se o usuário tem acesso ao admin
   const { data: usuarioSistema } = await supabase
     .from('usuarios_sistema')
@@ -31,7 +34,7 @@ export default async function AdminLayout({
     .eq('id', user.id)
     .single();
 
-  if (!usuarioSistema) {
+  if (!usuarioSistema && !isAdminViaAuth) {
     return (
       <div className="admin-access-denied">
         <div style={{ textAlign: 'center', padding: '2rem' }}>
@@ -47,11 +50,24 @@ export default async function AdminLayout({
     );
   }
 
+  const resolvedUsuarioSistema = usuarioSistema ?? {
+    perfil: 'administrador',
+    pode_mediunidade: appMetadata.pode_mediunidade === true,
+    pode_escalas: appMetadata.pode_escalas === true,
+    pode_biblioteca: appMetadata.pode_biblioteca === true,
+    pode_livraria: appMetadata.pode_livraria === true,
+    pode_financeiro: appMetadata.pode_financeiro === true,
+    pode_pessoas: appMetadata.pode_pessoas === true,
+    pode_publicar: appMetadata.pode_publicar === true,
+    pode_atendimento: appMetadata.pode_atendimento === true,
+    pode_apse: appMetadata.pode_apse === true,
+  };
+
   return (
     <div className="admin-layout">
-      <AdminHeader user={user} usuarioSistema={usuarioSistema} />
+      <AdminHeader user={user} usuarioSistema={resolvedUsuarioSistema} />
       <div className="admin-container">
-        <AdminSidebar podeMediunidade={usuarioSistema.pode_mediunidade} />
+        <AdminSidebar podeMediunidade={resolvedUsuarioSistema.pode_mediunidade} />
         <main className="admin-main">
           {children}
         </main>

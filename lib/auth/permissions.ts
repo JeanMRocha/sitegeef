@@ -25,7 +25,27 @@ export async function getUserPermissions() {
     .eq('id', user.id)
     .maybeSingle();
 
-  return usuarioSistema;
+  if (usuarioSistema) {
+    return usuarioSistema;
+  }
+
+  const appMetadata = (user.app_metadata ?? {}) as Record<string, unknown>;
+  const siteRole = typeof appMetadata.site_role === 'string' ? appMetadata.site_role : null;
+
+  return {
+    id: user.id,
+    pessoa_id: null,
+    perfil: siteRole ?? 'publico',
+    pode_escalas: appMetadata.pode_escalas === true,
+    pode_biblioteca: appMetadata.pode_biblioteca === true,
+    pode_livraria: appMetadata.pode_livraria === true,
+    pode_financeiro: appMetadata.pode_financeiro === true,
+    pode_pessoas: appMetadata.pode_pessoas === true,
+    pode_publicar: appMetadata.pode_publicar === true,
+    pode_mediunidade: appMetadata.pode_mediunidade === true,
+    pode_atendimento: appMetadata.pode_atendimento === true,
+    pode_apse: appMetadata.pode_apse === true,
+  };
 }
 
 export async function requirePermission(permission: PermissionFlag, redirectPath = '/admin') {
