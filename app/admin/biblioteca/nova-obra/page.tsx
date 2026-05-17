@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createObra } from '../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Nova Obra - Admin GEEF',
@@ -21,9 +22,10 @@ async function handleSubmit(formData: FormData) {
       publico: (formData.get('publico') as string) || 'adulto',
     });
 
-    redirect(`/admin/biblioteca/${obra.id}`);
+    redirect(buildFlashNoticeUrl(`/admin/biblioteca/${obra.id}`, { variant: 'success', message: 'Obra criada.' }));
   } catch (error) {
     console.error('Erro ao criar obra:', error);
+    redirect(buildFlashNoticeUrl('/admin/biblioteca', { variant: 'error', message: 'Não foi possível criar a obra.' }));
     return;
   }
 }

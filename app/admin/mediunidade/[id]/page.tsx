@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getGrupoById, updateGrupo, getGrupoMembros, adicionarMembro, updateMembroStatus, removerMembro, getReunioes, criarReuniao, getPessoasDisponiveis } from '../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Grupo Mediúnico - Admin GEEF',
@@ -17,9 +18,10 @@ async function handleSubmitGrupo(id: string, formData: FormData) {
       status: (formData.get('status') as string) || undefined,
     });
 
-    redirect(`/admin/mediunidade/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/mediunidade/${id}`, { variant: 'success', message: 'Grupo salvo.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/mediunidade/${id}`, { variant: 'error', message: 'Não foi possível salvar o grupo.' }));
     return;
   }
 }
@@ -35,9 +37,10 @@ async function handleAdicionarMembro(id: string, formData: FormData) {
       desde: new Date().toISOString().split('T')[0],
     });
 
-    redirect(`/admin/mediunidade/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/mediunidade/${id}`, { variant: 'success', message: 'Membro adicionado.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/mediunidade/${id}`, { variant: 'error', message: 'Não foi possível adicionar o membro.' }));
     return;
   }
 }
@@ -52,21 +55,23 @@ async function handleCriarReuniao(id: string, formData: FormData) {
       observacoes: (formData.get('observacoes') as string) || undefined,
     });
 
-    redirect(`/admin/mediunidade/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/mediunidade/${id}`, { variant: 'success', message: 'Reunião registrada.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/mediunidade/${id}`, { variant: 'error', message: 'Não foi possível registrar a reunião.' }));
     return;
   }
 }
 
-async function handleRemoverMembro(id: string) {
+async function handleRemoverMembro(grupoId: string, id: string) {
   'use server';
 
   try {
     await removerMembro(id);
-    redirect(new URL(document.referrer).pathname);
+    redirect(buildFlashNoticeUrl(`/admin/mediunidade/${grupoId}`, { variant: 'success', message: 'Membro removido.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/mediunidade/${grupoId}`, { variant: 'error', message: 'Não foi possível remover o membro.' }));
     return;
   }
 }
@@ -247,7 +252,7 @@ async function GrupoContent({ id }: { id: string }) {
                       {membro.desde ? new Date(membro.desde).toLocaleDateString('pt-BR') : '—'}
                     </td>
                     <td>
-                      <form action={() => handleRemoverMembro(membro.id)} style={{ display: 'inline' }}>
+                      <form action={() => handleRemoverMembro(id, membro.id)} style={{ display: 'inline' }}>
                         <button type="submit" className="admin-btn admin-btn-small" style={{ backgroundColor: '#ef4444', color: '#fff', border: 'none' }}>
                           ✕ Remover
                         </button>

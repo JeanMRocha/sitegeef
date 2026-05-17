@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getNotificacaoById, marcarComoLida, deletarNotificacao } from '../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Notificação - Admin GEEF',
@@ -12,9 +13,10 @@ async function handleMarcarLida(id: string) {
 
   try {
     await marcarComoLida(id);
-    redirect(`/admin/notificacoes/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/notificacoes/${id}`, { variant: 'success', message: 'Notificação marcada como lida.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/notificacoes/${id}`, { variant: 'error', message: 'Não foi possível atualizar a notificação.' }));
     return;
   }
 }
@@ -24,9 +26,10 @@ async function handleDeletar(id: string) {
 
   try {
     await deletarNotificacao(id);
-    redirect('/admin/notificacoes');
+    redirect(buildFlashNoticeUrl('/admin/notificacoes', { variant: 'success', message: 'Notificação removida.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl('/admin/notificacoes', { variant: 'error', message: 'Não foi possível remover a notificação.' }));
     return;
   }
 }

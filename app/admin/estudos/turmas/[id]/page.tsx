@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getTurmaById, updateTurma, getFrequencias, registrarFrequencia, updateFrequencia, getPessoasDisponiveis } from '../../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Turma - Admin GEEF',
@@ -19,9 +20,10 @@ async function handleSubmitTurma(id: string, formData: FormData) {
       status: (formData.get('status') as string) || undefined,
     });
 
-    redirect(`/admin/estudos/turmas/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/estudos/turmas/${id}`, { variant: 'success', message: 'Turma salva.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/estudos/turmas/${id}`, { variant: 'error', message: 'Não foi possível salvar a turma.' }));
     return;
   }
 }
@@ -37,21 +39,23 @@ async function handleRegistrarFrequencia(id: string, formData: FormData) {
       presente: formData.get('presente') === 'on',
     });
 
-    redirect(`/admin/estudos/turmas/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/estudos/turmas/${id}`, { variant: 'success', message: 'Frequência registrada.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/estudos/turmas/${id}`, { variant: 'error', message: 'Não foi possível registrar a frequência.' }));
     return;
   }
 }
 
-async function handleToggleFrequencia(id: string, presente: boolean) {
+async function handleToggleFrequencia(turmaId: string, id: string, presente: boolean) {
   'use server';
 
   try {
     await updateFrequencia(id, !presente);
-    redirect(new URL(document.referrer).pathname);
+    redirect(buildFlashNoticeUrl(`/admin/estudos/turmas/${turmaId}`, { variant: 'success', message: 'Frequência atualizada.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/estudos/turmas/${turmaId}`, { variant: 'error', message: 'Não foi possível atualizar a frequência.' }));
     return;
   }
 }
@@ -253,7 +257,7 @@ async function TurmaContent({ id }: { id: string }) {
                       </span>
                     </td>
                     <td>
-                      <form action={() => handleToggleFrequencia(freq.id, freq.presente)} style={{ display: 'inline' }}>
+                      <form action={() => handleToggleFrequencia(id, freq.id, freq.presente)} style={{ display: 'inline' }}>
                         <button type="submit" className="admin-btn admin-btn-small">
                           🔄 Alterar
                         </button>

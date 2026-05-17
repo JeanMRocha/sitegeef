@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getAssembleiaById, updateAssembleia } from '../../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Assembleia - Admin GEEF',
@@ -18,9 +19,10 @@ async function handleSubmit(id: string, formData: FormData) {
       status: (formData.get('status') as string) || undefined,
     });
 
-    redirect(`/admin/governanca/assembleias/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/governanca/assembleias/${id}`, { variant: 'success', message: 'Assembleia salva.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/governanca/assembleias/${id}`, { variant: 'error', message: 'Não foi possível salvar a assembleia.' }));
     return;
   }
 }

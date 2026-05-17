@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getContaById, updateConta, toggleContaStatus } from '../../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Conta - Admin GEEF',
@@ -17,9 +18,10 @@ async function handleSubmit(id: string, formData: FormData) {
       tipo: formData.get('tipo') as string,
     });
 
-    redirect(`/admin/financeiro/plano-contas/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/financeiro/plano-contas/${id}`, { variant: 'success', message: 'Conta salva.' }));
   } catch (error) {
     console.error('Erro ao atualizar conta:', error);
+    redirect(buildFlashNoticeUrl(`/admin/financeiro/plano-contas/${id}`, { variant: 'error', message: 'Não foi possível salvar a conta.' }));
     return;
   }
 }
@@ -29,9 +31,10 @@ async function handleToggle(id: string, ativo: boolean) {
 
   try {
     await toggleContaStatus(id, ativo);
-    redirect(`/admin/financeiro/plano-contas/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/financeiro/plano-contas/${id}`, { variant: 'success', message: 'Status da conta atualizado.' }));
   } catch (error) {
     console.error('Erro ao alternar status:', error);
+    redirect(buildFlashNoticeUrl(`/admin/financeiro/plano-contas/${id}`, { variant: 'error', message: 'Não foi possível alterar o status.' }));
     return;
   }
 }

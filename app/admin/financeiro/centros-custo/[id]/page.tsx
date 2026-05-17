@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getCentroCustoById, updateCentroCusto, toggleCentroCustoStatus } from '../../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Centro de Custo - Admin GEEF',
@@ -15,9 +16,10 @@ async function handleSubmit(id: string, formData: FormData) {
       nome: formData.get('nome') as string,
     });
 
-    redirect(`/admin/financeiro/centros-custo/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/financeiro/centros-custo/${id}`, { variant: 'success', message: 'Centro de custo salvo.' }));
   } catch (error) {
     console.error('Erro ao atualizar centro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/financeiro/centros-custo/${id}`, { variant: 'error', message: 'Não foi possível salvar o centro de custo.' }));
     return;
   }
 }
@@ -27,9 +29,10 @@ async function handleToggle(id: string, ativo: boolean) {
 
   try {
     await toggleCentroCustoStatus(id, ativo);
-    redirect(`/admin/financeiro/centros-custo/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/financeiro/centros-custo/${id}`, { variant: 'success', message: 'Status do centro atualizado.' }));
   } catch (error) {
     console.error('Erro ao alternar status:', error);
+    redirect(buildFlashNoticeUrl(`/admin/financeiro/centros-custo/${id}`, { variant: 'error', message: 'Não foi possível alterar o status.' }));
     return;
   }
 }

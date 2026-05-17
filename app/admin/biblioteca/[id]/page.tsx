@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getObraById, updateObra, toggleObraStatus, deleteExemplar } from '../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Editar Obra - Admin GEEF',
@@ -22,9 +23,10 @@ async function handleUpdate(id: string, formData: FormData) {
       publico: (formData.get('publico') as string) || undefined,
     });
 
-    redirect(`/admin/biblioteca/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/biblioteca/${id}`, { variant: 'success', message: 'Obra salva.' }));
   } catch (error) {
     console.error('Erro ao atualizar obra:', error);
+    redirect(buildFlashNoticeUrl(`/admin/biblioteca/${id}`, { variant: 'error', message: 'Não foi possível salvar a obra.' }));
     return;
   }
 }
@@ -34,9 +36,10 @@ async function handleToggleStatus(id: string, novoStatus: boolean) {
 
   try {
     await toggleObraStatus(id, novoStatus);
-    redirect(`/admin/biblioteca/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/biblioteca/${id}`, { variant: 'success', message: 'Status da obra atualizado.' }));
   } catch (error) {
     console.error('Erro ao atualizar status:', error);
+    redirect(buildFlashNoticeUrl(`/admin/biblioteca/${id}`, { variant: 'error', message: 'Não foi possível alterar o status.' }));
     return;
   }
 }
@@ -46,9 +49,10 @@ async function handleDeleteExemplar(obraId: string, exemplarId: string) {
 
   try {
     await deleteExemplar(exemplarId);
-    redirect(`/admin/biblioteca/${obraId}`);
+    redirect(buildFlashNoticeUrl(`/admin/biblioteca/${obraId}`, { variant: 'success', message: 'Exemplar removido.' }));
   } catch (error) {
     console.error('Erro ao deletar exemplar:', error);
+    redirect(buildFlashNoticeUrl(`/admin/biblioteca/${obraId}`, { variant: 'error', message: 'Não foi possível remover o exemplar.' }));
     return;
   }
 }

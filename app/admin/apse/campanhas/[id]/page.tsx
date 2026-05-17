@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getCampanhaById, updateCampanha } from '../../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Campanha - Admin GEEF',
@@ -20,9 +21,10 @@ async function handleSubmit(id: string, formData: FormData) {
       status: (formData.get('status') as string) || undefined,
     });
 
-    redirect(`/admin/apse/campanhas/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/apse/campanhas/${id}`, { variant: 'success', message: 'Campanha salva.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/apse/campanhas/${id}`, { variant: 'error', message: 'Não foi possível salvar a campanha.' }));
     return;
   }
 }

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getMovimentoById, updateMovimento, deleteMovimento, getPlanoContas, getCentrosCusto } from '../../actions';
 import { getPessoas } from '../../../pessoas/actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Lançamento - Admin GEEF',
@@ -24,9 +25,10 @@ async function handleSubmit(id: string, formData: FormData) {
       comprovante_url: (formData.get('comprovante_url') as string) || undefined,
     });
 
-    redirect(`/admin/financeiro/lancamentos/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/financeiro/lancamentos/${id}`, { variant: 'success', message: 'Lançamento salvo.' }));
   } catch (error) {
     console.error('Erro ao atualizar lançamento:', error);
+    redirect(buildFlashNoticeUrl(`/admin/financeiro/lancamentos/${id}`, { variant: 'error', message: 'Não foi possível salvar o lançamento.' }));
     return;
   }
 }
@@ -36,9 +38,10 @@ async function handleDelete(id: string) {
 
   try {
     await deleteMovimento(id);
-    redirect('/admin/financeiro/lancamentos');
+    redirect(buildFlashNoticeUrl('/admin/financeiro/lancamentos', { variant: 'success', message: 'Lançamento removido.' }));
   } catch (error) {
     console.error('Erro ao deletar lançamento:', error);
+    redirect(buildFlashNoticeUrl('/admin/financeiro/lancamentos', { variant: 'error', message: 'Não foi possível remover o lançamento.' }));
     return;
   }
 }

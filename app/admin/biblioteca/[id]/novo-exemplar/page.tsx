@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createExemplar, getObraById } from '../../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Novo Exemplar - Admin GEEF',
@@ -18,9 +19,10 @@ async function handleSubmit(formData: FormData, obraId: string) {
       origem: (formData.get('origem') as string) || undefined,
     });
 
-    redirect(`/admin/biblioteca/${obraId}`);
+    redirect(buildFlashNoticeUrl(`/admin/biblioteca/${obraId}`, { variant: 'success', message: 'Exemplar adicionado.' }));
   } catch (error) {
     console.error('Erro ao criar exemplar:', error);
+    redirect(buildFlashNoticeUrl(`/admin/biblioteca/${obraId}`, { variant: 'error', message: 'Não foi possível adicionar o exemplar.' }));
     return;
   }
 }

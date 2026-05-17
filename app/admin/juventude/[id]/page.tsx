@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getGrupoById, updateGrupo, toggleGrupoStatus, getPessoasDisponiveis } from '../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Grupo - Admin GEEF',
@@ -18,9 +19,10 @@ async function handleSubmit(id: string, formData: FormData) {
       status: formData.get('status') as string,
     });
 
-    redirect(`/admin/juventude/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/juventude/${id}`, { variant: 'success', message: 'Grupo salvo.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/juventude/${id}`, { variant: 'error', message: 'Não foi possível salvar o grupo.' }));
     return;
   }
 }
@@ -30,9 +32,10 @@ async function handleToggle(id: string, ativo: boolean) {
 
   try {
     await toggleGrupoStatus(id, ativo);
-    redirect(`/admin/juventude/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/juventude/${id}`, { variant: 'success', message: 'Status do grupo atualizado.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/juventude/${id}`, { variant: 'error', message: 'Não foi possível atualizar o status.' }));
     return;
   }
 }
