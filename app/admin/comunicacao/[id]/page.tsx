@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getPublicacaoById, updatePublicacao, deletePublicacao } from '../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Publicação - Admin GEEF',
@@ -18,9 +19,10 @@ async function handleSubmit(id: string, formData: FormData) {
       status: (formData.get('status') as string) || undefined,
     });
 
-    redirect(`/admin/comunicacao/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/comunicacao/${id}`, { variant: 'success', message: 'Publicação salva.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/comunicacao/${id}`, { variant: 'error', message: 'Não foi possível salvar a publicação.' }));
     return;
   }
 }
@@ -30,9 +32,10 @@ async function handleDelete(id: string) {
 
   try {
     await deletePublicacao(id);
-    redirect('/admin/comunicacao');
+    redirect(buildFlashNoticeUrl('/admin/comunicacao', { variant: 'success', message: 'Publicação excluída.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/comunicacao/${id}`, { variant: 'error', message: 'Não foi possível excluir a publicação.' }));
     return;
   }
 }

@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getReuniaoById, updateReuniao, deleteReuniao, getPessoasDisponiveis } from '../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Reunião Virtual - Admin GEEF',
@@ -21,9 +22,10 @@ async function handleSubmit(id: string, formData: FormData) {
       status: (formData.get('status') as string) || undefined,
     });
 
-    redirect(`/admin/reunioes-virtuais/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/reunioes-virtuais/${id}`, { variant: 'success', message: 'Reunião salva.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/reunioes-virtuais/${id}`, { variant: 'error', message: 'Não foi possível salvar a reunião.' }));
     return;
   }
 }
@@ -33,9 +35,10 @@ async function handleDelete(id: string) {
 
   try {
     await deleteReuniao(id);
-    redirect('/admin/reunioes-virtuais');
+    redirect(buildFlashNoticeUrl('/admin/reunioes-virtuais', { variant: 'success', message: 'Reunião excluída.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/reunioes-virtuais/${id}`, { variant: 'error', message: 'Não foi possível excluir a reunião.' }));
     return;
   }
 }

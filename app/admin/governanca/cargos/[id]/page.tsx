@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getCargoById, updateCargo } from '../../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Cargo - Admin GEEF',
@@ -17,9 +18,10 @@ async function handleSubmit(id: string, formData: FormData) {
       nivel: (formData.get('nivel') as string) || undefined,
     });
 
-    redirect(`/admin/governanca/cargos/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/governanca/cargos/${id}`, { variant: 'success', message: 'Cargo salvo.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/governanca/cargos/${id}`, { variant: 'error', message: 'Não foi possível salvar o cargo.' }));
     return;
   }
 }

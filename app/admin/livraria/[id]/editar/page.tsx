@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getProdutoById, updateProduto } from '../../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Editar Produto - Admin GEEF',
@@ -22,9 +23,10 @@ async function handleSubmit(id: string, formData: FormData) {
       valor_venda: formData.get('valor_venda') ? parseFloat((formData.get('valor_venda') as string)) : undefined,
     });
 
-    redirect(`/admin/livraria/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/livraria/${id}`, { variant: 'success', message: 'Produto salvo.' }));
   } catch (error) {
     console.error('Erro ao atualizar produto:', error);
+    redirect(buildFlashNoticeUrl(`/admin/livraria/${id}`, { variant: 'error', message: 'Não foi possível salvar o produto.' }));
     return;
   }
 }

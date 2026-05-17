@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getDepartamentoById, updateDepartamento, addMembro, removeMembro, getPessoasDisponiveis, toggleDepartamentoStatus } from '../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Editar Departamento - Admin GEEF',
@@ -18,9 +19,10 @@ async function handleUpdate(deptId: string, formData: FormData) {
       vice_id: (formData.get('vice_id') as string) || undefined,
     });
 
-    redirect(`/admin/departamentos/${deptId}`);
+    redirect(buildFlashNoticeUrl(`/admin/departamentos/${deptId}`, { variant: 'success', message: 'Departamento salvo.' }));
   } catch (error) {
     void error;
+    redirect(buildFlashNoticeUrl(`/admin/departamentos/${deptId}`, { variant: 'error', message: 'Não foi possível salvar o departamento.' }));
     return;
   }
 }
@@ -36,9 +38,10 @@ async function handleAddMembro(deptId: string, formData: FormData) {
       (formData.get('desde') as string) || undefined
     );
 
-    redirect(`/admin/departamentos/${deptId}`);
+    redirect(buildFlashNoticeUrl(`/admin/departamentos/${deptId}`, { variant: 'success', message: 'Membro adicionado.' }));
   } catch (error) {
     void error;
+    redirect(buildFlashNoticeUrl(`/admin/departamentos/${deptId}`, { variant: 'error', message: 'Não foi possível adicionar o membro.' }));
     return;
   }
 }
@@ -48,9 +51,10 @@ async function handleRemoveMembro(membroId: string, deptId: string) {
 
   try {
     await removeMembro(membroId);
-    redirect(`/admin/departamentos/${deptId}`);
+    redirect(buildFlashNoticeUrl(`/admin/departamentos/${deptId}`, { variant: 'success', message: 'Membro removido.' }));
   } catch (error) {
     void error;
+    redirect(buildFlashNoticeUrl(`/admin/departamentos/${deptId}`, { variant: 'error', message: 'Não foi possível remover o membro.' }));
     return;
   }
 }

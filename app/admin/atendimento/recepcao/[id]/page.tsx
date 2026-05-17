@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getRecepcaoById, updateRecepcao, deleteRecepcao } from '../../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Atendimento Recepção - Admin GEEF',
@@ -19,9 +20,10 @@ async function handleSubmit(id: string, formData: FormData) {
       observacoes: (formData.get('observacoes') as string) || undefined,
     });
 
-    redirect(`/admin/atendimento/recepcao/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/atendimento/recepcao/${id}`, { variant: 'success', message: 'Atendimento salvo.' }));
   } catch (error) {
     console.error('Erro ao atualizar:', error);
+    redirect(buildFlashNoticeUrl(`/admin/atendimento/recepcao/${id}`, { variant: 'error', message: 'Não foi possível salvar o atendimento.' }));
     return;
   }
 }
@@ -31,9 +33,10 @@ async function handleDelete(id: string) {
 
   try {
     await deleteRecepcao(id);
-    redirect('/admin/atendimento/recepcao');
+    redirect(buildFlashNoticeUrl('/admin/atendimento/recepcao', { variant: 'success', message: 'Atendimento excluído.' }));
   } catch (error) {
     console.error('Erro ao deletar:', error);
+    redirect(buildFlashNoticeUrl(`/admin/atendimento/recepcao/${id}`, { variant: 'error', message: 'Não foi possível excluir o atendimento.' }));
     return;
   }
 }

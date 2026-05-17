@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getPessoasSemLogin, grantLogin } from '../actions';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Novo Usuário - Admin GEEF',
@@ -64,9 +65,10 @@ async function handleSubmit(formData: FormData) {
 
     await grantLogin(userId, pessoaId, perfil, permissoes);
 
-    redirect('/admin/usuarios');
+    redirect(buildFlashNoticeUrl('/admin/usuarios', { variant: 'success', message: 'Usuário criado com sucesso.' }));
   } catch (error) {
     console.error('Erro ao criar usuário:', error);
+    redirect(buildFlashNoticeUrl('/admin/usuarios/novo', { variant: 'error', message: 'Não foi possível criar o usuário.' }));
     return;
   }
 }

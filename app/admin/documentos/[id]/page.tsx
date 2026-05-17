@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getModeloById, updateModelo, toggleModeloStatus } from '../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Editar Modelo de Documento - Admin GEEF',
@@ -18,9 +19,10 @@ async function handleUpdate(id: string, formData: FormData) {
       conteudo: (formData.get('conteudo') as string) || undefined,
     });
 
-    redirect(`/admin/documentos/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/documentos/${id}`, { variant: 'success', message: 'Documento salvo.' }));
   } catch (error) {
     console.error('Erro ao atualizar modelo:', error);
+    redirect(buildFlashNoticeUrl(`/admin/documentos/${id}`, { variant: 'error', message: 'Não foi possível salvar o documento.' }));
     return;
   }
 }
@@ -30,9 +32,10 @@ async function handleToggleStatus(id: string, novoStatus: boolean) {
 
   try {
     await toggleModeloStatus(id, novoStatus);
-    redirect(`/admin/documentos/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/documentos/${id}`, { variant: 'success', message: 'Status atualizado.' }));
   } catch (error) {
     console.error('Erro ao atualizar status:', error);
+    redirect(buildFlashNoticeUrl(`/admin/documentos/${id}`, { variant: 'error', message: 'Não foi possível atualizar o status.' }));
     return;
   }
 }

@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getMetaById, updateMeta, deleteMeta, getPessoasDisponiveis } from '../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Meta - Admin GEEF',
@@ -23,9 +24,10 @@ async function handleSubmit(id: string, formData: FormData) {
       status: (formData.get('status') as string) || undefined,
     });
 
-    redirect(`/admin/planejamento/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/planejamento/${id}`, { variant: 'success', message: 'Meta salva.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/planejamento/${id}`, { variant: 'error', message: 'Não foi possível salvar a meta.' }));
     return;
   }
 }
@@ -35,9 +37,10 @@ async function handleDelete(id: string) {
 
   try {
     await deleteMeta(id);
-    redirect('/admin/planejamento');
+    redirect(buildFlashNoticeUrl('/admin/planejamento', { variant: 'success', message: 'Meta excluída.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/planejamento/${id}`, { variant: 'error', message: 'Não foi possível excluir a meta.' }));
     return;
   }
 }

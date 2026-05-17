@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getUsuarioById, updateUsuario, revokeLogin } from '../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Editar Usuário - Admin GEEF',
@@ -45,9 +46,10 @@ async function handleUpdate(userId: string, formData: FormData) {
       pode_apse: formData.get('pode_apse') === 'on',
     });
 
-    redirect('/admin/usuarios');
+    redirect(buildFlashNoticeUrl('/admin/usuarios', { variant: 'success', message: 'Usuário atualizado.' }));
   } catch (error) {
     console.error('Erro ao atualizar usuário:', error);
+    redirect(buildFlashNoticeUrl(`/admin/usuarios/${userId}`, { variant: 'error', message: 'Não foi possível atualizar o usuário.' }));
     return;
   }
 }
@@ -57,9 +59,10 @@ async function handleRevoke(userId: string) {
 
   try {
     await revokeLogin(userId);
-    redirect('/admin/usuarios');
+    redirect(buildFlashNoticeUrl('/admin/usuarios', { variant: 'success', message: 'Login revogado.' }));
   } catch (error) {
     console.error('Erro ao remover login:', error);
+    redirect(buildFlashNoticeUrl(`/admin/usuarios/${userId}`, { variant: 'error', message: 'Não foi possível revogar o acesso.' }));
     return;
   }
 }

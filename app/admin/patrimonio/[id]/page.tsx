@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getBemById, updateBem, deleteBem, getPessoasDisponiveis } from '../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Bem - Admin GEEF',
@@ -23,9 +24,10 @@ async function handleSubmit(id: string, formData: FormData) {
       status: (formData.get('status') as string) || undefined,
     });
 
-    redirect(`/admin/patrimonio/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/patrimonio/${id}`, { variant: 'success', message: 'Bem salvo.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/patrimonio/${id}`, { variant: 'error', message: 'Não foi possível salvar o bem.' }));
     return;
   }
 }
@@ -35,9 +37,10 @@ async function handleDelete(id: string) {
 
   try {
     await deleteBem(id);
-    redirect('/admin/patrimonio');
+    redirect(buildFlashNoticeUrl('/admin/patrimonio', { variant: 'success', message: 'Bem excluído.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/patrimonio/${id}`, { variant: 'error', message: 'Não foi possível excluir o bem.' }));
     return;
   }
 }

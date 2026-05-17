@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getEmprestimoById, updateEmprestimo, devolverEmprestimo } from '../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Detalhes do Empréstimo - Admin GEEF',
@@ -16,9 +17,10 @@ async function handleUpdate(id: string, formData: FormData) {
       observacao: (formData.get('observacao') as string) || undefined,
     });
 
-    redirect(`/admin/biblioteca/emprestimos/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/biblioteca/emprestimos/${id}`, { variant: 'success', message: 'Empréstimo salvo.' }));
   } catch (error) {
     console.error('Erro ao atualizar empréstimo:', error);
+    redirect(buildFlashNoticeUrl(`/admin/biblioteca/emprestimos/${id}`, { variant: 'error', message: 'Não foi possível salvar o empréstimo.' }));
     return;
   }
 }
@@ -28,9 +30,10 @@ async function handleDevolver(id: string) {
 
   try {
     await devolverEmprestimo(id);
-    redirect('/admin/biblioteca/emprestimos');
+    redirect(buildFlashNoticeUrl('/admin/biblioteca/emprestimos', { variant: 'success', message: 'Devolução registrada.' }));
   } catch (error) {
     console.error('Erro ao devolver exemplar:', error);
+    redirect(buildFlashNoticeUrl(`/admin/biblioteca/emprestimos/${id}`, { variant: 'error', message: 'Não foi possível registrar a devolução.' }));
     return;
   }
 }

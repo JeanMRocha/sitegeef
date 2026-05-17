@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getDiretoriaById, updateDiretoria, getCargoOcupacoes, createCargoOcupacao, getPessoasDisponiveis, getCargos } from '../../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Diretoria - Admin GEEF',
@@ -19,9 +20,10 @@ async function handleSubmitDiretoria(id: string, formData: FormData) {
       observacoes: (formData.get('observacoes') as string) || undefined,
     });
 
-    redirect(`/admin/governanca/diretorias/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/governanca/diretorias/${id}`, { variant: 'success', message: 'Diretoria salva.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/governanca/diretorias/${id}`, { variant: 'error', message: 'Não foi possível salvar a diretoria.' }));
     return;
   }
 }
@@ -37,9 +39,10 @@ async function handleAssignarCargo(id: string, formData: FormData) {
       data_inicio: (formData.get('data_inicio') as string) || undefined,
     });
 
-    redirect(`/admin/governanca/diretorias/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/governanca/diretorias/${id}`, { variant: 'success', message: 'Cargo atribuído.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/governanca/diretorias/${id}`, { variant: 'error', message: 'Não foi possível atribuir o cargo.' }));
     return;
   }
 }

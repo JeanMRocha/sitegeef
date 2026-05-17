@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getFuncaoById, updateFuncao, toggleFuncaoStatus } from '../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Editar Função - Admin GEEF',
@@ -16,9 +17,10 @@ async function handleUpdate(id: string, formData: FormData) {
       descricao: (formData.get('descricao') as string) || undefined,
     });
 
-    redirect(`/admin/funcoes/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/funcoes/${id}`, { variant: 'success', message: 'Função salva.' }));
   } catch (error) {
     console.error('Erro ao atualizar função:', error);
+    redirect(buildFlashNoticeUrl(`/admin/funcoes/${id}`, { variant: 'error', message: 'Não foi possível salvar a função.' }));
     return;
   }
 }
@@ -28,9 +30,10 @@ async function handleToggleStatus(id: string, novoStatus: boolean) {
 
   try {
     await toggleFuncaoStatus(id, novoStatus);
-    redirect(`/admin/funcoes/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/funcoes/${id}`, { variant: 'success', message: 'Status atualizado.' }));
   } catch (error) {
     console.error('Erro ao atualizar status:', error);
+    redirect(buildFlashNoticeUrl(`/admin/funcoes/${id}`, { variant: 'error', message: 'Não foi possível atualizar o status.' }));
     return;
   }
 }
