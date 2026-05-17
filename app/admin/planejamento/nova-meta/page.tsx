@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createMeta, getPessoasDisponiveis } from '../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Nova Meta - Admin GEEF',
@@ -20,9 +21,10 @@ async function handleSubmit(formData: FormData) {
       indicador: (formData.get('indicador') as string) || undefined,
     });
 
-    redirect(`/admin/planejamento/${meta.id}`);
+    redirect(buildFlashNoticeUrl(`/admin/planejamento/${meta.id}`, { variant: 'success', message: 'Meta criada.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl('/admin/planejamento', { variant: 'error', message: 'Não foi possível criar a meta.' }));
     return;
   }
 }

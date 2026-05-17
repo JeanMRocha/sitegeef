@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getCriancaById, updateCrianca, deleteCrianca, getTurmas } from '../../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Criança - Admin GEEF',
@@ -18,9 +19,10 @@ async function handleSubmit(id: string, formData: FormData) {
       status: formData.get('status') as string,
     });
 
-    redirect(`/admin/evangelizacao/criancas/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/evangelizacao/criancas/${id}`, { variant: 'success', message: 'Criança salva.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/evangelizacao/criancas/${id}`, { variant: 'error', message: 'Não foi possível salvar a criança.' }));
     return;
   }
 }
@@ -30,9 +32,10 @@ async function handleDelete(id: string) {
 
   try {
     await deleteCrianca(id);
-    redirect('/admin/evangelizacao/criancas');
+    redirect(buildFlashNoticeUrl('/admin/evangelizacao/criancas', { variant: 'success', message: 'Criança removida.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl('/admin/evangelizacao/criancas', { variant: 'error', message: 'Não foi possível remover a criança.' }));
     return;
   }
 }

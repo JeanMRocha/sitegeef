@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getExemplarById, updateExemplar } from '../../../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Editar Exemplar - Admin GEEF',
@@ -18,10 +19,20 @@ async function handleUpdate(formData: FormData, obraId: string, exemplarId: stri
       situacao: (formData.get('situacao') as string) || undefined,
     });
 
-    redirect(`/admin/biblioteca/${obraId}`);
+    redirect(
+      buildFlashNoticeUrl(`/admin/biblioteca/${obraId}`, {
+        variant: 'success',
+        message: 'Exemplar salvo.',
+      }),
+    );
   } catch (error) {
     console.error('Erro ao atualizar exemplar:', error);
-    return;
+    redirect(
+      buildFlashNoticeUrl(`/admin/biblioteca/${obraId}`, {
+        variant: 'error',
+        message: 'Não foi possível salvar o exemplar.',
+      }),
+    );
   }
 }
 

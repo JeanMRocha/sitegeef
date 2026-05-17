@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createTemaDoutrinario } from '../../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Novo Tema Doutrinário - Admin GEEF',
@@ -15,9 +16,10 @@ async function handleSubmit(formData: FormData) {
       categoria: formData.get('categoria') as string,
     });
 
-    redirect(`/admin/funcoes/temas/${tema.id}`);
+    redirect(buildFlashNoticeUrl(`/admin/funcoes/temas/${tema.id}`, { variant: 'success', message: 'Tema criado.' }));
   } catch (error) {
     console.error('Erro ao criar tema:', error);
+    redirect(buildFlashNoticeUrl('/admin/funcoes/temas', { variant: 'error', message: 'Não foi possível criar o tema.' }));
     return;
   }
 }

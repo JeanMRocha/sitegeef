@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getEscalaById, updateEscalaStatus } from '../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Editar Escala - Admin GEEF',
@@ -20,9 +21,10 @@ async function handlePublish(id: string) {
 
   try {
     await updateEscalaStatus(id, 'publicada');
-    redirect(`/admin/escalas/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/escalas/${id}`, { variant: 'success', message: 'Escala publicada.' }));
   } catch (error) {
     console.error('Erro ao publicar escala:', error);
+    redirect(buildFlashNoticeUrl(`/admin/escalas/${id}`, { variant: 'error', message: 'Não foi possível publicar a escala.' }));
     return;
   }
 }

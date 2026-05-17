@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createBem, getPessoasDisponiveis } from '../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Novo Bem - Admin GEEF',
@@ -21,9 +22,10 @@ async function handleSubmit(formData: FormData) {
       termo_doacao_url: (formData.get('termo_doacao_url') as string) || undefined,
     });
 
-    redirect(`/admin/patrimonio/${bem.id}`);
+    redirect(buildFlashNoticeUrl(`/admin/patrimonio/${bem.id}`, { variant: 'success', message: 'Bem criado.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl('/admin/patrimonio', { variant: 'error', message: 'Não foi possível criar o bem.' }));
     return;
   }
 }

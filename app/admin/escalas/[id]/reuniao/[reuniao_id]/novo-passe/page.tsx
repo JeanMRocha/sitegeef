@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { addPasseEscalon, getPessoasDisponiveis } from '../../../../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Adicionar Passe - Admin GEEF',
@@ -16,9 +17,10 @@ async function handleSubmit(formData: FormData, escalaId: string, reuniaoId: str
       parseInt(formData.get('posicao') as string)
     );
 
-    redirect(`/admin/escalas/${escalaId}`);
+    redirect(buildFlashNoticeUrl(`/admin/escalas/${escalaId}`, { variant: 'success', message: 'Passe adicionado.' }));
   } catch (error) {
     console.error('Erro ao adicionar passe:', error);
+    redirect(buildFlashNoticeUrl(`/admin/escalas/${escalaId}`, { variant: 'error', message: 'Não foi possível adicionar o passe.' }));
     return;
   }
 }

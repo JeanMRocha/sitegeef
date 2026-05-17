@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getProdutoById, toggleProdutoStatus } from '../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Produto - Admin GEEF',
@@ -12,10 +13,20 @@ async function handleToggleStatus(id: string, ativo: boolean) {
 
   try {
     await toggleProdutoStatus(id, !ativo);
-    redirect(`/admin/livraria/${id}`);
+    redirect(
+      buildFlashNoticeUrl(`/admin/livraria/${id}`, {
+        variant: 'success',
+        message: ativo ? 'Produto desativado.' : 'Produto reativado.',
+      }),
+    );
   } catch (error) {
     console.error('Erro ao alternar status:', error);
-    return;
+    redirect(
+      buildFlashNoticeUrl(`/admin/livraria/${id}`, {
+        variant: 'error',
+        message: 'Não foi possível atualizar o produto.',
+      }),
+    );
   }
 }
 

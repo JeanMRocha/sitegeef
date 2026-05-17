@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createGrupo, getPessoasDisponiveis } from '../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Novo Grupo Mediúnico - Admin GEEF',
@@ -15,9 +16,10 @@ async function handleSubmit(formData: FormData) {
       coordenador_id: (formData.get('coordenador_id') as string) || undefined,
     });
 
-    redirect(`/admin/mediunidade/${grupo.id}`);
+    redirect(buildFlashNoticeUrl(`/admin/mediunidade/${grupo.id}`, { variant: 'success', message: 'Grupo mediúnico criado.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl('/admin/mediunidade', { variant: 'error', message: 'Não foi possível criar o grupo.' }));
     return;
   }
 }

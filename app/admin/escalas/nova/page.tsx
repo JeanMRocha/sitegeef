@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createEscala } from '../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Nova Escala - Admin GEEF',
@@ -15,9 +16,10 @@ async function handleSubmit(formData: FormData) {
       ano: parseInt(formData.get('ano') as string),
     });
 
-    redirect(`/admin/escalas/${escala.id}`);
+    redirect(buildFlashNoticeUrl(`/admin/escalas/${escala.id}`, { variant: 'success', message: 'Escala criada.' }));
   } catch (error) {
     console.error('Erro ao criar escala:', error);
+    redirect(buildFlashNoticeUrl('/admin/escalas', { variant: 'error', message: 'Não foi possível criar a escala.' }));
     return;
   }
 }

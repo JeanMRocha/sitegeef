@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createCrianca, getPessoasDisponiveis, getTurmas } from '../../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Nova Criança - Admin GEEF',
@@ -18,9 +19,10 @@ async function handleSubmit(formData: FormData) {
       autorizacoes: (formData.get('autorizacoes') as string) || undefined,
     });
 
-    redirect(`/admin/evangelizacao/criancas/${crianca.id}`);
+    redirect(buildFlashNoticeUrl(`/admin/evangelizacao/criancas/${crianca.id}`, { variant: 'success', message: 'Criança criada.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl('/admin/evangelizacao/criancas', { variant: 'error', message: 'Não foi possível criar a criança.' }));
     return;
   }
 }

@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getTemaDoutrinarioById, updateTemaDoutrinario, toggleTemaDoutrinarioStatus } from '../../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Editar Tema Doutrinário - Admin GEEF',
@@ -16,9 +17,10 @@ async function handleUpdate(id: string, formData: FormData) {
       categoria: (formData.get('categoria') as string) || undefined,
     });
 
-    redirect(`/admin/funcoes/temas/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/funcoes/temas/${id}`, { variant: 'success', message: 'Tema salvo.' }));
   } catch (error) {
     console.error('Erro ao atualizar tema:', error);
+    redirect(buildFlashNoticeUrl(`/admin/funcoes/temas/${id}`, { variant: 'error', message: 'Não foi possível salvar o tema.' }));
     return;
   }
 }
@@ -28,9 +30,10 @@ async function handleToggleStatus(id: string, novoStatus: boolean) {
 
   try {
     await toggleTemaDoutrinarioStatus(id, novoStatus);
-    redirect(`/admin/funcoes/temas/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/funcoes/temas/${id}`, { variant: 'success', message: 'Status do tema atualizado.' }));
   } catch (error) {
     console.error('Erro ao atualizar status:', error);
+    redirect(buildFlashNoticeUrl(`/admin/funcoes/temas/${id}`, { variant: 'error', message: 'Não foi possível alterar o status.' }));
     return;
   }
 }

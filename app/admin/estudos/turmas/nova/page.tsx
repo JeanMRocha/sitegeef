@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createTurma, getCursos, getPessoasDisponiveis } from '../../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Nova Turma - Admin GEEF',
@@ -18,9 +19,10 @@ async function handleSubmit(formData: FormData) {
       data_fim: formData.get('data_fim') as string,
     });
 
-    redirect(`/admin/estudos/turmas/${turma.id}`);
+    redirect(buildFlashNoticeUrl(`/admin/estudos/turmas/${turma.id}`, { variant: 'success', message: 'Turma criada.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl('/admin/estudos/turmas', { variant: 'error', message: 'Não foi possível criar a turma.' }));
     return;
   }
 }

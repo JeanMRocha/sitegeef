@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getCursoById, updateCurso, getTurmas } from '../../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Curso - Admin GEEF',
@@ -17,9 +18,10 @@ async function handleSubmit(id: string, formData: FormData) {
       ativo: formData.get('ativo') === 'on',
     });
 
-    redirect(`/admin/estudos/cursos/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/estudos/cursos/${id}`, { variant: 'success', message: 'Curso salvo.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/estudos/cursos/${id}`, { variant: 'error', message: 'Não foi possível salvar o curso.' }));
     return;
   }
 }

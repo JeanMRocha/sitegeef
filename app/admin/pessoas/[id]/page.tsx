@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getPessoaById, updatePessoa, addVinculo, removeVinculo, togglePessoaStatus } from '../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Editar Pessoa - Admin GEEF',
@@ -75,10 +76,20 @@ async function handleUpdatePessoa(pessoaId: string, formData: FormData) {
       }
     }
 
-    redirect('/admin/pessoas');
+    redirect(
+      buildFlashNoticeUrl('/admin/pessoas', {
+        variant: 'success',
+        message: 'Pessoa salva.',
+      }),
+    );
   } catch (error) {
     console.error('Erro ao atualizar pessoa:', error);
-    return;
+    redirect(
+      buildFlashNoticeUrl(`/admin/pessoas/${pessoaId}`, {
+        variant: 'error',
+        message: 'Não foi possível salvar a pessoa.',
+      }),
+    );
   }
 }
 

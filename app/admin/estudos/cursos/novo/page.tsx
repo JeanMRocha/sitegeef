@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createCurso } from '../../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Novo Curso - Admin GEEF',
@@ -15,9 +16,10 @@ async function handleSubmit(formData: FormData) {
       descricao: (formData.get('descricao') as string) || undefined,
     });
 
-    redirect(`/admin/estudos/cursos/${curso.id}`);
+    redirect(buildFlashNoticeUrl(`/admin/estudos/cursos/${curso.id}`, { variant: 'success', message: 'Curso criado.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl('/admin/estudos/cursos', { variant: 'error', message: 'Não foi possível criar o curso.' }));
     return;
   }
 }

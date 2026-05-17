@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { registrarMovimento, getProdutoById, getPessoasDisponiveis } from '../../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Registrar Movimento - Admin GEEF',
@@ -31,9 +32,10 @@ async function handleSubmit(produto_id: string, formData: FormData) {
       observacao,
     });
 
-    redirect(`/admin/livraria/${produto_id}`);
+    redirect(buildFlashNoticeUrl(`/admin/livraria/${produto_id}`, { variant: 'success', message: 'Movimento registrado.' }));
   } catch (error) {
     console.error('Erro ao registrar movimento:', error);
+    redirect(buildFlashNoticeUrl(`/admin/livraria/${produto_id}`, { variant: 'error', message: 'Não foi possível registrar o movimento.' }));
     return;
   }
 }

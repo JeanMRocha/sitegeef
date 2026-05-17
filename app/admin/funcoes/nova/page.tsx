@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createFuncao } from '../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Nova Função - Admin GEEF',
@@ -15,9 +16,10 @@ async function handleSubmit(formData: FormData) {
       descricao: (formData.get('descricao') as string) || undefined,
     });
 
-    redirect(`/admin/funcoes/${funcao.id}`);
+    redirect(buildFlashNoticeUrl(`/admin/funcoes/${funcao.id}`, { variant: 'success', message: 'Função criada.' }));
   } catch (error) {
     console.error('Erro ao criar função:', error);
+    redirect(buildFlashNoticeUrl('/admin/funcoes', { variant: 'error', message: 'Não foi possível criar a função.' }));
     return;
   }
 }

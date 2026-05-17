@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { addFuncao, getFuncoes, getPessoasDisponiveis } from '../../../../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Adicionar Função - Admin GEEF',
@@ -17,9 +18,10 @@ async function handleSubmit(formData: FormData, escalaId: string, reuniaoId: str
       (formData.get('substituto_id') as string) || undefined
     );
 
-    redirect(`/admin/escalas/${escalaId}`);
+    redirect(buildFlashNoticeUrl(`/admin/escalas/${escalaId}`, { variant: 'success', message: 'Função adicionada.' }));
   } catch (error) {
     console.error('Erro ao adicionar função:', error);
+    redirect(buildFlashNoticeUrl(`/admin/escalas/${escalaId}`, { variant: 'error', message: 'Não foi possível adicionar a função.' }));
     return;
   }
 }

@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createProduto } from '../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Novo Produto - Admin GEEF',
@@ -21,9 +22,10 @@ async function handleSubmit(formData: FormData) {
       valor_venda: parseFloat((formData.get('valor_venda') as string) || '0'),
     });
 
-    redirect(`/admin/livraria/${produto.id}`);
+    redirect(buildFlashNoticeUrl(`/admin/livraria/${produto.id}`, { variant: 'success', message: 'Produto criado.' }));
   } catch (error) {
     console.error('Erro ao criar produto:', error);
+    redirect(buildFlashNoticeUrl('/admin/livraria', { variant: 'error', message: 'Não foi possível criar o produto.' }));
     return;
   }
 }

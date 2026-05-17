@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getEscalaFuncaoById, updateFuncao, removeFuncao, getPessoasDisponiveis, getFuncoes } from '../../../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Editar Função - Admin GEEF',
@@ -17,9 +18,10 @@ async function handleUpdate(formData: FormData, escalaId: string, funcaoId: stri
       (formData.get('substituto_id') as string) || undefined
     );
 
-    redirect(`/admin/escalas/${escalaId}`);
+    redirect(buildFlashNoticeUrl(`/admin/escalas/${escalaId}`, { variant: 'success', message: 'Função salva.' }));
   } catch (error) {
     console.error('Erro ao atualizar função:', error);
+    redirect(buildFlashNoticeUrl(`/admin/escalas/${escalaId}`, { variant: 'error', message: 'Não foi possível salvar a função.' }));
     return;
   }
 }
@@ -29,9 +31,10 @@ async function handleRemove(escalaId: string, funcaoId: string) {
 
   try {
     await removeFuncao(funcaoId);
-    redirect(`/admin/escalas/${escalaId}`);
+    redirect(buildFlashNoticeUrl(`/admin/escalas/${escalaId}`, { variant: 'success', message: 'Função removida.' }));
   } catch (error) {
     console.error('Erro ao remover função:', error);
+    redirect(buildFlashNoticeUrl(`/admin/escalas/${escalaId}`, { variant: 'error', message: 'Não foi possível remover a função.' }));
     return;
   }
 }

@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getPasseById, updatePasseEscalon, removePasseEscalon, getPessoasDisponiveis } from '../../../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Editar Passe - Admin GEEF',
@@ -17,9 +18,10 @@ async function handleUpdate(formData: FormData, escalaId: string, passeId: strin
       parseInt(formData.get('posicao') as string)
     );
 
-    redirect(`/admin/escalas/${escalaId}`);
+    redirect(buildFlashNoticeUrl(`/admin/escalas/${escalaId}`, { variant: 'success', message: 'Passe salvo.' }));
   } catch (error) {
     console.error('Erro ao atualizar passe:', error);
+    redirect(buildFlashNoticeUrl(`/admin/escalas/${escalaId}`, { variant: 'error', message: 'Não foi possível salvar o passe.' }));
     return;
   }
 }
@@ -29,9 +31,10 @@ async function handleRemove(escalaId: string, passeId: string) {
 
   try {
     await removePasseEscalon(passeId);
-    redirect(`/admin/escalas/${escalaId}`);
+    redirect(buildFlashNoticeUrl(`/admin/escalas/${escalaId}`, { variant: 'success', message: 'Passe removido.' }));
   } catch (error) {
     console.error('Erro ao remover passe:', error);
+    redirect(buildFlashNoticeUrl(`/admin/escalas/${escalaId}`, { variant: 'error', message: 'Não foi possível remover o passe.' }));
     return;
   }
 }

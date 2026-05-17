@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getTurmaById, updateTurma, getCriancas, getEvangelizadores, addEvangelizador, removeEvangelizador, getPessoasDisponiveis, getAulas } from '../../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Turma - Admin GEEF',
@@ -20,9 +21,10 @@ async function handleSubmit(id: string, formData: FormData) {
       status: formData.get('status') as string,
     });
 
-    redirect(`/admin/evangelizacao/turmas/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/evangelizacao/turmas/${id}`, { variant: 'success', message: 'Turma salva.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/evangelizacao/turmas/${id}`, { variant: 'error', message: 'Não foi possível salvar a turma.' }));
     return;
   }
 }
@@ -32,9 +34,10 @@ async function handleAddEvangelizador(id: string, formData: FormData) {
 
   try {
     await addEvangelizador(id, formData.get('pessoa_id') as string);
-    redirect(`/admin/evangelizacao/turmas/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/evangelizacao/turmas/${id}`, { variant: 'success', message: 'Evangelizador adicionado.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/evangelizacao/turmas/${id}`, { variant: 'error', message: 'Não foi possível adicionar o evangelizador.' }));
     return;
   }
 }
@@ -44,9 +47,10 @@ async function handleRemoveEvangelizador(id: string) {
 
   try {
     await removeEvangelizador(id);
-    redirect(`/admin/evangelizacao/turmas/${(await getTurmaById(id)).id}`);
+    redirect(buildFlashNoticeUrl(`/admin/evangelizacao/turmas/${(await getTurmaById(id)).id}`, { variant: 'success', message: 'Evangelizador removido.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/evangelizacao/turmas/${(await getTurmaById(id)).id}`, { variant: 'error', message: 'Não foi possível remover o evangelizador.' }));
     return;
   }
 }
