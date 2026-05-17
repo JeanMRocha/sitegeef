@@ -6,6 +6,7 @@
 2. `docs/AGENT_PLAYBOOK.md`
 3. `docs/MODULE_MAP.md`
 4. `docs/baseerp.md` quando a mudanca for de ERP
+5. `docs/MCP_SUPABASE_GEEF.md` quando a tarefa envolver MCP ou Supabase via Codex
 
 ## Regra de trabalho
 
@@ -31,6 +32,7 @@
 - `lib/admin/cache.ts` = invalida cache de dashboard, biblioteca e documentos.
 - `lib/areas/invalidate-user-area.ts` = invalida area do usuario/leitor.
 - `lib/escalas/public-escalas.ts` = cache publico das escalas.
+- `docs/MCP_SUPABASE_GEEF.md` = recuperar e validar o MCP `supabase-geef`.
 
 ## Quando mexer em cache
 
@@ -47,4 +49,3 @@
 - `app/admin/pessoas/*` -> cadastro central
 - `app/admin/funcoes/*` -> funcoes e temas
 - `app/admin/escalas/*` -> escalas publicas e operacao mensal
-

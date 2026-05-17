@@ -9,7 +9,8 @@ Padronizar como o agente encontra o que alterar, como aplica mudancas e como evi
 1. `agente.md`
 2. `HANDOFF.md`
 3. `docs/MODULE_MAP.md`
-4. O arquivo do modulo alvo
+4. `docs/MCP_SUPABASE_GEEF.md` quando a tarefa envolver MCP do Supabase
+5. O arquivo do modulo alvo
 
 ## Procedimento padrao para mudancas visuais
 
@@ -29,6 +30,7 @@ Padronizar como o agente encontra o que alterar, como aplica mudancas e como evi
 4. Invalida por tag e path no modulo que escreve.
 5. Nao invalidar em getters.
 6. Nao usar `service-role` em client components.
+7. Se o MCP do projeto falhar, verificar `codex mcp list` e reautenticar `supabase-geef` antes de alterar o repo.
 
 ## Procedimento padrao para cache
 
@@ -93,4 +95,3 @@ Padronizar como o agente encontra o que alterar, como aplica mudancas e como evi
 - Nunca expor `service_role` no browser.
 - Nunca cachear dado que precise de sessao para autorizar.
 - Se o dado for sensivel, preferir runtime dinamico e leitura server-side.
-

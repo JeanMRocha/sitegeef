@@ -7,6 +7,7 @@
 - [Mapa de modulos](./MODULE_MAP.md)
 - [Agent map JSON](../agent-map.json)
 - [Documento base do ERP](./baseerp.md)
+- [MCP Supabase GEEF](./MCP_SUPABASE_GEEF.md)
 - [Sistema de tema](../THEME_SYSTEM.md)
 
 ## Por assunto
@@ -21,6 +22,7 @@
 
 - [Mapa de modulos](./MODULE_MAP.md)
 - [Agent Playbook](./AGENT_PLAYBOOK.md)
+- [MCP Supabase GEEF](./MCP_SUPABASE_GEEF.md)
 - [Aplicar migracao](../APPLY_MIGRATION.md)
 - [Status de deploy](../DEPLOYMENT_STATUS.md)
 
