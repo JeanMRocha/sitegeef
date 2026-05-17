@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createPessoa, getPessoaById, removeVinculo, addVinculo, updatePessoa } from '../actions';
 import { type tipo_vinculo } from '@/lib/supabase/types';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Nova Pessoa - Admin GEEF',
@@ -79,98 +80,152 @@ async function savePessoaStep(formData: FormData) {
   const step = isPessoaStep(formData.get('step')) ? (formData.get('step') as PessoaStep) : 'identificacao';
   const pessoaId = textValue(formData, 'pessoa_id');
 
-  if (step === 'identificacao') {
-    const identificacao = {
-      nome: textValue(formData, 'nome'),
-      nome_social: textValue(formData, 'nome_social'),
-      data_nascimento: textValue(formData, 'data_nascimento'),
-      cpf: textValue(formData, 'cpf'),
-      rg: textValue(formData, 'rg'),
-    };
+  try {
+    if (step === 'identificacao') {
+      const identificacao = {
+        nome: textValue(formData, 'nome'),
+        nome_social: textValue(formData, 'nome_social'),
+        data_nascimento: textValue(formData, 'data_nascimento'),
+        cpf: textValue(formData, 'cpf'),
+        rg: textValue(formData, 'rg'),
+      };
 
-    if (!identificacao.nome) {
-      return;
+      if (!identificacao.nome) {
+        redirect(
+          buildFlashNoticeUrl(buildHref(pessoaId || null, 'identificacao'), {
+            variant: 'error',
+            message: 'Informe o nome para continuar.',
+          }),
+        );
+      }
+
+      if (!pessoaId) {
+        const pessoa = await createPessoa({
+          nome: identificacao.nome,
+          nome_social: identificacao.nome_social,
+          data_nascimento: identificacao.data_nascimento,
+          cpf: identificacao.cpf,
+          rg: identificacao.rg,
+        });
+
+        const nextStep = getNextStep(step) ?? step;
+        redirect(
+          buildFlashNoticeUrl(buildHref(pessoa.id, nextStep), {
+            variant: 'success',
+            message: 'Etapa salva.',
+          }),
+        );
+      }
+
+      await updatePessoa(pessoaId, identificacao);
+      const nextStep = getNextStep(step) ?? step;
+      redirect(
+        buildFlashNoticeUrl(buildHref(pessoaId, nextStep), {
+          variant: 'success',
+          message: 'Etapa salva.',
+        }),
+      );
     }
 
     if (!pessoaId) {
-      const pessoa = await createPessoa({
-        nome: identificacao.nome,
-        nome_social: identificacao.nome_social,
-        data_nascimento: identificacao.data_nascimento,
-        cpf: identificacao.cpf,
-        rg: identificacao.rg,
+      redirect(
+        buildFlashNoticeUrl(buildHref(null, 'identificacao'), {
+          variant: 'error',
+          message: 'Crie a pessoa pela etapa de identificação.',
+        }),
+      );
+    }
+
+    if (step === 'contato') {
+      await updatePessoa(pessoaId, {
+        telefone: textValue(formData, 'telefone'),
+        whatsapp: textValue(formData, 'whatsapp'),
+        email: textValue(formData, 'email'),
+        contato_emergencia: textValue(formData, 'contato_emergencia'),
       });
 
-      const nextStep = getNextStep(step) ?? step;
-      redirect(buildHref(pessoa.id, nextStep));
+      const nextStep = getNextStep(step);
+      redirect(
+        buildFlashNoticeUrl(nextStep ? buildHref(pessoaId, nextStep) : '/admin/pessoas', {
+          variant: 'success',
+          message: 'Etapa salva.',
+        }),
+      );
     }
 
-    await updatePessoa(pessoaId, identificacao);
-    const nextStep = getNextStep(step) ?? step;
-    redirect(buildHref(pessoaId, nextStep));
-  }
+    if (step === 'endereco') {
+      await updatePessoa(pessoaId, {
+        logradouro: textValue(formData, 'logradouro'),
+        numero: textValue(formData, 'numero'),
+        bairro: textValue(formData, 'bairro'),
+        cidade: textValue(formData, 'cidade'),
+        estado: textValue(formData, 'estado'),
+        cep: textValue(formData, 'cep'),
+      });
 
-  if (!pessoaId) {
-    redirect(buildHref(null, 'identificacao'));
-  }
+      const nextStep = getNextStep(step);
+      redirect(
+        buildFlashNoticeUrl(nextStep ? buildHref(pessoaId, nextStep) : '/admin/pessoas', {
+          variant: 'success',
+          message: 'Etapa salva.',
+        }),
+      );
+    }
 
-  if (step === 'contato') {
-    await updatePessoa(pessoaId, {
-      telefone: textValue(formData, 'telefone'),
-      whatsapp: textValue(formData, 'whatsapp'),
-      email: textValue(formData, 'email'),
-      contato_emergencia: textValue(formData, 'contato_emergencia'),
-    });
+    if (step === 'vinculos') {
+      const { vinculos } = await getPessoaById(pessoaId);
+      const vinculosAtuais = new Set(vinculos.map((v: any) => v.vinculo));
+      const vinculosNovos = new Set(
+        TIPOS_VINCULO.filter((vinculo) => formData.get(`vinculo_${vinculo}`) === 'on'),
+      );
 
-    const nextStep = getNextStep(step);
-    redirect(nextStep ? buildHref(pessoaId, nextStep) : '/admin/pessoas');
-  }
+      for (const vinculo of vinculosAtuais) {
+        if (!vinculosNovos.has(vinculo)) {
+          await removeVinculo(pessoaId, vinculo as tipo_vinculo);
+        }
+      }
 
-  if (step === 'endereco') {
-    await updatePessoa(pessoaId, {
-      logradouro: textValue(formData, 'logradouro'),
-      numero: textValue(formData, 'numero'),
-      bairro: textValue(formData, 'bairro'),
-      cidade: textValue(formData, 'cidade'),
-      estado: textValue(formData, 'estado'),
-      cep: textValue(formData, 'cep'),
-    });
+      for (const vinculo of vinculosNovos) {
+        if (!vinculosAtuais.has(vinculo)) {
+          await addVinculo(pessoaId, vinculo as tipo_vinculo);
+        }
+      }
 
-    const nextStep = getNextStep(step);
-    redirect(nextStep ? buildHref(pessoaId, nextStep) : '/admin/pessoas');
-  }
+      const nextStep = getNextStep(step);
+      redirect(
+        buildFlashNoticeUrl(nextStep ? buildHref(pessoaId, nextStep) : '/admin/pessoas', {
+          variant: 'success',
+          message: 'Etapa salva.',
+        }),
+      );
+    }
 
-  if (step === 'vinculos') {
-    const { vinculos } = await getPessoaById(pessoaId);
-    const vinculosAtuais = new Set(vinculos.map((v: any) => v.vinculo));
-    const vinculosNovos = new Set(
-      TIPOS_VINCULO.filter((vinculo) => formData.get(`vinculo_${vinculo}`) === 'on'),
+    if (step === 'configuracoes') {
+      await updatePessoa(pessoaId, {
+        observacoes: textValue(formData, 'observacoes'),
+        autoriza_notificacao: booleanValue(formData, 'autoriza_notificacao'),
+        autoriza_imagem_voz: booleanValue(formData, 'autoriza_imagem_voz'),
+      });
+
+      redirect(
+        buildFlashNoticeUrl('/admin/pessoas', {
+          variant: 'success',
+          message: 'Pessoa salva.',
+        }),
+      );
+    }
+  } catch (error) {
+    if (typeof error === 'object' && error !== null && 'digest' in error && String((error as { digest?: string }).digest || '').startsWith('NEXT_REDIRECT')) {
+      throw error;
+    }
+
+    const fallbackHref = pessoaId ? buildHref(pessoaId, step) : buildHref(null, 'identificacao');
+    redirect(
+      buildFlashNoticeUrl(fallbackHref, {
+        variant: 'error',
+        message: 'Não foi possível salvar a pessoa.',
+      }),
     );
-
-    for (const vinculo of vinculosAtuais) {
-      if (!vinculosNovos.has(vinculo)) {
-        await removeVinculo(pessoaId, vinculo as tipo_vinculo);
-      }
-    }
-
-    for (const vinculo of vinculosNovos) {
-      if (!vinculosAtuais.has(vinculo)) {
-        await addVinculo(pessoaId, vinculo as tipo_vinculo);
-      }
-    }
-
-    const nextStep = getNextStep(step);
-    redirect(nextStep ? buildHref(pessoaId, nextStep) : '/admin/pessoas');
-  }
-
-  if (step === 'configuracoes') {
-    await updatePessoa(pessoaId, {
-      observacoes: textValue(formData, 'observacoes'),
-      autoriza_notificacao: booleanValue(formData, 'autoriza_notificacao'),
-      autoriza_imagem_voz: booleanValue(formData, 'autoriza_imagem_voz'),
-    });
-
-    redirect('/admin/pessoas');
   }
 }
 
