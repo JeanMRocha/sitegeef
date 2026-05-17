@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getReservaById, cancelarReserva, confirmarReserva, getExemplaresdisponiveisParaReserva } from '../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Reserva - Admin GEEF',
@@ -12,9 +13,10 @@ async function handleCancel(id: string) {
 
   try {
     await cancelarReserva(id);
-    redirect('/admin/biblioteca/reservas');
+    redirect(buildFlashNoticeUrl('/admin/biblioteca/reservas', { variant: 'success', message: 'Reserva cancelada.' }));
   } catch (error) {
     console.error('Erro ao cancelar reserva:', error);
+    redirect(buildFlashNoticeUrl('/admin/biblioteca/reservas', { variant: 'error', message: 'Não foi possível cancelar a reserva.' }));
     return;
   }
 }
@@ -25,9 +27,10 @@ async function handleConfirm(id: string, formData: FormData) {
   try {
     const exemplar_id = formData.get('exemplar_id') as string;
     await confirmarReserva(id, exemplar_id);
-    redirect('/admin/biblioteca/reservas');
+    redirect(buildFlashNoticeUrl('/admin/biblioteca/reservas', { variant: 'success', message: 'Reserva confirmada.' }));
   } catch (error) {
     console.error('Erro ao confirmar reserva:', error);
+    redirect(buildFlashNoticeUrl('/admin/biblioteca/reservas', { variant: 'error', message: 'Não foi possível confirmar a reserva.' }));
     return;
   }
 }

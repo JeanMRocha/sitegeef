@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getIrradiacaoById, updateIrradiacao, toggleIrradiacaoStatus, getPessoasDisponiveis } from '../../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Irradiação - Admin GEEF',
@@ -19,9 +20,10 @@ async function handleSubmit(id: string, formData: FormData) {
       status: formData.get('status') as string,
     });
 
-    redirect(`/admin/atendimento/irradiacao/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/atendimento/irradiacao/${id}`, { variant: 'success', message: 'Irradiação salva.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/atendimento/irradiacao/${id}`, { variant: 'error', message: 'Não foi possível salvar a irradiação.' }));
     return;
   }
 }
@@ -31,9 +33,10 @@ async function handleToggle(id: string, ativa: boolean) {
 
   try {
     await toggleIrradiacaoStatus(id, ativa);
-    redirect(`/admin/atendimento/irradiacao/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/atendimento/irradiacao/${id}`, { variant: 'success', message: 'Status da irradiação atualizado.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/atendimento/irradiacao/${id}`, { variant: 'error', message: 'Não foi possível alterar o status.' }));
     return;
   }
 }

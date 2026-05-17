@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createPublicacao, getPessoasDisponiveis } from '../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Nova Publicação - Admin GEEF',
@@ -17,9 +18,10 @@ async function handleSubmit(formData: FormData) {
       autor_id: formData.get('autor_id') as string,
     });
 
-    redirect(`/admin/comunicacao/${publicacao.id}`);
+    redirect(buildFlashNoticeUrl(`/admin/comunicacao/${publicacao.id}`, { variant: 'success', message: 'Publicação criada.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl('/admin/comunicacao', { variant: 'error', message: 'Não foi possível criar a publicação.' }));
     return;
   }
 }

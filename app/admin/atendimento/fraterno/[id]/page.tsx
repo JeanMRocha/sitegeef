@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getAtendimentoFraternoById, updateAtendimentoFraterno, deleteAtendimentoFraterno, getPessoasDisponiveis } from '../../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Atendimento Fraterno - Admin GEEF',
@@ -22,9 +23,10 @@ async function handleSubmit(id: string, formData: FormData) {
       status: formData.get('status') as string,
     });
 
-    redirect(`/admin/atendimento/fraterno/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/atendimento/fraterno/${id}`, { variant: 'success', message: 'Atendimento salvo.' }));
   } catch (error) {
     console.error('Erro ao atualizar:', error);
+    redirect(buildFlashNoticeUrl(`/admin/atendimento/fraterno/${id}`, { variant: 'error', message: 'Não foi possível salvar o atendimento.' }));
     return;
   }
 }
@@ -34,9 +36,10 @@ async function handleDelete(id: string) {
 
   try {
     await deleteAtendimentoFraterno(id);
-    redirect('/admin/atendimento/fraterno');
+    redirect(buildFlashNoticeUrl('/admin/atendimento/fraterno', { variant: 'success', message: 'Atendimento removido.' }));
   } catch (error) {
     console.error('Erro ao deletar:', error);
+    redirect(buildFlashNoticeUrl('/admin/atendimento/fraterno', { variant: 'error', message: 'Não foi possível remover o atendimento.' }));
     return;
   }
 }

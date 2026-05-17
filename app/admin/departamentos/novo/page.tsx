@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createDepartamento, getPessoasDisponiveis } from '../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Novo Departamento - Admin GEEF',
@@ -21,9 +22,10 @@ async function handleSubmit(formData: FormData) {
       return;
     }
 
-    redirect(`/admin/departamentos/${dept.id}`);
+    redirect(buildFlashNoticeUrl(`/admin/departamentos/${dept.id}`, { variant: 'success', message: 'Departamento criado.' }));
   } catch (error) {
     console.error('Erro ao criar departamento:', error);
+    redirect(buildFlashNoticeUrl('/admin/departamentos', { variant: 'error', message: 'Não foi possível criar o departamento.' }));
     return;
   }
 }

@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getEvangelhoNoLarById, updateEvangelhoNoLar, deleteEvangelhoNoLar, getPessoasDisponiveis } from '../../actions';
 import { Suspense } from 'react';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Evangelho no Lar - Admin GEEF',
@@ -20,9 +21,10 @@ async function handleSubmit(id: string, formData: FormData) {
       observacoes: (formData.get('observacoes') as string) || undefined,
     });
 
-    redirect(`/admin/atendimento/evangelhos-lar/${id}`);
+    redirect(buildFlashNoticeUrl(`/admin/atendimento/evangelhos-lar/${id}`, { variant: 'success', message: 'Evangelho no Lar salvo.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl(`/admin/atendimento/evangelhos-lar/${id}`, { variant: 'error', message: 'Não foi possível salvar o Evangelho no Lar.' }));
     return;
   }
 }
@@ -32,9 +34,10 @@ async function handleDelete(id: string) {
 
   try {
     await deleteEvangelhoNoLar(id);
-    redirect('/admin/atendimento/evangelhos-lar');
+    redirect(buildFlashNoticeUrl('/admin/atendimento/evangelhos-lar', { variant: 'success', message: 'Evangelho no Lar removido.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl('/admin/atendimento/evangelhos-lar', { variant: 'error', message: 'Não foi possível remover o Evangelho no Lar.' }));
     return;
   }
 }

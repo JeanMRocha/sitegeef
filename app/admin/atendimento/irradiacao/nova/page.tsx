@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createIrradiacao, getPessoasDisponiveis } from '../../actions';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Nova Irradiação - Admin GEEF',
@@ -18,9 +19,10 @@ async function handleSubmit(formData: FormData) {
       confidencial: formData.get('confidencial') === 'on',
     });
 
-    redirect(`/admin/atendimento/irradiacao/${irr.id}`);
+    redirect(buildFlashNoticeUrl(`/admin/atendimento/irradiacao/${irr.id}`, { variant: 'success', message: 'Irradiação criada.' }));
   } catch (error) {
     console.error('Erro:', error);
+    redirect(buildFlashNoticeUrl('/admin/atendimento/irradiacao', { variant: 'error', message: 'Não foi possível criar a irradiação.' }));
     return;
   }
 }
