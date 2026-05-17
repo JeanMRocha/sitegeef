@@ -21,7 +21,9 @@ Definir qual skill consultar primeiro em tarefas do GEEF para reduzir exploraç�
    - Use `skills/supabase-patterns.md`
 4. Tarefa envolve permissões, RBAC, `requirePermission`, `usuarios_sistema` ou menu por acesso?
    - Use `skills/auth-permissions.md`
-5. Tarefa envolve schema, tabela, índice, policy, migração ou rollback?
+5. Tarefa envolve feedback visual de salvar, validação de formulário, `useNotification()`, `NotificationProvider` ou aviso de sessão?
+   - Use `skills/notificacoes-timers-avisos.md`
+6. Tarefa envolve schema, tabela, índice, policy, migração ou rollback?
    - Use `skills/migrations-workflow.md`
 
 ## Regras de operação
@@ -33,6 +35,8 @@ Definir qual skill consultar primeiro em tarefas do GEEF para reduzir exploraç�
 - Quando a tela usar abas ou wizard, o cabeçalho deve concentrar `Salvar` e `Cancelar` para todas as abas; não duplicar botões no rodapé de cada painel.
 - Quando um formulário tiver abas secundárias, o botão do cabeçalho deve apontar para o form ativo por `form=...`, mantendo o mesmo lugar visual independentemente da aba.
 - Ao criar telas novas do admin, seguir o padrão definido nas skills antes de inventar um layout próprio.
+- Após salvar, exibir feedback curto de sucesso ou erro e voltar para a visão correta da área, sem depender de texto longo.
+- Se a tela precisar avisar sucesso, erro, validação ou sessão, usar a skill de notificações antes de escrever mensagens fixas.
 
 ## Sinais de risco
 

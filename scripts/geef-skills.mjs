@@ -17,6 +17,7 @@ const SKILL_PRIORITY = [
   { key: 'supabase', skillPath: 'skills/supabase-patterns.md', label: 'Padrões Supabase GEEF' },
   { key: 'permission', skillPath: 'skills/auth-permissions.md', label: 'Sistema de Permissões GEEF' },
   { key: 'migration', skillPath: 'skills/migrations-workflow.md', label: 'Workflow de Migrações GEEF' },
+  { key: 'notification', skillPath: 'skills/notificacoes-timers-avisos.md', label: 'Notificações, Timers e Avisos (OpnForm)' },
   { key: 'orchestration', skillPath: 'skills/roteamento-operacional-autoreflex.md', label: 'Roteamento Operacional de Skills GEEF' },
 ];
 

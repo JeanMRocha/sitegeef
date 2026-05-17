@@ -33,6 +33,8 @@ Use este checklist antes de considerar um módulo admin pronto.
 - [ ] Botões de ação ficam visíveis sem scroll excessivo
 - [ ] Em telas com abas, `Salvar` e `Cancelar` ficam no cabeçalho e acionam o form da aba ativa
 - [ ] Não existem CTAs duplicados no rodapé de cada aba/painel quando o cabeçalho já resolve a ação
+- [ ] Após salvar, a tela mostra aviso curto de sucesso ou erro
+- [ ] Feedback de sucesso, erro, validação e sessão segue a skill `notificacoes-timers-avisos`
 - [ ] Estados vazios e erro têm copy curta e funcional
 
 ## Validação
@@ -48,5 +50,6 @@ Use este checklist antes de considerar um módulo admin pronto.
 2. `skills/padrao-actions-ts.md`
 3. `skills/supabase-patterns.md`
 4. `skills/auth-permissions.md`
-5. `skills/migrations-workflow.md` quando houver schema
-6. `skills/roteamento-operacional-autoreflex.md` para decidir a skill certa antes de criar nova tela
+5. `skills/notificacoes-timers-avisos.md` quando a tela precisar de feedback, validação ou aviso de sessão
+6. `skills/migrations-workflow.md` quando houver schema
+7. `skills/roteamento-operacional-autoreflex.md` para decidir a skill certa antes de criar nova tela

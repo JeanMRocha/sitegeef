@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
 import { Suspense } from 'react';
 import {
   addContaBancaria,
@@ -14,6 +15,7 @@ import {
   updateInstituicao,
 } from '../actions';
 import { contentPages, site } from '@/lib/site-data';
+import { NotificationNoticeHydrator } from '@/components/notification-notice-hydrator';
 
 export const metadata = {
   title: 'Editar Instituição - Admin GEEF',
@@ -30,6 +32,7 @@ const INSTITUICAO_STEPS = [
 ] as const;
 
 type InstituicaoStep = (typeof INSTITUICAO_STEPS)[number]['key'];
+type SaveNotice = 'success' | 'error';
 
 const QUEM_SOMOS = contentPages['quem-somos'];
 
@@ -74,6 +77,25 @@ function buildHref(step: InstituicaoStep) {
   return `/admin/instituicao/editar?${params.toString()}`;
 }
 
+function buildEditUrl(step: InstituicaoStep, notice?: SaveNotice) {
+  const params = new URLSearchParams();
+  params.set('tab', step);
+  if (notice) {
+    params.set('notice', notice);
+  }
+  return `/admin/instituicao/editar?${params.toString()}`;
+}
+
+function buildOverviewUrl(notice?: SaveNotice) {
+  if (!notice) {
+    return '/admin/instituicao';
+  }
+
+  const params = new URLSearchParams();
+  params.set('notice', notice);
+  return `/admin/instituicao?${params.toString()}`;
+}
+
 function textValue(formData: FormData, name: string) {
   const value = formData.get(name);
   if (typeof value !== 'string') {
@@ -95,6 +117,10 @@ function formatCnpj(value: string | undefined) {
   }
 
   return `${digits.slice(0, 2)}.${digits.slice(2, 5)}.${digits.slice(5, 8)}/${digits.slice(8, 12)}-${digits.slice(12)}`;
+}
+
+function normalizeDateInput(value: string | undefined) {
+  return value ? value.slice(0, 10) : '';
 }
 
 function resolveNomeOficial(instituicaoAtual: typeof FALLBACK_INSTITUICAO | null, formData: FormData) {
@@ -208,7 +234,7 @@ function TabHeaderAction({ activeStep }: { activeStep: InstituicaoStep }) {
 async function handleAddContato(formData: FormData) {
   'use server';
 
-  await addContato({
+  const result = await addContato({
     tipo: (formData.get('tipo') as string) || 'Contato',
     telefone: (formData.get('telefone') as string) || undefined,
     whatsapp: (formData.get('whatsapp') as string) || undefined,
@@ -220,7 +246,13 @@ async function handleAddContato(formData: FormData) {
     responsavel_id: (formData.get('responsavel_id') as string) || undefined,
   });
 
-  redirect('/admin/instituicao/editar?tab=contatos');
+  if (!result.success) {
+    redirect(buildEditUrl('contatos', 'error'));
+  }
+
+  revalidatePath('/admin/instituicao');
+  revalidatePath('/admin/instituicao/editar');
+  redirect(buildEditUrl('contatos', 'success'));
 }
 
 async function handleDeleteContato(formData: FormData) {
@@ -228,16 +260,21 @@ async function handleDeleteContato(formData: FormData) {
 
   const id = formData.get('id');
   if (typeof id === 'string' && id) {
-    await deleteContato(id);
+    const result = await deleteContato(id);
+    if (!result.success) {
+      redirect(buildEditUrl('contatos', 'error'));
+    }
   }
 
-  redirect('/admin/instituicao/editar?tab=contatos');
+  revalidatePath('/admin/instituicao');
+  revalidatePath('/admin/instituicao/editar');
+  redirect(buildEditUrl('contatos', 'success'));
 }
 
 async function handleAddConta(formData: FormData) {
   'use server';
 
-  await addContaBancaria({
+  const result = await addContaBancaria({
     nome: (formData.get('nome') as string) || 'Conta bancária',
     banco: (formData.get('banco') as string) || undefined,
     agencia: (formData.get('agencia') as string) || undefined,
@@ -251,7 +288,13 @@ async function handleAddConta(formData: FormData) {
     visibilidade: (formData.get('visibilidade') as string) || undefined,
   });
 
-  redirect('/admin/instituicao/editar?tab=contas');
+  if (!result.success) {
+    redirect(buildEditUrl('contas', 'error'));
+  }
+
+  revalidatePath('/admin/instituicao');
+  revalidatePath('/admin/instituicao/editar');
+  redirect(buildEditUrl('contas', 'success'));
 }
 
 async function handleDeleteConta(formData: FormData) {
@@ -259,10 +302,15 @@ async function handleDeleteConta(formData: FormData) {
 
   const id = formData.get('id');
   if (typeof id === 'string' && id) {
-    await deleteContaBancaria(id);
+    const result = await deleteContaBancaria(id);
+    if (!result.success) {
+      redirect(buildEditUrl('contas', 'error'));
+    }
   }
 
-  redirect('/admin/instituicao/editar?tab=contas');
+  revalidatePath('/admin/instituicao');
+  revalidatePath('/admin/instituicao/editar');
+  redirect(buildEditUrl('contas', 'success'));
 }
 
 async function saveInstituicaoStep(formData: FormData) {
@@ -278,60 +326,70 @@ async function saveInstituicaoStep(formData: FormData) {
   if (step === 'identificacao') {
     const nomeOficial = snapshot.nome_oficial;
     if (!nomeOficial) {
-      return;
+      redirect(buildEditUrl(step, 'error'));
     }
 
     const result = await updateInstituicao(snapshot);
 
     if (!result.success) {
-      return;
+      redirect(buildEditUrl(step, 'error'));
     }
 
-    redirect('/admin/instituicao');
+    revalidatePath('/admin/instituicao');
+    revalidatePath('/admin/instituicao/editar');
+    redirect(buildOverviewUrl('success'));
   }
 
   if (step === 'endereco') {
     const result = await updateEndereco(enderecoSnapshot);
 
     if (!result?.success) {
-      return;
+      redirect(buildEditUrl(step, 'error'));
     }
 
-    redirect('/admin/instituicao');
+    revalidatePath('/admin/instituicao');
+    revalidatePath('/admin/instituicao/editar');
+    redirect(buildOverviewUrl('success'));
   }
 
   if (step === 'descritivo') {
     const result = await updateInstituicao(snapshot);
 
     if (!result.success) {
-      return;
+      redirect(buildEditUrl(step, 'error'));
     }
 
-    redirect('/admin/instituicao');
+    revalidatePath('/admin/instituicao');
+    revalidatePath('/admin/instituicao/editar');
+    redirect(buildOverviewUrl('success'));
   }
 
   if (step === 'valores') {
     const result = await updateInstituicao(snapshot);
 
     if (!result.success) {
-      return;
+      redirect(buildEditUrl(step, 'error'));
     }
 
-    redirect('/admin/instituicao');
+    revalidatePath('/admin/instituicao');
+    revalidatePath('/admin/instituicao/editar');
+    redirect(buildOverviewUrl('success'));
   }
 
   if (step === 'documentos') {
     const result = await updateInstituicao(snapshot);
 
     if (!result.success) {
-      return;
+      redirect(buildEditUrl(step, 'error'));
     }
 
-    redirect('/admin/instituicao');
+    revalidatePath('/admin/instituicao');
+    revalidatePath('/admin/instituicao/editar');
+    redirect(buildOverviewUrl('success'));
   }
 }
 
-async function EditInstituicaoContent({ searchParams }: { searchParams: { tab?: string } }) {
+async function EditInstituicaoContent({ searchParams }: { searchParams: { tab?: string; notice?: SaveNotice } }) {
   const instituicao = await getInstituicao();
   const enderecos = await getEnderecos();
   const contatos = await getContatos();
@@ -342,6 +400,7 @@ async function EditInstituicaoContent({ searchParams }: { searchParams: { tab?: 
 
   const requestedStep = isInstituicaoStep(searchParams.tab) ? searchParams.tab : 'identificacao';
   const activeStep = requestedStep;
+  const notice = searchParams.notice;
 
   const renderTabLink = (step: InstituicaoStep) => {
     const isActive = activeStep === step;
@@ -375,6 +434,8 @@ async function EditInstituicaoContent({ searchParams }: { searchParams: { tab?: 
 
       <section className="area-section">
         <div className="admin-card admin-step-card">
+          <NotificationNoticeHydrator notice={notice} />
+
           <form id="instituicao-step-form" action={saveInstituicaoStep}>
             <input type="hidden" name="step" value={activeStep} />
             {activeStep !== 'identificacao' ? (
@@ -413,7 +474,7 @@ async function EditInstituicaoContent({ searchParams }: { searchParams: { tab?: 
                 </label>
                 <label className="profile-form-field">
                   <span>Data de fundação</span>
-                  <input type="date" name="data_fundacao" defaultValue={instituicaoBase.data_fundacao || ''} className="profile-form-input" />
+                  <input type="date" name="data_fundacao" defaultValue={normalizeDateInput(instituicaoBase.data_fundacao)} className="profile-form-input" />
                 </label>
                 <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
                   <span>Natureza jurídica</span>

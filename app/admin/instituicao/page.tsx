@@ -2,10 +2,13 @@ import Link from "next/link";
 import { getInstituicao, getEnderecos, getContatos, getContasBancarias } from "./actions";
 import { Suspense } from "react";
 import { contentPages, site } from "@/lib/site-data";
+import { NotificationNoticeHydrator } from "@/components/notification-notice-hydrator";
 
 export const metadata = {
   title: "Instituição - Admin GEEF",
 };
+
+type SaveNotice = 'success' | 'error';
 
 const QUEM_SOMOS = contentPages["quem-somos"];
 
@@ -27,7 +30,21 @@ function formatCnpj(value: string | undefined) {
   return `${digits.slice(0, 2)}.${digits.slice(2, 5)}.${digits.slice(5, 8)}/${digits.slice(8, 12)}-${digits.slice(12)}`;
 }
 
-async function InstituicaoContent() {
+function formatDate(value: string | undefined) {
+  if (!value) {
+    return "—";
+  }
+
+  const datePart = value.slice(0, 10);
+  if (/^\d{4}-\d{2}-\d{2}$/.test(datePart)) {
+    const [year, month, day] = datePart.split('-');
+    return `${day}/${month}/${year}`;
+  }
+
+  return value;
+}
+
+async function InstituicaoContent({ searchParams }: { searchParams?: { notice?: SaveNotice } }) {
   const instituicao = await getInstituicao();
   const enderecos = await getEnderecos();
   const contatos = await getContatos();
@@ -35,6 +52,7 @@ async function InstituicaoContent() {
 
   const endereco = enderecos[0];
   const instituicaoBase = instituicao ?? FALLBACK_INSTITUICAO;
+  const notice = searchParams?.notice;
 
   return (
     <div className="area-page">
@@ -55,6 +73,8 @@ async function InstituicaoContent() {
 
       <section className="area-section">
         <div className="table-surface">
+          <NotificationNoticeHydrator notice={notice} />
+
           <div className="area-section-title">
             <h2>Dados básicos</h2>
           </div>
@@ -73,7 +93,7 @@ async function InstituicaoContent() {
                 </div>
             <div className="area-panel-item">
               <strong>Data de fundação</strong>
-              <p>{instituicaoBase.data_fundacao ? new Date(instituicaoBase.data_fundacao).toLocaleDateString("pt-BR") : "—"}</p>
+              <p>{formatDate(instituicaoBase.data_fundacao)}</p>
             </div>
           </div>
 
@@ -200,10 +220,10 @@ async function InstituicaoContent() {
   );
 }
 
-export default function InstituicaoPage() {
+export default function InstituicaoPage({ searchParams }: { searchParams?: { notice?: SaveNotice } }) {
   return (
     <Suspense fallback={<div style={{ padding: "2rem", textAlign: "center" }}>Carregando...</div>}>
-      <InstituicaoContent />
+      <InstituicaoContent searchParams={searchParams} />
     </Suspense>
   );
 }
