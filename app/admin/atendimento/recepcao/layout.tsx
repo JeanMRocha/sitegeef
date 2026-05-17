@@ -1,10 +1,10 @@
 import { AdminModuleGate } from '@/components/admin/admin-module-gate';
 
 export const metadata = {
-  title: 'Atendimento Fraterno - Admin GEEF',
+  title: 'Recepção - Admin GEEF',
 };
 
-export default function FraternoLayout({
+export default function RecepcaoLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -13,8 +13,8 @@ export default function FraternoLayout({
     <AdminModuleGate
       permission="pode_atendimento"
       profiles={['coord_atendimento']}
-      redirectPath="/admin/atendimento/fraterno"
-      title="Atendimento Fraterno"
+      redirectPath="/admin/atendimento/recepcao"
+      title="Recepção"
     >
       {children}
     </AdminModuleGate>

@@ -1,29 +1,22 @@
-import { redirect } from 'next/navigation';
-import { createClient } from '@/lib/supabase/server';
+import { AdminModuleGate } from '@/components/admin/admin-module-gate';
 
 export const metadata = {
   title: 'Atendimento - Admin GEEF',
 };
 
-export default async function AtendimentoLayout({
+export default function AtendimentoLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createClient();
-  let user = null;
-
-  try {
-    const authResult = await supabase.auth.getUser();
-    user = authResult.data.user;
-  } catch (error) {
-    console.error('Falha ao obter usuário autenticado no AtendimentoLayout:', error);
-    redirect('/login?next=/admin/atendimento');
-  }
-
-  if (!user) {
-    redirect('/login?next=/admin/atendimento');
-  }
-
-  return children;
+  return (
+    <AdminModuleGate
+      permission="pode_atendimento"
+      profiles={['coord_atendimento', 'coord_passe']}
+      redirectPath="/admin/atendimento"
+      title="Atendimento Espiritual"
+    >
+      {children}
+    </AdminModuleGate>
+  );
 }

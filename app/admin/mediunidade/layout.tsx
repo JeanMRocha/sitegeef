@@ -1,37 +1,22 @@
-import { redirect } from 'next/navigation';
-import { createClient } from '@/lib/supabase/server';
-import { checkPermission } from '@/lib/auth/permissions';
-import { AccessDenied } from '@/components/admin/access-denied';
+import { AdminModuleGate } from '@/components/admin/admin-module-gate';
 
 export const metadata = {
   title: 'Mediunidade - Admin GEEF',
 };
 
-export default async function MediunidadeLayout({
+export default function MediunidadeLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createClient();
-  let user = null;
-
-  try {
-    const authResult = await supabase.auth.getUser();
-    user = authResult.data.user;
-  } catch (error) {
-    console.error('Falha ao obter usuário autenticado no MediunidadeLayout:', error);
-    redirect('/login?next=/admin/mediunidade');
-  }
-
-  if (!user) {
-    redirect('/login?next=/admin/mediunidade');
-  }
-
-  const allowed = await checkPermission('pode_mediunidade');
-
-  if (!allowed) {
-    return <AccessDenied title="Mediunidade" message="Acesso negado" />;
-  }
-
-  return children;
+  return (
+    <AdminModuleGate
+      permission="pode_mediunidade"
+      profiles={['administrador']}
+      redirectPath="/admin/mediunidade"
+      title="Mediunidade"
+    >
+      {children}
+    </AdminModuleGate>
+  );
 }

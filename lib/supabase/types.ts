@@ -1,4 +1,4 @@
-export type status_pessoa = 'ativo' | 'inativo' | 'falecido';
+export type status_pessoa = 'ativo' | 'inativo' | 'falecido' | 'afastado';
 
 export type tipo_vinculo =
   | 'frequentador'

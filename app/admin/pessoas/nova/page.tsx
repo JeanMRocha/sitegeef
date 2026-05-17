@@ -1,6 +1,7 @@
-import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { createPessoa } from '../actions';
+import { redirect } from 'next/navigation';
+import { createPessoa, getPessoaById, removeVinculo, addVinculo, updatePessoa } from '../actions';
+import { type tipo_vinculo } from '@/lib/supabase/types';
 
 export const metadata = {
   title: 'Nova Pessoa - Admin GEEF',
@@ -22,185 +23,356 @@ const TIPOS_VINCULO = [
   'dirigente',
   'membro_departamento',
   'visitante',
-];
+] as const;
 
-async function handleSubmit(formData: FormData) {
+const PERSONA_STEPS = [
+  { key: 'identificacao', label: 'Identificação' },
+  { key: 'contato', label: 'Contato' },
+  { key: 'endereco', label: 'Endereço' },
+  { key: 'vinculos', label: 'Vínculos' },
+  { key: 'configuracoes', label: 'Configurações' },
+] as const;
+
+type PessoaStep = (typeof PERSONA_STEPS)[number]['key'];
+
+function isPessoaStep(value: unknown): value is PessoaStep {
+  return typeof value === 'string' && PERSONA_STEPS.some((step) => step.key === value);
+}
+
+function getNextStep(step: PessoaStep): PessoaStep | null {
+  const index = PERSONA_STEPS.findIndex((item) => item.key === step);
+  if (index < 0 || index + 1 >= PERSONA_STEPS.length) {
+    return null;
+  }
+
+  return PERSONA_STEPS[index + 1].key;
+}
+
+function buildHref(pessoaId: string | null, step: PessoaStep) {
+  const params = new URLSearchParams();
+
+  if (pessoaId) {
+    params.set('id', pessoaId);
+  }
+
+  params.set('tab', step);
+  return `/admin/pessoas/nova?${params.toString()}`;
+}
+
+function textValue(formData: FormData, name: string) {
+  const value = formData.get(name);
+  if (typeof value !== 'string') {
+    return undefined;
+  }
+
+  const trimmed = value.trim();
+  return trimmed ? trimmed : undefined;
+}
+
+function booleanValue(formData: FormData, name: string) {
+  return formData.get(name) === 'on';
+}
+
+async function savePessoaStep(formData: FormData) {
   'use server';
 
-  try {
-    const vinculos = TIPOS_VINCULO.filter((v) => formData.get(`vinculo_${v}`) === 'on');
+  const step = isPessoaStep(formData.get('step')) ? (formData.get('step') as PessoaStep) : 'identificacao';
+  const pessoaId = textValue(formData, 'pessoa_id');
 
-    await createPessoa({
-      nome: formData.get('nome') as string,
-      nome_social: (formData.get('nome_social') as string) || undefined,
-      email: (formData.get('email') as string) || undefined,
-      telefone: (formData.get('telefone') as string) || undefined,
-      whatsapp: (formData.get('whatsapp') as string) || undefined,
-      data_nascimento: (formData.get('data_nascimento') as string) || undefined,
-      cpf: (formData.get('cpf') as string) || undefined,
-      rg: (formData.get('rg') as string) || undefined,
-      logradouro: (formData.get('logradouro') as string) || undefined,
-      numero: (formData.get('numero') as string) || undefined,
-      bairro: (formData.get('bairro') as string) || undefined,
-      cidade: (formData.get('cidade') as string) || undefined,
-      estado: (formData.get('estado') as string) || undefined,
-      cep: (formData.get('cep') as string) || undefined,
-      observacoes: (formData.get('observacoes') as string) || undefined,
-      contato_emergencia: (formData.get('contato_emergencia') as string) || undefined,
-      autoriza_notificacao: formData.get('autoriza_notificacao') === 'on',
-      autoriza_imagem_voz: formData.get('autoriza_imagem_voz') === 'on',
-      vinculos: vinculos as any[],
+  if (step === 'identificacao') {
+    const identificacao = {
+      nome: textValue(formData, 'nome'),
+      nome_social: textValue(formData, 'nome_social'),
+      data_nascimento: textValue(formData, 'data_nascimento'),
+      cpf: textValue(formData, 'cpf'),
+      rg: textValue(formData, 'rg'),
+    };
+
+    if (!identificacao.nome) {
+      throw new Error('O nome completo é obrigatório.');
+    }
+
+    if (!pessoaId) {
+      const pessoa = await createPessoa({
+        nome: identificacao.nome,
+        nome_social: identificacao.nome_social,
+        data_nascimento: identificacao.data_nascimento,
+        cpf: identificacao.cpf,
+        rg: identificacao.rg,
+      });
+
+      const nextStep = getNextStep(step) ?? step;
+      redirect(buildHref(pessoa.id, nextStep));
+    }
+
+    await updatePessoa(pessoaId, identificacao);
+    const nextStep = getNextStep(step) ?? step;
+    redirect(buildHref(pessoaId, nextStep));
+  }
+
+  if (!pessoaId) {
+    redirect(buildHref(null, 'identificacao'));
+  }
+
+  if (step === 'contato') {
+    await updatePessoa(pessoaId, {
+      telefone: textValue(formData, 'telefone'),
+      whatsapp: textValue(formData, 'whatsapp'),
+      email: textValue(formData, 'email'),
+      contato_emergencia: textValue(formData, 'contato_emergencia'),
+    });
+
+    const nextStep = getNextStep(step);
+    redirect(nextStep ? buildHref(pessoaId, nextStep) : '/admin/pessoas');
+  }
+
+  if (step === 'endereco') {
+    await updatePessoa(pessoaId, {
+      logradouro: textValue(formData, 'logradouro'),
+      numero: textValue(formData, 'numero'),
+      bairro: textValue(formData, 'bairro'),
+      cidade: textValue(formData, 'cidade'),
+      estado: textValue(formData, 'estado'),
+      cep: textValue(formData, 'cep'),
+    });
+
+    const nextStep = getNextStep(step);
+    redirect(nextStep ? buildHref(pessoaId, nextStep) : '/admin/pessoas');
+  }
+
+  if (step === 'vinculos') {
+    const { vinculos } = await getPessoaById(pessoaId);
+    const vinculosAtuais = new Set(vinculos.map((v: any) => v.vinculo));
+    const vinculosNovos = new Set(
+      TIPOS_VINCULO.filter((vinculo) => formData.get(`vinculo_${vinculo}`) === 'on'),
+    );
+
+    for (const vinculo of vinculosAtuais) {
+      if (!vinculosNovos.has(vinculo)) {
+        await removeVinculo(pessoaId, vinculo as tipo_vinculo);
+      }
+    }
+
+    for (const vinculo of vinculosNovos) {
+      if (!vinculosAtuais.has(vinculo)) {
+        await addVinculo(pessoaId, vinculo as tipo_vinculo);
+      }
+    }
+
+    const nextStep = getNextStep(step);
+    redirect(nextStep ? buildHref(pessoaId, nextStep) : '/admin/pessoas');
+  }
+
+  if (step === 'configuracoes') {
+    await updatePessoa(pessoaId, {
+      observacoes: textValue(formData, 'observacoes'),
+      autoriza_notificacao: booleanValue(formData, 'autoriza_notificacao'),
+      autoriza_imagem_voz: booleanValue(formData, 'autoriza_imagem_voz'),
     });
 
     redirect('/admin/pessoas');
-  } catch (error) {
-    console.error('Erro ao criar pessoa:', error);
-    throw error;
   }
 }
 
-export default function NovaPessoaPage() {
-  return (
-    <div className="area-page">
-      <section className="area-hero">
-        <div className="area-hero-top">
+async function NovaPessoaContent({ searchParams }: { searchParams: { id?: string; tab?: string } }) {
+  const pessoaId = typeof searchParams.id === 'string' ? searchParams.id.trim() : '';
+  const requestedStep = isPessoaStep(searchParams.tab) ? searchParams.tab : 'identificacao';
+  const activeStep = pessoaId ? requestedStep : 'identificacao';
+  const pessoaData = pessoaId ? await getPessoaById(pessoaId) : { pessoa: null, vinculos: [] };
+  const pessoa = pessoaData.pessoa;
+  const vinculosSet = new Set(pessoaData.vinculos.map((v: any) => v.vinculo));
+
+  if (pessoaId && !pessoa) {
+    return (
+      <div className="area-page">
+        <div className="admin-page-header">
           <div>
-            <p className="area-subtitle">Cadastro de pessoa</p>
-            <h1 className="area-hero-title">Nova Pessoa</h1>
+            <h1 className="admin-page-title">Nova Pessoa</h1>
+          </div>
+          <div className="admin-actions">
+            <Link href="/admin/pessoas" className="admin-btn admin-btn-secondary">Cancelar</Link>
           </div>
         </div>
-        <p className="area-subtitle">Cadastre uma nova pessoa no sistema.</p>
-      </section>
+
+        <section className="area-section">
+          <div className="admin-card" style={{ maxWidth: '900px', margin: '0 auto' }}>
+            <p style={{ margin: 0, color: 'var(--muted)' }}>
+              Não foi possível carregar a pessoa selecionada.
+            </p>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
+  const renderTabLink = (step: PessoaStep) => {
+    const isActive = activeStep === step;
+    const isEnabled = Boolean(pessoaId) || step === 'identificacao';
+    const className = `admin-step-tab ${isActive ? 'active' : ''} ${!isEnabled ? 'disabled' : ''}`;
+    const href = buildHref(pessoaId, step);
+    const label = PERSONA_STEPS.find((item) => item.key === step)?.label ?? step;
+
+    if (!isEnabled) {
+      return (
+        <span key={step} className={className} aria-disabled="true">
+          {label}
+        </span>
+      );
+    }
+
+    return (
+      <Link key={step} href={href} className={className}>
+        {label}
+      </Link>
+    );
+  };
+
+  return (
+    <div className="area-page">
+      <div className="admin-page-header">
+        <div>
+          <h1 className="admin-page-title">Nova Pessoa</h1>
+        </div>
+        <div className="admin-actions">
+          <button type="submit" form="pessoa-step-form" className="admin-btn admin-btn-primary">
+            Salvar
+          </button>
+          <Link href="/admin/pessoas" className="admin-btn admin-btn-secondary">
+            Cancelar
+          </Link>
+        </div>
+      </div>
+
+      <nav className="admin-step-tabs" aria-label="Etapas do cadastro">
+        {PERSONA_STEPS.map((step) => renderTabLink(step.key))}
+      </nav>
 
       <section className="area-section">
-        <div className="table-surface" style={{ maxWidth: '900px', margin: '0 auto' }}>
-          <form action={handleSubmit}>
-            <div className="area-section-title">
-              <h2>Identificação</h2>
-              <p>Dados principais da pessoa cadastrada.</p>
-            </div>
-            <div className="module-grid">
-              <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
-                <span>Nome completo *</span>
-                <input type="text" name="nome" required className="profile-form-input" />
-              </label>
-              <label className="profile-form-field">
-                <span>Nome social</span>
-                <input type="text" name="nome_social" className="profile-form-input" />
-              </label>
-              <label className="profile-form-field">
-                <span>CPF</span>
-                <input type="text" name="cpf" placeholder="000.000.000-00" className="profile-form-input" />
-              </label>
-              <label className="profile-form-field">
-                <span>RG</span>
-                <input type="text" name="rg" className="profile-form-input" />
-              </label>
-              <label className="profile-form-field">
-                <span>Data de nascimento</span>
-                <input type="date" name="data_nascimento" className="profile-form-input" />
-              </label>
-            </div>
+        <div className="admin-card admin-step-card" style={{ maxWidth: '980px', margin: '0 auto' }}>
+          <form id="pessoa-step-form" action={savePessoaStep}>
+            <input type="hidden" name="step" value={activeStep} />
+            {pessoaId ? <input type="hidden" name="pessoa_id" value={pessoaId} /> : null}
 
-            <div className="area-section-title" style={{ marginTop: '1.5rem' }}>
-              <h2>Contato</h2>
-              <p>Telefone, email e contato de emergência.</p>
-            </div>
-            <div className="module-grid">
-              <label className="profile-form-field">
-                <span>Telefone</span>
-                <input type="tel" name="telefone" className="profile-form-input" />
-              </label>
-              <label className="profile-form-field">
-                <span>WhatsApp</span>
-                <input type="tel" name="whatsapp" className="profile-form-input" />
-              </label>
-              <label className="profile-form-field">
-                <span>Email</span>
-                <input type="email" name="email" className="profile-form-input" />
-              </label>
-              <label className="profile-form-field">
-                <span>Contato de emergência</span>
-                <input type="text" name="contato_emergencia" placeholder="Nome e telefone" className="profile-form-input" />
-              </label>
-            </div>
+            {activeStep === 'identificacao' && (
+              <div className="module-grid">
+                <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
+                  <span>Nome completo *</span>
+                  <input type="text" name="nome" required defaultValue={pessoa?.nome || ''} className="profile-form-input" />
+                </label>
+                <label className="profile-form-field">
+                  <span>Nome social</span>
+                  <input type="text" name="nome_social" defaultValue={pessoa?.nome_social || ''} className="profile-form-input" />
+                </label>
+                <label className="profile-form-field">
+                  <span>CPF</span>
+                  <input type="text" name="cpf" defaultValue={pessoa?.cpf || ''} placeholder="000.000.000-00" className="profile-form-input" />
+                </label>
+                <label className="profile-form-field">
+                  <span>RG</span>
+                  <input type="text" name="rg" defaultValue={pessoa?.rg || ''} className="profile-form-input" />
+                </label>
+                <label className="profile-form-field">
+                  <span>Data de nascimento</span>
+                  <input type="date" name="data_nascimento" defaultValue={pessoa?.data_nascimento || ''} className="profile-form-input" />
+                </label>
+              </div>
+            )}
 
-            <div className="area-section-title" style={{ marginTop: '1.5rem' }}>
-              <h2>Endereço</h2>
-              <p>Localização da pessoa.</p>
-            </div>
-            <div className="module-grid">
-              <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
-                <span>Logradouro</span>
-                <input type="text" name="logradouro" className="profile-form-input" />
-              </label>
-              <label className="profile-form-field">
-                <span>Bairro</span>
-                <input type="text" name="bairro" className="profile-form-input" />
-              </label>
-              <label className="profile-form-field">
-                <span>Número</span>
-                <input type="text" name="numero" className="profile-form-input" />
-              </label>
-              <label className="profile-form-field">
-                <span>Complemento</span>
-                <input type="text" name="complemento" className="profile-form-input" />
-              </label>
-              <label className="profile-form-field">
-                <span>Cidade</span>
-                <input type="text" name="cidade" className="profile-form-input" />
-              </label>
-              <label className="profile-form-field">
-                <span>Estado</span>
-                <input type="text" name="estado" placeholder="RJ" maxLength={2} className="profile-form-input" />
-              </label>
-              <label className="profile-form-field">
-                <span>CEP</span>
-                <input type="text" name="cep" placeholder="00000-000" className="profile-form-input" />
-              </label>
-            </div>
+            {activeStep === 'contato' && (
+              <div className="module-grid">
+                <label className="profile-form-field">
+                  <span>Telefone</span>
+                  <input type="tel" name="telefone" defaultValue={pessoa?.telefone || ''} className="profile-form-input" />
+                </label>
+                <label className="profile-form-field">
+                  <span>WhatsApp</span>
+                  <input type="tel" name="whatsapp" defaultValue={pessoa?.whatsapp || ''} className="profile-form-input" />
+                </label>
+                <label className="profile-form-field">
+                  <span>Email</span>
+                  <input type="email" name="email" defaultValue={pessoa?.email || ''} className="profile-form-input" />
+                </label>
+                <label className="profile-form-field">
+                  <span>Contato de emergência</span>
+                  <input
+                    type="text"
+                    name="contato_emergencia"
+                    defaultValue={pessoa?.contato_emergencia || ''}
+                    placeholder="Nome e telefone"
+                    className="profile-form-input"
+                  />
+                </label>
+              </div>
+            )}
 
-            <div className="area-section-title" style={{ marginTop: '1.5rem' }}>
-              <h2>Vínculos</h2>
-              <p>Selecione os vínculos desta pessoa.</p>
-            </div>
-            <div className="table-surface">
+            {activeStep === 'endereco' && (
+              <div className="module-grid">
+                <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
+                  <span>Logradouro</span>
+                  <input type="text" name="logradouro" defaultValue={pessoa?.logradouro || ''} className="profile-form-input" />
+                </label>
+                <label className="profile-form-field">
+                  <span>Número</span>
+                  <input type="text" name="numero" defaultValue={pessoa?.numero || ''} className="profile-form-input" />
+                </label>
+                <label className="profile-form-field">
+                  <span>Bairro</span>
+                  <input type="text" name="bairro" defaultValue={pessoa?.bairro || ''} className="profile-form-input" />
+                </label>
+                <label className="profile-form-field">
+                  <span>Cidade</span>
+                  <input type="text" name="cidade" defaultValue={pessoa?.cidade || ''} className="profile-form-input" />
+                </label>
+                <label className="profile-form-field">
+                  <span>Estado</span>
+                  <input type="text" name="estado" defaultValue={pessoa?.estado || ''} placeholder="RJ" maxLength={2} className="profile-form-input" />
+                </label>
+                <label className="profile-form-field">
+                  <span>CEP</span>
+                  <input type="text" name="cep" defaultValue={pessoa?.cep || ''} placeholder="00000-000" className="profile-form-input" />
+                </label>
+              </div>
+            )}
+
+            {activeStep === 'vinculos' && (
               <div className="tag-list" style={{ flexWrap: 'wrap' }}>
                 {TIPOS_VINCULO.map((vinculo) => (
-                  <label key={vinculo} className="tag" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <input type="checkbox" name={`vinculo_${vinculo}`} />
+                  <label
+                    key={vinculo}
+                    className="tag"
+                    style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+                  >
+                    <input type="checkbox" name={`vinculo_${vinculo}`} defaultChecked={vinculosSet.has(vinculo)} />
                     <span>{vinculo}</span>
                   </label>
                 ))}
               </div>
-            </div>
+            )}
 
-            <div className="area-section-title" style={{ marginTop: '1.5rem' }}>
-              <h2>Configurações</h2>
-              <p>Observações e autorizações.</p>
-            </div>
-            <div className="module-grid">
-              <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
-                <span>Observações</span>
-                <textarea name="observacoes" rows={4} className="profile-form-input" />
-              </label>
-              <label className="tag" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
-                <input type="checkbox" name="autoriza_notificacao" defaultChecked />
-                <span>Autoriza notificações</span>
-              </label>
-              <label className="tag" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
-                <input type="checkbox" name="autoriza_imagem_voz" />
-                <span>Autoriza imagem/voz</span>
-              </label>
-            </div>
-
-            <div className="area-panel-grid" style={{ marginTop: '1.5rem' }}>
-              <button type="submit" className="profile-form-btn profile-form-btn-primary">Criar Pessoa</button>
-              <Link href="/admin/pessoas" className="profile-form-btn profile-form-btn-secondary">Cancelar</Link>
-            </div>
+            {activeStep === 'configuracoes' && (
+              <div className="module-grid">
+                <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
+                  <span>Observações</span>
+                  <textarea name="observacoes" rows={5} defaultValue={pessoa?.observacoes || ''} className="profile-form-input" />
+                </label>
+                <label className="tag" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <input type="checkbox" name="autoriza_notificacao" defaultChecked={pessoa?.autoriza_notificacao ?? true} />
+                  <span>Autoriza notificações</span>
+                </label>
+                <label className="tag" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <input type="checkbox" name="autoriza_imagem_voz" defaultChecked={pessoa?.autoriza_imagem_voz ?? false} />
+                  <span>Autoriza imagem/voz</span>
+                </label>
+              </div>
+            )}
           </form>
         </div>
       </section>
     </div>
   );
+}
+
+export default async function NovaPessoaPage({ searchParams }: { searchParams: Promise<any> }) {
+  const resolvedSearchParams = await searchParams;
+  return <NovaPessoaContent searchParams={resolvedSearchParams} />;
 }

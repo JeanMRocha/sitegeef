@@ -1,20 +1,20 @@
 import { AdminModuleGate } from '@/components/admin/admin-module-gate';
 
 export const metadata = {
-  title: 'Biblioteca - Admin GEEF',
+  title: 'Funções - Admin GEEF',
 };
 
-export default function BibliotecaLayout({
+export default function FuncoesLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
     <AdminModuleGate
-      permission="pode_biblioteca"
-      profiles={['bibliotecario']}
-      redirectPath="/admin/biblioteca"
-      title="Biblioteca"
+      permission="pode_escalas"
+      profiles={['coord_passe']}
+      redirectPath="/admin/funcoes"
+      title="Funções"
     >
       {children}
     </AdminModuleGate>

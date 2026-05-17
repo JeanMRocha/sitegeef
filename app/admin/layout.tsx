@@ -85,7 +85,7 @@ export default async function AdminLayout({
     <div className="admin-layout">
       <AdminHeader user={user} usuarioSistema={resolvedUsuarioSistema} />
       <div className="admin-container">
-        <AdminSidebar podeMediunidade={resolvedUsuarioSistema.pode_mediunidade} />
+        <AdminSidebar usuarioSistema={resolvedUsuarioSistema} />
         <main className="admin-main">
           {children}
         </main>
