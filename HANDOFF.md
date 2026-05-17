@@ -47,8 +47,11 @@ Use esta ordem quando a tarefa envolver estrutura/admin, actions, banco ou segur
 2. `skills/padrao-actions-ts.md`
 3. `skills/supabase-patterns.md`
 4. `skills/auth-permissions.md`
-5. `skills/migrations-workflow.md` quando houver mudança de schema
-6. `skills/roteamento-operacional-autoreflex.md` quando a tarefa for misturada, repetitiva ou duvidosa
+5. `skills/notificacoes-timers-avisos.md` quando a tela precisar de feedback, validação ou aviso de sessão
+6. `skills/relatorios-geef.md` quando a tarefa for analítica, de KPI, dashboard ou exportação
+7. `skills/livraria-biblioteca-hibrida.md` quando a tarefa for de catálogo, exemplares, vendas, empréstimos ou multas
+8. `skills/migrations-workflow.md` quando houver mudança de schema
+9. `skills/roteamento-operacional-autoreflex.md` quando a tarefa for misturada, repetitiva ou duvidosa
 
 Árvore rápida de decisão:
 
@@ -56,6 +59,9 @@ Use esta ordem quando a tarefa envolver estrutura/admin, actions, banco ou segur
 - Getter/mutação/cache/revalidate/error fallback -> `skills/padrao-actions-ts.md`
 - Supabase, RLS, server role, browser client -> `skills/supabase-patterns.md`
 - RBAC, `requirePermission`, `usuarios_sistema` -> `skills/auth-permissions.md`
+- Feedback, validacao, aviso de sessao -> `skills/notificacoes-timers-avisos.md`
+- Relatorios, dashboard, KPI, exportacao -> `skills/relatorios-geef.md`
+- Catalogo, exemplar, venda, emprestimo, multa -> `skills/livraria-biblioteca-hibrida.md`
 - Tabela, coluna, índice, policy, rollout -> `skills/migrations-workflow.md`
 - Se a tarefa toca mais de uma camada e você quer a decisão certa primeiro -> `skills/roteamento-operacional-autoreflex.md`
 
@@ -87,6 +93,7 @@ Quando o Autoreflex voltar a responder, rodar primeiro:
 - `app/admin/pessoas/*` -> cadastro central
 - `app/admin/funcoes/*` -> funcoes e temas
 - `app/admin/escalas/*` -> escalas publicas e operacao mensal
+- `app/admin/relatorios/*` -> visão analítica e consolidação por módulo
 
 ## Mudancas recentes para nao regredir
 

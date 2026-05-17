@@ -1,0 +1,11 @@
+{
+  "name": "relatorios-geef",
+  "title": "Relatórios GEEF",
+  "summary": "Skill para criar relatórios, dashboards, KPIs, filtros e exportação PDF/print no GEEF com abordagem dataset-centric inspirada no Superset.",
+  "tags": ["relatorios", "dashboard", "bi", "analytics", "indicadores", "pdf", "exportacao", "superset", "geef"],
+  "language": "pt-BR",
+  "source_skill_path": "skills/relatorios-geef.md",
+  "created_at": "2026-05-17T12:00:00-03:00",
+  "updated_at": "2026-05-17T12:00:00-03:00",
+  "version": 1
+}
