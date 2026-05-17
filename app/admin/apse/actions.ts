@@ -1,40 +1,63 @@
 'use server';
 
+import { unstable_cache } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
+import { createServiceRoleClient } from '@/lib/supabase/service-role';
+import { invalidateAdminApseCache } from '@/lib/admin/cache';
 
 // Famílias Assistidas
-export async function getFamilias() {
-  const supabase = await createClient();
+async function loadFamilias() {
+  try {
+    const supabase = createServiceRoleClient();
 
-  const { data, error } = await supabase
-    .from('familias_assistidas')
-    .select(`
-      *,
-      responsavel:pessoas (nome)
-    `)
-    .order('criado_em', { ascending: false });
+    const { data, error } = await supabase
+      .from('familias_assistidas')
+      .select(`
+        *,
+        responsavel:pessoas (nome)
+      `)
+      .order('criado_em', { ascending: false });
 
-  if (error) throw error;
+    if (error) throw error;
 
-  return data || [];
+    return data || [];
+  } catch (error) {
+    console.error('Falha ao carregar famílias APSE:', error);
+    return [];
+  }
 }
 
-export async function getFamiliaById(id: string) {
-  const supabase = await createClient();
+export const getFamilias = unstable_cache(loadFamilias, ['admin-apse-familias'], {
+  revalidate: 60,
+  tags: ['admin-apse-familias'],
+});
 
-  const { data, error } = await supabase
-    .from('familias_assistidas')
-    .select(`
-      *,
-      responsavel:pessoas (id, nome)
-    `)
-    .eq('id', id)
-    .single();
+async function loadFamiliaById(id: string) {
+  try {
+    const supabase = createServiceRoleClient();
 
-  if (error) throw error;
+    const { data, error } = await supabase
+      .from('familias_assistidas')
+      .select(`
+        *,
+        responsavel:pessoas (id, nome)
+      `)
+      .eq('id', id)
+      .single();
 
-  return data;
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.error('Falha ao carregar família APSE:', error);
+    return null;
+  }
 }
+
+export const getFamiliaById = unstable_cache(loadFamiliaById, ['admin-apse-familia'], {
+  revalidate: 60,
+  tags: ['admin-apse-familias'],
+});
 
 export async function createFamilia(formData: {
   responsavel_id: string;
@@ -52,6 +75,7 @@ export async function createFamilia(formData: {
 
   if (error) throw error;
 
+  invalidateAdminApseCache();
   return data;
 }
 
@@ -74,36 +98,57 @@ export async function updateFamilia(
 
   if (error) throw error;
 
+  invalidateAdminApseCache();
   return { success: true };
 }
 
 // Campanhas APSE
-export async function getCampanhas() {
-  const supabase = await createClient();
+async function loadCampanhas() {
+  try {
+    const supabase = createServiceRoleClient();
 
-  const { data, error } = await supabase
-    .from('campanhas_apse')
-    .select('*')
-    .order('data_inicio', { ascending: false });
+    const { data, error } = await supabase
+      .from('campanhas_apse')
+      .select('*')
+      .order('data_inicio', { ascending: false });
 
-  if (error) throw error;
+    if (error) throw error;
 
-  return data || [];
+    return data || [];
+  } catch (error) {
+    console.error('Falha ao carregar campanhas APSE:', error);
+    return [];
+  }
 }
 
-export async function getCampanhaById(id: string) {
-  const supabase = await createClient();
+export const getCampanhas = unstable_cache(loadCampanhas, ['admin-apse-campanhas'], {
+  revalidate: 60,
+  tags: ['admin-apse-campanhas'],
+});
 
-  const { data, error } = await supabase
-    .from('campanhas_apse')
-    .select('*')
-    .eq('id', id)
-    .single();
+async function loadCampanhaById(id: string) {
+  try {
+    const supabase = createServiceRoleClient();
 
-  if (error) throw error;
+    const { data, error } = await supabase
+      .from('campanhas_apse')
+      .select('*')
+      .eq('id', id)
+      .single();
 
-  return data;
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.error('Falha ao carregar campanha APSE:', error);
+    return null;
+  }
 }
+
+export const getCampanhaById = unstable_cache(loadCampanhaById, ['admin-apse-campanha'], {
+  revalidate: 60,
+  tags: ['admin-apse-campanhas'],
+});
 
 export async function createCampanha(formData: {
   nome: string;
@@ -122,6 +167,7 @@ export async function createCampanha(formData: {
 
   if (error) throw error;
 
+  invalidateAdminApseCache();
   return data;
 }
 
@@ -145,52 +191,73 @@ export async function updateCampanha(
 
   if (error) throw error;
 
+  invalidateAdminApseCache();
   return { success: true };
 }
 
 // Atendimentos APSE
-export async function getAtendimentos(familia_id?: string) {
-  const supabase = await createClient();
+async function loadAtendimentos(familia_id?: string) {
+  try {
+    const supabase = createServiceRoleClient();
 
-  let query = supabase
-    .from('atendimentos_apse')
-    .select(`
-      *,
-      familia:familias_assistidas (responsavel_id),
-      pessoa:pessoas (nome),
-      responsavel:pessoas (nome)
-    `)
-    .order('data', { ascending: false });
+    let query = supabase
+      .from('atendimentos_apse')
+      .select(`
+        *,
+        familia:familias_assistidas (responsavel_id),
+        pessoa:pessoas (nome),
+        responsavel:pessoas (nome)
+      `)
+      .order('data', { ascending: false });
 
-  if (familia_id) {
-    query = query.eq('familia_id', familia_id);
+    if (familia_id) {
+      query = query.eq('familia_id', familia_id);
+    }
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.error('Falha ao carregar atendimentos APSE:', error);
+    return [];
   }
-
-  const { data, error } = await query;
-
-  if (error) throw error;
-
-  return data || [];
 }
 
-export async function getAtendimentoById(id: string) {
-  const supabase = await createClient();
+export const getAtendimentos = unstable_cache(loadAtendimentos, ['admin-apse-atendimentos'], {
+  revalidate: 60,
+  tags: ['admin-apse-atendimentos'],
+});
 
-  const { data, error } = await supabase
-    .from('atendimentos_apse')
-    .select(`
-      *,
-      familia:familias_assistidas (id, responsavel_id),
-      pessoa:pessoas (id, nome),
-      responsavel:pessoas (id, nome)
-    `)
-    .eq('id', id)
-    .single();
+async function loadAtendimentoById(id: string) {
+  try {
+    const supabase = createServiceRoleClient();
 
-  if (error) throw error;
+    const { data, error } = await supabase
+      .from('atendimentos_apse')
+      .select(`
+        *,
+        familia:familias_assistidas (id, responsavel_id),
+        pessoa:pessoas (id, nome),
+        responsavel:pessoas (id, nome)
+      `)
+      .eq('id', id)
+      .single();
 
-  return data;
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.error('Falha ao carregar atendimento APSE:', error);
+    return null;
+  }
 }
+
+export const getAtendimentoById = unstable_cache(loadAtendimentoById, ['admin-apse-atendimento'], {
+  revalidate: 60,
+  tags: ['admin-apse-atendimentos'],
+});
 
 export async function createAtendimento(formData: {
   familia_id: string;
@@ -210,6 +277,7 @@ export async function createAtendimento(formData: {
 
   if (error) throw error;
 
+  invalidateAdminApseCache();
   return data;
 }
 
@@ -230,19 +298,30 @@ export async function updateAtendimento(
 
   if (error) throw error;
 
+  invalidateAdminApseCache();
   return { success: true };
 }
 
-export async function getPessoasDisponiveis() {
-  const supabase = await createClient();
+async function loadPessoasDisponiveis() {
+  try {
+    const supabase = createServiceRoleClient();
 
-  const { data, error } = await supabase
-    .from('pessoas')
-    .select('id, nome')
-    .eq('status', 'ativo')
-    .order('nome');
+    const { data, error } = await supabase
+      .from('pessoas')
+      .select('id, nome')
+      .eq('status', 'ativo')
+      .order('nome');
 
-  if (error) throw error;
+    if (error) throw error;
 
-  return data || [];
+    return data || [];
+  } catch (error) {
+    console.error('Falha ao carregar pessoas APSE:', error);
+    return [];
+  }
 }
+
+export const getPessoasDisponiveis = unstable_cache(loadPessoasDisponiveis, ['admin-apse-pessoas'], {
+  revalidate: 30,
+  tags: ['admin-apse-pessoas'],
+});

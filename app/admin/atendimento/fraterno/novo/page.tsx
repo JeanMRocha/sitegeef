@@ -6,6 +6,8 @@ export const metadata = {
   title: 'Novo Atendimento Fraterno - Admin GEEF',
 };
 
+export const dynamic = 'force-dynamic';
+
 async function handleSubmit(formData: FormData) {
   'use server';
 

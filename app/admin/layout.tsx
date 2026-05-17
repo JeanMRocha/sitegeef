@@ -18,7 +18,15 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  let user = null;
+
+  try {
+    const authResult = await supabase.auth.getUser();
+    user = authResult.data.user;
+  } catch (error) {
+    console.error('Falha ao obter usuário autenticado no AdminLayout:', error);
+    redirect('/login?next=/admin');
+  }
 
   if (!user) {
     redirect('/login?next=/admin');
@@ -28,11 +36,25 @@ export default async function AdminLayout({
   const isAdminViaAuth = appMetadata.site_role === 'administrador';
 
   // Verificar se o usuário tem acesso ao admin
-  const { data: usuarioSistema } = await supabase
-    .from('usuarios_sistema')
-    .select('perfil, pode_mediunidade, pode_escalas, pode_biblioteca, pode_livraria, pode_financeiro, pode_pessoas, pode_publicar, pode_atendimento, pode_apse')
-    .eq('id', user.id)
-    .single();
+  let usuarioSistema = null;
+
+  try {
+    const { data, error } = await supabase
+      .from('usuarios_sistema')
+      .select('perfil, pode_mediunidade, pode_escalas, pode_biblioteca, pode_livraria, pode_financeiro, pode_pessoas, pode_publicar, pode_atendimento, pode_apse')
+      .eq('id', user.id)
+      .maybeSingle();
+
+    if (error?.code) {
+      console.error('Falha ao ler usuarios_sistema em AdminLayout:', error);
+    } else {
+      usuarioSistema = data;
+    }
+  } catch (error) {
+    if (error) {
+      console.error('Exceção ao ler usuarios_sistema em AdminLayout:', error);
+    }
+  }
 
   if (!usuarioSistema && !isAdminViaAuth) {
     return (

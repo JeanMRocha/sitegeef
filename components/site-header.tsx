@@ -10,9 +10,10 @@ type SiteHeaderProps = {
   userEmail: string | null;
   nomeCompleto: string | null;
   avatarUrl: string | null;
+  hasAdminAccess: boolean;
 };
 
-export function SiteHeader({ userEmail, nomeCompleto, avatarUrl }: SiteHeaderProps) {
+export function SiteHeader({ userEmail, nomeCompleto, avatarUrl, hasAdminAccess }: SiteHeaderProps) {
   const [moreOpen, setMoreOpen] = useState(false);
   const moreRef = useRef<HTMLDivElement>(null);
 
@@ -95,6 +96,7 @@ export function SiteHeader({ userEmail, nomeCompleto, avatarUrl }: SiteHeaderPro
           userEmail={userEmail}
           nomeCompleto={nomeCompleto}
           avatarUrl={avatarUrl}
+          hasAdminAccess={hasAdminAccess}
         />
       </div>
     </header>

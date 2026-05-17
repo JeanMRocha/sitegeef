@@ -1,44 +1,67 @@
 'use server';
 
+import { unstable_cache } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
+import { createServiceRoleClient } from '@/lib/supabase/service-role';
+import { invalidateAdminAtendimentoCache } from '@/lib/admin/cache';
 
 // Recepção
-export async function getRecepcoes(mes?: number, ano?: number) {
-  const supabase = await createClient();
+async function loadRecepcoes(mes?: number, ano?: number) {
+  try {
+    const supabase = createServiceRoleClient();
 
-  let query = supabase
-    .from('atendimento_recepcao')
-    .select('*')
-    .order('data', { ascending: false });
+    let query = supabase
+      .from('atendimento_recepcao')
+      .select('*')
+      .order('data', { ascending: false });
 
-  if (mes && ano) {
-    const dataInicio = `${ano}-${String(mes).padStart(2, '0')}-01`;
-    const dataFim = new Date(ano, mes, 0).toISOString().split('T')[0];
-    query = query
-      .gte('data', dataInicio)
-      .lte('data', dataFim);
+    if (mes && ano) {
+      const dataInicio = `${ano}-${String(mes).padStart(2, '0')}-01`;
+      const dataFim = new Date(ano, mes, 0).toISOString().split('T')[0];
+      query = query
+        .gte('data', dataInicio)
+        .lte('data', dataFim);
+    }
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.error('Falha ao carregar recepções:', error);
+    return [];
   }
-
-  const { data, error } = await query;
-
-  if (error) throw error;
-
-  return data || [];
 }
 
-export async function getRecepcaoById(id: string) {
-  const supabase = await createClient();
+export const getRecepcoes = unstable_cache(loadRecepcoes, ['admin-atendimento-recepcao'], {
+  revalidate: 60,
+  tags: ['admin-atendimento-recepcao'],
+});
 
-  const { data, error } = await supabase
-    .from('atendimento_recepcao')
-    .select('*')
-    .eq('id', id)
-    .single();
+async function loadRecepcaoById(id: string) {
+  try {
+    const supabase = createServiceRoleClient();
 
-  if (error) throw error;
+    const { data, error } = await supabase
+      .from('atendimento_recepcao')
+      .select('*')
+      .eq('id', id)
+      .single();
 
-  return data;
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.error('Falha ao carregar recepção:', error);
+    return null;
+  }
 }
+
+export const getRecepcaoById = unstable_cache(loadRecepcaoById, ['admin-atendimento-recepcao-item'], {
+  revalidate: 60,
+  tags: ['admin-atendimento-recepcao'],
+});
 
 export async function createRecepcao(formData: {
   data: string;
@@ -57,6 +80,7 @@ export async function createRecepcao(formData: {
 
   if (error) throw error;
 
+  invalidateAdminAtendimentoCache();
   return data;
 }
 
@@ -79,6 +103,7 @@ export async function updateRecepcao(
 
   if (error) throw error;
 
+  invalidateAdminAtendimentoCache();
   return { success: true };
 }
 
@@ -92,54 +117,75 @@ export async function deleteRecepcao(id: string) {
 
   if (error) throw error;
 
+  invalidateAdminAtendimentoCache();
   return { success: true };
 }
 
 // Atendimento Fraterno
-export async function getAtendimentosFraterno(mes?: number, ano?: number) {
-  const supabase = await createClient();
+async function loadAtendimentosFraterno(mes?: number, ano?: number) {
+  try {
+    const supabase = createServiceRoleClient();
 
-  let query = supabase
-    .from('atendimento_fraterno')
-    .select(`
-      *,
-      pessoas (nome),
-      atendente:pessoas!atendente_id (nome)
-    `)
-    .order('data', { ascending: false });
+    let query = supabase
+      .from('atendimento_fraterno')
+      .select(`
+        *,
+        pessoas (nome),
+        atendente:pessoas!atendente_id (nome)
+      `)
+      .order('data', { ascending: false });
 
-  if (mes && ano) {
-    const dataInicio = `${ano}-${String(mes).padStart(2, '0')}-01`;
-    const dataFim = new Date(ano, mes, 0).toISOString().split('T')[0];
-    query = query
-      .gte('data', dataInicio)
-      .lte('data', dataFim);
+    if (mes && ano) {
+      const dataInicio = `${ano}-${String(mes).padStart(2, '0')}-01`;
+      const dataFim = new Date(ano, mes, 0).toISOString().split('T')[0];
+      query = query
+        .gte('data', dataInicio)
+        .lte('data', dataFim);
+    }
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.error('Falha ao carregar atendimentos fraterno:', error);
+    return [];
   }
-
-  const { data, error } = await query;
-
-  if (error) throw error;
-
-  return data || [];
 }
 
-export async function getAtendimentoFraternoById(id: string) {
-  const supabase = await createClient();
+export const getAtendimentosFraterno = unstable_cache(loadAtendimentosFraterno, ['admin-atendimento-fraterno'], {
+  revalidate: 60,
+  tags: ['admin-atendimento-fraterno'],
+});
 
-  const { data, error } = await supabase
-    .from('atendimento_fraterno')
-    .select(`
-      *,
-      pessoas (id, nome),
-      atendente:pessoas!atendente_id (id, nome)
-    `)
-    .eq('id', id)
-    .single();
+async function loadAtendimentoFraternoById(id: string) {
+  try {
+    const supabase = createServiceRoleClient();
 
-  if (error) throw error;
+    const { data, error } = await supabase
+      .from('atendimento_fraterno')
+      .select(`
+        *,
+        pessoas (id, nome),
+        atendente:pessoas!atendente_id (id, nome)
+      `)
+      .eq('id', id)
+      .single();
 
-  return data;
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.error('Falha ao carregar atendimento fraterno:', error);
+    return null;
+  }
 }
+
+export const getAtendimentoFraternoById = unstable_cache(loadAtendimentoFraternoById, ['admin-atendimento-fraterno-item'], {
+  revalidate: 60,
+  tags: ['admin-atendimento-fraterno'],
+});
 
 export async function createAtendimentoFraterno(formData: {
   pessoa_id: string;
@@ -160,6 +206,7 @@ export async function createAtendimentoFraterno(formData: {
 
   if (error) throw error;
 
+  invalidateAdminAtendimentoCache();
   return data;
 }
 
@@ -185,6 +232,7 @@ export async function updateAtendimentoFraterno(
 
   if (error) throw error;
 
+  invalidateAdminAtendimentoCache();
   return { success: true };
 }
 
@@ -198,42 +246,63 @@ export async function deleteAtendimentoFraterno(id: string) {
 
   if (error) throw error;
 
+  invalidateAdminAtendimentoCache();
   return { success: true };
 }
 
 // Evangelhos no Lar
-export async function getEvangelhasNoLar() {
-  const supabase = await createClient();
+async function loadEvangelhasNoLar() {
+  try {
+    const supabase = createServiceRoleClient();
 
-  const { data, error } = await supabase
-    .from('evangelhos_no_lar')
-    .select(`
-      *,
-      pessoas (nome)
-    `)
-    .order('data', { ascending: false });
+    const { data, error } = await supabase
+      .from('evangelhos_no_lar')
+      .select(`
+        *,
+        pessoas (nome)
+      `)
+      .order('data', { ascending: false });
 
-  if (error) throw error;
+    if (error) throw error;
 
-  return data || [];
+    return data || [];
+  } catch (error) {
+    console.error('Falha ao carregar evangelhos no lar:', error);
+    return [];
+  }
 }
 
-export async function getEvangelhoNoLarById(id: string) {
-  const supabase = await createClient();
+export const getEvangelhasNoLar = unstable_cache(loadEvangelhasNoLar, ['admin-atendimento-evangelhos-lar'], {
+  revalidate: 60,
+  tags: ['admin-atendimento-evangelhos-lar'],
+});
 
-  const { data, error } = await supabase
-    .from('evangelhos_no_lar')
-    .select(`
-      *,
-      pessoas (id, nome)
-    `)
-    .eq('id', id)
-    .single();
+async function loadEvangelhoNoLarById(id: string) {
+  try {
+    const supabase = createServiceRoleClient();
 
-  if (error) throw error;
+    const { data, error } = await supabase
+      .from('evangelhos_no_lar')
+      .select(`
+        *,
+        pessoas (id, nome)
+      `)
+      .eq('id', id)
+      .single();
 
-  return data;
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.error('Falha ao carregar evangelho no lar:', error);
+    return null;
+  }
 }
+
+export const getEvangelhoNoLarById = unstable_cache(loadEvangelhoNoLarById, ['admin-atendimento-evangelho-lar-item'], {
+  revalidate: 60,
+  tags: ['admin-atendimento-evangelhos-lar'],
+});
 
 export async function createEvangelhoNoLar(formData: {
   pessoa_id: string;
@@ -253,6 +322,7 @@ export async function createEvangelhoNoLar(formData: {
 
   if (error) throw error;
 
+  invalidateAdminAtendimentoCache();
   return data;
 }
 
@@ -276,6 +346,7 @@ export async function updateEvangelhoNoLar(
 
   if (error) throw error;
 
+  invalidateAdminAtendimentoCache();
   return { success: true };
 }
 
@@ -289,48 +360,69 @@ export async function deleteEvangelhoNoLar(id: string) {
 
   if (error) throw error;
 
+  invalidateAdminAtendimentoCache();
   return { success: true };
 }
 
 // Irradiação
-export async function getIrradiacoes(ativas?: boolean) {
-  const supabase = await createClient();
+async function loadIrradiacoes(ativas?: boolean) {
+  try {
+    const supabase = createServiceRoleClient();
 
-  let query = supabase
-    .from('irradiacoes')
-    .select(`
-      *,
-      pessoas (nome)
-    `)
-    .order('criado_em', { ascending: false });
+    let query = supabase
+      .from('irradiacoes')
+      .select(`
+        *,
+        pessoas (nome)
+      `)
+      .order('criado_em', { ascending: false });
 
-  if (ativas !== undefined) {
-    query = query.eq('status', ativas ? 'ativa' : 'encerrada');
+    if (ativas !== undefined) {
+      query = query.eq('status', ativas ? 'ativa' : 'encerrada');
+    }
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+
+    return data || [];
+  } catch (error) {
+    console.error('Falha ao carregar irradiações:', error);
+    return [];
   }
-
-  const { data, error } = await query;
-
-  if (error) throw error;
-
-  return data || [];
 }
 
-export async function getIrradiacaoById(id: string) {
-  const supabase = await createClient();
+export const getIrradiacoes = unstable_cache(loadIrradiacoes, ['admin-atendimento-irradiacao'], {
+  revalidate: 60,
+  tags: ['admin-atendimento-irradiacao'],
+});
 
-  const { data, error } = await supabase
-    .from('irradiacoes')
-    .select(`
-      *,
-      pessoas (id, nome)
-    `)
-    .eq('id', id)
-    .single();
+async function loadIrradiacaoById(id: string) {
+  try {
+    const supabase = createServiceRoleClient();
 
-  if (error) throw error;
+    const { data, error } = await supabase
+      .from('irradiacoes')
+      .select(`
+        *,
+        pessoas (id, nome)
+      `)
+      .eq('id', id)
+      .single();
 
-  return data;
+    if (error) throw error;
+
+    return data;
+  } catch (error) {
+    console.error('Falha ao carregar irradiação:', error);
+    return null;
+  }
 }
+
+export const getIrradiacaoById = unstable_cache(loadIrradiacaoById, ['admin-atendimento-irradiacao-item'], {
+  revalidate: 60,
+  tags: ['admin-atendimento-irradiacao'],
+});
 
 export async function createIrradiacao(formData: {
   solicitante_id: string;
@@ -349,6 +441,7 @@ export async function createIrradiacao(formData: {
 
   if (error) throw error;
 
+  invalidateAdminAtendimentoCache();
   return data;
 }
 
@@ -371,6 +464,7 @@ export async function updateIrradiacao(
 
   if (error) throw error;
 
+  invalidateAdminAtendimentoCache();
   return { success: true };
 }
 
@@ -384,19 +478,30 @@ export async function toggleIrradiacaoStatus(id: string, ativa: boolean) {
 
   if (error) throw error;
 
+  invalidateAdminAtendimentoCache();
   return { success: true };
 }
 
-export async function getPessoasDisponiveis() {
-  const supabase = await createClient();
+async function loadPessoasDisponiveis() {
+  try {
+    const supabase = createServiceRoleClient();
 
-  const { data, error } = await supabase
-    .from('pessoas')
-    .select('id, nome, email')
-    .eq('status', 'ativo')
-    .order('nome');
+    const { data, error } = await supabase
+      .from('pessoas')
+      .select('id, nome, email')
+      .eq('status', 'ativo')
+      .order('nome');
 
-  if (error) throw error;
+    if (error) throw error;
 
-  return data || [];
+    return data || [];
+  } catch (error) {
+    console.error('Falha ao carregar pessoas de atendimento:', error);
+    return [];
+  }
 }
+
+export const getPessoasDisponiveis = unstable_cache(loadPessoasDisponiveis, ['admin-atendimento-pessoas'], {
+  revalidate: 30,
+  tags: ['admin-atendimento-pessoas'],
+});

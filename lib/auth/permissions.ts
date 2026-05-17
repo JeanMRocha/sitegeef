@@ -13,20 +13,34 @@ export type PermissionFlag =
 
 export async function getUserPermissions() {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  let user = null;
+
+  try {
+    const authResult = await supabase.auth.getUser();
+    user = authResult.data.user;
+  } catch (error) {
+    console.error('Falha ao obter usuário autenticado em getUserPermissions:', error);
+    return null;
+  }
 
   if (!user) {
     return null;
   }
 
-  const { data: usuarioSistema } = await supabase
-    .from('usuarios_sistema')
-    .select('id, pessoa_id, perfil, pode_escalas, pode_biblioteca, pode_livraria, pode_financeiro, pode_pessoas, pode_publicar, pode_mediunidade, pode_atendimento, pode_apse')
-    .eq('id', user.id)
-    .maybeSingle();
+  try {
+    const { data: usuarioSistema, error } = await supabase
+      .from('usuarios_sistema')
+      .select('id, pessoa_id, perfil, pode_escalas, pode_biblioteca, pode_livraria, pode_financeiro, pode_pessoas, pode_publicar, pode_mediunidade, pode_atendimento, pode_apse')
+      .eq('id', user.id)
+      .maybeSingle();
 
-  if (usuarioSistema) {
-    return usuarioSistema;
+    if (error) {
+      console.error('Falha ao ler usuarios_sistema em getUserPermissions:', error);
+    } else if (usuarioSistema) {
+      return usuarioSistema;
+    }
+  } catch (error) {
+    console.error('Exceção ao ler usuarios_sistema em getUserPermissions:', error);
   }
 
   const appMetadata = (user.app_metadata ?? {}) as Record<string, unknown>;

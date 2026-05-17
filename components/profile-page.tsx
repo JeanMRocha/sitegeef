@@ -18,6 +18,7 @@ export async function ProfilePageView() {
   const nomeCompleto = (user.user_metadata?.full_name as string) || null;
   const siteRole = (user.app_metadata?.site_role as string) || null;
   const isAdmin = siteRole === "administrador";
+  const roleLabel = isAdmin ? "Administrador" : siteRole || "público";
 
   return (
     <main className="profile-page-compact">
@@ -38,8 +39,7 @@ export async function ProfilePageView() {
             <h1>{nomeCompleto || "Usuário"}</h1>
             <p>{user.email}</p>
             <div className="tag-list" style={{ marginTop: "0.75rem" }}>
-              <span className="tag">{siteRole || "público"}</span>
-              {isAdmin && <span className="tag">Administrador</span>}
+              <span className="tag">{roleLabel}</span>
             </div>
           </div>
         </header>

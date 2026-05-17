@@ -85,6 +85,31 @@ async function handleUpdatePessoa(pessoaId: string, formData: FormData) {
 async function EditPessoaContent({ id }: { id: string }) {
   const { pessoa, vinculos } = await getPessoaById(id);
 
+  if (!pessoa) {
+    return (
+      <div className="area-page">
+        <section className="area-hero">
+          <div className="area-hero-top">
+            <div>
+              <p className="area-subtitle">Cadastro de pessoa</p>
+              <h1 className="area-hero-title">Editar Pessoa</h1>
+            </div>
+          </div>
+          <p className="area-subtitle">A pessoa solicitada não foi encontrada ou ainda não está disponível.</p>
+        </section>
+
+        <section className="area-section">
+          <div className="area-empty">
+            <p>Não foi possível carregar o cadastro desta pessoa.</p>
+            <Link href="/admin/pessoas" className="profile-form-btn profile-form-btn-secondary">
+              Voltar para pessoas
+            </Link>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
   const vinculosSet = new Set(vinculos.map((v: any) => v.vinculo));
 
   return (

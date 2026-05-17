@@ -15,68 +15,106 @@ export async function getPessoas(
   const pageSize = 20;
   const offset = (page - 1) * pageSize;
 
-  let query = supabase
-    .from('pessoas')
-    .select(
-      `
-      id,
-      nome,
-      email,
-      telefone,
-      status,
-      criado_em,
-      pessoa_vinculos (vinculo)
-    `,
-      { count: 'exact' }
-    );
+  try {
+    let query = supabase
+      .from('pessoas')
+      .select(
+        `
+        id,
+        nome,
+        email,
+        telefone,
+        status,
+        criado_em,
+        pessoa_vinculos (vinculo)
+      `,
+        { count: 'exact' }
+      );
 
-  if (search) {
-    query = query.or(`nome.ilike.%${search}%,email.ilike.%${search}%,telefone.ilike.%${search}%`);
+    if (search) {
+      query = query.or(`nome.ilike.%${search}%,email.ilike.%${search}%,telefone.ilike.%${search}%`);
+    }
+
+    if (statusFilter) {
+      query = query.eq('status', statusFilter);
+    }
+
+    const { data, count, error } = await query.range(offset, offset + pageSize - 1);
+
+    if (error) {
+      if ((error as any)?.code) {
+        console.error('Falha ao carregar pessoas:', error);
+      }
+      return {
+        pessoas: [],
+        total: 0,
+        page,
+        pageSize,
+      };
+    }
+
+    let filtered = data || [];
+    if (vinculoFilter) {
+      filtered = filtered.filter((pessoa: any) =>
+        pessoa.pessoa_vinculos?.some((v: any) => v.vinculo === vinculoFilter)
+      );
+    }
+
+    return {
+      pessoas: filtered,
+      total: count || 0,
+      page,
+      pageSize,
+    };
+  } catch (error) {
+    if (error) {
+      console.error('Exceção ao carregar pessoas:', error);
+    }
+    return {
+      pessoas: [],
+      total: 0,
+      page,
+      pageSize,
+    };
   }
-
-  if (statusFilter) {
-    query = query.eq('status', statusFilter);
-  }
-
-  const { data, count, error } = await query.range(offset, offset + pageSize - 1);
-
-  if (error) throw error;
-
-  // Filter by vínculo if specified
-  let filtered = data || [];
-  if (vinculoFilter) {
-    filtered = filtered.filter((pessoa: any) =>
-      pessoa.pessoa_vinculos?.some((v: any) => v.vinculo === vinculoFilter)
-    );
-  }
-
-  return {
-    pessoas: filtered,
-    total: count || 0,
-    page,
-    pageSize,
-  };
 }
 
 export async function getPessoaById(id: string) {
   const supabase = await createClient();
 
-  const { data: pessoa, error: pessoaError } = await supabase
-    .from('pessoas')
-    .select('*')
-    .eq('id', id)
-    .single();
+  try {
+    const { data: pessoa, error: pessoaError } = await supabase
+      .from('pessoas')
+      .select('*')
+      .eq('id', id)
+      .maybeSingle();
 
-  if (pessoaError) throw pessoaError;
+    if (pessoaError) {
+      if ((pessoaError as any)?.code) {
+        console.error('Falha ao carregar pessoa:', pessoaError);
+      }
+      return { pessoa: null, vinculos: [] };
+    }
 
-  const { data: vinculos, error: vinculosError } = await supabase
-    .from('pessoa_vinculos')
-    .select('*')
-    .eq('pessoa_id', id);
+    const { data: vinculos, error: vinculosError } = await supabase
+      .from('pessoa_vinculos')
+      .select('*')
+      .eq('pessoa_id', id);
 
-  if (vinculosError) throw vinculosError;
+    if (vinculosError) {
+      if ((vinculosError as any)?.code) {
+        console.error('Falha ao carregar vínculos da pessoa:', vinculosError);
+      }
+      return { pessoa: pessoa ?? null, vinculos: [] };
+    }
 
-  return { pessoa, vinculos };
+    return { pessoa: pessoa ?? null, vinculos: vinculos ?? [] };
+  } catch (error) {
+    if (error) {
+      console.error('Exceção ao carregar pessoa por id:', error);
+    }
+    return { pessoa: null, vinculos: [] };
+  }
 }
 
 export async function createPessoa(formData: {

@@ -22,6 +22,11 @@ export function UserMenu({
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const { theme, toggleTheme } = useTheme();
+  const normalizedEmail = userEmail?.trim().toLowerCase() || null;
+  const isAdminByEmail =
+    normalizedEmail === "contatogeef@gmail.com" ||
+    normalizedEmail === "app.jmr@gmail.com";
+  const canAccessAdmin = Boolean(hasAdminAccess || isAdminByEmail);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -100,6 +105,15 @@ export function UserMenu({
 
           {/* Navigation Links */}
           <nav className="site-header-user-nav">
+            {canAccessAdmin && (
+              <Link
+                href="/admin"
+                className="site-header-user-item"
+                onClick={() => setMenuOpen(false)}
+              >
+                <span>🛠️</span> Painel Admin
+              </Link>
+            )}
             <Link
               href="/perfil"
               className="site-header-user-item"
@@ -114,15 +128,6 @@ export function UserMenu({
             >
               <span>📋</span> Minha Área
             </Link>
-            {hasAdminAccess && (
-              <Link
-                href="/admin"
-                className="site-header-user-item"
-                onClick={() => setMenuOpen(false)}
-              >
-                <span>🛠️</span> Painel Admin
-              </Link>
-            )}
           </nav>
 
           {/* Divider */}

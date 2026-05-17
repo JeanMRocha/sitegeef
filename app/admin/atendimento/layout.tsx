@@ -11,7 +11,15 @@ export default async function AtendimentoLayout({
   children: React.ReactNode;
 }) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  let user = null;
+
+  try {
+    const authResult = await supabase.auth.getUser();
+    user = authResult.data.user;
+  } catch (error) {
+    console.error('Falha ao obter usuário autenticado no AtendimentoLayout:', error);
+    redirect('/login?next=/admin/atendimento');
+  }
 
   if (!user) {
     redirect('/login?next=/admin/atendimento');

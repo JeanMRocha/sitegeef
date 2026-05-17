@@ -6,6 +6,8 @@ export const metadata = {
   title: 'Atendimento Fraterno - Admin GEEF',
 };
 
+export const dynamic = 'force-dynamic';
+
 async function FraternoContent({ searchParams }: { searchParams: { mes?: string; ano?: string } }) {
   const hoje = new Date();
   const mes = searchParams.mes ? parseInt(searchParams.mes) : hoje.getMonth() + 1;

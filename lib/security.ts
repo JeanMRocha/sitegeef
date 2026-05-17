@@ -92,12 +92,19 @@ function getForwardedOrigin(headers: Headers) {
 
 export function getAppOrigin(headers?: Headers) {
   const configuredOrigin = getConfiguredOrigin();
+  const forwardedOrigin = headers ? getForwardedOrigin(headers) : null;
+
+  if (process.env.NODE_ENV !== "production") {
+    if (forwardedOrigin) {
+      return forwardedOrigin;
+    }
+
+    return "http://localhost:3500";
+  }
 
   if (configuredOrigin && !isLocalhostHost(new URL(configuredOrigin).hostname)) {
     return configuredOrigin;
   }
-
-  const forwardedOrigin = headers ? getForwardedOrigin(headers) : null;
 
   if (forwardedOrigin) {
     return forwardedOrigin;

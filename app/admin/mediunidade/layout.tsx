@@ -13,7 +13,15 @@ export default async function MediunidadeLayout({
   children: React.ReactNode;
 }) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  let user = null;
+
+  try {
+    const authResult = await supabase.auth.getUser();
+    user = authResult.data.user;
+  } catch (error) {
+    console.error('Falha ao obter usuário autenticado no MediunidadeLayout:', error);
+    redirect('/login?next=/admin/mediunidade');
+  }
 
   if (!user) {
     redirect('/login?next=/admin/mediunidade');

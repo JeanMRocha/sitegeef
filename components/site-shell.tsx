@@ -10,12 +10,25 @@ type SiteShellProps = {
 
 export function SiteShell({ user, children }: Readonly<SiteShellProps>) {
   const userEmail = user?.email || null;
+  const normalizedEmail = userEmail?.trim().toLowerCase() || null;
   const nomeCompleto = (user?.user_metadata?.full_name as string) || null;
   const avatarUrl = (user?.user_metadata?.avatar_url as string) || null;
+  const appMetadata = (user?.app_metadata ?? {}) as Record<string, unknown>;
+  const siteRole =
+    typeof appMetadata.site_role === "string" ? appMetadata.site_role.trim().toLowerCase() : null;
+  const hasAdminAccess =
+    siteRole === "administrador" ||
+    normalizedEmail === "contatogeef@gmail.com" ||
+    normalizedEmail === "app.jmr@gmail.com";
 
   return (
     <div className="site-shell">
-      <SiteHeader userEmail={userEmail} nomeCompleto={nomeCompleto} avatarUrl={avatarUrl} />
+      <SiteHeader
+        userEmail={userEmail}
+        nomeCompleto={nomeCompleto}
+        avatarUrl={avatarUrl}
+        hasAdminAccess={hasAdminAccess}
+      />
 
       {children}
 

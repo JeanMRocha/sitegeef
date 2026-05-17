@@ -6,6 +6,17 @@
   --admin-border: rgba(225, 212, 238, 0.92);
 }
 
+.site-shell {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.site-shell > .site-header,
+.site-shell > .site-footer {
+  display: none !important;
+}
+
 .admin-layout {
   display: flex;
   flex-direction: column;

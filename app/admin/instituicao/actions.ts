@@ -5,53 +5,91 @@ import { createClient } from '@/lib/supabase/server';
 export async function getInstituicao() {
   const supabase = await createClient();
 
-  const { data, error } = await supabase
-    .from('instituicao')
-    .select('*')
-    .single();
+  try {
+    const { data, error } = await supabase
+      .from('instituicao')
+      .select('*')
+      .maybeSingle();
 
-  if (error && error.code !== 'PGRST116') {
-    throw error;
+    if (error?.code && error.code !== 'PGRST116') {
+      console.error('Falha ao carregar instituicao:', error);
+      return null;
+    }
+
+    return data;
+  } catch (error) {
+    if (error) {
+      console.error('Exceção ao carregar instituicao:', error);
+    }
+    return null;
   }
-
-  return data;
 }
 
 export async function getEnderecos() {
   const supabase = await createClient();
 
-  const { data, error } = await supabase.from('instituicao_enderecos').select('*');
+  try {
+    const { data, error } = await supabase.from('instituicao_enderecos').select('*');
 
-  if (error) throw error;
+    if (error) {
+      if (Object.keys(error).length > 0) {
+        console.error('Falha ao carregar instituicao_enderecos:', error);
+      }
+      return [];
+    }
 
-  return data || [];
+    return data || [];
+  } catch (error) {
+    console.error('Exceção ao carregar instituicao_enderecos:', error);
+    return [];
+  }
 }
 
 export async function getContatos() {
   const supabase = await createClient();
 
-  const { data, error } = await supabase
-    .from('instituicao_contatos')
-    .select(
+  try {
+    const { data, error } = await supabase
+      .from('instituicao_contatos')
+      .select(
+        `
+        *,
+        pessoas (nome, email)
       `
-      *,
-      pessoas (nome, email)
-    `
-    );
+      );
 
-  if (error) throw error;
+    if (error) {
+      if (Object.keys(error).length > 0) {
+        console.error('Falha ao carregar instituicao_contatos:', error);
+      }
+      return [];
+    }
 
-  return data || [];
+    return data || [];
+  } catch (error) {
+    console.error('Exceção ao carregar instituicao_contatos:', error);
+    return [];
+  }
 }
 
 export async function getContasBancarias() {
   const supabase = await createClient();
 
-  const { data, error } = await supabase.from('contas_bancarias').select('*');
+  try {
+    const { data, error } = await supabase.from('contas_bancarias').select('*');
 
-  if (error) throw error;
+    if (error) {
+      if (Object.keys(error).length > 0) {
+        console.error('Falha ao carregar contas_bancarias:', error);
+      }
+      return [];
+    }
 
-  return data || [];
+    return data || [];
+  } catch (error) {
+    console.error('Exceção ao carregar contas_bancarias:', error);
+    return [];
+  }
 }
 
 export async function updateInstituicao(formData: {
@@ -71,10 +109,24 @@ export async function updateInstituicao(formData: {
   const supabase = await createClient();
 
   // Try to get existing
-  let { data: existing, error: readError } = await supabase
-    .from('instituicao')
-    .select('id')
-    .single();
+  let existing = null;
+
+  try {
+    const { data, error } = await supabase
+      .from('instituicao')
+      .select('id')
+      .maybeSingle();
+
+    if (error?.code && error.code !== 'PGRST116') {
+      console.error('Falha ao verificar instituicao existente:', error);
+    } else {
+      existing = data;
+    }
+  } catch (error) {
+    if (error) {
+      console.error('Exceção ao verificar instituicao existente:', error);
+    }
+  }
 
   if (existing) {
     // Update
@@ -83,12 +135,18 @@ export async function updateInstituicao(formData: {
       .update({ ...formData, atualizado_em: new Date().toISOString() })
       .eq('id', existing.id);
 
-    if (updateError) throw updateError;
+    if (updateError) {
+      console.error('Falha ao atualizar instituicao:', updateError);
+      throw updateError;
+    }
   } else {
     // Create
     const { error: insertError } = await supabase.from('instituicao').insert([formData]);
 
-    if (insertError) throw insertError;
+    if (insertError) {
+      console.error('Falha ao criar instituicao:', insertError);
+      throw insertError;
+    }
   }
 
   return { success: true };
@@ -109,7 +167,20 @@ export async function updateEndereco(formData: {
   const supabase = await createClient();
 
   // Try to get existing
-  let { data: existing } = await supabase.from('instituicao_enderecos').select('id').limit(1).single();
+  let existing = null;
+
+  try {
+    const { data, error } = await supabase.from('instituicao_enderecos').select('id').limit(1).maybeSingle();
+    if (error?.code && error.code !== 'PGRST116') {
+      console.error('Falha ao verificar endereco existente:', error);
+    } else {
+      existing = data;
+    }
+  } catch (error) {
+    if (error) {
+      console.error('Exceção ao verificar endereco existente:', error);
+    }
+  }
 
   if (existing) {
     const { error } = await supabase.from('instituicao_enderecos').update(formData).eq('id', existing.id);

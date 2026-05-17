@@ -6,6 +6,8 @@ export const metadata = {
   title: 'Famílias Assistidas - Admin GEEF',
 };
 
+export const dynamic = 'force-dynamic';
+
 async function FamiliasContent() {
   const familias = await getFamilias();
 

@@ -13,7 +13,15 @@ export default async function IrradiacaoLayout({
   children: React.ReactNode;
 }) {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  let user = null;
+
+  try {
+    const authResult = await supabase.auth.getUser();
+    user = authResult.data.user;
+  } catch (error) {
+    console.error('Falha ao obter usuário autenticado no IrradiacaoLayout:', error);
+    redirect('/login?next=/admin/atendimento/irradiacao');
+  }
 
   if (!user) {
     redirect('/login?next=/admin/atendimento/irradiacao');
