@@ -5,6 +5,8 @@ type UserAreaData = {
   perfil: any | null;
   usuario: any | null;
   pessoa: any | null;
+  siteRole: string | null;
+  hasAdminAccess: boolean;
   emprestimos: any[];
   reservas: any[];
   movimentosLivraria: any[];
@@ -33,6 +35,16 @@ async function loadUserArea(userId: string): Promise<UserAreaData> {
     },
   });
 
+  const authUserResponse = await fetch(`${url}/auth/v1/admin/users/${userId}`, {
+    headers: {
+      apikey: serviceRoleKey,
+      Authorization: `Bearer ${serviceRoleKey}`,
+    },
+  });
+
+  const authUser = authUserResponse.ok ? await authUserResponse.json() : null;
+  const siteRole = typeof authUser?.app_metadata?.site_role === "string" ? authUser.app_metadata.site_role : null;
+
   const [perfilResult, usuarioResult] = await Promise.all([
     supabase.from("profiles").select("*").eq("id", userId).single(),
     supabase.from("usuarios_sistema").select("*").eq("id", userId).single(),
@@ -40,6 +52,7 @@ async function loadUserArea(userId: string): Promise<UserAreaData> {
 
   const perfil = perfilResult.data ?? null;
   const usuario = usuarioResult.data ?? null;
+  const hasAdminAccess = siteRole === "administrador" || usuario?.perfil === "administrador";
   const pessoaId = usuario?.pessoa_id ?? null;
 
   if (!pessoaId) {
@@ -47,6 +60,8 @@ async function loadUserArea(userId: string): Promise<UserAreaData> {
       perfil,
       usuario,
       pessoa: null,
+      siteRole,
+      hasAdminAccess,
       emprestimos: [],
       reservas: [],
       movimentosLivraria: [],
@@ -120,6 +135,8 @@ async function loadUserArea(userId: string): Promise<UserAreaData> {
     perfil,
     usuario,
     pessoa: pessoaResult.data ?? null,
+    siteRole,
+    hasAdminAccess,
     emprestimos: emprestimosResult.data ?? [],
     reservas: reservasResult.data ?? [],
     movimentosLivraria: movimentosResult.data ?? [],

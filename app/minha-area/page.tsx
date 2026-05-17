@@ -15,7 +15,7 @@ async function MinhaAreaContent() {
     redirect("/login?next=/minha-area");
   }
 
-  const { usuario, pessoa, emprestimos, reservas, movimentosLivraria, escalas, voluntariados, consentimentos } =
+  const { usuario, pessoa, siteRole, hasAdminAccess, emprestimos, reservas, movimentosLivraria, escalas, voluntariados, consentimentos } =
     await getCachedUserArea(user.id);
 
   const today = new Date().toISOString().split("T")[0];
@@ -57,6 +57,16 @@ async function MinhaAreaContent() {
               </span>
             </div>
           ))}
+          {hasAdminAccess && (
+            <div className="area-summary-card" style={{ borderColor: "rgba(138, 0, 90, 0.25)" }}>
+              <strong>Admin</strong>
+              <span>
+                Acesso administrativo
+                <br />
+                Painel liberado
+              </span>
+            </div>
+          )}
         </div>
       </section>
 
@@ -87,7 +97,11 @@ async function MinhaAreaContent() {
               </div>
               <div className="area-panel-item">
                 <strong>Perfil</strong>
-                <p>{usuario?.perfil || "Público"}</p>
+                <p>{usuario?.perfil || siteRole || "Público"}</p>
+              </div>
+              <div className="area-panel-item">
+                <strong>Regra</strong>
+                <p>{hasAdminAccess ? "Administrador" : "Usuário público"}</p>
               </div>
             </div>
           ) : (
@@ -206,6 +220,21 @@ async function MinhaAreaContent() {
                   <p>Consentido em {new Date(c.data_consentimento).toLocaleDateString("pt-BR")}</p>
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {hasAdminAccess && (
+        <section className="area-section">
+          <h2 className="area-section-title">Acesso administrativo</h2>
+          <div className="admin-card">
+            <div className="area-panel-item">
+              <strong>Conta com permissão de administração</strong>
+              <p>Use o menu superior para acessar o painel administrativo e testar módulos internos.</p>
+              <div style={{ marginTop: "1rem" }}>
+                <a href="/admin" className="profile-form-btn profile-form-btn-primary">Abrir Admin</a>
+              </div>
             </div>
           </div>
         </section>
