@@ -129,6 +129,12 @@ async function MinhaAreaContent() {
                 <a href="/privacidade">Ler política de privacidade</a> · <a href="/lgpd">Mais detalhes</a>
               </p>
             </div>
+            <div className="area-panel-item">
+              <strong>Baixar dados</strong>
+              <p>
+                <a href="/api/lgpd/export">Exportar meus dados</a>
+              </p>
+            </div>
           </div>
         </div>
       </section>

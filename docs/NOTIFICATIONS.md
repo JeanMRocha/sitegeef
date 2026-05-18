@@ -72,6 +72,39 @@ await criarNotificacaoErro(
 
 A Edge Function processa notificações pendentes com canal `email` e as envia via Resend.
 
+### 2.1. Edge Function LGPD — Limpeza e Encerramento
+
+**Arquivo:** `supabase/functions/cleanup-lgpd/index.ts`
+
+A Edge Function `cleanup-lgpd` executa a rotina de retenção LGPD:
+
+- encerra pedidos do titular vencidos;
+- remove `lgpd_solicitacoes` já resolvidas fora da janela de retenção;
+- remove `ops_events` antigos ligados a privacidade e auditoria.
+
+#### Configuração
+
+```
+LGPD_CLEANUP_SECRET=seu-token-secreto-opcional
+```
+
+Se a secret estiver definida, a chamada precisa enviar:
+
+```bash
+curl -X POST "https://seu-projeto.supabase.co/functions/v1/cleanup-lgpd" \
+  -H "Authorization: Bearer seu-token-secreto-opcional"
+```
+
+#### Programação
+
+Use o mesmo padrão de cron das demais Edge Functions do projeto. A retenção LGPD foi desenhada para rodar em segundo plano, fora da interface.
+
+#### Comportamento
+
+- `ops_events`: retenção de 180 dias.
+- `lgpd_solicitacoes`: retenção de 365 dias após resolução.
+- pedidos vencidos: fechamento automático para `encerrada`.
+
 #### Configuração
 
 **Environment Variables (Supabase Dashboard):**
@@ -133,6 +166,20 @@ const response = await fetch('/api/notificacoes/enviar', {
     }
   ]
 }
+```
+
+### 4. Agendamento via GitHub Actions
+
+O projeto também pode processar as funções por GitHub Actions, sem depender de cron externo do provedor:
+
+- `.github/workflows/notifications-dispatch.yml` chama `send-pending-notifications` a cada 5 minutos.
+- `.github/workflows/lgpd-retention.yml` chama `cleanup-lgpd` uma vez por dia.
+
+Variáveis opcionais:
+
+```
+NOTIFICATION_FUNCTION_SECRET=seu-token-secreto
+LGPD_CLEANUP_SECRET=seu-token-secreto-opcional
 ```
 
 ---

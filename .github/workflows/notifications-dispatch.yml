@@ -1,0 +1,33 @@
+name: Notifications Dispatch
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+jobs:
+  dispatch-notifications:
+    name: Process pending notifications
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger notification function
+        env:
+          FUNCTION_URL: https://nycgpokqlmrfzegjlrwa.supabase.co/functions/v1/send-pending-notifications
+          NOTIFICATION_FUNCTION_SECRET: ${{ secrets.NOTIFICATION_FUNCTION_SECRET }}
+        run: |
+          set -euo pipefail
+
+          headers=(-H "Content-Type: application/json")
+          if [ -n "${NOTIFICATION_FUNCTION_SECRET:-}" ]; then
+            headers+=(-H "Authorization: Bearer ${NOTIFICATION_FUNCTION_SECRET}")
+          fi
+
+          response_file="$(mktemp)"
+          http_code="$(curl -sS -o "$response_file" -w "%{http_code}" -X POST "$FUNCTION_URL" "${headers[@]}")"
+
+          echo "HTTP status: $http_code"
+          cat "$response_file"
+
+          if [ "$http_code" -lt 200 ] || [ "$http_code" -ge 300 ]; then
+            exit 1
+          fi

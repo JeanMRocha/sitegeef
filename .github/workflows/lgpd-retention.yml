@@ -1,0 +1,33 @@
+name: LGPD Retention Cleanup
+
+on:
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+
+jobs:
+  cleanup-lgpd:
+    name: Run LGPD cleanup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger cleanup function
+        env:
+          CLEANUP_URL: https://nycgpokqlmrfzegjlrwa.supabase.co/functions/v1/cleanup-lgpd
+          LGPD_CLEANUP_SECRET: ${{ secrets.LGPD_CLEANUP_SECRET }}
+        run: |
+          set -euo pipefail
+
+          headers=(-H "Content-Type: application/json")
+          if [ -n "${LGPD_CLEANUP_SECRET:-}" ]; then
+            headers+=(-H "Authorization: Bearer ${LGPD_CLEANUP_SECRET}")
+          fi
+
+          response_file="$(mktemp)"
+          http_code="$(curl -sS -o "$response_file" -w "%{http_code}" -X POST "$CLEANUP_URL" "${headers[@]}")"
+
+          echo "HTTP status: $http_code"
+          cat "$response_file"
+
+          if [ "$http_code" -lt 200 ] || [ "$http_code" -ge 300 ]; then
+            exit 1
+          fi

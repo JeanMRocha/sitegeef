@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 import { invalidateAdminDocumentosCache } from '@/lib/admin/cache';
 import { invalidateUserAreaCache } from '@/lib/areas/invalidate-user-area';
+import { sendEmailNotification } from '@/lib/notificacoes/email-service';
 import { recordOpsEvent } from '@/lib/ops-events';
 
 async function recordDocumentosAuditEvent(
@@ -22,6 +23,106 @@ async function recordDocumentosAuditEvent(
     });
   } catch {
     // A auditoria não pode bloquear o fluxo principal.
+  }
+}
+
+async function notifyTitularRequestStakeholders(
+  solicitacao: {
+    id: string;
+    request_type: string;
+    titular_nome?: string | null;
+    titular_email?: string | null;
+    status?: string | null;
+    responsavel_id?: string | null;
+    resposta?: string | null;
+  },
+  action: 'created' | 'updated'
+) {
+  try {
+    const supabase = createServiceRoleClient();
+    const fallbackEmail = process.env.LGPD_ENCARREGADO_EMAIL || process.env.LGPD_COMPLIANCE_EMAIL || null;
+    const titulo =
+      action === 'created'
+        ? 'Novo pedido LGPD'
+        : 'Pedido LGPD atualizado';
+    const mensagemBase =
+      action === 'created'
+        ? `Novo pedido do titular registrado: ${solicitacao.request_type}.`
+        : `Pedido do titular atualizado para ${solicitacao.status || 'sem status'}.`;
+    const mensagem = [
+      mensagemBase,
+      solicitacao.titular_nome ? `Titular: ${solicitacao.titular_nome}` : null,
+      solicitacao.titular_email ? `Email: ${solicitacao.titular_email}` : null,
+      solicitacao.resposta ? `Resposta: ${solicitacao.resposta}` : null,
+      `Abrir: /admin/documentos/pedidos/${solicitacao.id}`,
+    ]
+      .filter(Boolean)
+      .join('\n');
+
+    let targetPessoaId = solicitacao.responsavel_id || null;
+    let targetNome = 'Encarregado LGPD';
+    let targetEmail = fallbackEmail;
+    let notificacaoId: string | null = null;
+
+    if (targetPessoaId) {
+      const { data: responsavel } = await supabase
+        .from('pessoas')
+        .select('id, nome, email')
+        .eq('id', targetPessoaId)
+        .maybeSingle();
+
+      if (responsavel?.nome) {
+        targetNome = responsavel.nome;
+      }
+
+      if (responsavel?.email) {
+        targetEmail = responsavel.email;
+      }
+    }
+
+    if (targetPessoaId || targetEmail) {
+      const { data: notificacao } = await supabase
+        .from('notificacoes')
+        .insert({
+          pessoa_id: targetPessoaId || null,
+          tipo: action === 'created' ? 'alerta' : 'sistema',
+          titulo,
+          mensagem,
+          canal: 'email',
+          modulo_origem: 'lgpd',
+          status: 'pendente',
+          criado_em: new Date().toISOString(),
+        })
+        .select('id')
+        .single();
+
+      notificacaoId = notificacao?.id || null;
+    }
+
+    if (targetEmail) {
+      const emailResult = await sendEmailNotification({
+        pessoaId: targetPessoaId || 'lgpd-encarregado',
+        email: targetEmail,
+        nome: targetNome,
+        titulo,
+        mensagem,
+        tipo: action === 'created' ? 'alerta' : 'sistema',
+        modulo_origem: 'lgpd',
+        link_acao: `/admin/documentos/pedidos/${solicitacao.id}`,
+      });
+
+      if (emailResult.success && notificacaoId) {
+        await supabase
+          .from('notificacoes')
+          .update({
+            status: 'enviado',
+            enviado_em: new Date().toISOString(),
+          })
+          .eq('id', notificacaoId);
+      }
+    }
+  } catch {
+    // A notificação não pode bloquear o fluxo principal.
   }
 }
 
@@ -214,6 +315,10 @@ export async function createTitularSolicitacao(formData: {
   request_type: string;
   details?: string | null;
   origem?: string | null;
+  status?: string;
+  resposta?: string | null;
+  resolvido_em?: string | null;
+  prazo_resposta?: string | null;
 }) {
   const supabase = createServiceRoleClient();
 
@@ -228,7 +333,10 @@ export async function createTitularSolicitacao(formData: {
         request_type: formData.request_type,
         details: formData.details || null,
         origem: formData.origem || 'minha-area',
-        status: 'aberta',
+        status: formData.status || 'aberta',
+        resposta: formData.resposta || null,
+        resolvido_em: formData.resolvido_em || null,
+        prazo_resposta: formData.prazo_resposta || null,
       },
     ])
     .select()
@@ -238,6 +346,7 @@ export async function createTitularSolicitacao(formData: {
 
   invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
+  await notifyTitularRequestStakeholders(data, 'created');
   await recordDocumentosAuditEvent('user-area/lgpd', 'Pedido do titular registrado', {
     solicitacao_id: data.id,
     pessoa_id: formData.pessoa_id || null,
@@ -291,6 +400,16 @@ export async function updateTitularSolicitacao(
 
   invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
+  const { data: solicitacao } = await supabase
+    .from('lgpd_solicitacoes')
+    .select('id, request_type, titular_nome, titular_email, status, responsavel_id, resposta')
+    .eq('id', id)
+    .maybeSingle();
+
+  if (solicitacao) {
+    await notifyTitularRequestStakeholders(solicitacao, 'updated');
+  }
+
   await recordDocumentosAuditEvent('admin/documentos/pedidos', 'Pedido do titular atualizado', {
     solicitacao_id: id,
     status: formData.status || null,

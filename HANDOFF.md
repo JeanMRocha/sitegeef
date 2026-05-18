@@ -141,6 +141,12 @@ Quando o Autoreflex voltar a responder, rodar primeiro:
   - As mutações do módulo agora registram eventos em `ops_events` e a nova tela `/admin/documentos/auditoria` mostra o rastro técnico de LGPD sem expor conteúdo sensível.
   - A área do usuário ganhou um formulário discreto de pedido do titular em `/minha-area`, e o submit grava evento em `ops_events` com source `user-area/lgpd` para a auditoria acompanhar revogação/acesso/correção.
   - Os pedidos agora também persistem em `lgpd_solicitacoes`, com fila administrativa em `/admin/documentos/pedidos`, detalhe para tratamento, responsável, prazo e resposta curta. O status sai de `aberta` para `em_andamento`, `respondida` ou `encerrada`, e a fila volta a refletir os registros na área do usuário após a invalidação de cache.
+  - O pedido do titular também aciona notificação automática para o responsável/encarregado via `notificacoes` e email, com fallback para `LGPD_ENCARREGADO_EMAIL` ou `LGPD_COMPLIANCE_EMAIL` quando não houver pessoa vinculada.
+  - A exportação do titular agora sai por `/api/lgpd/export`, gera o JSON com os dados da área do usuário e registra um pedido LGPD respondido para manter a trilha operacional.
+  - A retenção LGPD ficou explícita: `ops_events` ligados a auditoria privacidade expiram em 180 dias, `lgpd_solicitacoes` resolvidas expiram em 365 dias, e pedidos vencidos são encerrados automaticamente pela função `cleanup_lgpd_retention`.
+  - A limpeza LGPD agora tem agendamento no GitHub Actions em `.github/workflows/lgpd-retention.yml`, com execução diária e suporte a `LGPD_CLEANUP_SECRET` quando configurado.
+  - A fila de notificações pendentes também passou a ter agendamento no GitHub Actions em `.github/workflows/notifications-dispatch.yml`, reforçando a entrega fora da interface sem duplicar o envio quando a notificação já saiu no primeiro disparo.
+  - Os avisos curtos na UI continuam intencionais e transitórios; eles não são persistidos como conteúdo operacional.
   - O header publico foi separado em uma casca server-rendered (`components/site-header.tsx`) e uma camada client para menus/usuario (`components/site-header-actions.tsx`) para o menu principal nao sumir quando a hidratacao falhar depois do logout.
   - Se o Fast Refresh reclamar de arquivo ausente nesse fluxo, reiniciar o `next dev` limpo antes de investigar a UI.
 - `Supabase remoto`

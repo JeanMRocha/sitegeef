@@ -16,7 +16,7 @@ type UserAreaData = {
   pedidosTitular: any[];
 };
 
-async function loadUserArea(userId: string): Promise<UserAreaData> {
+export async function loadUserArea(userId: string): Promise<UserAreaData> {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const serviceRoleKey =
     process.env.GEEF_SUPABASE_SERVICE_ROLE_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY;
