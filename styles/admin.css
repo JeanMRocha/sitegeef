@@ -265,7 +265,7 @@
   border-radius: 999px;
   border: 1px solid var(--border-medium);
   background: var(--surface-secondary);
-  color: var(--text-muted);
+  color: var(--text-secondary);
   text-decoration: none;
   font-size: 0.92rem;
   font-weight: 700;
@@ -273,21 +273,23 @@
 }
 
 .admin-step-tab:hover {
-  color: var(--uva-700);
+  color: var(--text-primary);
   border-color: var(--border-light);
   background: var(--surface-secondary-hover);
 }
 
 .admin-step-tab.active {
   color: var(--text-primary);
-  border-color: rgba(138, 0, 90, 0.22);
-  background: linear-gradient(135deg, rgba(138, 0, 90, 0.12), rgba(99, 213, 31, 0.08));
+  border-color: var(--primary);
+  background: var(--surface-tertiary);
+  font-weight: 700;
 }
 
 .admin-step-tab.disabled {
-  opacity: 0.45;
+  opacity: 0.6;
   cursor: not-allowed;
   pointer-events: none;
+  color: var(--text-muted);
 }
 
 .admin-info-hint {
@@ -445,12 +447,14 @@
   background: var(--btn-secondary-bg);
   color: var(--btn-secondary-text);
   border: 1px solid var(--btn-secondary-border);
+  font-weight: 600;
 }
 
 .admin-btn-secondary:hover {
   background: var(--btn-secondary-hover-bg);
-  border-color: var(--btn-secondary-border);
+  border-color: var(--border-light);
   color: var(--btn-secondary-hover-text);
+  transform: translateY(-1px);
 }
 
 .admin-btn-small {
