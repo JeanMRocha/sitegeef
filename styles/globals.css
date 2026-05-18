@@ -1,3 +1,5 @@
+@import url('./identity-system.css');
+
 :root {
   color-scheme: light;
   --bg: #f7f2fb;
@@ -435,34 +437,23 @@ img {
 }
 
 .button-primary {
-  background: linear-gradient(135deg, var(--uva), var(--uva-strong));
-  color: #fff;
-  box-shadow: 0 18px 34px rgba(138, 0, 90, 0.22);
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  box-shadow: var(--btn-primary-shadow);
+  border: var(--btn-primary-border);
 }
 
 .button-secondary {
-  background: rgba(247, 239, 252, 0.96);
-  border-color: rgba(138, 0, 90, 0.12);
-  color: var(--text);
+  background: var(--btn-secondary-bg);
+  border: 1px solid var(--btn-secondary-border);
+  color: var(--btn-secondary-text);
 }
 
-:root.dark .button-primary {
-  background: linear-gradient(135deg, #d06aa8, #e08ac4);
-  color: white;
-  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.35);
-}
-
-:root.dark .button-secondary {
-  background: rgba(45, 41, 38, 0.96);
-  border-color: #5a5349;
-  color: #e8dfd4;
-}
-
-:root.dark .button-secondary:hover,
-:root.dark .button-secondary:focus-visible {
-  border-color: #8a7a72;
-  background: rgba(70, 60, 52, 0.96);
-  color: #f0b5de;
+.button-secondary:hover,
+.button-secondary:focus-visible {
+  border-color: var(--btn-secondary-border);
+  background: var(--btn-secondary-hover-bg);
+  color: var(--btn-secondary-hover-text);
 }
 
 .button-icon {
