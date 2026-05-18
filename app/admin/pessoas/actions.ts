@@ -16,20 +16,10 @@ export async function getPessoas(
   const offset = (page - 1) * pageSize;
 
   try {
+    // Buscar pessoas sem join (relação não está configurada no Supabase)
     let query = supabase
       .from('pessoas')
-      .select(
-        `
-        id,
-        nome,
-        email,
-        telefone,
-        status,
-        criado_em,
-        pessoa_vinculos (vinculo)
-      `,
-        { count: 'exact' }
-      );
+      .select('id,nome,email,telefone,status,criado_em', { count: 'exact' });
 
     if (search) {
       query = query.or(`nome.ilike.%${search}%,email.ilike.%${search}%,telefone.ilike.%${search}%`);
@@ -51,7 +41,33 @@ export async function getPessoas(
       };
     }
 
-    let filtered = data || [];
+    let pessoas = data || [];
+
+    // Buscar vínculos separadamente se houver pessoas
+    if (pessoas.length > 0) {
+      const pessoaIds = pessoas.map((p: any) => p.id);
+      const { data: vinculosData, error: vinculosError } = await supabase
+        .from('pessoa_vinculos')
+        .select('pessoa_id,vinculo')
+        .in('pessoa_id', pessoaIds);
+
+      if (!vinculosError && vinculosData) {
+        // Mapear vínculos para cada pessoa
+        const vinculosByPessoaId = vinculosData.reduce((acc: any, v: any) => {
+          if (!acc[v.pessoa_id]) acc[v.pessoa_id] = [];
+          acc[v.pessoa_id].push({ vinculo: v.vinculo });
+          return acc;
+        }, {});
+
+        pessoas = pessoas.map((p: any) => ({
+          ...p,
+          pessoa_vinculos: vinculosByPessoaId[p.id] || [],
+        }));
+      }
+    }
+
+    // Aplicar filtro de vínculo se necessário
+    let filtered = pessoas;
     if (vinculoFilter) {
       filtered = filtered.filter((pessoa: any) =>
         pessoa.pessoa_vinculos?.some((v: any) => v.vinculo === vinculoFilter)
