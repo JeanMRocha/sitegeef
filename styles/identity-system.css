@@ -176,3 +176,68 @@
   --border-medium: #4a413a;
   --border-dark: #3a312a;
 }
+
+/* ===== CAMADA 7: MODALS & OVERLAYS ===== */
+:root {
+  --modal-bg: var(--surface-primary);
+  --modal-border: var(--border-medium);
+  --modal-overlay: rgba(0, 0, 0, 0.5);
+  --modal-shadow: 0 40px 100px rgba(124, 63, 163, 0.12);
+
+  --popover-bg: var(--surface-primary);
+  --popover-border: var(--border-medium);
+  --popover-shadow: 0 22px 45px rgba(40, 21, 29, 0.15);
+
+  --dropdown-bg: var(--surface-primary);
+  --dropdown-border: var(--border-medium);
+  --dropdown-item-hover: var(--surface-primary-hover);
+  --dropdown-item-text: var(--text-primary);
+}
+
+:root.dark {
+  --modal-bg: var(--surface-primary);
+  --modal-border: var(--border-medium);
+  --modal-overlay: rgba(0, 0, 0, 0.8);
+  --modal-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
+
+  --popover-bg: var(--surface-primary);
+  --popover-border: var(--border-medium);
+  --popover-shadow: 0 22px 45px rgba(0, 0, 0, 0.35);
+
+  --dropdown-bg: var(--surface-primary);
+  --dropdown-border: var(--border-medium);
+  --dropdown-item-hover: var(--surface-primary-hover);
+  --dropdown-item-text: var(--text-primary);
+}
+
+/* ===== CAMADA 8: TOOLTIPS & HINTS ===== */
+:root {
+  --tooltip-bg: #1c201f;
+  --tooltip-text: #ffffff;
+  --tooltip-arrow: #1c201f;
+}
+
+:root.dark {
+  --tooltip-bg: #f4efe7;
+  --tooltip-text: #1c201f;
+  --tooltip-arrow: #f4efe7;
+}
+
+/* ===== CAMADA 9: LINKS & FOCUS ===== */
+:root {
+  --link-color: #8a005a;
+  --link-hover: #a01470;
+  --link-visited: #6a0045;
+
+  --focus-ring: rgba(138, 0, 90, 0.2);
+  --focus-outline: #8a005a;
+}
+
+:root.dark {
+  --link-color: #e08ac4;
+  --link-hover: #f0b5de;
+  --link-visited: #d06aa8;
+
+  --focus-ring: rgba(224, 138, 196, 0.2);
+  --focus-outline: #e08ac4;
+}
