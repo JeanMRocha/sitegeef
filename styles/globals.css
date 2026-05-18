@@ -2486,8 +2486,101 @@ img {
   color: #f0bddb;
 }
 
+:root.dark .profile-form-field {
+  color: var(--text);
+}
+
+:root.dark .profile-form-field span {
+  color: var(--text-muted);
+}
+
+:root.dark .profile-form-input,
+:root.dark .profile-form-textarea,
+:root.dark .profile-form-select {
+  background: rgba(50, 45, 42, 0.96);
+  border-color: #5a5349;
+  color: var(--text);
+}
+
+:root.dark .profile-form-input::placeholder,
+:root.dark .profile-form-textarea::placeholder {
+  color: rgba(212, 204, 193, 0.5);
+}
+
+:root.dark .profile-form-input:hover,
+:root.dark .profile-form-textarea:hover,
+:root.dark .profile-form-select:hover {
+  border-color: #6b6258;
+}
+
+:root.dark .profile-form-input:focus,
+:root.dark .profile-form-textarea:focus,
+:root.dark .profile-form-select:focus {
+  border-color: #8a7a6f;
+  box-shadow: 0 0 0 3px rgba(138, 0, 90, 0.15);
+}
+
+:root.dark .area-panel-item,
+:root.dark .admin-card {
+  background: rgba(50, 45, 42, 0.96);
+  border-color: #5a5349;
+  color: var(--text);
+}
+
+:root.dark .area-panel-item strong {
+  color: var(--text);
+}
+
 :root.dark .content-badge-text {
   color: var(--text);
+}
+
+:root.dark .admin-table {
+  background: rgba(40, 36, 33, 0.96);
+  border-color: #5a5349;
+}
+
+:root.dark .admin-table thead {
+  background: rgba(50, 45, 42, 0.96);
+  border-color: #5a5349;
+}
+
+:root.dark .admin-table th {
+  color: var(--text);
+  border-color: #5a5349;
+}
+
+:root.dark .admin-table td {
+  color: var(--text);
+  border-color: #5a5349;
+}
+
+:root.dark .admin-table tbody tr:hover {
+  background: rgba(60, 55, 50, 0.96);
+}
+
+:root.dark .table-surface {
+  background: rgba(40, 36, 33, 0.96);
+}
+
+:root.dark .inline-status {
+  color: var(--text);
+  background: rgba(138, 0, 90, 0.15);
+}
+
+:root.dark .inline-status-success {
+  color: #8fd4a2;
+  background: rgba(99, 213, 31, 0.15);
+}
+
+:root.dark .inline-status-warning {
+  color: #f5b869;
+  background: rgba(245, 158, 11, 0.15);
+}
+
+:root.dark .inline-status-danger {
+  color: #f87171;
+  background: rgba(239, 68, 68, 0.15);
 }
 
 :root.dark .button-secondary {
