@@ -14,6 +14,7 @@ Este documento alinha os nomes dos arquivos locais de migration com os checkpoin
 | `supabase/migrations/20260517_instituicao_safe_fallback.sql` | `instituicao_safe_fallback` |
 | `supabase/migrations/20260517_instituicao_singleton_and_policies.sql` | `instituicao_singleton_and_policies_exact` |
 | `supabase/migrations/20260517_pessoas_usuarios_policies.sql` | `pessoas_usuarios_policies_exact` |
+| `supabase/migrations/20260518_admin_user_jwt_fallback.sql` | `admin_user_jwt_fallback` |
 
 ## Observações
 

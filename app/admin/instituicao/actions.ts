@@ -1,6 +1,9 @@
 'use server';
 
-import { createClient } from '@/lib/supabase/server';
+import { revalidateTag, unstable_cache } from 'next/cache';
+import { redirect } from 'next/navigation';
+import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
+import { createServiceRoleClient } from '@/lib/supabase/service-role';
 
 function hasMeaningfulError(error: unknown) {
   if (!error || typeof error !== 'object') {
@@ -34,7 +37,7 @@ function stripUndefined<T extends Record<string, unknown>>(value: T) {
 }
 
 export async function getInstituicao() {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   try {
     const { data, error } = await supabase
@@ -55,7 +58,7 @@ export async function getInstituicao() {
 }
 
 export async function getEnderecos() {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   try {
     const { data, error } = await supabase.from('instituicao_enderecos').select('*');
@@ -71,7 +74,7 @@ export async function getEnderecos() {
 }
 
 export async function getContatos() {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   try {
     const { data, error } = await supabase
@@ -94,7 +97,7 @@ export async function getContatos() {
 }
 
 export async function getContasBancarias() {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   try {
     const { data, error } = await supabase.from('contas_bancarias').select('*');
@@ -108,6 +111,57 @@ export async function getContasBancarias() {
     return [];
   }
 }
+
+async function loadContatoTipos() {
+  const supabase = createServiceRoleClient();
+
+  try {
+    const { data, error } = await supabase
+      .from('instituicao_contato_tipos')
+      .select('id, label, ordem, ativo')
+      .eq('ativo', true)
+      .order('ordem', { ascending: true })
+      .order('label', { ascending: true });
+
+    if (error) {
+      return [];
+    }
+
+    return data || [];
+  } catch {
+    return [];
+  }
+}
+
+export const getContatoTipos = unstable_cache(loadContatoTipos, ['admin-instituicao-contato-tipos'], {
+  revalidate: 30,
+  tags: ['admin-instituicao-contato-tipos'],
+});
+
+async function loadPessoasDisponiveis() {
+  const supabase = createServiceRoleClient();
+
+  try {
+    const { data, error } = await supabase
+      .from('pessoas')
+      .select('id, nome, email')
+      .eq('status', 'ativo')
+      .order('nome', { ascending: true });
+
+    if (error) {
+      return [];
+    }
+
+    return data || [];
+  } catch {
+    return [];
+  }
+}
+
+export const getPessoasDisponiveis = unstable_cache(loadPessoasDisponiveis, ['admin-instituicao-pessoas'], {
+  revalidate: 30,
+  tags: ['admin-instituicao-pessoas'],
+});
 
 export async function updateInstituicao(formData: {
   nome_oficial?: string;
@@ -123,7 +177,7 @@ export async function updateInstituicao(formData: {
   valores?: string;
   estatuto_url?: string;
 }) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
   const patch = stripUndefined({
     ...formData,
     cnpj: normalizeCnpj(formData.cnpj),
@@ -216,7 +270,7 @@ export async function updateEndereco(formData: {
   latitude?: number;
   longitude?: number;
 }) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   let existingId: string | null = null;
 
@@ -253,13 +307,99 @@ export async function addContato(formData: {
   site?: string;
   responsavel_id?: string;
 }) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
+
+  if (formData.responsavel_id) {
+    const { data, error } = await supabase.from('pessoas').select('id').eq('id', formData.responsavel_id).maybeSingle();
+
+    if (error || !data) {
+      return { success: false, error: 'Pessoa responsável não encontrada.' };
+    }
+  }
 
   const { error } = await supabase.from('instituicao_contatos').insert([{ ...formData, ativo: true }]);
 
-  if (error) return { success: false };
+  if (error) return { success: false, error: error.message };
 
   return { success: true };
+}
+
+function normalizeContatoTipoLabel(value?: string) {
+  return value?.trim().replace(/\s+/g, ' ');
+}
+
+function formDataText(formData: FormData, name: string) {
+  const value = formData.get(name);
+  return typeof value === 'string' ? value : '';
+}
+
+export async function addContatoTipo(formData: FormData) {
+  const supabase = createServiceRoleClient();
+  const label = normalizeContatoTipoLabel(formDataText(formData, 'label'));
+
+  if (!label) {
+    redirect(buildFlashNoticeUrl('/admin/instituicao/editar?tab=contatos', { variant: 'error', message: 'Informe o nome do tipo.' }));
+  }
+
+  const { error } = await supabase
+    .from('instituicao_contato_tipos')
+    .insert([{ label, ordem: 999, ativo: true }]);
+
+  if (error) {
+    redirect(buildFlashNoticeUrl('/admin/instituicao/editar?tab=contatos', { variant: 'error', message: `Não foi possível salvar o tipo: ${error.message}` }));
+  }
+
+  revalidateTag('admin-instituicao-contato-tipos');
+  redirect(buildFlashNoticeUrl('/admin/instituicao/editar?tab=contatos', { variant: 'success', message: 'Tipo salvo.' }));
+}
+
+export async function updateContatoTipo(formData: FormData) {
+  const supabase = createServiceRoleClient();
+  const id = formDataText(formData, 'id');
+  const label = normalizeContatoTipoLabel(formDataText(formData, 'label'));
+  const ordemRaw = formDataText(formData, 'ordem');
+
+  if (!id) {
+    redirect(buildFlashNoticeUrl('/admin/instituicao/editar?tab=contatos', { variant: 'error', message: 'Tipo inválido.' }));
+  }
+
+  if (!label) {
+    redirect(buildFlashNoticeUrl('/admin/instituicao/editar?tab=contatos', { variant: 'error', message: 'Informe o nome do tipo.' }));
+  }
+
+  const { error } = await supabase
+    .from('instituicao_contato_tipos')
+    .update({
+      label,
+      ordem: ordemRaw && !Number.isNaN(Number(ordemRaw)) ? Number(ordemRaw) : 999,
+      atualizado_em: new Date().toISOString(),
+    })
+    .eq('id', id);
+
+  if (error) {
+    redirect(buildFlashNoticeUrl('/admin/instituicao/editar?tab=contatos', { variant: 'error', message: `Não foi possível atualizar o tipo: ${error.message}` }));
+  }
+
+  revalidateTag('admin-instituicao-contato-tipos');
+  redirect(buildFlashNoticeUrl('/admin/instituicao/editar?tab=contatos', { variant: 'success', message: 'Tipo atualizado.' }));
+}
+
+export async function deleteContatoTipo(formData: FormData) {
+  const supabase = createServiceRoleClient();
+  const id = formDataText(formData, 'id');
+
+  if (!id) {
+    redirect(buildFlashNoticeUrl('/admin/instituicao/editar?tab=contatos', { variant: 'error', message: 'Tipo inválido.' }));
+  }
+
+  const { error } = await supabase.from('instituicao_contato_tipos').delete().eq('id', id);
+
+  if (error) {
+    redirect(buildFlashNoticeUrl('/admin/instituicao/editar?tab=contatos', { variant: 'error', message: `Não foi possível remover o tipo: ${error.message}` }));
+  }
+
+  revalidateTag('admin-instituicao-contato-tipos');
+  redirect(buildFlashNoticeUrl('/admin/instituicao/editar?tab=contatos', { variant: 'success', message: 'Tipo removido.' }));
 }
 
 export async function updateContato(
@@ -276,17 +416,25 @@ export async function updateContato(
     responsavel_id?: string;
   }
 ) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
+
+  if (formData.responsavel_id) {
+    const { data, error } = await supabase.from('pessoas').select('id').eq('id', formData.responsavel_id).maybeSingle();
+
+    if (error || !data) {
+      return { success: false, error: 'Pessoa responsável não encontrada.' };
+    }
+  }
 
   const { error } = await supabase.from('instituicao_contatos').update(formData).eq('id', id);
 
-  if (error) return { success: false };
+  if (error) return { success: false, error: error.message };
 
   return { success: true };
 }
 
 export async function deleteContato(id: string) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { error } = await supabase.from('instituicao_contatos').delete().eq('id', id);
 
@@ -308,7 +456,7 @@ export async function addContaBancaria(formData: {
   finalidade?: string;
   visibilidade?: string;
 }) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { error } = await supabase.from('contas_bancarias').insert([{ ...formData, ativo: true }]);
 
@@ -333,7 +481,7 @@ export async function updateContaBancaria(
     visibilidade?: string;
   }
 ) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { error } = await supabase.from('contas_bancarias').update(formData).eq('id', id);
 
@@ -343,7 +491,7 @@ export async function updateContaBancaria(
 }
 
 export async function deleteContaBancaria(id: string) {
-  const supabase = await createClient();
+  const supabase = createServiceRoleClient();
 
   const { error } = await supabase.from('contas_bancarias').delete().eq('id', id);
 

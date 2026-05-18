@@ -6,15 +6,19 @@ import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 import {
   addContaBancaria,
   addContato,
+  getContatoTipos,
   deleteContaBancaria,
   deleteContato,
   getContasBancarias,
   getContatos,
   getEnderecos,
   getInstituicao,
+  getPessoasDisponiveis,
   updateEndereco,
   updateInstituicao,
 } from '../actions';
+import { DescritivoField } from '@/components/admin/instituicao-descritivo-fields';
+import { InstituicaoContatoFields, InstituicaoContatoTipoManager } from '@/components/admin/instituicao-contatos-fields';
 import { contentPages, site } from '@/lib/site-data';
 
 export const metadata = {
@@ -211,7 +215,12 @@ async function handleAddContato(formData: FormData) {
   });
 
   if (!result.success) {
-    redirect(buildFlashNoticeUrl('/admin/instituicao/editar?tab=contatos', { variant: 'error', message: 'Não foi possível salvar o contato.' }));
+    redirect(
+      buildFlashNoticeUrl('/admin/instituicao/editar?tab=contatos', {
+        variant: 'error',
+        message: result.error ? `Não foi possível salvar o contato: ${result.error}` : 'Não foi possível salvar o contato.',
+      })
+    );
   }
 
   revalidatePath('/admin/instituicao');
@@ -378,6 +387,8 @@ async function EditInstituicaoContent({ searchParams }: { searchParams: { tab?: 
   const enderecos = await getEnderecos();
   const contatos = await getContatos();
   const contas = await getContasBancarias();
+  const pessoas = await getPessoasDisponiveis();
+  const tiposContato = await getContatoTipos();
   const endereco = enderecos[0];
   const instituicaoBase = instituicao ?? FALLBACK_INSTITUICAO;
   const enderecoBase = endereco ?? FALLBACK_ENDERECO;
@@ -508,31 +519,51 @@ async function EditInstituicaoContent({ searchParams }: { searchParams: { tab?: 
 
             {activeStep === 'descritivo' && (
               <div className="module-grid">
-                <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
-                  <span>Descrição breve</span>
-                  <textarea name="descricao" defaultValue={instituicaoBase.descricao || ''} rows={4} className="profile-form-input" />
-                </label>
-                <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
-                  <span>História</span>
-                  <textarea name="historia" defaultValue={instituicaoBase.historia || ''} rows={6} className="profile-form-input" />
-                </label>
+                <DescritivoField
+                  name="descricao"
+                  label="Descrição breve"
+                  defaultValue={instituicaoBase.descricao || ''}
+                  rows={4}
+                  recommendedLength={280}
+                  placeholder="Resumo objetivo da instituição."
+                />
+                <DescritivoField
+                  name="historia"
+                  label="História"
+                  defaultValue={instituicaoBase.historia || ''}
+                  rows={6}
+                  recommendedLength={1200}
+                  placeholder="Conte a origem, a trajetória e os marcos principais."
+                />
               </div>
             )}
 
             {activeStep === 'valores' && (
               <div className="module-grid">
-                <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
-                  <span>Missão</span>
-                  <textarea name="missao" defaultValue={instituicaoBase.missao || ''} rows={4} className="profile-form-input" />
-                </label>
-                <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
-                  <span>Visão</span>
-                  <textarea name="visao" defaultValue={instituicaoBase.visao || ''} rows={4} className="profile-form-input" />
-                </label>
-                <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
-                  <span>Valores</span>
-                  <textarea name="valores" defaultValue={instituicaoBase.valores || ''} rows={4} className="profile-form-input" />
-                </label>
+                <DescritivoField
+                  name="missao"
+                  label="Missão"
+                  defaultValue={instituicaoBase.missao || ''}
+                  rows={4}
+                  recommendedLength={280}
+                  placeholder="Qual é o propósito da instituição?"
+                />
+                <DescritivoField
+                  name="visao"
+                  label="Visão"
+                  defaultValue={instituicaoBase.visao || ''}
+                  rows={4}
+                  recommendedLength={280}
+                  placeholder="Onde a instituição quer chegar?"
+                />
+                <DescritivoField
+                  name="valores"
+                  label="Valores"
+                  defaultValue={instituicaoBase.valores || ''}
+                  rows={4}
+                  recommendedLength={500}
+                  placeholder="Liste os princípios que orientam o trabalho."
+                />
               </div>
             )}
 
@@ -581,52 +612,16 @@ async function EditInstituicaoContent({ searchParams }: { searchParams: { tab?: 
                         </div>
                       ))}
                     </div>
-                  ) : (
+                ) : (
                     <div className="area-empty">Nenhum contato registrado.</div>
                   )}
                 </div>
 
                 <form id="contatos-step-form" action={handleAddContato} style={{ gridColumn: '1 / -1' }}>
-                  <div className="module-grid">
-                    <label className="profile-form-field">
-                      <span>Tipo *</span>
-                      <input name="tipo" className="profile-form-input" placeholder="Ex: WhatsApp" required />
-                    </label>
-                    <label className="profile-form-field">
-                      <span>Telefone</span>
-                      <input name="telefone" className="profile-form-input" placeholder="(00) 0000-0000" />
-                    </label>
-                    <label className="profile-form-field">
-                      <span>WhatsApp</span>
-                      <input name="whatsapp" className="profile-form-input" placeholder="(00) 00000-0000" />
-                    </label>
-                    <label className="profile-form-field">
-                      <span>Email</span>
-                      <input type="email" name="email" className="profile-form-input" placeholder="contato@..." />
-                    </label>
-                    <label className="profile-form-field">
-                      <span>Instagram</span>
-                      <input name="instagram" className="profile-form-input" placeholder="@perfil" />
-                    </label>
-                    <label className="profile-form-field">
-                      <span>Facebook</span>
-                      <input name="facebook" className="profile-form-input" placeholder="URL ou página" />
-                    </label>
-                    <label className="profile-form-field">
-                      <span>YouTube</span>
-                      <input name="youtube" className="profile-form-input" placeholder="URL do canal" />
-                    </label>
-                    <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
-                      <span>Site</span>
-                      <input name="site" className="profile-form-input" placeholder="https://..." />
-                    </label>
-                    <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
-                      <span>Responsável (ID da pessoa)</span>
-                      <input name="responsavel_id" className="profile-form-input" placeholder="UUID opcional" />
-                    </label>
-                  </div>
-
+                  <InstituicaoContatoFields pessoas={pessoas} tipos={tiposContato} />
                 </form>
+
+                <InstituicaoContatoTipoManager tipos={tiposContato} />
               </div>
             )}
 

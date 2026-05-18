@@ -2,15 +2,12 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
   ArrowIcon,
-  BookIcon,
   CalendarIcon,
   GroupIcon,
   HeartIcon,
-  LiveIcon,
   MailIcon,
-  UserIcon,
 } from "@/components/site-icons";
-import { featureCards, publicHref, schedule, site } from "@/lib/site-data";
+import { contentPages, publicHref, site } from "@/lib/site-data";
 import { normalizeInternalPath } from "@/lib/security";
 
 export const dynamic = "force-dynamic";
@@ -27,11 +24,35 @@ const iconMap = {
   group: GroupIcon,
   calendar: CalendarIcon,
   heart: HeartIcon,
-  live: LiveIcon,
-  book: BookIcon,
   mail: MailIcon,
-  user: UserIcon,
 };
+
+const quickLinks = [
+  {
+    href: publicHref("/quem-somos"),
+    title: contentPages["quem-somos"].title,
+    description: contentPages["quem-somos"].summary,
+    icon: "group",
+  },
+  {
+    href: publicHref("/agenda"),
+    title: contentPages["agenda"].title,
+    description: contentPages["agenda"].summary,
+    icon: "calendar",
+  },
+  {
+    href: publicHref("/atendimento-fraterno"),
+    title: contentPages["atendimento-fraterno"].title,
+    description: contentPages["atendimento-fraterno"].summary,
+    icon: "heart",
+  },
+  {
+    href: publicHref("/contato"),
+    title: contentPages["contato"].title,
+    description: contentPages["contato"].summary,
+    icon: "mail",
+  },
+] as const;
 
 export default async function Home({ searchParams }: HomePageProps) {
   const resolvedSearchParams = await searchParams;
@@ -71,68 +92,22 @@ export default async function Home({ searchParams }: HomePageProps) {
             </Link>
           </div>
         </div>
-
-        <aside className="hero-visual" aria-label="Resumo do site">
-          <div className="hero-panel">
-            <div className="hero-panel-top">
-              <span className="pill pill-primary">Site público</span>
-              <span className="pill">Visão rápida</span>
-            </div>
-            <h2>Entrada clara para quem chega pela primeira vez.</h2>
-            <p>
-              A home organiza o essencial sem competir com a leitura principal.
-            </p>
-            <ul className="hero-panel-list">
-              <li>
-                <span className="mini-dot" aria-hidden="true" />
-                Reuniões públicas e estudos
-              </li>
-              <li>
-                <span className="mini-dot" aria-hidden="true" />
-                Atendimento fraterno
-              </li>
-              <li>
-                <span className="mini-dot" aria-hidden="true" />
-                Vídeos e transmissões
-              </li>
-            </ul>
-          </div>
-        </aside>
       </section>
 
-      <section className="public-trust-grid" aria-label="Resumo institucional">
-        <div className="public-trust-item">
-          <strong>01</strong>
-          <span>Identidade visual consistente em todas as páginas públicas.</span>
-        </div>
-        <div className="public-trust-item">
-          <strong>02</strong>
-          <span>Conteúdo pensado para leitura rápida em celular e desktop.</span>
-        </div>
-        <div className="public-trust-item">
-          <strong>03</strong>
-          <span>Atalhos diretos para o que o visitante mais procura.</span>
-        </div>
-        <div className="public-trust-item">
-          <strong>04</strong>
-          <span>Base visual pronta para crescer sem perder coerência.</span>
-        </div>
-      </section>
-
-      <section className="section" aria-labelledby="services-title">
+      <section className="section" aria-labelledby="quick-links-title">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">Serviços</p>
-            <h2 id="services-title">O que o visitante encontra</h2>
+            <p className="eyebrow">Acesso rápido</p>
+            <h2 id="quick-links-title">O que já está pronto no site</h2>
           </div>
           <p>
-            Conteúdo inicial estruturado para celular e desktop, com navegação
-            clara e páginas diretas.
+            As páginas abaixo levam direto para o conteúdo real que já pode ser
+            consultado pelo visitante.
           </p>
         </div>
 
         <div className="feature-grid">
-          {featureCards.map((card) => {
+          {quickLinks.map((card) => {
             const Icon = iconMap[card.icon];
             return (
               <Link key={card.href} href={card.href} className="feature-card">
@@ -144,26 +119,6 @@ export default async function Home({ searchParams }: HomePageProps) {
               </Link>
             );
           })}
-        </div>
-      </section>
-
-      <section className="section" aria-labelledby="agenda-title">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">Agenda</p>
-            <h2 id="agenda-title">Rotina inicial da casa</h2>
-          </div>
-          <p>Uma base simples para visitação rápida e atualização futura.</p>
-        </div>
-
-        <div className="schedule-grid">
-          {schedule.map((item) => (
-            <article key={item.title} className="schedule-card">
-              <h3>{item.title}</h3>
-              <p className="schedule-meta">{item.when}</p>
-              <p>{item.description}</p>
-            </article>
-          ))}
         </div>
       </section>
 

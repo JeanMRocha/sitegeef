@@ -24,6 +24,7 @@ export function SiteShell({ user, children }: Readonly<SiteShellProps>) {
   return (
     <div className="site-shell">
       <SiteHeader
+        key={user?.id ?? "anonymous"}
         userEmail={userEmail}
         nomeCompleto={nomeCompleto}
         avatarUrl={avatarUrl}

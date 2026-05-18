@@ -126,12 +126,20 @@ Quando o Autoreflex voltar a responder, rodar primeiro:
   - `data_fundacao` deve persistir como `date` em formato `YYYY-MM-DD`.
   - `updateInstituicao()` deve enviar apenas o patch da aba ativa e mesclar no servidor com a linha existente.
   - Nao reintroduzir telas paralelas para contatos/contas fora do editor principal.
+  - As mutacoes do modulo agora usam `service_role` no server para ficar no mesmo padrao dos demais modulos admin e evitar dependencia de JWT antigo na RLS.
+  - A sessao de contatos agora usa mascara leve e avisos individuais por campo; `responsavel_id` vem de `pessoas` ativas via `select`.
+  - O dropdown de `tipo` dos contatos agora vem da tabela `public.instituicao_contato_tipos`, com seed dos tipos base e CRUD no proprio editor de instituicao.
+  - A home publica foi enxugada removendo o painel visual provisório e o bloco de "confiança" que ainda pareciam mock.
+  - O header publico foi separado em uma casca server-rendered (`components/site-header.tsx`) e uma camada client para menus/usuario (`components/site-header-actions.tsx`) para o menu principal nao sumir quando a hidratacao falhar depois do logout.
+  - Se o Fast Refresh reclamar de arquivo ausente nesse fluxo, reiniciar o `next dev` limpo antes de investigar a UI.
 - `Supabase remoto`
   - O projeto `supabase-geef` estava sem as tabelas de base da instituicao, entao foi aplicado um bootstrap minimo antes da migration de singleton.
   - `public.is_admin_user()` foi endurecida com `search_path = public` para evitar aviso de advisor de funcao mutavel.
   - `public.pessoas` e `public.usuarios_sistema` receberam policies explicitas para reduzir lints de RLS sem policy no projeto remoto.
   - Como o remoto ja tinha parte do schema, as migrations restantes foram reexecutadas em checkpoints idempotentes e registradas com nomes de controle, nao como replay bruto do arquivo original.
   - O mapa 1:1 entre arquivo local e checkpoint remoto agora vive em `docs/SUPABASE_MIGRATION_MAP.md`.
+  - `public.is_admin_user()` passou a aceitar tanto `usuarios_sistema` quanto o claim `app_metadata.site_role = 'administrador'`, para casar com o fallback já usado pelo admin shell.
+  - Para o cadastro de instituicao, o caminho de gravação agora prefere `service_role` no server, então a policy continua como defesa de profundidade, mas não é o único ponto de autorização.
 - `components/admin/*` e `styles/admin.css`
   - O shell admin precisa crescer com a largura da viewport.
   - Nao reintroduzir `max-width` fixo que prenda cards, abas ou formularios no centro.

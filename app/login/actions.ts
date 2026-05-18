@@ -103,6 +103,9 @@ export async function signOut() {
     }
 
     revalidatePath("/", "layout");
+    revalidatePath("/admin", "layout");
+    revalidatePath("/minha-area", "layout");
+    revalidatePath("/perfil", "layout");
     redirect("/");
   } catch (error) {
     console.error("Logout error:", error);
