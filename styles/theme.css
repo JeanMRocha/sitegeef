@@ -48,9 +48,9 @@
   --surface: rgba(246, 237, 252, 0.96);
   --surface-hover: rgba(239, 226, 249, 0.98);
   --text: #1c201f;
-  --text-muted: #63586f;
-  --border: #e1d4ee;
-  --line: #e1d4ee;
+  --text-muted: #3d3846; /* Melhorado contraste: de #63586f */
+  --border: #d1c4db; /* Mais escuro: de #e1d4ee */
+  --line: #d1c4db;
   --shadow: 0 24px 60px rgba(124, 63, 163, 0.08);
   --shadow-lg: 0 40px 100px rgba(124, 63, 163, 0.12);
   --shadow-sm: 0 4px 12px rgba(124, 63, 163, 0.06);

@@ -3,7 +3,7 @@
   --admin-header-height: 74px;
   --admin-bg: #f7f2fb;
   --admin-card-bg: rgba(245, 235, 253, 0.96);
-  --admin-border: rgba(225, 212, 238, 0.92);
+  --admin-border: #d1c4db; /* Melhorado contraste: de rgba(225, 212, 238, 0.92) */
 }
 
 .site-shell {
