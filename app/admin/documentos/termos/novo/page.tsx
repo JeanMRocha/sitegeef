@@ -38,8 +38,14 @@ export default async function NovoTermoPage() {
       <div className="admin-page-header">
         <div>
           <h1 className="admin-page-title">Novo Termo Assinado</h1>
-          <p className="admin-page-subtitle">Registre um novo documento assinado</p>
+          <p className="admin-page-subtitle">Registre apenas o necessário para comprovação e vigência.</p>
         </div>
+      </div>
+
+      <div className="admin-card" style={{ marginBottom: '1rem', padding: '0.95rem 1rem', borderLeft: '3px solid var(--primary)' }}>
+        <p style={{ margin: 0, color: 'var(--muted)', lineHeight: 1.6 }}>
+          Confira o modelo antes de salvar e evite anexar arquivo externo se o conteúdo já estiver no cadastro.
+        </p>
       </div>
 
       {/* Form */}
@@ -69,7 +75,7 @@ export default async function NovoTermoPage() {
           </div>
 
           <div className="admin-form-group">
-            <label>Modelo de Documento *</label>
+            <label>Modelo *</label>
             <select
               name="modelo_id"
               required
@@ -110,7 +116,7 @@ export default async function NovoTermoPage() {
           </div>
 
           <div className="admin-form-group">
-            <label>URL do Arquivo (PDF/doc)</label>
+            <label>URL do arquivo (opcional)</label>
             <input
               type="url"
               name="arquivo_url"
@@ -119,7 +125,7 @@ export default async function NovoTermoPage() {
           </div>
 
           <div className="admin-form-group">
-            <label>Responsável (se menor de idade)</label>
+            <label>Responsável legal (se aplicável)</label>
             <select
               name="responsavel_id"
               style={{

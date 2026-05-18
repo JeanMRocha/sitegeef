@@ -45,6 +45,25 @@ async function handleEncerrar(id: string, formData: FormData) {
 async function EditServicoContent({ id }: { id: string }) {
   const servico = await getServicoById(id);
 
+  if (!servico) {
+    return (
+      <div>
+        <div className="admin-page-header">
+          <div>
+            <h1 className="admin-page-title">Serviço Voluntário</h1>
+            <p className="admin-page-subtitle">Registro não encontrado.</p>
+          </div>
+        </div>
+
+        <div className="admin-card">
+          <p style={{ margin: 0, color: 'var(--muted)' }}>
+            O serviço pode ter sido removido ou você não tem acesso.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       {/* Header */}
@@ -80,6 +99,9 @@ async function EditServicoContent({ id }: { id: string }) {
 
       {/* Status Box */}
       <div className="admin-card" style={{ marginBottom: '2rem', backgroundColor: 'rgba(59, 130, 246, 0.05)', borderLeft: '4px solid var(--primary)' }}>
+        <div style={{ marginBottom: '1rem', padding: '0.9rem 1rem', borderRadius: '0.75rem', background: 'rgba(138, 0, 90, 0.06)', color: 'var(--muted)', lineHeight: 1.6 }}>
+          Mantenha o vínculo claro. Se o serviço terminar, registre o fim e preserve o histórico.
+        </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem' }}>
           <div>
             <p style={{ margin: '0.5rem 0', fontSize: '0.85rem', color: 'var(--muted)', textTransform: 'uppercase' }}>Departamento</p>
@@ -151,7 +173,7 @@ async function EditServicoContent({ id }: { id: string }) {
             </div>
 
             <div className="admin-form-group">
-              <label>URL do Termo</label>
+              <label>URL do termo</label>
               <input
                 type="url"
                 name="termo_url"

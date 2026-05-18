@@ -137,6 +137,7 @@ Quando o Autoreflex voltar a responder, rodar primeiro:
   - O aviso de login ficou curto por padrão; a orientacao detalhada ficou concentrada na pagina de privacidade.
   - O menu institucional agora expõe "Privacidade" para acesso rápido sem destacar demais o tema na primeira dobra.
   - A área admin de documentos ganhou uma nota curta de revisão antes de salvar ou revogar consentimento.
+  - As telas de `termos` e `voluntariado` seguiram o mesmo padrão discreto: notas curtas, labels reduzidos e guards para registros ausentes.
   - O header publico foi separado em uma casca server-rendered (`components/site-header.tsx`) e uma camada client para menus/usuario (`components/site-header-actions.tsx`) para o menu principal nao sumir quando a hidratacao falhar depois do logout.
   - Se o Fast Refresh reclamar de arquivo ausente nesse fluxo, reiniciar o `next dev` limpo antes de investigar a UI.
 - `Supabase remoto`

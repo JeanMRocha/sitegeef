@@ -18,11 +18,17 @@ async function TermosList({ searchParams }: { searchParams: { page?: string } })
       <div className="admin-page-header">
         <div>
           <h1 className="admin-page-title">Termos Assinados</h1>
-          <p className="admin-page-subtitle">Rastreamento de documentos assinados</p>
+          <p className="admin-page-subtitle">Registro discreto de termos, vigência e revogação.</p>
         </div>
         <Link href="/admin/documentos/termos/novo" className="admin-btn admin-btn-primary">
           ➕ Novo Termo
         </Link>
+      </div>
+
+      <div className="admin-card" style={{ marginBottom: '1rem', padding: '0.9rem 1rem' }}>
+        <p style={{ margin: 0, color: 'var(--muted)', lineHeight: 1.6 }}>
+          Use o modelo correto, guarde só o essencial e confirme a validade antes de assinar.
+        </p>
       </div>
 
       {/* Tabs Navigation */}

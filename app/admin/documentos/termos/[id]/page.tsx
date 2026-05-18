@@ -43,6 +43,25 @@ async function EditTermoContent({ id }: { id: string }) {
   const termo = await getTermoById(id);
   const pessoas = await getPessoasDisponiveis();
 
+  if (!termo) {
+    return (
+      <div>
+        <div className="admin-page-header">
+          <div>
+            <h1 className="admin-page-title">Termo Assinado</h1>
+            <p className="admin-page-subtitle">Registro não encontrado.</p>
+          </div>
+        </div>
+
+        <div className="admin-card">
+          <p style={{ margin: 0, color: 'var(--muted)' }}>
+            O termo pode ter sido removido ou você não tem acesso.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       {/* Header */}
@@ -75,13 +94,16 @@ async function EditTermoContent({ id }: { id: string }) {
 
       {/* Info Box */}
       <div className="admin-card" style={{ marginBottom: '2rem', backgroundColor: 'rgba(59, 130, 246, 0.05)', borderLeft: '4px solid var(--primary)' }}>
+        <div style={{ marginBottom: '1rem', padding: '0.9rem 1rem', borderRadius: '0.75rem', background: 'rgba(138, 0, 90, 0.06)', color: 'var(--muted)', lineHeight: 1.6 }}>
+          Mantenha vigência e arquivo coerentes. Se houver revogação, deixe a evidência visível.
+        </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
           <div>
             <p style={{ margin: '0.5rem 0', fontSize: '0.9rem' }}>
-              <strong>Documento:</strong> {termo.documentos_modelo?.tipo}
+              <strong>Documento:</strong> {termo.documentos_modelo?.tipo || '—'}
             </p>
             <p style={{ margin: '0.5rem 0', fontSize: '0.9rem' }}>
-              <strong>Título:</strong> {termo.documentos_modelo?.titulo}
+              <strong>Título:</strong> {termo.documentos_modelo?.titulo || '—'}
             </p>
             <p style={{ margin: '0.5rem 0', fontSize: '0.9rem' }}>
               <strong>Status:</strong> <span style={{
@@ -153,7 +175,7 @@ async function EditTermoContent({ id }: { id: string }) {
             </div>
 
             <div className="admin-form-group">
-              <label>URL do Arquivo</label>
+              <label>URL do arquivo</label>
               <input
                 type="url"
                 name="arquivo_url"

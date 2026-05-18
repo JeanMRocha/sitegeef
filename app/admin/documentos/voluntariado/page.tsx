@@ -18,11 +18,17 @@ async function ServicosList({ searchParams }: { searchParams: { page?: string } 
       <div className="admin-page-header">
         <div>
           <h1 className="admin-page-title">Serviços Voluntários</h1>
-          <p className="admin-page-subtitle">Registro de voluntariado por pessoa e departamento</p>
+          <p className="admin-page-subtitle">Registro discreto de voluntariado, vínculo e vigência.</p>
         </div>
         <Link href="/admin/documentos/voluntariado/novo" className="admin-btn admin-btn-primary">
           ➕ Novo Serviço
         </Link>
+      </div>
+
+      <div className="admin-card" style={{ marginBottom: '1rem', padding: '0.9rem 1rem' }}>
+        <p style={{ margin: 0, color: 'var(--muted)', lineHeight: 1.6 }}>
+          Registre só o necessário para comprovar o vínculo e o período de atuação.
+        </p>
       </div>
 
       {/* Tabs Navigation */}

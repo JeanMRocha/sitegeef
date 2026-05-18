@@ -39,8 +39,14 @@ export default async function NovoServicoPage() {
       <div className="admin-page-header">
         <div>
           <h1 className="admin-page-title">Novo Serviço Voluntário</h1>
-          <p className="admin-page-subtitle">Registre novo compromisso de voluntariado</p>
+          <p className="admin-page-subtitle">Registre apenas o vínculo necessário e o período de atuação.</p>
         </div>
+      </div>
+
+      <div className="admin-card" style={{ marginBottom: '1rem', padding: '0.95rem 1rem', borderLeft: '3px solid var(--primary)' }}>
+        <p style={{ margin: 0, color: 'var(--muted)', lineHeight: 1.6 }}>
+          Se houver termo, anexe o link. Se não houver, deixe o registro enxuto e consistente.
+        </p>
       </div>
 
       {/* Form */}
@@ -93,7 +99,7 @@ export default async function NovoServicoPage() {
           </div>
 
           <div className="admin-form-group">
-            <label>Descrição do Serviço *</label>
+            <label>Serviço *</label>
             <input
               type="text"
               name="servico"
@@ -103,7 +109,7 @@ export default async function NovoServicoPage() {
           </div>
 
           <div className="admin-form-group">
-            <label>Horários</label>
+            <label>Horários (opcional)</label>
             <input
               type="text"
               name="horarios"
@@ -130,7 +136,7 @@ export default async function NovoServicoPage() {
           </div>
 
           <div className="admin-form-group">
-            <label>URL do Termo de Voluntariado</label>
+            <label>URL do termo (opcional)</label>
             <input
               type="url"
               name="termo_url"
