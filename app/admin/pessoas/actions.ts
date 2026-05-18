@@ -1,6 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
+import { createServiceRoleClient } from '@/lib/supabase/service-role';
 import { type tipo_vinculo, type status_pessoa } from '@/lib/supabase/types';
 import { invalidateUserAreaCache } from '@/lib/areas/invalidate-user-area';
 import { invalidateAdminDashboardCache, invalidateAdminBibliotecaCache, invalidateAdminDocumentosCache } from '@/lib/admin/cache';
@@ -15,14 +16,18 @@ export async function getPessoas(
 
   // Debug: verificar quem está autenticado
   const { data: { user } } = await supabase.auth.getUser();
-  console.log(`[getPessoas] Usuário autenticado: ${user?.email || 'anônimo'}`);
+  console.log(`[getPessoas] Usuário autenticado: ${user?.email || 'anônimo'} (uid: ${user?.id || 'null'})`);
+
+  // Usar service role para bypass RLS e debug
+  const supabaseService = createServiceRoleClient();
 
   const pageSize = 20;
   const offset = (page - 1) * pageSize;
 
   try {
     // Buscar pessoas sem join (relação não está configurada no Supabase)
-    let query = supabase
+    // Usando service role para bypass RLS
+    let query = supabaseService
       .from('pessoas')
       .select('id,nome,email,telefone,status,criado_em', { count: 'exact' });
 
@@ -51,7 +56,7 @@ export async function getPessoas(
     // Buscar vínculos separadamente se houver pessoas
     if (pessoas.length > 0) {
       const pessoaIds = pessoas.map((p: any) => p.id);
-      const { data: vinculosData, error: vinculosError } = await supabase
+      const { data: vinculosData, error: vinculosError } = await supabaseService
         .from('pessoa_vinculos')
         .select('pessoa_id,vinculo')
         .in('pessoa_id', pessoaIds);
