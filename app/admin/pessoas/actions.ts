@@ -42,6 +42,7 @@ export async function getPessoas(
     const { data, count, error } = await query.range(offset, offset + pageSize - 1);
 
     if (error) {
+      console.error('[getPessoas] Erro ao buscar pessoas:', error);
       return {
         pessoas: [],
         total: 0,
@@ -57,13 +58,16 @@ export async function getPessoas(
       );
     }
 
+    console.log(`[getPessoas] Encontradas ${filtered.length} pessoas (page=${page}, search='${search}')`);
+
     return {
       pessoas: filtered,
       total: count || 0,
       page,
       pageSize,
     };
-  } catch {
+  } catch (err) {
+    console.error('[getPessoas] Erro inesperado:', err);
     return {
       pessoas: [],
       total: 0,
