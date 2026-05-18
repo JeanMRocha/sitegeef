@@ -65,7 +65,7 @@
 }
 
 :root.dark {
-  --btn-primary-bg: linear-gradient(135deg, #d06aa8, #e08ac4);
+  --btn-primary-bg: linear-gradient(135deg, #b0427d, #c6547a);
   --btn-primary-text: #ffffff;
   --btn-primary-border: transparent;
   --btn-primary-shadow: 0 14px 28px rgba(0, 0, 0, 0.35);
