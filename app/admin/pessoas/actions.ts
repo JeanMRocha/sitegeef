@@ -12,6 +12,11 @@ export async function getPessoas(
   statusFilter?: status_pessoa
 ) {
   const supabase = await createClient();
+
+  // Debug: verificar quem está autenticado
+  const { data: { user } } = await supabase.auth.getUser();
+  console.log(`[getPessoas] Usuário autenticado: ${user?.email || 'anônimo'}`);
+
   const pageSize = 20;
   const offset = (page - 1) * pageSize;
 
