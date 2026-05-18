@@ -32,6 +32,7 @@ async function AuditoriaContent({ searchParams }: { searchParams: { source?: str
   const termos = events.filter((event) => event.source.includes('admin/documentos/termos')).length;
   const consentimentos = events.filter((event) => event.source.includes('admin/documentos/consentimentos')).length;
   const voluntariado = events.filter((event) => event.source.includes('admin/documentos/voluntariado')).length;
+  const titulares = events.filter((event) => event.source.includes('user-area/lgpd')).length;
 
   return (
     <div>
@@ -111,6 +112,10 @@ async function AuditoriaContent({ searchParams }: { searchParams: { source?: str
           <span className="stat-label">Voluntariado</span>
           <strong>{voluntariado}</strong>
         </article>
+        <article className="stat-card">
+          <span className="stat-label">Titular</span>
+          <strong>{titulares}</strong>
+        </article>
       </section>
 
       <section className="area-section">
@@ -128,6 +133,7 @@ async function AuditoriaContent({ searchParams }: { searchParams: { source?: str
                 <option value="admin/documentos/termos">Termos</option>
                 <option value="admin/documentos/consentimentos">Consentimentos</option>
                 <option value="admin/documentos/voluntariado">Voluntariado</option>
+                <option value="user-area/lgpd">Titular</option>
               </select>
             </label>
 

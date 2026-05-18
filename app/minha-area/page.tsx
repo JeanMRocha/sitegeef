@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { EnsureUserSystem } from "@/components/ensure-user-system";
 import { getCachedUserArea } from "@/lib/areas/user-area";
+import { submitTitularRequest } from "./actions";
 
 export const metadata = {
   title: "Minha Área",
@@ -129,6 +130,42 @@ async function MinhaAreaContent() {
               </p>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="area-section">
+        <h2 className="area-section-title">Pedido do titular</h2>
+        <div className="admin-card">
+          <p style={{ marginTop: 0, color: "var(--muted)", lineHeight: 1.6 }}>
+            Se quiser revisar, corrigir ou pedir revogação, envie um pedido curto por aqui. O registro vai para a equipe responsável.
+          </p>
+          <form action={submitTitularRequest} className="area-panel-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))" }}>
+            <label className="profile-form-field">
+              <span>Tipo do pedido</span>
+              <select name="request_type" className="profile-form-input" defaultValue="revogacao">
+                <option value="acesso">Acesso aos dados</option>
+                <option value="correcao">Correção de dados</option>
+                <option value="revogacao">Revogação de consentimento</option>
+                <option value="eliminacao">Eliminação quando cabível</option>
+              </select>
+            </label>
+
+            <label className="profile-form-field" style={{ gridColumn: "1 / -1" }}>
+              <span>Detalhe opcional</span>
+              <textarea
+                name="details"
+                className="profile-form-input"
+                rows={4}
+                placeholder="Se quiser, explique de forma breve o pedido."
+              />
+            </label>
+
+            <div className="area-panel-item" style={{ alignSelf: "end" }}>
+              <button type="submit" className="profile-form-btn profile-form-btn-primary">
+                Enviar pedido
+              </button>
+            </div>
+          </form>
         </div>
       </section>
 
