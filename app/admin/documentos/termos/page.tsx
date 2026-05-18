@@ -36,6 +36,9 @@ async function TermosList({ searchParams }: { searchParams: { page?: string } })
         <Link href="/admin/documentos" style={{ paddingBottom: '0.5rem', color: 'var(--muted)', textDecoration: 'none' }}>
           📄 Modelos
         </Link>
+        <Link href="/admin/documentos/pedidos" style={{ paddingBottom: '0.5rem', color: 'var(--muted)', textDecoration: 'none' }}>
+          📮 Pedidos do Titular
+        </Link>
         <Link href="/admin/documentos/termos" style={{ paddingBottom: '0.5rem', borderBottom: '2px solid var(--primary)', color: 'var(--primary)', fontWeight: 600, textDecoration: 'none' }}>
           ✍️ Termos Assinados
         </Link>

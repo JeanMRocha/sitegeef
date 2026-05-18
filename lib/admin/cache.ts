@@ -28,6 +28,7 @@ export function invalidateAdminBibliotecaCache() {
 export function invalidateAdminDocumentosCache() {
   revalidateTag(ADMIN_DOCUMENTOS_CACHE_TAG);
   revalidatePath("/admin/documentos");
+  revalidatePath("/admin/documentos/pedidos");
   revalidatePath("/admin/documentos/termos");
   revalidatePath("/admin/documentos/consentimentos");
   revalidatePath("/admin/documentos/voluntariado");

@@ -138,6 +138,168 @@ export async function toggleModeloStatus(id: string, ativo: boolean) {
   return { success: true };
 }
 
+type TitularSolicitacaoStatus = 'aberta' | 'em_andamento' | 'respondida' | 'encerrada';
+
+function normalizeSolicitacaoStatus(status?: string): TitularSolicitacaoStatus | 'all' {
+  if (
+    status === 'aberta' ||
+    status === 'em_andamento' ||
+    status === 'respondida' ||
+    status === 'encerrada'
+  ) {
+    return status;
+  }
+
+  return 'all';
+}
+
+async function loadTitularSolicitacoes(page = 1, status?: string) {
+  const supabase = createServiceRoleClient();
+  const pageSize = 20;
+  const offset = (page - 1) * pageSize;
+  const normalizedStatus = normalizeSolicitacaoStatus(status);
+
+  let query = supabase
+    .from('lgpd_solicitacoes')
+    .select('*', { count: 'exact' })
+    .order('created_at', { ascending: false })
+    .range(offset, offset + pageSize - 1);
+
+  if (normalizedStatus !== 'all') {
+    query = query.eq('status', normalizedStatus);
+  }
+
+  const { data, count, error } = await query;
+
+  if (error) {
+    return {
+      solicitacoes: [],
+      total: 0,
+      page,
+      pageSize,
+    };
+  }
+
+  return {
+    solicitacoes: data || [],
+    total: count || 0,
+    page,
+    pageSize,
+  };
+}
+
+export async function getTitularSolicitacoes(page = 1, status?: string) {
+  return loadTitularSolicitacoes(page, status);
+}
+
+export async function getTitularSolicitacaoById(id: string) {
+  const supabase = createServiceRoleClient();
+
+  const { data, error } = await supabase
+    .from('lgpd_solicitacoes')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (error) return null;
+
+  return data;
+}
+
+export async function createTitularSolicitacao(formData: {
+  user_id: string;
+  pessoa_id?: string | null;
+  titular_nome?: string | null;
+  titular_email?: string | null;
+  request_type: string;
+  details?: string | null;
+  origem?: string | null;
+}) {
+  const supabase = createServiceRoleClient();
+
+  const { data, error } = await supabase
+    .from('lgpd_solicitacoes')
+    .insert([
+      {
+        user_id: formData.user_id,
+        pessoa_id: formData.pessoa_id || null,
+        titular_nome: formData.titular_nome || null,
+        titular_email: formData.titular_email || null,
+        request_type: formData.request_type,
+        details: formData.details || null,
+        origem: formData.origem || 'minha-area',
+        status: 'aberta',
+      },
+    ])
+    .select()
+    .single();
+
+  if (error) return null;
+
+  invalidateAdminDocumentosCache();
+  invalidateUserAreaCache();
+  await recordDocumentosAuditEvent('user-area/lgpd', 'Pedido do titular registrado', {
+    solicitacao_id: data.id,
+    pessoa_id: formData.pessoa_id || null,
+    request_type: formData.request_type,
+  });
+
+  return data;
+}
+
+export async function updateTitularSolicitacao(
+  id: string,
+  formData: {
+    status?: string;
+    responsavel_id?: string | null;
+    resposta?: string | null;
+    prazo_resposta?: string | null;
+  }
+) {
+  const supabase = createServiceRoleClient();
+  const patch: Record<string, unknown> = {
+    updated_at: new Date().toISOString(),
+  };
+
+  if (formData.status) {
+    patch.status = formData.status;
+    if (formData.status === 'respondida' || formData.status === 'encerrada') {
+      patch.resolvido_em = new Date().toISOString();
+    } else {
+      patch.resolvido_em = null;
+    }
+  }
+
+  if (formData.responsavel_id !== undefined) {
+    patch.responsavel_id = formData.responsavel_id || null;
+  }
+
+  if (formData.resposta !== undefined) {
+    patch.resposta = formData.resposta || null;
+  }
+
+  if (formData.prazo_resposta !== undefined) {
+    patch.prazo_resposta = formData.prazo_resposta || null;
+  }
+
+  const { error } = await supabase
+    .from('lgpd_solicitacoes')
+    .update(patch)
+    .eq('id', id);
+
+  if (error) return { success: false };
+
+  invalidateAdminDocumentosCache();
+  invalidateUserAreaCache();
+  await recordDocumentosAuditEvent('admin/documentos/pedidos', 'Pedido do titular atualizado', {
+    solicitacao_id: id,
+    status: formData.status || null,
+    responsavel_id: formData.responsavel_id || null,
+  });
+
+  return { success: true };
+}
+
 async function loadTermosAssinados(page = 1) {
   const supabase = createServiceRoleClient();
   const pageSize = 20;

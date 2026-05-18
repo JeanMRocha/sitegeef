@@ -29,6 +29,7 @@ async function AuditoriaContent({ searchParams }: { searchParams: { source?: str
   const stats = await getOpsEventStats(events);
   const recent = events.slice(0, 20);
   const modelos = events.filter((event) => event.source.includes('admin/documentos/modelos')).length;
+  const pedidosAdmin = events.filter((event) => event.source.includes('admin/documentos/pedidos')).length;
   const termos = events.filter((event) => event.source.includes('admin/documentos/termos')).length;
   const consentimentos = events.filter((event) => event.source.includes('admin/documentos/consentimentos')).length;
   const voluntariado = events.filter((event) => event.source.includes('admin/documentos/voluntariado')).length;
@@ -63,6 +64,9 @@ async function AuditoriaContent({ searchParams }: { searchParams: { source?: str
       >
         <Link href="/admin/documentos" style={{ paddingBottom: '0.5rem', color: 'var(--muted)', textDecoration: 'none' }}>
           📄 Modelos
+        </Link>
+        <Link href="/admin/documentos/pedidos" style={{ paddingBottom: '0.5rem', color: 'var(--muted)', textDecoration: 'none' }}>
+          📮 Pedidos do Titular
         </Link>
         <Link href="/admin/documentos/termos" style={{ paddingBottom: '0.5rem', color: 'var(--muted)', textDecoration: 'none' }}>
           ✍️ Termos Assinados
@@ -101,6 +105,10 @@ async function AuditoriaContent({ searchParams }: { searchParams: { source?: str
           <strong>{modelos}</strong>
         </article>
         <article className="stat-card">
+          <span className="stat-label">Pedidos</span>
+          <strong>{pedidosAdmin}</strong>
+        </article>
+        <article className="stat-card">
           <span className="stat-label">Termos</span>
           <strong>{termos}</strong>
         </article>
@@ -130,6 +138,7 @@ async function AuditoriaContent({ searchParams }: { searchParams: { source?: str
               <select name="source" defaultValue={source} className="profile-form-input">
                 <option value="all">Todos</option>
                 <option value="admin/documentos/modelos">Modelos</option>
+                <option value="admin/documentos/pedidos">Pedidos</option>
                 <option value="admin/documentos/termos">Termos</option>
                 <option value="admin/documentos/consentimentos">Consentimentos</option>
                 <option value="admin/documentos/voluntariado">Voluntariado</option>

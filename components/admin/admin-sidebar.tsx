@@ -370,6 +370,12 @@ export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
               📄 Documentos / LGPD
             </Link>
             <Link
+              href="/admin/documentos/pedidos"
+              className={`admin-nav-item ${isActive('/admin/documentos/pedidos') ? 'active' : ''}`}
+            >
+              📮 Pedidos do Titular
+            </Link>
+            <Link
               href="/admin/documentos/auditoria"
               className={`admin-nav-item ${isActive('/admin/documentos/auditoria') ? 'active' : ''}`}
             >

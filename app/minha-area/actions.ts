@@ -2,8 +2,8 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { recordOpsEvent } from "@/lib/ops-events";
 import { buildFlashNoticeUrl } from "@/lib/notificacoes/flash-notice";
+import { createTitularSolicitacao } from "@/app/admin/documentos/actions";
 
 export async function ensureUserSystemRecord() {
   const supabase = await createClient();
@@ -49,32 +49,6 @@ export async function ensureUserSystemRecord() {
   return { success: true, message: "Registro criado com sucesso" };
 }
 
-async function recordTitularRequestEvent(input: {
-  userId: string;
-  personId: string | null;
-  email: string | null;
-  requestType: string;
-  details: string;
-}) {
-  try {
-    await recordOpsEvent({
-      source: "user-area/lgpd",
-      eventType: "log",
-      level: "info",
-      message: "Solicitação do titular registrada",
-      payload: {
-        user_id: input.userId,
-        pessoa_id: input.personId,
-        email: input.email,
-        request_type: input.requestType,
-        details: input.details,
-      },
-    });
-  } catch {
-    // A solicitação não pode falhar por causa da trilha de auditoria.
-  }
-}
-
 export async function submitTitularRequest(formData: FormData) {
   const supabase = await createClient();
   const {
@@ -98,21 +72,34 @@ export async function submitTitularRequest(formData: FormData) {
     );
   }
 
-  const [usuarioResult, pessoaResult] = await Promise.all([
-    supabase.from("usuarios_sistema").select("pessoa_id").eq("id", user.id).maybeSingle(),
-    supabase.from("profiles").select("email").eq("id", user.id).maybeSingle(),
-  ]);
-
+  const usuarioResult = await supabase.from("usuarios_sistema").select("pessoa_id").eq("id", user.id).maybeSingle();
   const pessoaId = usuarioResult.data?.pessoa_id ?? null;
-  const email = pessoaResult.data?.email ?? user.email ?? null;
 
-  await recordTitularRequestEvent({
-    userId: user.id,
-    personId: pessoaId,
-    email,
-    requestType,
+  const pessoaResult = pessoaId
+    ? await supabase.from("pessoas").select("nome, email").eq("id", pessoaId).maybeSingle()
+    : { data: null };
+
+  const titularNome = pessoaResult.data?.nome ?? user.user_metadata?.nome ?? null;
+  const titularEmail = pessoaResult.data?.email ?? user.email ?? null;
+
+  const solicitacao = await createTitularSolicitacao({
+    user_id: user.id,
+    pessoa_id: pessoaId,
+    titular_nome: titularNome,
+    titular_email: titularEmail,
+    request_type: requestType,
     details: details || "Pedido enviado pela área do usuário.",
+    origem: "minha-area",
   });
+
+  if (!solicitacao) {
+    redirect(
+      buildFlashNoticeUrl("/minha-area", {
+        variant: "error",
+        message: "Não foi possível registrar o pedido.",
+      })
+    );
+  }
 
   redirect(
     buildFlashNoticeUrl("/minha-area", {

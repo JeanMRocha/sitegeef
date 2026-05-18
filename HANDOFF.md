@@ -140,6 +140,7 @@ Quando o Autoreflex voltar a responder, rodar primeiro:
   - As telas de `termos` e `voluntariado` seguiram o mesmo padrão discreto: notas curtas, labels reduzidos e guards para registros ausentes.
   - As mutações do módulo agora registram eventos em `ops_events` e a nova tela `/admin/documentos/auditoria` mostra o rastro técnico de LGPD sem expor conteúdo sensível.
   - A área do usuário ganhou um formulário discreto de pedido do titular em `/minha-area`, e o submit grava evento em `ops_events` com source `user-area/lgpd` para a auditoria acompanhar revogação/acesso/correção.
+  - Os pedidos agora também persistem em `lgpd_solicitacoes`, com fila administrativa em `/admin/documentos/pedidos`, detalhe para tratamento, responsável, prazo e resposta curta.
   - O header publico foi separado em uma casca server-rendered (`components/site-header.tsx`) e uma camada client para menus/usuario (`components/site-header-actions.tsx`) para o menu principal nao sumir quando a hidratacao falhar depois do logout.
   - Se o Fast Refresh reclamar de arquivo ausente nesse fluxo, reiniciar o `next dev` limpo antes de investigar a UI.
 - `Supabase remoto`

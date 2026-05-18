@@ -11,6 +11,7 @@ async function ModelosList() {
 
   const tabs = [
     { href: "/admin/documentos", label: "📄 Modelos" },
+    { href: "/admin/documentos/pedidos", label: "📮 Pedidos do Titular" },
     { href: "/admin/documentos/termos", label: "✍️ Termos Assinados" },
     { href: "/admin/documentos/consentimentos", label: "🔒 Consentimentos LGPD" },
     { href: "/admin/documentos/voluntariado", label: "🤝 Serviços Voluntários" },
@@ -29,7 +30,7 @@ async function ModelosList() {
             Novo Modelo
           </Link>
         </div>
-        <p className="area-subtitle">Modelos de termos, consentimentos e voluntariado.</p>
+        <p className="area-subtitle">Modelos, pedidos do titular, consentimentos, termos e voluntariado.</p>
       </section>
 
       <section className="area-section">

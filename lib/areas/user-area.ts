@@ -13,6 +13,7 @@ type UserAreaData = {
   escalas: any[];
   voluntariados: any[];
   consentimentos: any[];
+  pedidosTitular: any[];
 };
 
 async function loadUserArea(userId: string): Promise<UserAreaData> {
@@ -68,10 +69,11 @@ async function loadUserArea(userId: string): Promise<UserAreaData> {
       escalas: [],
       voluntariados: [],
       consentimentos: [],
+      pedidosTitular: [],
     };
   }
 
-  const [pessoaResult, emprestimosResult, reservasResult, movimentosResult, escalasResult, voluntariosResult, consentimentosResult] =
+  const [pessoaResult, emprestimosResult, reservasResult, movimentosResult, escalasResult, voluntariosResult, consentimentosResult, pedidosResult] =
     await Promise.all([
       supabase.from("pessoas").select("*").eq("id", pessoaId).single(),
       usuario?.pode_biblioteca
@@ -129,6 +131,12 @@ async function loadUserArea(userId: string): Promise<UserAreaData> {
         .select("*")
         .eq("pessoa_id", pessoaId)
         .eq("status", "ativo"),
+      supabase
+        .from("lgpd_solicitacoes")
+        .select("*")
+        .eq("pessoa_id", pessoaId)
+        .order("created_at", { ascending: false })
+        .limit(8),
     ]);
 
   return {
@@ -143,6 +151,7 @@ async function loadUserArea(userId: string): Promise<UserAreaData> {
     escalas: escalasResult.data ?? [],
     voluntariados: voluntariosResult.data ?? [],
     consentimentos: consentimentosResult.data ?? [],
+    pedidosTitular: pedidosResult.data ?? [],
   };
 }
 

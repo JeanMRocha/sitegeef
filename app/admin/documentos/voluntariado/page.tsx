@@ -36,6 +36,9 @@ async function ServicosList({ searchParams }: { searchParams: { page?: string } 
         <Link href="/admin/documentos" style={{ paddingBottom: '0.5rem', color: 'var(--muted)', textDecoration: 'none' }}>
           📄 Modelos
         </Link>
+        <Link href="/admin/documentos/pedidos" style={{ paddingBottom: '0.5rem', color: 'var(--muted)', textDecoration: 'none' }}>
+          📮 Pedidos do Titular
+        </Link>
         <Link href="/admin/documentos/termos" style={{ paddingBottom: '0.5rem', color: 'var(--muted)', textDecoration: 'none' }}>
           ✍️ Termos Assinados
         </Link>

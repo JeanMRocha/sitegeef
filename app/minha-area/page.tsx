@@ -16,7 +16,7 @@ async function MinhaAreaContent() {
     redirect("/login?next=/minha-area");
   }
 
-  const { usuario, pessoa, siteRole, hasAdminAccess, emprestimos, reservas, movimentosLivraria, escalas, voluntariados, consentimentos } =
+  const { usuario, pessoa, siteRole, hasAdminAccess, emprestimos, reservas, movimentosLivraria, escalas, voluntariados, consentimentos, pedidosTitular } =
     await getCachedUserArea(user.id);
 
   const today = new Date().toISOString().split("T")[0];
@@ -168,6 +168,36 @@ async function MinhaAreaContent() {
           </form>
         </div>
       </section>
+
+      {pedidosTitular.length > 0 && (
+        <section className="area-section">
+          <h2 className="area-section-title">Pedidos recentes</h2>
+          <div className="admin-card">
+            <div className="area-panel-grid">
+              {pedidosTitular.map((pedido: any) => (
+                <div key={pedido.id} className="area-panel-item">
+                  <strong>
+                    {pedido.request_type === "acesso"
+                      ? "Acesso aos dados"
+                      : pedido.request_type === "correcao"
+                        ? "Correção de dados"
+                        : pedido.request_type === "revogacao"
+                          ? "Revogação"
+                          : "Eliminação"}
+                  </strong>
+                  <p style={{ marginBottom: '0.25rem' }}>
+                    {pedido.status}
+                    {pedido.resolvido_em ? ` · concluído em ${new Date(pedido.resolvido_em).toLocaleDateString("pt-BR")}` : ""}
+                  </p>
+                  <p style={{ color: "var(--muted)" }}>
+                    {new Date(pedido.created_at).toLocaleDateString("pt-BR")}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {usuario?.pode_biblioteca && (
         <section className="area-section">
