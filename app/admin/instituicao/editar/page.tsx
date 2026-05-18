@@ -19,6 +19,7 @@ import {
 } from '../actions';
 import { DescritivoField } from '@/components/admin/instituicao-descritivo-fields';
 import { InstituicaoContatoFields, InstituicaoContatoTipoManager } from '@/components/admin/instituicao-contatos-fields';
+import { LogoUploadForm } from '@/components/admin/logo-upload-form';
 import { contentPages, site } from '@/lib/site-data';
 
 export const metadata = {
@@ -569,10 +570,13 @@ async function EditInstituicaoContent({ searchParams }: { searchParams: { tab?: 
 
             {activeStep === 'documentos' && (
               <div className="module-grid">
-                <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
-                  <span>Logo (URL)</span>
-                  <input type="url" name="logo_url" defaultValue={instituicaoBase.logo_url || ''} className="profile-form-input" />
-                </label>
+                <div style={{ gridColumn: '1 / -1' }}>
+                  <label>
+                    <span style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Logo</span>
+                  </label>
+                  <LogoUploadForm currentLogo={instituicaoBase.logo_url || ''} />
+                </div>
+                <input type="hidden" name="logo_url" value={instituicaoBase.logo_url || ''} />
                 <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
                   <span>Estatuto (URL do PDF)</span>
                   <input type="url" name="estatuto_url" defaultValue={instituicaoBase.estatuto_url || ''} className="profile-form-input" />

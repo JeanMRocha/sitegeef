@@ -4,6 +4,7 @@ import { revalidateTag, unstable_cache } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
+import { uploadLogo } from '@/lib/supabase/storage';
 
 function hasMeaningfulError(error: unknown) {
   if (!error || typeof error !== 'object') {
@@ -498,4 +499,49 @@ export async function deleteContaBancaria(id: string) {
   if (error) return { success: false };
 
   return { success: true };
+}
+
+export async function uploadLogoAction(formData: FormData) {
+  const file = formData.get('file') as File;
+
+  if (!file) {
+    return { success: false, error: 'Nenhum arquivo foi selecionado.' };
+  }
+
+  const result = await uploadLogo(file);
+
+  if (!result.success) {
+    return { success: false, error: result.error };
+  }
+
+  // Atualizar logo_url na instituição
+  const supabase = createServiceRoleClient();
+  let instituicaoId: string | null = null;
+
+  try {
+    const { data } = await supabase
+      .from('instituicao')
+      .select('id')
+      .order('criado_em', { ascending: true })
+      .limit(1)
+      .maybeSingle();
+
+    instituicaoId = data?.id ?? null;
+  } catch {
+    // Continuar mesmo se houver erro
+  }
+
+  if (instituicaoId) {
+    const { error } = await supabase
+      .from('instituicao')
+      .update({ logo_url: result.url, atualizado_em: new Date().toISOString() })
+      .eq('id', instituicaoId);
+
+    if (error) {
+      return { success: false, error: `Upload realizado, mas erro ao salvar: ${error.message}` };
+    }
+  }
+
+  revalidateTag('instituicao');
+  return { success: true, url: result.url };
 }
