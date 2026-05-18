@@ -76,9 +76,9 @@
   --surface: #221f1d;
   --surface-hover: #2d2926;
   --text: #f4efe7;
-  --text-muted: #b7ada2;
-  --border: #453f3a;
-  --line: #453f3a;
+  --text-muted: #d4ccc1; /* Melhorado contraste: de #b7ada2 */
+  --border: #5a5349; /* Mais claro: de #453f3a */
+  --line: #5a5349;
   --shadow: 0 24px 60px rgba(0, 0, 0, 0.38);
   --shadow-lg: 0 40px 100px rgba(0, 0, 0, 0.5);
   --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.25);

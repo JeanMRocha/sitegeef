@@ -107,6 +107,27 @@
   font-weight: 600;
 }
 
+/* Dark Mode Adjustments */
+:root.dark .admin-sidebar {
+  background:
+    linear-gradient(180deg, rgba(50, 45, 42, 0.98), rgba(40, 36, 33, 0.96));
+  border-color: rgba(100, 92, 86, 0.3);
+}
+
+:root.dark .admin-nav-title,
+:root.dark .admin-nav-title-button {
+  color: var(--text-muted);
+}
+
+:root.dark .admin-nav-item {
+  color: var(--text);
+}
+
+:root.dark .admin-nav-title-button:hover {
+  background: rgba(138, 0, 90, 0.15);
+  color: #f0b5de;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
   .admin-sidebar {

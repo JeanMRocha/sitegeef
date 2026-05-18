@@ -6,6 +6,12 @@
   --admin-border: #d1c4db; /* Melhorado contraste: de rgba(225, 212, 238, 0.92) */
 }
 
+:root.dark {
+  --admin-bg: #11100f;
+  --admin-card-bg: rgba(40, 36, 33, 0.96);
+  --admin-border: #5a5349;
+}
+
 .site-shell {
   width: 100%;
   margin: 0;
@@ -663,4 +669,34 @@
   .admin-btn {
     width: 100%;
   }
+}
+
+/* Dark Mode Adjustments */
+:root.dark .admin-header {
+  background: rgba(50, 45, 42, 0.92);
+  border-color: rgba(100, 92, 86, 0.3);
+}
+
+:root.dark .admin-page-header {
+  background: rgba(40, 36, 33, 0.82);
+  border-color: #5a5349;
+}
+
+:root.dark .admin-nav-title {
+  color: var(--text-muted);
+}
+
+:root.dark .admin-nav-item {
+  color: var(--text);
+}
+
+:root.dark .admin-nav-item:hover {
+  background: rgba(138, 0, 90, 0.15);
+  border-color: rgba(138, 0, 90, 0.2);
+}
+
+:root.dark .admin-nav-item.active {
+  background: rgba(138, 0, 90, 0.2);
+  border-color: rgba(138, 0, 90, 0.25);
+  color: #f0b5de;
 }
