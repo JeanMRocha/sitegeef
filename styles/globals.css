@@ -904,9 +904,9 @@ img {
 
 .area-panel-item {
   padding: 1rem;
-  border: 1px solid rgba(14, 36, 8, 0.08);
+  border: 1px solid var(--border-light);
   border-radius: 18px;
-  background: rgba(244, 233, 255, 0.92);
+  background: var(--surface-tertiary);
 }
 
 .area-panel-item strong {
@@ -922,8 +922,8 @@ img {
 .area-empty {
   padding: 1.2rem;
   border-radius: 18px;
-  background: rgba(138, 0, 90, 0.05);
-  color: var(--muted);
+  background: var(--surface-tertiary);
+  color: var(--text-muted);
 }
 
 .stat-grid {
@@ -935,10 +935,8 @@ img {
 .stat-card {
   padding: 1.2rem;
   border-radius: 20px;
-  border: 1px solid rgba(14, 36, 8, 0.08);
-  background:
-    linear-gradient(135deg, rgba(138, 0, 90, 0.12), rgba(99, 213, 31, 0.05)),
-    rgba(244, 233, 255, 0.94);
+  border: 1px solid var(--border-light);
+  background: var(--surface-secondary);
 }
 
 .stat-card span {
@@ -2428,7 +2426,7 @@ img {
 :root.dark .area-hero,
 :root.dark .stat-card,
 :root.dark .module-card {
-  background: linear-gradient(180deg, rgba(34, 31, 29, 0.98), rgba(25, 22, 20, 0.98));
+  background: linear-gradient(180deg, var(--surface-primary), var(--surface-secondary));
 }
 
 :root.dark .hero-visual {
@@ -2535,10 +2533,9 @@ img {
   box-shadow: 0 0 0 3px rgba(138, 0, 90, 0.15);
 }
 
-:root.dark .area-panel-item,
 :root.dark .admin-card {
-  background: rgba(50, 45, 42, 0.96);
-  border-color: #5a5349;
+  background: var(--surface-tertiary);
+  border-color: var(--border-medium);
   color: var(--text);
 }
 
