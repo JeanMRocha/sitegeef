@@ -110,6 +110,28 @@ async function MinhaAreaContent() {
         </div>
       </section>
 
+      <section className="area-section">
+        <h2 className="area-section-title">Privacidade</h2>
+        <div className="admin-card">
+          <div className="area-panel-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))" }}>
+            <div className="area-panel-item">
+              <strong>O que você pode pedir</strong>
+              <p>Acesso, correção, revogação de consentimento e informação sobre uso.</p>
+            </div>
+            <div className="area-panel-item">
+              <strong>Como tratar</strong>
+              <p>Use a página de privacidade ou fale com a casa pelo canal oficial.</p>
+            </div>
+            <div className="area-panel-item">
+              <strong>Onde ver</strong>
+              <p>
+                <a href="/privacidade">Ler política de privacidade</a> · <a href="/lgpd">Mais detalhes</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {usuario?.pode_biblioteca && (
         <section className="area-section">
           <h2 className="area-section-title">Biblioteca</h2>

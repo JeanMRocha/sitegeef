@@ -24,6 +24,25 @@ async function handleRevoke(id: string) {
 async function ConsentimentoContent({ id }: { id: string }) {
   const consentimento = await getConsentimentoById(id);
 
+  if (!consentimento) {
+    return (
+      <div>
+        <div className="admin-page-header">
+          <div>
+            <h1 className="admin-page-title">Consentimento LGPD</h1>
+            <p className="admin-page-subtitle">Registro não encontrado.</p>
+          </div>
+        </div>
+
+        <div className="admin-card">
+          <p style={{ margin: 0, color: 'var(--muted)' }}>
+            O registro pode ter sido removido ou você não tem acesso.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       {/* Header */}
@@ -56,6 +75,9 @@ async function ConsentimentoContent({ id }: { id: string }) {
 
       {/* Info Box */}
       <div className="admin-card" style={{ marginBottom: '2rem' }}>
+        <div style={{ marginBottom: '1rem', padding: '0.9rem 1rem', borderRadius: '0.75rem', background: 'rgba(138, 0, 90, 0.06)', color: 'var(--muted)', lineHeight: 1.6 }}>
+          Revogue apenas quando o pedido vier do titular ou quando houver base para encerrar o tratamento.
+        </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '2rem' }}>
           <div>
             <p style={{ margin: '0.5rem 0', fontSize: '0.85rem', color: 'var(--muted)', textTransform: 'uppercase' }}>Finalidade</p>

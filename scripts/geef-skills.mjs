@@ -9,12 +9,17 @@
  *   node scripts/geef-skills.mjs index
  */
 
-const AUTOREFLEX_URL = 'http://127.0.0.1:8090';
+const AUTOREFLEX_URLS = [...new Set([
+  process.env.AUTOREFLEX_URL,
+  process.env.AUTOREFLEX_PORT ? `http://127.0.0.1:${process.env.AUTOREFLEX_PORT}` : null,
+  'http://127.0.0.1:8090',
+].filter(Boolean))];
 const SKILLS_DIR = './skills';
 const SKILL_PRIORITY = [
   { key: 'admin', skillPath: 'skills/padrao-modulo-admin.md', label: 'Padrão de Módulo Admin GEEF' },
   { key: 'action', skillPath: 'skills/padrao-actions-ts.md', label: 'Padrão de Server Actions GEEF' },
   { key: 'supabase', skillPath: 'skills/supabase-patterns.md', label: 'Padrões Supabase GEEF' },
+  { key: 'lgpd', skillPath: 'skills/lgpd-governanca.md', label: 'LGPD e Governança de Dados GEEF' },
   { key: 'permission', skillPath: 'skills/auth-permissions.md', label: 'Sistema de Permissões GEEF' },
   { key: 'migration', skillPath: 'skills/migrations-workflow.md', label: 'Workflow de Migrações GEEF' },
   { key: 'notification', skillPath: 'skills/notificacoes-timers-avisos.md', label: 'Notificações, Timers e Avisos (OpnForm)' },
@@ -27,15 +32,60 @@ const SKILL_PRIORITY = [
   { key: 'orchestration', skillPath: 'skills/roteamento-operacional-autoreflex.md', label: 'Roteamento Operacional de Skills GEEF' },
 ];
 
-async function api(endpoint, method, body = null) {
-  const url = `${AUTOREFLEX_URL}${endpoint}`;
+async function fetchWithTimeout(url, options = {}, timeoutMs = 5000) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
-    const response = await fetch(url, {
+    return await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+async function probeUrl(baseUrl) {
+  try {
+    const response = await fetchWithTimeout(`${baseUrl}/health`, { cache: 'no-store' }, 5000);
+    return response.ok;
+  } catch {
+    return false;
+  }
+}
+
+async function resolveAutoreflexUrl() {
+  for (const baseUrl of AUTOREFLEX_URLS) {
+    if (await probeUrl(baseUrl)) {
+      return baseUrl;
+    }
+  }
+
+  throw new Error(`Autoreflex não respondeu em nenhuma URL testada: ${AUTOREFLEX_URLS.join(', ')}`);
+}
+
+async function api(endpoint, method, body = null) {
+  let baseUrl;
+
+  try {
+    baseUrl = await resolveAutoreflexUrl();
+  } catch (error) {
+    console.error('❌ Autoreflex não está respondendo.');
+    console.error(`   URLs testadas: ${AUTOREFLEX_URLS.join(', ')}`);
+    console.error('   Se ele estiver em outra porta, defina AUTOREFLEX_URL ou AUTOREFLEX_PORT.');
+    console.error(`   Erro: ${error.message}`);
+    process.exit(1);
+  }
+
+  const url = `${baseUrl}${endpoint}`;
+
+  try {
+    const response = await fetchWithTimeout(url, {
       method,
       headers: { 'Content-Type': 'application/json' },
       body: body ? JSON.stringify(body) : undefined,
-    });
+    }, 5000);
 
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -43,7 +93,7 @@ async function api(endpoint, method, body = null) {
 
     return await response.json();
   } catch (error) {
-    console.error(`❌ Erro ao conectar em ${AUTOREFLEX_URL}`);
+    console.error(`❌ Erro ao conectar em ${baseUrl}`);
     console.error(`   Certifique-se de que o Autoreflex está rodando.`);
     console.error(`   Erro: ${error.message}`);
     process.exit(1);
@@ -215,14 +265,17 @@ async function recommend(query) {
 
 async function health() {
   try {
-    const res = await fetch(`${AUTOREFLEX_URL}/health`);
+    const baseUrl = await resolveAutoreflexUrl();
+    const res = await fetchWithTimeout(`${baseUrl}/health`, { cache: 'no-store' }, 5000);
     if (res.ok) {
-      console.log('✅ Autoreflex está rodando em', AUTOREFLEX_URL);
+      console.log('✅ Autoreflex está rodando em', baseUrl);
       return true;
     }
   } catch (err) {
     // Continuar com erro
   }
+
+  console.log(`❌ Autoreflex não está respondendo em: ${AUTOREFLEX_URLS.join(', ')}`);
   return false;
 }
 

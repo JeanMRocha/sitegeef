@@ -6,6 +6,7 @@ import {
   GroupIcon,
   HeartIcon,
   MailIcon,
+  ShieldIcon,
 } from "@/components/site-icons";
 import { contentPages, publicHref, site } from "@/lib/site-data";
 import { normalizeInternalPath } from "@/lib/security";
@@ -25,6 +26,7 @@ const iconMap = {
   calendar: CalendarIcon,
   heart: HeartIcon,
   mail: MailIcon,
+  privacy: ShieldIcon,
 };
 
 const quickLinks = [
@@ -51,6 +53,12 @@ const quickLinks = [
     title: contentPages["contato"].title,
     description: contentPages["contato"].summary,
     icon: "mail",
+  },
+  {
+    href: publicHref("/privacidade"),
+    title: contentPages["privacidade"].title,
+    description: contentPages["privacidade"].summary,
+    icon: "privacy",
   },
 ] as const;
 

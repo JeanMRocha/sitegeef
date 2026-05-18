@@ -46,7 +46,7 @@ export async function uploadLogo(file: File): Promise<{ success: boolean; url?: 
   }
 }
 
-function _getLogoUrl(storagePath?: string): string {
+async function _getLogoUrl(storagePath?: string): Promise<string> {
   if (!storagePath) {
     return '';
   }

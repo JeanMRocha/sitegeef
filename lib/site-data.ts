@@ -316,8 +316,8 @@ export const contentPages: Record<string, ContentPage> = {
     summary: "Como falar com a casa e chegar até o espaço físico.",
     intro:
       "O contato inicial deve ser fácil, claro e disponível no primeiro clique.",
-    ctaLabel: "Ver privacidade",
-    ctaHref: publicHref("/privacidade"),
+    ctaLabel: "Ver LGPD",
+    ctaHref: publicHref("/lgpd"),
     sections: [
       {
         heading: "Informações",
@@ -325,13 +325,62 @@ export const contentPages: Record<string, ContentPage> = {
       },
     ],
   },
+  lgpd: {
+    title: "LGPD",
+    summary: "Central pública de privacidade, direitos do titular e tratamento de dados.",
+    intro:
+      "Aqui estão os pontos essenciais sobre como o GEEF trata dados pessoais, o que pode ser coletado, por quanto tempo fica guardado e como você pode pedir correção, acesso ou revogação.",
+    ctaLabel: "Abrir privacidade",
+    ctaHref: publicHref("/privacidade"),
+    sections: [
+      {
+        heading: "O que tratamos",
+        text: "Coletamos apenas o necessário para contato, acesso ao site, atendimento, consentimentos, voluntariado, documentos e áreas administrativas autorizadas.",
+        bullets: [
+          "Dados de cadastro e contato.",
+          "Dados de acesso e autenticação.",
+          "Consentimentos e termos assinados.",
+          "Registros operacionais e de auditoria.",
+        ],
+      },
+      {
+        heading: "Seus direitos",
+        text: "Você pode pedir confirmação, acesso, correção, eliminação quando cabível, informação sobre compartilhamentos e revogação de consentimento.",
+        bullets: [
+          "Solicitar cópia ou revisão dos seus dados.",
+          "Corrigir dados desatualizados.",
+          "Revogar consentimentos concedidos.",
+          "Perguntar como os dados foram usados.",
+        ],
+      },
+      {
+        heading: "Segurança e retenção",
+        text: "Mantemos acesso restrito, usamos os dados só para a finalidade informada e eliminamos ou arquivamos conforme a necessidade operacional e legal.",
+        bullets: [
+          "Acesso limitado por perfil e função.",
+          "Dados sensíveis passam por revisão reforçada.",
+          "Logs e auditoria ficam separados do conteúdo principal.",
+          "Incidentes relevantes seguem fluxo formal de resposta.",
+        ],
+      },
+      {
+        heading: "Contato LGPD",
+        text: "Se você quiser exercer um direito ou esclarecer o uso de um dado pessoal, fale com a casa pelo canal oficial de contato.",
+        bullets: [
+          "E-mail: contatogeef@gmail.com",
+          "Telefone: (22) 99725-1807",
+          "Endereço: Rua Gwyer de Azevedo, 35, Centro, Santa Maria Madalena-RJ",
+        ],
+      },
+    ],
+  },
   privacidade: {
     title: "Privacidade",
-    summary: "Diretrizes iniciais de privacidade e cuidado com dados.",
+    summary: "Diretrizes de privacidade, consentimento e cuidado com dados.",
     intro:
-      "Esta página registra a base inicial de privacidade para o site público. O texto final pode crescer junto com os módulos internos.",
-    ctaLabel: "Voltar ao início",
-    ctaHref: publicHref("/"),
+      "Esta página detalha como o site público trata seus dados pessoais e quando o GEEF pode registrar consentimento, contato ou preferência do usuário.",
+    ctaLabel: "Ver central LGPD",
+    ctaHref: publicHref("/lgpd"),
     sections: [
       {
         heading: "Princípios",
@@ -340,6 +389,34 @@ export const contentPages: Record<string, ContentPage> = {
           "Dados usados apenas para contato e atendimento.",
           "Sem coleta desnecessária no site público.",
           "Consentimento e finalidade claros quando houver formulários.",
+        ],
+      },
+      {
+        heading: "Como usamos os dados",
+        text: "O site usa dados para login, recuperação de acesso, exibição da área do usuário e registro de consentimentos quando houver fluxo explícito.",
+        bullets: [
+          "Login e recuperação de senha.",
+          "Área do usuário e preferências.",
+          "Consentimentos e termos assinados.",
+          "Registros de auditoria e segurança.",
+        ],
+      },
+      {
+        heading: "O que não fazemos",
+        text: "Não usamos os dados para finalidades ocultas nem exibimos informação pessoal desnecessária em páginas públicas.",
+        bullets: [
+          "Não vendemos dados.",
+          "Não publicamos conteúdo sensível sem base e autorização.",
+          "Não mantemos dado por prazo indefinido sem motivo.",
+        ],
+      },
+      {
+        heading: "Canal de atendimento",
+        text: "Se quiser revisar, corrigir ou revogar consentimento, use o contato oficial ou a área autenticada do usuário.",
+        bullets: [
+          "Ver a central LGPD.",
+          "Acessar a área do usuário.",
+          "Falar com a casa pelo e-mail oficial.",
         ],
       },
     ],

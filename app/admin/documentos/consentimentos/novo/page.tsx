@@ -58,8 +58,14 @@ export default async function NovoConsentimentoPage() {
       <div className="admin-page-header">
         <div>
           <h1 className="admin-page-title">Novo Consentimento LGPD</h1>
-          <p className="admin-page-subtitle">Registre novo consentimento de tratamento de dados</p>
+          <p className="admin-page-subtitle">Registre apenas o necessário. Base legal e finalidade devem ficar claras.</p>
         </div>
+      </div>
+
+      <div className="admin-card" style={{ marginBottom: '1rem', padding: '0.95rem 1rem', borderLeft: '3px solid var(--primary)' }}>
+        <p style={{ margin: 0, color: 'var(--muted)', lineHeight: 1.6 }}>
+          Mantenha o texto objetivo, evite dados excessivos e confirme a base legal antes de salvar.
+        </p>
       </div>
 
       {/* Form */}
@@ -89,17 +95,17 @@ export default async function NovoConsentimentoPage() {
           </div>
 
           <div className="admin-form-group">
-            <label>Finalidade do Tratamento de Dados *</label>
+            <label>Finalidade *</label>
             <input
               type="text"
               name="finalidade"
-              placeholder="Ex: Envio de newsletter, Marketing direto, Suporte ao cliente"
+              placeholder="Ex: suporte ao usuário, comunicação autorizada, atendimento"
               required
             />
           </div>
 
           <div className="admin-form-group">
-            <label>Base Legal</label>
+            <label>Base legal</label>
             <select
               name="base_legal"
               style={{
@@ -121,7 +127,7 @@ export default async function NovoConsentimentoPage() {
           </div>
 
           <div className="admin-form-group">
-            <label>Canais Autorizados</label>
+            <label>Canais autorizados</label>
             <select
               name="canal_autorizado"
               style={{

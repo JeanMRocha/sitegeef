@@ -87,6 +87,15 @@ export function UserIcon(props: IconProps) {
   );
 }
 
+export function ShieldIcon(props: IconProps) {
+  return (
+    <IconShell {...props}>
+      <path d="M12 3 5 6v5c0 5 3.2 8.7 7 10 3.8-1.3 7-5 7-10V6z" />
+      <path d="M9.5 12.2 11.3 14l3.7-4" />
+    </IconShell>
+  );
+}
+
 export function ArrowIcon(props: IconProps) {
   return (
     <IconShell {...props}>

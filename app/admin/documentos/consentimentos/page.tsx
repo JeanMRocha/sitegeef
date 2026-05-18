@@ -18,11 +18,17 @@ async function ConsentimentosList({ searchParams }: { searchParams: { page?: str
       <div className="admin-page-header">
         <div>
           <h1 className="admin-page-title">Consentimentos LGPD</h1>
-          <p className="admin-page-subtitle">Rastreamento de consentimentos de dados pessoais</p>
+          <p className="admin-page-subtitle">Rastreamento discreto de consentimentos e base legal.</p>
         </div>
         <Link href="/admin/documentos/consentimentos/novo" className="admin-btn admin-btn-primary">
           ➕ Novo Consentimento
         </Link>
+      </div>
+
+      <div className="admin-card" style={{ marginBottom: '1rem', padding: '0.9rem 1rem' }}>
+        <p style={{ margin: 0, color: 'var(--muted)', lineHeight: 1.6 }}>
+          Registre só o necessário para justificar o tratamento e facilitar revogação, se houver pedido do titular.
+        </p>
       </div>
 
       {/* Tabs Navigation */}

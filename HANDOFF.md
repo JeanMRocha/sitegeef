@@ -10,6 +10,7 @@
 6. `docs/ADMIN_REGRESSION_NOTES.md` quando a tarefa tocar admin, permissões, pessoas, governança, assets do Next ou SEO/fallback de layout
 7. `tests/admin-smoke.mjs` para validar rotas admin principais antes de abrir o browser
 8. `docs/ADMIN_MODULE_CHECKLIST.md` quando a tarefa for criar ou alterar qualquer módulo admin
+9. `skills/lgpd-governanca.md` quando a tarefa tocar dados pessoais, consentimento, retenção, logs, incidentes ou privacidade
 
 ## Regra de trabalho
 
@@ -53,7 +54,8 @@ Use esta ordem quando a tarefa envolver estrutura/admin, actions, banco ou segur
 6. `skills/relatorios-geef.md` quando a tarefa for analítica, de KPI, dashboard ou exportação
 7. `skills/livraria-biblioteca-hibrida.md` quando a tarefa for de catálogo, exemplares, vendas, empréstimos ou multas
 8. `skills/migrations-workflow.md` quando houver mudança de schema
-9. `skills/roteamento-operacional-autoreflex.md` quando a tarefa for misturada, repetitiva ou duvidosa
+9. `skills/lgpd-governanca.md` quando a tarefa tocar dados pessoais, base legal, direitos do titular, retenção ou incidentes
+10. `skills/roteamento-operacional-autoreflex.md` quando a tarefa for misturada, repetitiva ou duvidosa
 
 Árvore rápida de decisão:
 
@@ -65,6 +67,7 @@ Use esta ordem quando a tarefa envolver estrutura/admin, actions, banco ou segur
 - Relatorios, dashboard, KPI, exportacao -> `skills/relatorios-geef.md`
 - Catalogo, exemplar, venda, emprestimo, multa -> `skills/livraria-biblioteca-hibrida.md`
 - Tabela, coluna, índice, policy, rollout -> `skills/migrations-workflow.md`
+- LGPD, privacidade, consentimento, retenção, incidente, dados sensíveis -> `skills/lgpd-governanca.md`
 - Se a tarefa toca mais de uma camada e você quer a decisão certa primeiro -> `skills/roteamento-operacional-autoreflex.md`
 
 Atalhos locais:
@@ -130,6 +133,8 @@ Quando o Autoreflex voltar a responder, rodar primeiro:
   - A sessao de contatos agora usa mascara leve e avisos individuais por campo; `responsavel_id` vem de `pessoas` ativas via `select`.
   - O dropdown de `tipo` dos contatos agora vem da tabela `public.instituicao_contato_tipos`, com seed dos tipos base e CRUD no proprio editor de instituicao.
   - A home publica foi enxugada removendo o painel visual provisório e o bloco de "confiança" que ainda pareciam mock.
+  - A base pública ganhou uma central discreta de privacidade em `/privacidade` e `/lgpd`, com links também na home, no login, no rodape e em Minha Área.
+  - O aviso de login ficou curto por padrão; a orientacao detalhada ficou concentrada na pagina de privacidade.
   - O header publico foi separado em uma casca server-rendered (`components/site-header.tsx`) e uma camada client para menus/usuario (`components/site-header-actions.tsx`) para o menu principal nao sumir quando a hidratacao falhar depois do logout.
   - Se o Fast Refresh reclamar de arquivo ausente nesse fluxo, reiniciar o `next dev` limpo antes de investigar a UI.
 - `Supabase remoto`
@@ -143,6 +148,8 @@ Quando o Autoreflex voltar a responder, rodar primeiro:
 - `components/admin/*` e `styles/admin.css`
   - O shell admin precisa crescer com a largura da viewport.
   - Nao reintroduzir `max-width` fixo que prenda cards, abas ou formularios no centro.
+- `lib/supabase/storage.ts`
+  - `unstable_cache()` agora usa uma função assíncrona para manter o build do Next 15 estável.
 - `app/favicon.ico/route.ts`
   - Nao recriar esse route handler enquanto `public/favicon.ico` for a fonte unica do favicon.
 

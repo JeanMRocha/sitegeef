@@ -42,6 +42,14 @@ export function SiteShell({ user, children }: Readonly<SiteShellProps>) {
             <span className="site-footer-separator" aria-hidden="true">·</span>
             <span>{site.email}</span>
             <span className="site-footer-separator" aria-hidden="true">·</span>
+            <Link href="/lgpd" className="footer-link">
+              LGPD
+            </Link>
+            <span className="site-footer-separator" aria-hidden="true">·</span>
+            <Link href="/privacidade" className="footer-link">
+              Privacidade
+            </Link>
+            <span className="site-footer-separator" aria-hidden="true">·</span>
             <Link href="/institucional" className="footer-link">
               Credibilidade e Filiações
             </Link>

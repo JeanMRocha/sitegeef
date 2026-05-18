@@ -1,0 +1,11 @@
+{
+  "name": "lgpd-governanca",
+  "title": "LGPD e Governança de Dados GEEF",
+  "summary": "Padrão do projeto para classificação, base legal, revisão, gates, retenção, incidentes, direitos do titular e persistência de evidências LGPD",
+  "tags": ["lgpd", "privacidade", "dados-pessoais", "dados-sensiveis", "governanca", "retencao", "incidentes", "consentimento"],
+  "language": "pt-BR",
+  "source_skill_path": "skills/lgpd-governanca.md",
+  "created_at": "2026-05-18T00:00:00-03:00",
+  "updated_at": "2026-05-18T00:00:00-03:00",
+  "version": 1
+}
