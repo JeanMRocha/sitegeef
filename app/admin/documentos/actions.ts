@@ -5,6 +5,25 @@ import { createClient } from '@/lib/supabase/server';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 import { invalidateAdminDocumentosCache } from '@/lib/admin/cache';
 import { invalidateUserAreaCache } from '@/lib/areas/invalidate-user-area';
+import { recordOpsEvent } from '@/lib/ops-events';
+
+async function recordDocumentosAuditEvent(
+  source: string,
+  message: string,
+  payload: Record<string, unknown> = {}
+) {
+  try {
+    await recordOpsEvent({
+      source,
+      eventType: 'log',
+      level: 'info',
+      message,
+      payload,
+    });
+  } catch {
+    // A auditoria não pode bloquear o fluxo principal.
+  }
+}
 
 async function loadModelosDocumentos() {
   const supabase = createServiceRoleClient();
@@ -65,6 +84,10 @@ export async function createModelo(formData: {
 
   invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
+  await recordDocumentosAuditEvent('admin/documentos/modelos', 'Modelo de documento criado', {
+    modelo_id: data.id,
+    tipo: data.tipo,
+  });
   return data;
 }
 
@@ -90,6 +113,9 @@ export async function updateModelo(
 
   invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
+  await recordDocumentosAuditEvent('admin/documentos/modelos', 'Modelo de documento atualizado', {
+    modelo_id: id,
+  });
   return { success: true };
 }
 
@@ -105,6 +131,10 @@ export async function toggleModeloStatus(id: string, ativo: boolean) {
 
   invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
+  await recordDocumentosAuditEvent('admin/documentos/modelos', 'Status de modelo alterado', {
+    modelo_id: id,
+    ativo,
+  });
   return { success: true };
 }
 
@@ -196,6 +226,12 @@ export async function createTermo(formData: {
 
   invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
+  await recordDocumentosAuditEvent('admin/documentos/termos', 'Termo assinado criado', {
+    termo_id: data.id,
+    pessoa_id: formData.pessoa_id,
+    modelo_id: formData.modelo_id,
+    responsavel_id: formData.responsavel_id || null,
+  });
   return data;
 }
 
@@ -221,6 +257,9 @@ export async function updateTermo(
 
   invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
+  await recordDocumentosAuditEvent('admin/documentos/termos', 'Termo assinado atualizado', {
+    termo_id: id,
+  });
   return { success: true };
 }
 
@@ -236,6 +275,9 @@ export async function revogaTermo(id: string) {
 
   invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
+  await recordDocumentosAuditEvent('admin/documentos/termos', 'Termo revogado', {
+    termo_id: id,
+  });
   return { success: true };
 }
 
@@ -321,6 +363,11 @@ export async function createConsentimento(formData: {
 
   invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
+  await recordDocumentosAuditEvent('admin/documentos/consentimentos', 'Consentimento criado', {
+    consentimento_id: data.id,
+    pessoa_id: formData.pessoa_id,
+    base_legal: formData.base_legal || null,
+  });
   return data;
 }
 
@@ -336,6 +383,9 @@ export async function revogaConsentimento(id: string) {
 
   invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
+  await recordDocumentosAuditEvent('admin/documentos/consentimentos', 'Consentimento revogado', {
+    consentimento_id: id,
+  });
   return { success: true };
 }
 
@@ -430,6 +480,11 @@ export async function createServico(formData: {
 
   invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
+  await recordDocumentosAuditEvent('admin/documentos/voluntariado', 'Serviço voluntário criado', {
+    servico_id: data.id,
+    pessoa_id: formData.pessoa_id,
+    departamento_id: formData.departamento_id,
+  });
   return data;
 }
 
@@ -456,6 +511,9 @@ export async function updateServico(
 
   invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
+  await recordDocumentosAuditEvent('admin/documentos/voluntariado', 'Serviço voluntário atualizado', {
+    servico_id: id,
+  });
   return { success: true };
 }
 
@@ -471,6 +529,10 @@ export async function encerraServico(id: string, data_fim: string) {
 
   invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
+  await recordDocumentosAuditEvent('admin/documentos/voluntariado', 'Serviço voluntário encerrado', {
+    servico_id: id,
+    data_fim,
+  });
   return { success: true };
 }
 

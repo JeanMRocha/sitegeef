@@ -14,6 +14,7 @@ async function ModelosList() {
     { href: "/admin/documentos/termos", label: "✍️ Termos Assinados" },
     { href: "/admin/documentos/consentimentos", label: "🔒 Consentimentos LGPD" },
     { href: "/admin/documentos/voluntariado", label: "🤝 Serviços Voluntários" },
+    { href: "/admin/documentos/auditoria", label: "🧭 Auditoria LGPD" },
   ];
 
   return (

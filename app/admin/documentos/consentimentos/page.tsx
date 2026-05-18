@@ -45,6 +45,9 @@ async function ConsentimentosList({ searchParams }: { searchParams: { page?: str
         <Link href="/admin/documentos/voluntariado" style={{ paddingBottom: '0.5rem', color: 'var(--muted)', textDecoration: 'none' }}>
           🤝 Serviços Voluntários
         </Link>
+        <Link href="/admin/documentos/auditoria" style={{ paddingBottom: '0.5rem', color: 'var(--muted)', textDecoration: 'none' }}>
+          🧭 Auditoria LGPD
+        </Link>
       </div>
 
       {/* Table */}
