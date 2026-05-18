@@ -72,6 +72,7 @@ export const navItems: NavItem[] = [
   { href: "/atendimento-fraterno", label: "Atendimento fraterno" },
 
   // Institutional group (in "Mais" dropdown, after divider)
+  { href: "/lgpd", label: "Privacidade", group: "institucional" },
   { href: "/institucional", label: "Credibilidade e Filiações", group: "institucional" },
   { href: "/doacoes", label: "Doações", group: "institucional" },
   { href: "/contato", label: "Contato", group: "institucional" },

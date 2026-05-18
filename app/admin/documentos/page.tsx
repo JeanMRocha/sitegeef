@@ -32,6 +32,15 @@ async function ModelosList() {
       </section>
 
       <section className="area-section">
+        <div className="area-panel-item">
+          <strong>Nota rápida</strong>
+          <p style={{ marginTop: '0.45rem' }}>
+            Antes de registrar ou revogar consentimento, confirme finalidade, base legal e necessidade real do dado.
+          </p>
+        </div>
+      </section>
+
+      <section className="area-section">
         <div className="module-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
           {tabs.map((tab) => (
             <Link key={tab.href} href={tab.href} className="module-card">
