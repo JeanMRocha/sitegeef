@@ -41,6 +41,8 @@ export async function getPessoas(
 
     const { data, count, error } = await query.range(offset, offset + pageSize - 1);
 
+    console.log(`[getPessoas] Query result - data: ${data?.length || 0}, count: ${count}, error: ${error ? JSON.stringify(error) : 'none'}`);
+
     if (error) {
       console.error('[getPessoas] Erro ao buscar pessoas:', error);
       return {
@@ -52,6 +54,7 @@ export async function getPessoas(
     }
 
     let pessoas = data || [];
+    console.log(`[getPessoas] Pessoas carregadas: ${pessoas.length}`);
 
     // Buscar vínculos separadamente se houver pessoas
     if (pessoas.length > 0) {
