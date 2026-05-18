@@ -700,3 +700,56 @@
   border-color: rgba(138, 0, 90, 0.25);
   color: #f0b5de;
 }
+
+:root.dark .admin-step-tab {
+  background: rgba(45, 41, 38, 0.96);
+  border-color: #5a5349;
+  color: var(--text-muted);
+}
+
+:root.dark .admin-step-tab:hover {
+  background: rgba(80, 70, 62, 0.96);
+  border-color: #8a7a72;
+  color: #f0b5de;
+}
+
+:root.dark .admin-step-tab.active {
+  background: linear-gradient(135deg, rgba(138, 0, 90, 0.25), rgba(99, 213, 31, 0.15));
+  border-color: rgba(138, 0, 90, 0.35);
+  color: #f0b5de;
+}
+
+:root.dark .admin-btn-primary {
+  background: linear-gradient(135deg, #d06aa8, #e08ac4);
+  color: white;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.35);
+}
+
+:root.dark .admin-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.45);
+}
+
+:root.dark .admin-btn-secondary {
+  background: rgba(45, 41, 38, 0.96);
+  color: #e8dfd4;
+  border-color: #5a5349;
+}
+
+:root.dark .admin-btn-secondary:hover {
+  background: rgba(70, 60, 52, 0.96);
+  border-color: #8a7a72;
+  color: #f0b5de;
+}
+
+:root.dark .admin-logout-btn {
+  background: rgba(45, 41, 38, 0.96);
+  border-color: #5a5349;
+  color: var(--text);
+}
+
+:root.dark .admin-logout-btn:hover {
+  background: rgba(70, 60, 52, 0.96);
+  border-color: #8a7a72;
+  color: #f0b5de;
+}
