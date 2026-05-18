@@ -1,7 +1,11 @@
 import { createServiceRoleClient } from './service-role';
+import { unstable_cache } from 'next/cache';
 
 const LOGO_BUCKET = 'instituicao-assets';
 const LOGO_PATH = 'logo/logo.png';
+
+// Cache de 24 horas para URL da logo (reduz chamadas ao Supabase)
+const LOGO_CACHE_TIME = 86400;
 
 export async function uploadLogo(file: File): Promise<{ success: boolean; url?: string; error?: string }> {
   try {
@@ -42,7 +46,7 @@ export async function uploadLogo(file: File): Promise<{ success: boolean; url?: 
   }
 }
 
-export function getLogoUrl(storagePath?: string): string {
+function _getLogoUrl(storagePath?: string): string {
   if (!storagePath) {
     return '';
   }
@@ -51,3 +55,8 @@ export function getLogoUrl(storagePath?: string): string {
   const { data } = supabase.storage.from(LOGO_BUCKET).getPublicUrl(storagePath);
   return data.publicUrl;
 }
+
+export const getLogoUrl = unstable_cache(_getLogoUrl, ['logo-url'], {
+  revalidate: LOGO_CACHE_TIME,
+  tags: ['logo'],
+});

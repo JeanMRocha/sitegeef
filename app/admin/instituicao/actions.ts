@@ -1,6 +1,6 @@
 'use server';
 
-import { revalidateTag, unstable_cache } from 'next/cache';
+import { revalidateTag, unstable_cache, revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
@@ -543,5 +543,8 @@ export async function uploadLogoAction(formData: FormData) {
   }
 
   revalidateTag('instituicao');
+  revalidateTag('logo');
+  revalidatePath('/admin/instituicao');
+  revalidatePath('/admin/instituicao/editar');
   return { success: true, url: result.url };
 }
