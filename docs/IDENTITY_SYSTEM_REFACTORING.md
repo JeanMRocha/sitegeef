@@ -25,54 +25,59 @@
 
 ---
 
-## 📋 Fase 2: Componentes Restantes (PLANEJADO)
+## ✅ Fase 2: Componentes Restantes (COMPLETO)
 
-### A refatorar em `admin.css`:
+### Refatorações completadas em `admin.css`:
 
 #### Forms & Inputs
-- [ ] `.admin-info-hint` — usar `--btn-tertiary-*` ou criar hint token
-- [ ] `.admin-save-banner` — status badges já foram, mas revisar cores
-- [ ] `.admin-card` — usar `--surface-primary`
-- [ ] `.admin-stat-card` — revisar fundo com gradient
-
-#### Navigation
-- [ ] `.admin-nav-title` — usar `--text-muted`
-- [ ] `.admin-nav-item` — usar `--text-primary` + hover states
-- [ ] `.admin-nav-item.active` — revisar cores com sistema
-
-#### Tables & Lists
-- [ ] `.admin-table thead` — usar `--surface-secondary` 
-- [ ] `.admin-table th` — usar `--text-muted`
-- [ ] `.admin-table tbody tr:hover` — usar `--surface-hover`
-
-#### Dashboard
-- [ ] `.admin-dashboard-kicker` — criar `--badge-*` ou usar `--status-*`
-- [ ] `.admin-dashboard-status` — já usa sucesso, confirmar
-- [ ] `.admin-dashboard-panel--highlight` — usar `--surface-primary`
-
-#### Misc
-- [ ] `.admin-inline-pill` — usar `--btn-tertiary-*`
-- [ ] `.admin-page-header` — revisar cores de fundo
-- [ ] `.admin-header` — dark mode ajustes
-
-### A refatorar em `globals.css`:
-
-#### Navigation
-- [ ] `.site-nav a:hover` — usar `--surface-hover`
-- [ ] `.site-user-menu-item:hover` — revisar cores
+- ✅ `.admin-info-hint` → `--surface-secondary`, `--border-medium`
+- ✅ `.admin-save-banner` → `--status-success/error-*` tokens
 
 #### Cards
-- [ ] `.hero-copy` → `--surface-primary`
-- [ ] `.feature-card` → `--surface-primary`
-- [ ] `.content-card` → `--surface-primary`
+- ✅ `.admin-card` → `--surface-primary`, `--border-medium`
+- ✅ `.admin-stat-card` → `--surface-secondary`
+- ✅ `.admin-stat-label` → `--text-muted`
 
-#### Inputs & Forms
-- [ ] Form fields públicos (se houver)
-- [ ] `.site-user-menu-popover` — usar `--surface-primary`
+#### Navigation
+- ✅ `.admin-nav-title` → `--text-muted`
+- ✅ `.admin-page-header` → `--surface-secondary`, `--border-medium`
+- ✅ `.admin-page-title/subtitle` → `--text-primary/muted`
+
+#### Tables & Lists
+- ✅ `.admin-table thead` → `--surface-tertiary`, `--border-medium`
+- ✅ `.admin-table th` → `--text-muted`
+- ✅ `.admin-table tbody tr:hover` → `--surface-primary-hover`
+
+#### Dashboard
+- ✅ `.admin-dashboard-panel` → `--text-muted`
+- ✅ `.admin-dashboard-kicker` → `--btn-tertiary-*` tokens
+- ✅ `.admin-dashboard-status` → `--status-success-*` tokens
+- ✅ `.admin-dashboard-panel--highlight` → `--surface-secondary`
+
+#### Misc
+- ✅ `.admin-inline-pill` → `--btn-tertiary-*` tokens
+- ✅ `.admin-subtle-card` → `--surface-primary`
+
+### Refatorações completadas em `globals.css`:
+
+#### Cards
+- ✅ `.hero-copy`, `.feature-card`, `.content-card` → `--surface-primary`, `--border-medium`
+- ✅ `.hero-panel` → `--surface-primary`, `--border-medium`
+
+#### Pills & Badges
+- ✅ `.pill` → `--btn-tertiary-*` tokens
+- ✅ `.pill-primary` → `--status-success-*` tokens
+
+#### Navigation & Menus
+- ✅ `.site-user-menu-popover` → `--surface-primary`, `--border-medium`
+
+#### Notifications
+- ✅ `.notification-toast` → `--surface-primary`, `--border-medium`
+- ✅ `.notification-toast.success/error/warning/info` → `--status-*` tokens
 
 ### Componentes específicos em `styles/`:
-- [ ] `admin-sidebar.css` — Revisar `--surface-*` usage
-- [ ] `globals.css` — Passar por seções mais lentamente
+- [ ] `admin-sidebar.css` — Revisar `--surface-*` usage (opcional)
+- [ ] `theme.css` — Verificar compatibilidade (apenas referência)
 
 ---
 
