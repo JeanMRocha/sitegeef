@@ -106,55 +106,40 @@ function resolveNomeOficial(instituicaoAtual: typeof FALLBACK_INSTITUICAO | null
   return textValue(formData, 'nome_oficial') || instituicaoAtual?.nome_oficial || FALLBACK_INSTITUICAO.nome_oficial;
 }
 
-function buildInstituicaoSnapshot(instituicaoAtual: typeof FALLBACK_INSTITUICAO | null, formData: FormData, step: InstituicaoStep) {
-  const base = instituicaoAtual ?? FALLBACK_INSTITUICAO;
+function buildInstituicaoPatch(instituicaoAtual: typeof FALLBACK_INSTITUICAO | null, formData: FormData, step: InstituicaoStep) {
   const nomeOficial = resolveNomeOficial(instituicaoAtual, formData);
 
   if (step === 'identificacao') {
     return {
       nome_oficial: nomeOficial,
-      nome_curto: textValue(formData, 'nome_curto') || base.nome_curto,
-      cnpj: normalizeCnpj(textValue(formData, 'cnpj')) || base.cnpj,
-      natureza_juridica: textValue(formData, 'natureza_juridica') || base.natureza_juridica,
-      data_fundacao: textValue(formData, 'data_fundacao') || base.data_fundacao,
-      logo_url: base.logo_url,
-      descricao: base.descricao,
-      historia: base.historia,
-      missao: base.missao,
-      visao: base.visao,
-      valores: base.valores,
-      estatuto_url: base.estatuto_url,
+      nome_curto: textValue(formData, 'nome_curto'),
+      cnpj: normalizeCnpj(textValue(formData, 'cnpj')),
+      natureza_juridica: textValue(formData, 'natureza_juridica'),
+      data_fundacao: textValue(formData, 'data_fundacao'),
     };
-  }
-
-  if (step === 'endereco') {
-    return base;
   }
 
   if (step === 'descritivo') {
     return {
-      ...base,
       nome_oficial: nomeOficial,
-      descricao: textValue(formData, 'descricao') || base.descricao,
-      historia: textValue(formData, 'historia') || base.historia,
+      descricao: textValue(formData, 'descricao'),
+      historia: textValue(formData, 'historia'),
     };
   }
 
   if (step === 'valores') {
     return {
-      ...base,
       nome_oficial: nomeOficial,
-      missao: textValue(formData, 'missao') || base.missao,
-      visao: textValue(formData, 'visao') || base.visao,
-      valores: textValue(formData, 'valores') || base.valores,
+      missao: textValue(formData, 'missao'),
+      visao: textValue(formData, 'visao'),
+      valores: textValue(formData, 'valores'),
     };
   }
 
   return {
-    ...base,
     nome_oficial: nomeOficial,
-    logo_url: textValue(formData, 'logo_url') || base.logo_url,
-    estatuto_url: textValue(formData, 'estatuto_url') || base.estatuto_url,
+    logo_url: textValue(formData, 'logo_url'),
+    estatuto_url: textValue(formData, 'estatuto_url'),
   };
 }
 
@@ -299,19 +284,24 @@ async function saveInstituicaoStep(formData: FormData) {
   const instituicaoAtual = await getInstituicao();
   const enderecosAtuais = await getEnderecos();
   const enderecoAtual = enderecosAtuais[0] || null;
-  const snapshot = buildInstituicaoSnapshot(instituicaoAtual, formData, step);
+  const patch = buildInstituicaoPatch(instituicaoAtual, formData, step);
   const enderecoSnapshot = buildEnderecoSnapshot(enderecoAtual, formData);
 
   if (step === 'identificacao') {
-    const nomeOficial = snapshot.nome_oficial;
+    const nomeOficial = patch.nome_oficial;
     if (!nomeOficial) {
       redirect(buildFlashNoticeUrl(`/admin/instituicao/editar?tab=${step}`, { variant: 'error', message: 'Nome oficial é obrigatório.' }));
     }
 
-    const result = await updateInstituicao(snapshot);
+    const result = await updateInstituicao(patch);
 
     if (!result.success) {
-      redirect(buildFlashNoticeUrl(`/admin/instituicao/editar?tab=${step}`, { variant: 'error', message: 'Não foi possível salvar a instituição.' }));
+      redirect(
+        buildFlashNoticeUrl(`/admin/instituicao/editar?tab=${step}`, {
+          variant: 'error',
+          message: result.error ? `Não foi possível salvar a instituição: ${result.error}` : 'Não foi possível salvar a instituição.',
+        })
+      );
     }
 
     revalidatePath('/admin/instituicao');
@@ -332,10 +322,15 @@ async function saveInstituicaoStep(formData: FormData) {
   }
 
   if (step === 'descritivo') {
-    const result = await updateInstituicao(snapshot);
+    const result = await updateInstituicao(patch);
 
     if (!result.success) {
-      redirect(buildFlashNoticeUrl(`/admin/instituicao/editar?tab=${step}`, { variant: 'error', message: 'Não foi possível salvar a descrição.' }));
+      redirect(
+        buildFlashNoticeUrl(`/admin/instituicao/editar?tab=${step}`, {
+          variant: 'error',
+          message: result.error ? `Não foi possível salvar a descrição: ${result.error}` : 'Não foi possível salvar a descrição.',
+        })
+      );
     }
 
     revalidatePath('/admin/instituicao');
@@ -344,10 +339,15 @@ async function saveInstituicaoStep(formData: FormData) {
   }
 
   if (step === 'valores') {
-    const result = await updateInstituicao(snapshot);
+    const result = await updateInstituicao(patch);
 
     if (!result.success) {
-      redirect(buildFlashNoticeUrl(`/admin/instituicao/editar?tab=${step}`, { variant: 'error', message: 'Não foi possível salvar as informações.' }));
+      redirect(
+        buildFlashNoticeUrl(`/admin/instituicao/editar?tab=${step}`, {
+          variant: 'error',
+          message: result.error ? `Não foi possível salvar as informações: ${result.error}` : 'Não foi possível salvar as informações.',
+        })
+      );
     }
 
     revalidatePath('/admin/instituicao');
@@ -356,10 +356,15 @@ async function saveInstituicaoStep(formData: FormData) {
   }
 
   if (step === 'documentos') {
-    const result = await updateInstituicao(snapshot);
+    const result = await updateInstituicao(patch);
 
     if (!result.success) {
-      redirect(buildFlashNoticeUrl(`/admin/instituicao/editar?tab=${step}`, { variant: 'error', message: 'Não foi possível salvar os documentos.' }));
+      redirect(
+        buildFlashNoticeUrl(`/admin/instituicao/editar?tab=${step}`, {
+          variant: 'error',
+          message: result.error ? `Não foi possível salvar os documentos: ${result.error}` : 'Não foi possível salvar os documentos.',
+        })
+      );
     }
 
     revalidatePath('/admin/instituicao');

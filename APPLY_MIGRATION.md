@@ -30,7 +30,7 @@ Se preferir fazer manualmente:
 
 1. Vá para **SQL Editor**: https://app.supabase.com/project/nycgpokqlmrfzegjlrwa/sql/editor
 2. Clique em **New Query**
-3. Cole o conteúdo de `supabase/migrations/20260515_rls_sensitive_modules.sql`
+3. Consulte `docs/SUPABASE_MIGRATION_MAP.md` e, se quiser replay manual do arquivo local, use `supabase/migrations/20260515_rls_sensitive_modules.sql`
 4. Clique em **Run**
 
 ## Verificar se funcionou

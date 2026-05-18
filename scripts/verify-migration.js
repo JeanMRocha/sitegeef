@@ -123,7 +123,7 @@ async function main() {
       console.log('Opção 1: Via Supabase Dashboard (Recomendado)');
       console.log('────────────────────────────────────────────');
       console.log('1. Abra: https://app.supabase.com/project/nycgpokqlmrfzegjlrwa/sql/editor');
-      console.log('2. Cole o conteúdo de: supabase/migrations/20260515_auth_profiles.sql');
+      console.log('2. Consulte docs/SUPABASE_MIGRATION_MAP.md e cole o conteúdo de: supabase/migrations/20260515_auth_profiles.sql');
       console.log('3. Clique "Run" para executar\n');
       console.log('Opção 2: Usar script (se credenciais disponíveis)');
       console.log('───────────────────────────────────────────────');

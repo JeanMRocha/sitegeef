@@ -17,6 +17,7 @@
 - Migrations detectadas automaticamente via GitHub
 - Aplicadas ao fazer push para `main`
 - Arquivo combinado: `supabase/combined-migrations.sql`
+- Mapa local -> checkpoint remoto: `docs/SUPABASE_MIGRATION_MAP.md`
 
 ---
 
@@ -72,7 +73,10 @@ supabase/
     ├── 20260515_auth_profiles.sql
     ├── 20260515_geef_erp.sql
     ├── 20260515_rls_sensitive_modules.sql
-    └── 20260516_fix_profiles_and_storage.sql    ← Nova!
+    ├── 20260516_fix_profiles_and_storage.sql
+    ├── 20260517_instituicao_safe_fallback.sql
+    ├── 20260517_instituicao_singleton_and_policies.sql
+    └── 20260517_pessoas_usuarios_policies.sql
 
 scripts/
 ├── geef-migrations.mjs              ← Runner de migrations
@@ -117,4 +121,3 @@ scripts/
 - [ ] Adicionar mudança de email
 - [ ] Adicionar autenticação via Google/GitHub
 - [ ] Adicionar 2FA (autenticação de dois fatores)
-

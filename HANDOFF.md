@@ -38,6 +38,8 @@
 - `lib/areas/invalidate-user-area.ts` = invalida area do usuario/leitor.
 - `lib/escalas/public-escalas.ts` = cache publico das escalas.
 - `docs/MCP_SUPABASE_GEEF.md` = recuperar e validar o MCP `supabase-geef`.
+- `docs/SUPABASE_MIGRATION_MAP.md` = mapa local -> checkpoint remoto das migrations aplicadas.
+- Cadastro da instituicao: o singleton e as policies ficam em `supabase/migrations/20260517_instituicao_singleton_and_policies.sql`.
 
 ## Ordem das skills
 
@@ -119,6 +121,17 @@ Quando o Autoreflex voltar a responder, rodar primeiro:
 - `app/admin/pessoas/nova/page.tsx`
   - O fluxo por abas deve continuar responsivo e salvar etapa por etapa.
   - O cabeçalho deve manter apenas `Nova Pessoa` e os botoes de acao alinhados a direita.
+- `app/admin/instituicao/*`
+  - O cadastro da instituicao usa `supabase/migrations/20260517_instituicao_singleton_and_policies.sql` como fonte de verdade para singleton e acesso.
+  - `data_fundacao` deve persistir como `date` em formato `YYYY-MM-DD`.
+  - `updateInstituicao()` deve enviar apenas o patch da aba ativa e mesclar no servidor com a linha existente.
+  - Nao reintroduzir telas paralelas para contatos/contas fora do editor principal.
+- `Supabase remoto`
+  - O projeto `supabase-geef` estava sem as tabelas de base da instituicao, entao foi aplicado um bootstrap minimo antes da migration de singleton.
+  - `public.is_admin_user()` foi endurecida com `search_path = public` para evitar aviso de advisor de funcao mutavel.
+  - `public.pessoas` e `public.usuarios_sistema` receberam policies explicitas para reduzir lints de RLS sem policy no projeto remoto.
+  - Como o remoto ja tinha parte do schema, as migrations restantes foram reexecutadas em checkpoints idempotentes e registradas com nomes de controle, nao como replay bruto do arquivo original.
+  - O mapa 1:1 entre arquivo local e checkpoint remoto agora vive em `docs/SUPABASE_MIGRATION_MAP.md`.
 - `components/admin/*` e `styles/admin.css`
   - O shell admin precisa crescer com a largura da viewport.
   - Nao reintroduzir `max-width` fixo que prenda cards, abas ou formularios no centro.

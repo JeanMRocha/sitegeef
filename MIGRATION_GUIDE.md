@@ -2,6 +2,8 @@
 
 ## 📅 Migration: 20260515_auth_profiles.sql
 
+Checkpoint remoto correspondente: `auth_profiles`
+
 Esta migration cria o sistema de autenticação completo com tabela de perfis, RLS policies, triggers e storage.
 
 ---
@@ -20,6 +22,8 @@ Abra o arquivo de migration:
 ```
 supabase/migrations/20260515_auth_profiles.sql
 ```
+
+Mapa de correspondência e histórico remoto: `docs/SUPABASE_MIGRATION_MAP.md`
 
 Ou copie o SQL abaixo:
 

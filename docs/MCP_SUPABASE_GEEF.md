@@ -20,6 +20,12 @@ Arquivo local do projeto:
 }
 ```
 
+Estado atual no Codex:
+
+- `codex mcp list` mostra `supabase-geef` como `enabled` com `Auth: OAuth`
+- `codex mcp get supabase-geef` aponta para `https://mcp.supabase.com/mcp?project_ref=nycgpokqlmrfzegjlrwa`
+- a sessao foi reautenticada com `codex mcp login supabase-geef`
+
 Arquivo local do Codex:
 
 ```json
@@ -52,9 +58,14 @@ isso normalmente indica problema de autenticacao da sessao MCP, nao erro de URL 
 3. Confirmar de novo com `codex mcp list`.
 4. Tentar acessar recursos do servidor outra vez.
 
+Comando direto para reativar a sessao:
+
+```bash
+codex mcp login supabase-geef
+```
+
 ## Regras
 
 - Nao trocar `supabase-geef` por um MCP generico.
 - Nao misturar este projeto com outras contas Supabase.
 - Se a sessao do MCP quebrar, tratar primeiro como problema de auth antes de alterar o repo.
-

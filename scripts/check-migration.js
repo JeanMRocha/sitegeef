@@ -41,7 +41,7 @@ console.log('2. Ou vá para Table Editor e procure por "profiles"\n');
 console.log('Se a migration NÃO foi aplicada:');
 console.log('───────────────────────────────');
 console.log('1. Abra: https://app.supabase.com/project/nycgpokqlmrfzegjlrwa/sql/editor');
-console.log('2. Copie o SQL de: supabase/migrations/20260515_auth_profiles.sql');
+console.log('2. Consulte docs/SUPABASE_MIGRATION_MAP.md e copie o SQL de: supabase/migrations/20260515_auth_profiles.sql');
 console.log('3. Cole no SQL Editor');
 console.log('4. Clique "Run" ou pressione Ctrl+Enter\n');
 
