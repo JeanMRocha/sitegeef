@@ -75,38 +75,8 @@
 }
 
 .site-language-switcher {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.12rem;
-  padding: 0.22rem;
-  background: var(--dropdown-bg);
-  border: 1px solid var(--dropdown-border);
-  border-radius: 999px;
-  box-shadow: 0 10px 20px rgba(124, 63, 163, 0.06);
-}
-
-.site-language-switcher-button {
-  min-width: 2.05rem;
-  height: 2rem;
-  border: none;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--dropdown-item-text);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  cursor: pointer;
-  transition: background-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
-}
-
-.site-language-switcher-button:hover {
-  background: var(--dropdown-item-hover);
-  transform: translateY(-1px);
-}
-
-.site-language-switcher-button.active {
-  background: var(--primary);
-  color: #fff;
+  width: 2.4rem;
+  height: 2.4rem;
 }
 
 /* "Mais" Dropdown Menu */
@@ -358,20 +328,39 @@
   flex-shrink: 0;
 }
 
-.site-header-user-language {
+.site-header-user-controls {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 0.45rem;
-  padding: 0.85rem 1rem 0.9rem;
-  border-left: 3px solid transparent;
+  padding: 0.85rem 1rem 1rem;
 }
 
-.site-header-user-language-label {
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--text-muted);
+.site-icon-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  padding: 0;
+  border: 1px solid var(--border-medium);
+  border-radius: 999px;
+  background: var(--surface-primary);
+  color: var(--dropdown-item-text);
+  box-shadow: 0 8px 18px rgba(124, 63, 163, 0.08);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.site-icon-toggle:hover {
+  background: var(--dropdown-item-hover);
+  border-color: var(--border-light);
+  transform: translateY(-1px);
+}
+
+.site-icon-toggle span {
+  font-size: 1rem;
+  line-height: 1;
 }
 
 /* User Settings */
@@ -500,13 +489,13 @@
   }
 
   .site-language-switcher {
-    gap: 0.08rem;
+    width: 2.2rem;
+    height: 2.2rem;
   }
 
-  .site-language-switcher-button {
-    min-width: 1.85rem;
-    height: 1.9rem;
-    font-size: 0.68rem;
+  .site-header-user-controls {
+    gap: 0.35rem;
+    padding: 0.75rem 0.85rem 0.9rem;
   }
 
   .site-header-user-initial {

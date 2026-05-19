@@ -92,22 +92,20 @@ export function UserMenu({
               >
                 <span>🛡️</span> {copy.header.privacy}
               </Link>
-              <div className="site-header-user-language">
-                <span className="site-header-user-language-label">
-                  {copy.header.language}
-                </span>
+              <div className="site-header-user-controls">
                 <LanguageSwitcher
                   locale={locale}
                   onLocaleChange={() => setMenuOpen(false)}
                 />
+                <button
+                  onClick={toggleTheme}
+                  className="site-icon-toggle"
+                  title={theme === "light" ? copy.header.themeLight : copy.header.themeDark}
+                  aria-label={theme === "light" ? copy.header.themeLight : copy.header.themeDark}
+                >
+                  <span aria-hidden="true">{theme === "light" ? "🌙" : "☀️"}</span>
+                </button>
               </div>
-              <button
-                onClick={toggleTheme}
-                className="site-header-user-item site-header-user-setting"
-              >
-                <span>{theme === "light" ? "🌙" : "☀️"}</span>
-                {theme === "light" ? copy.header.themeLight : copy.header.themeDark}
-              </button>
             </nav>
           </div>
         )}
@@ -185,23 +183,20 @@ export function UserMenu({
               <span>📋</span> {copy.header.myArea}
             </Link>
 
-            <div className="site-header-user-language">
-              <span className="site-header-user-language-label">
-                {copy.header.language}
-              </span>
+            <div className="site-header-user-controls">
               <LanguageSwitcher
                 locale={locale}
                 onLocaleChange={() => setMenuOpen(false)}
               />
+              <button
+                onClick={toggleTheme}
+                className="site-icon-toggle"
+                title={theme === "light" ? copy.header.themeLight : copy.header.themeDark}
+                aria-label={theme === "light" ? copy.header.themeLight : copy.header.themeDark}
+              >
+                <span aria-hidden="true">{theme === "light" ? "🌙" : "☀️"}</span>
+              </button>
             </div>
-
-            <button
-              onClick={toggleTheme}
-              className="site-header-user-item site-header-user-setting"
-            >
-              <span>{theme === "light" ? "🌙" : "☀️"}</span>
-              {theme === "light" ? copy.header.themeLight : copy.header.themeDark}
-            </button>
             <button
               onClick={() => signOut()}
               className="site-header-user-logout"

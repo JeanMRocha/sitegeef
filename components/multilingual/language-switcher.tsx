@@ -11,12 +11,9 @@ type LanguageSwitcherProps = {
 export function LanguageSwitcher({ locale, onLocaleChange }: Readonly<LanguageSwitcherProps>) {
   const router = useRouter();
   const copy = getMultilingualCopy(locale);
+  const nextLocale = locale === "pt" ? "en" : "pt";
 
-  const setLocale = (nextLocale: Locale) => {
-    if (nextLocale === locale) {
-      return;
-    }
-
+  const setLocale = () => {
     document.cookie = `${MULTILINGUAL_COOKIE_NAME}=${nextLocale}; path=/; max-age=31536000; samesite=lax`;
 
     try {
@@ -30,25 +27,14 @@ export function LanguageSwitcher({ locale, onLocaleChange }: Readonly<LanguageSw
   };
 
   return (
-    <div className="site-language-switcher" aria-label={copy.header.language}>
-      <button
-        type="button"
-        className={`site-language-switcher-button ${locale === "pt" ? "active" : ""}`}
-        aria-pressed={locale === "pt"}
-        onClick={() => setLocale("pt")}
-        title={copy.header.portuguese}
-      >
-        PT
-      </button>
-      <button
-        type="button"
-        className={`site-language-switcher-button ${locale === "en" ? "active" : ""}`}
-        aria-pressed={locale === "en"}
-        onClick={() => setLocale("en")}
-        title={copy.header.english}
-      >
-        EN
-      </button>
-    </div>
+    <button
+      type="button"
+      className="site-language-switcher site-icon-toggle"
+      aria-label={`${copy.header.language}: ${locale === "pt" ? copy.header.english : copy.header.portuguese}`}
+      title={`${copy.header.language}: ${locale === "pt" ? copy.header.english : copy.header.portuguese}`}
+      onClick={setLocale}
+    >
+      <span aria-hidden="true">🌐</span>
+    </button>
   );
 }
