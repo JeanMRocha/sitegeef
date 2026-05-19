@@ -61,7 +61,6 @@ export default async function Home({ searchParams }: HomePageProps) {
     <main>
       <section className="hero">
         <div className="hero-copy">
-          <p className="eyebrow">{copy.home.eyebrow}</p>
           <h1>{copy.home.title}</h1>
           <p className="hero-lead">{copy.home.lead}</p>
           <ul className="hero-highlights" aria-label={locale === "en" ? "Page highlights" : "Destaques da página"}>

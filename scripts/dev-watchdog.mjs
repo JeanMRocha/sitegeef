@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-import { spawn } from "node:child_process";
+import { execFile, spawn } from "node:child_process";
+import { once } from "node:events";
 import { watch } from "node:fs";
 import { access, rm } from "node:fs/promises";
 import path from "node:path";
@@ -22,6 +23,9 @@ let unhealthyCount = 0;
 let startupDeadline = 0;
 let restartReason = "startup";
 let pendingFileRestart = null;
+let restartLock = false;
+let queuedRestartReason = null;
+let expectedExitPid = null;
 const watchers = [];
 
 void bootstrap();
@@ -32,7 +36,7 @@ process.on("exit", cleanupTimers);
 
 async function bootstrap() {
   await resetNextArtifacts();
-  await startDev("initial start");
+  await startFreshDev("initial start");
   scheduleHealthCheck(true);
   await setupFileWatchers();
 }
@@ -48,31 +52,113 @@ async function resetNextArtifacts() {
   }
 }
 
-async function startDev(reason) {
-  cleanupChild();
+async function startFreshDev(reason) {
   unhealthyCount = 0;
   startupDeadline = Date.now() + startupGraceMs;
   restartReason = reason;
 
   console.log(`[watchdog] starting dev server on ${url} (${reason})`);
-  child = spawn("npm", ["run", "dev"], {
+  child = spawn(getNpmCommand(), ["run", "dev"], {
     stdio: "inherit",
-    shell: process.platform === "win32",
+    shell: false,
     env: process.env,
   });
 
-  child.on("exit", (code, signal) => {
+  const current = child;
+  const pid = current.pid;
+
+  current.on("exit", (code, signal) => {
+    const wasExpected = expectedExitPid === pid;
+    if (wasExpected) {
+      expectedExitPid = null;
+    }
+
     child = null;
 
     if (stopping) {
       return;
     }
 
+    if (wasExpected) {
+      return;
+    }
+
     console.warn(
       `[watchdog] dev server exited (${signal || `code ${code ?? "unknown"}`}), restarting in ${restartDelayMs}ms`,
     );
-    scheduleRestart("process exit");
+    queueRestart("process exit");
   });
+}
+
+function getNpmCommand() {
+  return process.platform === "win32" ? "npm.cmd" : "npm";
+}
+
+async function terminateCurrentChild() {
+  const current = child;
+
+  if (!current || typeof current.pid !== "number") {
+    child = null;
+    return;
+  }
+
+  expectedExitPid = current.pid;
+
+  try {
+    await killProcessTree(current.pid);
+  } catch (error) {
+    console.warn(
+      `[watchdog] could not terminate child tree ${current.pid}: ${error instanceof Error ? error.message : String(error)}`,
+    );
+  }
+
+  await Promise.race([
+    once(current, "exit").catch(() => undefined),
+    new Promise((resolve) => setTimeout(resolve, 5000)),
+  ]);
+
+  if (child === current) {
+    child = null;
+  }
+}
+
+async function killProcessTree(pid) {
+  if (process.platform === "win32") {
+    await new Promise((resolve, reject) => {
+      const killer = execFile(
+        "taskkill",
+        ["/PID", String(pid), "/T", "/F"],
+        { windowsHide: true },
+        (error) => {
+          if (error && !isTaskkillBenignError(error)) {
+            reject(error);
+            return;
+          }
+
+          resolve();
+        },
+      );
+
+      killer.on("error", reject);
+    });
+    return;
+  }
+
+  try {
+    process.kill(pid, "SIGTERM");
+  } catch (error) {
+    if (!isMissingProcessError(error)) {
+      throw error;
+    }
+  }
+}
+
+function isMissingProcessError(error) {
+  return error instanceof Error && (error.code === "ESRCH" || error.code === "EINVAL");
+}
+
+function isTaskkillBenignError(error) {
+  return error instanceof Error && typeof error.message === "string" && error.message.includes("not found");
 }
 
 async function setupFileWatchers() {
@@ -119,7 +205,7 @@ async function setupFileWatchers() {
 }
 
 function queueRestart(reason) {
-  restartReason = reason;
+  queuedRestartReason = reason;
 
   if (pendingFileRestart) {
     clearTimeout(pendingFileRestart);
@@ -131,8 +217,7 @@ function queueRestart(reason) {
       return;
     }
 
-    console.warn(`[watchdog] restarting dev server (${restartReason})`);
-    restartChild();
+    void restartChild(queuedRestartReason || reason);
   }, 600);
 }
 
@@ -161,7 +246,7 @@ async function probeHealth() {
     if (unhealthyCount >= unhealthyThreshold) {
       console.warn("[watchdog] restarting dev server after repeated health failures");
       unhealthyCount = 0;
-      restartChild();
+      void restartChild("health failure");
     }
   }
 }
@@ -180,33 +265,46 @@ function scheduleHealthCheck(immediate = false) {
   }, healthIntervalMs);
 }
 
-function scheduleRestart(reason) {
+async function restartChild(reason = restartReason) {
+  queuedRestartReason = reason;
+
   if (restartTimer) {
     clearTimeout(restartTimer);
+    restartTimer = null;
   }
 
-  console.log(`[watchdog] restart scheduled (${reason})`);
-  restartTimer = setTimeout(() => {
-    restartTimer = null;
-    if (!stopping) {
-      void startDev(reason);
-    }
-  }, restartDelayMs);
-}
-
-function restartChild() {
-  if (!child) {
-    void startDev("restart requested");
+  if (restartLock) {
     return;
   }
 
-  child.once("exit", () => {
-    if (!stopping) {
-      scheduleRestart("child exit");
-    }
-  });
+  restartLock = true;
 
-  child.kill();
+  try {
+    while (queuedRestartReason && !stopping) {
+      const nextReason = queuedRestartReason;
+      queuedRestartReason = null;
+
+      console.log(`[watchdog] restarting dev server (${nextReason})`);
+      await terminateCurrentChild();
+
+      if (stopping) {
+        return;
+      }
+
+      await new Promise((resolve) => {
+        restartTimer = setTimeout(() => {
+          restartTimer = null;
+          resolve(undefined);
+        }, restartDelayMs);
+      });
+
+      if (!stopping) {
+        await startFreshDev(nextReason);
+      }
+    }
+  } finally {
+    restartLock = false;
+  }
 }
 
 function stop() {
@@ -246,8 +344,12 @@ function cleanupWatchers() {
 }
 
 function cleanupChild() {
-  if (child && !child.killed) {
-    child.kill();
+  if (child && typeof child.pid === "number") {
+    try {
+      child.kill();
+    } catch {
+      // ignore
+    }
   }
   child = null;
 }
