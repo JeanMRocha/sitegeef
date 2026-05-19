@@ -6,6 +6,7 @@ import Link from "next/link";
 import { getMultilingualCopy, type Locale } from "@/lib/multilingual/client";
 import { LanguageSwitcher } from "@/components/multilingual/language-switcher";
 import { useTheme } from "@/hooks/useTheme";
+import { MoonIcon, SunIcon } from "@/components/site-icons";
 import { signOut } from "@/app/login/actions";
 
 type UserMenuProps = {
@@ -103,7 +104,11 @@ export function UserMenu({
                   title={theme === "light" ? copy.header.themeLight : copy.header.themeDark}
                   aria-label={theme === "light" ? copy.header.themeLight : copy.header.themeDark}
                 >
-                  <span aria-hidden="true">{theme === "light" ? "🌙" : "☀️"}</span>
+                  {theme === "light" ? (
+                    <MoonIcon className="site-icon-toggle-svg" />
+                  ) : (
+                    <SunIcon className="site-icon-toggle-svg" />
+                  )}
                 </button>
               </div>
             </nav>
@@ -194,7 +199,11 @@ export function UserMenu({
                 title={theme === "light" ? copy.header.themeLight : copy.header.themeDark}
                 aria-label={theme === "light" ? copy.header.themeLight : copy.header.themeDark}
               >
-                <span aria-hidden="true">{theme === "light" ? "🌙" : "☀️"}</span>
+                {theme === "light" ? (
+                  <MoonIcon className="site-icon-toggle-svg" />
+                ) : (
+                  <SunIcon className="site-icon-toggle-svg" />
+                )}
               </button>
             </div>
             <button

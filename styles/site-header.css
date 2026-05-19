@@ -363,6 +363,11 @@
   line-height: 1;
 }
 
+.site-icon-toggle-svg {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
 /* User Settings */
 .site-header-user-settings {
   display: flex;

@@ -96,6 +96,30 @@ export function ShieldIcon(props: IconProps) {
   );
 }
 
+export function SunIcon(props: IconProps) {
+  return (
+    <IconShell {...props}>
+      <circle cx="12" cy="12" r="4.25" />
+      <path d="M12 2.75V5" />
+      <path d="M12 19v2.25" />
+      <path d="M4.75 12H7" />
+      <path d="M17 12h2.25" />
+      <path d="m6.5 6.5 1.6 1.6" />
+      <path d="m15.9 15.9 1.6 1.6" />
+      <path d="m17.5 6.5-1.6 1.6" />
+      <path d="m8.1 15.9-1.6 1.6" />
+    </IconShell>
+  );
+}
+
+export function MoonIcon(props: IconProps) {
+  return (
+    <IconShell {...props}>
+      <path d="M16.6 14.8A7 7 0 0 1 9.2 7.4 6.8 6.8 0 1 0 16.6 14.8Z" />
+    </IconShell>
+  );
+}
+
 export function ArrowIcon(props: IconProps) {
   return (
     <IconShell {...props}>
