@@ -1,10 +1,15 @@
 import { unstable_noStore as noStore } from "next/cache";
 import { redirect } from "next/navigation";
+import { type Locale } from "@/lib/multilingual";
 import { createClient } from "@/lib/supabase/server";
 import { updateProfile, uploadAvatar } from "@/app/login/actions";
 import { LgpdFormNotice } from "@/components/lgpd/lgpd-form-notice";
 
-export async function ProfilePageView() {
+type ProfilePageViewProps = {
+  locale?: Locale;
+};
+
+export async function ProfilePageView({ locale = "pt" }: Readonly<ProfilePageViewProps>) {
   noStore();
 
   const supabase = await createClient();
@@ -19,7 +24,14 @@ export async function ProfilePageView() {
   const nomeCompleto = (user.user_metadata?.full_name as string) || null;
   const siteRole = (user.app_metadata?.site_role as string) || null;
   const isAdmin = siteRole === "administrador";
-  const roleLabel = isAdmin ? "Administrador" : siteRole || "público";
+  const roleLabel =
+    locale === "en"
+      ? isAdmin
+        ? "Administrator"
+        : siteRole || "public"
+      : isAdmin
+        ? "Administrador"
+        : siteRole || "público";
 
   return (
     <main className="profile-page-compact">
@@ -37,7 +49,7 @@ export async function ProfilePageView() {
             )}
           </div>
           <div className="profile-compact-header-info">
-            <h1>{nomeCompleto || "Usuário"}</h1>
+            <h1>{nomeCompleto || (locale === "en" ? "User" : "Usuário")}</h1>
             <p>{user.email}</p>
             <div className="tag-list" style={{ marginTop: "0.75rem" }}>
               <span className="tag">{roleLabel}</span>
@@ -46,22 +58,28 @@ export async function ProfilePageView() {
         </header>
 
         <div className="profile-compact-forms">
-          <LgpdFormNotice text="Usamos seus dados para atualizar seu cadastro e manter a área do usuário segura." />
+          <LgpdFormNotice
+            text={
+              locale === "en"
+                ? "We use your data to update your profile and keep the user area secure."
+                : "Usamos seus dados para atualizar seu cadastro e manter a área do usuário segura."
+            }
+          />
 
           <form action={updateProfile} className="profile-compact-form">
             <div className="profile-form-field">
-              <label htmlFor="nome_completo">Nome Completo</label>
+              <label htmlFor="nome_completo">{locale === "en" ? "Full name" : "Nome Completo"}</label>
               <div className="profile-form-row">
                 <input
                   id="nome_completo"
                   name="nome_completo"
                   type="text"
                   defaultValue={nomeCompleto || ""}
-                  placeholder="Seu nome"
+                  placeholder={locale === "en" ? "Your name" : "Seu nome"}
                   className="profile-form-input"
                 />
                 <button type="submit" className="profile-form-btn profile-form-btn-primary">
-                  Salvar
+                  {locale === "en" ? "Save" : "Salvar"}
                 </button>
               </div>
             </div>
@@ -69,7 +87,7 @@ export async function ProfilePageView() {
 
           <form action={uploadAvatar} className="profile-compact-form">
             <div className="profile-form-field">
-              <label htmlFor="avatar">Foto de Perfil</label>
+              <label htmlFor="avatar">{locale === "en" ? "Profile picture" : "Foto de Perfil"}</label>
               <div className="profile-form-row">
                 <input
                   id="avatar"
@@ -79,7 +97,7 @@ export async function ProfilePageView() {
                   className="profile-form-input"
                 />
                 <button type="submit" className="profile-form-btn profile-form-btn-secondary">
-                  Upload
+                  {locale === "en" ? "Upload" : "Upload"}
                 </button>
               </div>
             </div>
@@ -88,7 +106,11 @@ export async function ProfilePageView() {
         </div>
 
         <div className="profile-compact-info">
-          <p>💡 Use o menu flutuante no canto superior direito para configurações, tema e logout.</p>
+          <p>
+            {locale === "en"
+              ? "💡 Use the floating menu in the upper-right corner for settings, theme and logout."
+              : "💡 Use o menu flutuante no canto superior direito para configurações, tema e logout."}
+          </p>
         </div>
       </div>
     </main>
