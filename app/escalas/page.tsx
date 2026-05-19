@@ -1,32 +1,56 @@
 import type { Metadata } from "next";
 import { schedule } from "@/lib/site-data";
 import { getPublicEscalas } from "@/lib/escalas/public-escalas";
+import { getRequestLocale } from "@/lib/multilingual";
 
-export const metadata: Metadata = {
-  title: "Escalas do GEEF",
-  description: "Agenda pública base das atividades e reuniões do GEEF.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
 
-function getMonthName(mes: number): string {
-  const months = [
-    "Janeiro",
-    "Fevereiro",
-    "Março",
-    "Abril",
-    "Maio",
-    "Junho",
-    "Julho",
-    "Agosto",
-    "Setembro",
-    "Outubro",
-    "Novembro",
-    "Dezembro",
-  ];
-
-  return months[mes - 1] ?? "Mês inválido";
+  return {
+    title: locale === "en" ? "Schedules | GEEF" : "Escalas do GEEF",
+    description:
+      locale === "en"
+        ? "Public schedule of GEEF activities and meetings."
+        : "Agenda pública base das atividades e reuniões do GEEF.",
+  };
 }
 
-function PublicFallback() {
+function getMonthName(mes: number, locale: "pt" | "en"): string {
+  const months =
+    locale === "en"
+      ? [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ]
+      : [
+          "Janeiro",
+          "Fevereiro",
+          "Março",
+          "Abril",
+          "Maio",
+          "Junho",
+          "Julho",
+          "Agosto",
+          "Setembro",
+          "Outubro",
+          "Novembro",
+          "Dezembro",
+        ];
+
+  return months[mes - 1] ?? (locale === "en" ? "Invalid month" : "Mês inválido");
+}
+
+function PublicFallback({ locale }: { locale: "pt" | "en" }) {
   return (
     <section style={{ marginTop: "1rem", display: "grid", gap: "0.75rem" }}>
       {schedule.map((item) => (
@@ -50,7 +74,17 @@ function PublicFallback() {
             }}
           >
             <h3 style={{ margin: 0, fontSize: "1rem", fontWeight: 700, color: "var(--text)" }}>
-              {item.title}
+              {locale === "en"
+                ? item.title === "Estudo doutrinário"
+                  ? "Doctrinal study"
+                  : item.title === "Reunião pública"
+                    ? "Public meeting"
+                    : item.title === "Atendimento fraterno"
+                      ? "Fraternal care"
+                      : item.title === "Evangelização"
+                        ? "Evangelization"
+                        : item.title
+                : item.title}
             </h3>
             <span
               style={{
@@ -62,11 +96,23 @@ function PublicFallback() {
                 fontWeight: 700,
               }}
             >
-              {item.when}
+              {locale === "en"
+                ? item.when
+                    .replace("Terças", "Tuesdays")
+                    .replace("Quinta", "Thursday")
+                    .replace("Sob agendamento", "By appointment")
+                    .replace("jovens, quinta 16h30 - infantil, 19h00", "youth, Thursday 4:30 PM - children, 7:00 PM")
+                : item.when}
             </span>
           </div>
           <p style={{ margin: "0.55rem 0 0", color: "var(--muted)", lineHeight: 1.6 }}>
-            {item.description}
+            {locale === "en"
+              ? item.description
+                  .replace("Leitura, conversa e reflexão sobre a Doutrina Espírita.", "Reading, conversation and reflection on Spiritist Doctrine.")
+                  .replace("Palestra, acolhimento e encerramento com prece.", "Lecture, welcome and closing prayer.")
+                  .replace("Escuta individual para quem busca apoio e orientação.", "One-on-one listening for those seeking support and guidance.")
+                  .replace("Atividades e estudo voltados para crianças e jovens.", "Activities and study aimed at children and youth.")
+              : item.description}
           </p>
         </article>
       ))}
@@ -75,6 +121,7 @@ function PublicFallback() {
 }
 
 export default async function EscalasPage() {
+  const locale = await getRequestLocale();
   let escalas: Awaited<ReturnType<typeof getPublicEscalas>>["escalas"] = [];
 
   try {
@@ -116,7 +163,7 @@ export default async function EscalasPage() {
             fontWeight: 700,
           }}
         >
-          Escalas
+          {locale === "en" ? "Schedules" : "Escalas"}
         </p>
         <h1
           style={{
@@ -127,11 +174,12 @@ export default async function EscalasPage() {
             letterSpacing: "-0.05em",
           }}
         >
-          Agenda pública de atividades
+          {locale === "en" ? "Public activity schedule" : "Agenda pública de atividades"}
         </h1>
         <p style={{ margin: "0.65rem 0 0", color: "var(--muted)", maxWidth: "44rem", lineHeight: 1.6 }}>
-          O conteúdo vem do Supabase com cache local. Quando o ERP atualizar uma escala, a página pública
-          é invalidada e recarrega a versão nova sem perder desempenho.
+          {locale === "en"
+            ? "The content comes from Supabase with local cache. When the ERP updates a schedule, the public page is invalidated and reloads the new version without losing performance."
+            : "O conteúdo vem do Supabase com cache local. Quando o ERP atualizar uma escala, a página pública é invalidada e recarrega a versão nova sem perder desempenho."}
         </p>
       </section>
 
@@ -155,7 +203,7 @@ export default async function EscalasPage() {
                   color: "var(--text)",
                 }}
               >
-                {getMonthName(escala.mes)} de {escala.ano}
+                {getMonthName(escala.mes, locale)} {locale === "en" ? "of" : "de"} {escala.ano}
               </h2>
 
               <div style={{ display: "grid", gap: "1rem", marginTop: "1rem" }}>
@@ -178,11 +226,17 @@ export default async function EscalasPage() {
                         color: "var(--text)",
                       }}
                     >
-                      Quinta-feira, {new Date(`${reuniao.data}T00:00:00`).toLocaleDateString("pt-BR", {
-                        weekday: "long",
-                        month: "long",
-                        day: "numeric",
-                      })}
+                      {locale === "en"
+                        ? new Date(`${reuniao.data}T00:00:00`).toLocaleDateString("en-US", {
+                            weekday: "long",
+                            month: "long",
+                            day: "numeric",
+                          })
+                        : `Quinta-feira, ${new Date(`${reuniao.data}T00:00:00`).toLocaleDateString("pt-BR", {
+                            weekday: "long",
+                            month: "long",
+                            day: "numeric",
+                          })}`}
                     </h3>
 
                     <div style={{ display: "grid", gap: "0.65rem" }}>
@@ -198,10 +252,10 @@ export default async function EscalasPage() {
                             background: "rgba(247, 239, 252, 0.98)",
                           }}
                         >
-                          <strong>{ef.funcoes?.nome ?? "Função"}</strong>
-                          <span>{ef.pessoas?.nome ?? "Sem nome"}</span>
+                          <strong>{ef.funcoes?.nome ?? (locale === "en" ? "Role" : "Função")}</strong>
+                          <span>{ef.pessoas?.nome ?? (locale === "en" ? "Unnamed" : "Sem nome")}</span>
                           <span style={{ color: "var(--muted)", fontSize: "0.86rem" }}>
-                            {ef.substitutos?.nome ? `Sub: ${ef.substitutos.nome}` : ""}
+                            {ef.substitutos?.nome ? `${locale === "en" ? "Sub" : "Sub"}: ${ef.substitutos.nome}` : ""}
                           </span>
                         </div>
                       ))}
@@ -219,7 +273,7 @@ export default async function EscalasPage() {
                           }}
                         >
                           <strong>#{ep.posicao}</strong>
-                          <span>{ep.pessoas?.nome ?? "Sem nome"}</span>
+                          <span>{ep.pessoas?.nome ?? (locale === "en" ? "Unnamed" : "Sem nome")}</span>
                         </div>
                       ))}
 
@@ -235,8 +289,8 @@ export default async function EscalasPage() {
                             background: "rgba(247, 239, 252, 0.98)",
                           }}
                         >
-                          <span>{ee.pessoas?.nome ?? "Sem nome"}</span>
-                          <span>{ee.temas_doutrinarios?.titulo ?? ee.tema_livre ?? "Tema"}</span>
+                          <span>{ee.pessoas?.nome ?? (locale === "en" ? "Unnamed" : "Sem nome")}</span>
+                          <span>{ee.temas_doutrinarios?.titulo ?? ee.tema_livre ?? (locale === "en" ? "Topic" : "Tema")}</span>
                           <span style={{ color: "var(--muted)", fontSize: "0.86rem" }}>
                             {ee.turma ? `(${ee.turma})` : ""}
                           </span>
@@ -255,8 +309,8 @@ export default async function EscalasPage() {
                             background: "rgba(247, 239, 252, 0.98)",
                           }}
                         >
-                          <strong>{ep.expositores?.nome ?? "Expositor"}</strong>
-                          <span>{ep.temas_doutrinarios?.titulo ?? ep.tema_livre ?? "Tema"}</span>
+                          <strong>{ep.expositores?.nome ?? (locale === "en" ? "Speaker" : "Expositor")}</strong>
+                          <span>{ep.temas_doutrinarios?.titulo ?? ep.tema_livre ?? (locale === "en" ? "Topic" : "Tema")}</span>
                           <span style={{ color: "var(--muted)", fontSize: "0.86rem" }}>
                             {ep.cidade_origem ?? ep.tipo_palestra ?? ""}
                           </span>
@@ -270,7 +324,7 @@ export default async function EscalasPage() {
           ))}
         </section>
       ) : (
-        <PublicFallback />
+        <PublicFallback locale={locale} />
       )}
     </main>
   );

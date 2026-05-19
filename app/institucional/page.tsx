@@ -1,11 +1,17 @@
 import { Metadata } from "next";
 import { getRequestLocale } from "@/lib/multilingual/server";
 
-export const metadata: Metadata = {
-  title: "Institucional - GEEF",
-  description:
-    "Credibilidade, filiações e reconhecimentos da GEEF. Federação Espírita Brasileira, REUNIR II Serrana, 45º CEU.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+
+  return {
+    title: locale === "en" ? "Institutional | GEEF" : "Institucional - GEEF",
+    description:
+      locale === "en"
+        ? "Credibility, affiliations and recognitions of GEEF. Brazilian Spiritist Federation, REUNIR II Serrana, 45th CEU."
+        : "Credibilidade, filiações e reconhecimentos da GEEF. Federação Espírita Brasileira, REUNIR II Serrana, 45º CEU.",
+  };
+}
 
 export default async function InstitucionalPage() {
   const locale = await getRequestLocale();
