@@ -1613,15 +1613,27 @@ img {
   color: var(--text);
 }
 
+:root.dark .lgpd-notice {
+  background: linear-gradient(180deg, rgba(44, 39, 37, 0.98), rgba(34, 31, 29, 0.98));
+  border-color: rgba(229, 218, 206, 0.16);
+  color: var(--text);
+}
+
 .lgpd-notice strong {
   font-size: 0.9rem;
   letter-spacing: 0.02em;
+  color: var(--text);
 }
 
 .lgpd-notice p {
   margin: 0;
   color: var(--muted);
   line-height: 1.6;
+}
+
+:root.dark .lgpd-notice p,
+:root.dark .lgpd-notice-links {
+  color: var(--text-muted);
 }
 
 .lgpd-notice-links {
@@ -1636,6 +1648,10 @@ img {
   color: var(--uva);
   font-weight: 600;
   text-decoration: underline;
+}
+
+:root.dark .lgpd-notice-links a {
+  color: var(--accent);
 }
 
 .lgpd-form-notice {
