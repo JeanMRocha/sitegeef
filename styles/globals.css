@@ -338,6 +338,7 @@ img {
 }
 
 .hero-copy {
+  grid-column: 1 / -1;
   padding: clamp(1rem, 1.8vw, 1.65rem);
   position: relative;
   overflow: hidden;
@@ -370,6 +371,29 @@ img {
   font-size: clamp(2.3rem, 5.2vw, 4rem);
   line-height: 0.9;
   letter-spacing: -0.055em;
+}
+
+.hero-motto {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  margin: 0.55rem 0 0;
+  padding-top: 0.75rem;
+  max-width: 42rem;
+  border-top: 1px solid var(--border-medium);
+  color: var(--text-primary);
+}
+
+.hero-motto span {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.hero-motto em {
+  font-size: 0.84rem;
+  font-style: normal;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
 }
 
 .hero-lead,

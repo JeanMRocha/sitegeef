@@ -62,6 +62,10 @@ export default async function Home({ searchParams }: HomePageProps) {
       <section className="hero">
         <div className="hero-copy">
           <h1>{copy.home.title}</h1>
+          <p className="hero-motto">
+            <span>{copy.home.motto.text}</span>
+            <em>{copy.home.motto.attribution}</em>
+          </p>
           <p className="hero-lead">{copy.home.lead}</p>
           <ul className="hero-highlights" aria-label={locale === "en" ? "Page highlights" : "Destaques da página"}>
             {copy.home.highlights.map((item) => (

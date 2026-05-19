@@ -64,6 +64,10 @@ type MultilingualCopy = {
   home: {
     eyebrow: string;
     title: string;
+    motto: {
+      text: string;
+      attribution: string;
+    };
     lead: string;
     highlights: string[];
     primaryCta: string;
@@ -215,6 +219,10 @@ const multilingualCopy: Record<Locale, MultilingualCopy> = {
     home: {
       eyebrow: "GEEF · site público",
       title: site.name,
+      motto: {
+        text: "Fora da Caridade não há salvação",
+        attribution: "Allan Kardec",
+      },
       lead:
         "Casa de estudo, acolhimento e serviço fraterno. Um ponto de contato claro para agenda, atendimento, transmissão e informação.",
       highlights: ["Agenda, estudos e atendimento em foco", "Leitura rápida no celular e no desktop"],
@@ -299,6 +307,10 @@ const multilingualCopy: Record<Locale, MultilingualCopy> = {
     home: {
       eyebrow: "GEEF · public site",
       title: site.name,
+      motto: {
+        text: "Fora da Caridade não há salvação",
+        attribution: "Allan Kardec",
+      },
       lead:
         "A place for study, welcome and fraternal service. A clear contact point for schedule, care, streaming and information.",
       highlights: ["Schedule, studies and care in focus", "Quick reading on mobile and desktop"],
