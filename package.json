@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev -p 3500",
     "dev:watchdog": "node scripts/dev-watchdog.mjs",
+    "gate:server": "node scripts/wait-for-server-200.mjs",
     "agent:lint": "node scripts/agent-lint.mjs",
     "agent:map": "node scripts/generate-agent-map.mjs",
     "build": "next build",

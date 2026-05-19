@@ -442,8 +442,8 @@ export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
         {isAdministrador && (
           <div className="admin-nav-section">
             <Link
-              href="/admin/erros"
-              className={`admin-nav-item ${isActive('/admin/erros') ? 'active' : ''}`}
+              href="/admin/observability"
+              className={`admin-nav-item ${isActive('/admin/observability') ? 'active' : ''}`}
             >
               🧭 Observabilidade
             </Link>

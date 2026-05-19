@@ -1,7 +1,7 @@
 import { AdminModuleGate } from '@/components/admin/admin-module-gate';
 
 export const metadata = {
-  title: 'Erros e Debug - Admin GEEF',
+  title: 'Observabilidade - Admin GEEF',
 };
 
 export default function ErrosLayout({
@@ -12,7 +12,7 @@ export default function ErrosLayout({
   return (
     <AdminModuleGate
       adminOnly
-      redirectPath="/admin/erros"
+      redirectPath="/admin/observability"
       title="Observabilidade"
     >
       {children}

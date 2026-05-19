@@ -142,7 +142,7 @@ Quando o Autoreflex voltar a responder, rodar primeiro:
   - A área do usuário ganhou um formulário discreto de pedido do titular em `/minha-area`, e o submit grava evento em `ops_events` com source `user-area/lgpd` para a auditoria acompanhar revogação/acesso/correção.
   - Os pedidos agora também persistem em `lgpd_solicitacoes`, com fila administrativa em `/admin/documentos/pedidos`, detalhe para tratamento, responsável, prazo e resposta curta. O status sai de `aberta` para `em_andamento`, `respondida` ou `encerrada`, e a fila volta a refletir os registros na área do usuário após a invalidação de cache.
   - O pedido do titular também aciona notificação automática para o responsável/encarregado via `notificacoes` e email, com fallback para `LGPD_ENCARREGADO_EMAIL` ou `LGPD_COMPLIANCE_EMAIL` quando não houver pessoa vinculada.
-  - A observabilidade foi ampliada com `lib/observability.ts`: actions de login, evangelização, documentos, pedido do titular e carga da área do usuário agora registram falhas de servidor/formulário e falhas silenciosas do Supabase em `ops_events`.
+  - A observabilidade foi consolidada em `lib/observability/`: actions de login, evangelização, documentos, pedido do titular e carga da área do usuário agora registram falhas de servidor/formulário e falhas silenciosas do Supabase em `ops_events`.
   - Os eventos LGPD agora carregam severidade em `lgpd_registros.escopo.severity` e a central `/admin/lgpd` mostra a distribuição por `info`, `low`, `medium`, `high` e `critical` sem exigir mudança de schema.
   - A exportação do titular agora sai por `/api/lgpd/export`, gera o JSON com os dados da área do usuário e registra um pedido LGPD respondido para manter a trilha operacional.
   - A retenção LGPD ficou explícita: `ops_events` ligados a auditoria privacidade expiram em 180 dias, `lgpd_solicitacoes` resolvidas expiram em 365 dias, e pedidos vencidos são encerrados automaticamente pela função `cleanup_lgpd_retention`.
@@ -153,11 +153,13 @@ Quando o Autoreflex voltar a responder, rodar primeiro:
   - O cadastro de usuario agora exige Termos de Uso e ciencia da Politica de Privacidade no servidor, e grava as versoes aceitas em `lgpd_registros`.
   - O banner de cookies grava a preferencia na primeira visita, permite aceitar tudo, rejeitar os nao essenciais ou ajustar categorias, e envia o registro para a API `POST /api/lgpd/registros`.
   - Os fluxos com dados mais sensiveis ganharam aviso curto de privacidade antes do formulario, com destaque para menores, atendimento fraterno, irradiacao, upload de logo e lancamentos financeiros.
-  - A tela propria do modulo agora vive em `/admin/lgpd`, consolidando registros LGPD, fila operacional, consentimentos, notificacoes e eventos tecnicos num unico painel.
+  - A tela propria do modulo LGPD agora vive em `/admin/lgpd`, consolidando registros, fila operacional, consentimentos, notificacoes e eventos tecnicos num unico painel.
+  - A central de observabilidade agora vive em `/admin/observability`; `/admin/erros` ficou como alias legado para nao quebrar links antigos.
   - Os formulários de documentos e vinculacoes mais sensiveis passaram a exibir o aviso curto do modulo antes do envio, incluindo modelo de documento, consentimento LGPD, termo assinado, servico voluntario e edicao da instituicao.
   - A cobertura de avisos curtos foi ampliada para pessoa, usuario, emprestimo, reserva, recepcao, evangelho no lar, familia APSE, juventude, turmas de estudo, assembleias e grupos mediunicos.
   - Os detalhes editaveis mais sensiveis tambem receberam o aviso curto: pessoa, usuario, crianca, emprestimo, reserva, familia, fraterno, irradiacao, recepcao, evangelizacao e juventude.
   - O servidor local voltou a responder em `http://127.0.0.1:3500` depois do ajuste de porta ocupada, e a rota raiz respondeu `200` durante a validacao final.
+  - O gate local `npm run gate:server` confirma `200` antes de devolver a aplicacao e o `npm run test:admin-smoke` passou nas 24 rotas admin principais depois da reorganizacao.
   - O header publico foi separado em uma casca server-rendered (`components/site-header.tsx`) e uma camada client para menus/usuario (`components/site-header-actions.tsx`) para o menu principal nao sumir quando a hidratacao falhar depois do logout.
   - Se o Fast Refresh reclamar de arquivo ausente nesse fluxo, reiniciar o `next dev` limpo antes de investigar a UI.
 - `Supabase remoto`

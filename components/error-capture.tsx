@@ -53,7 +53,7 @@ function ErrorBody({ error, reset, scope }: Omit<ErrorCaptureProps, "root">) {
         <p className="error-kicker">Módulo de erros</p>
         <h1>Ocorreu um erro na aplicação</h1>
         <p className="error-summary">
-          O incidente foi capturado automaticamente e está pronto para análise no painel de erros.
+          O incidente foi capturado automaticamente e está pronto para análise na central de observabilidade.
         </p>
 
         <div className="error-meta">
@@ -68,8 +68,8 @@ function ErrorBody({ error, reset, scope }: Omit<ErrorCaptureProps, "root">) {
           <Link href="/" className="button button-secondary">
             Ir para a home
           </Link>
-          <Link href="/admin/erros" className="button button-secondary">
-            Abrir painel de erros
+          <Link href="/admin/observability" className="button button-secondary">
+            Abrir central
           </Link>
         </div>
 

@@ -11,6 +11,7 @@ async function ModelosList() {
 
   const tabs = [
     { href: "/admin/documentos", label: "📄 Modelos" },
+    { href: "/admin/observability", label: "🧭 Observabilidade" },
     { href: "/admin/lgpd", label: "🛡️ Central LGPD" },
     { href: "/admin/documentos/pedidos", label: "📮 Pedidos do Titular" },
     { href: "/admin/documentos/termos", label: "✍️ Termos Assinados" },
