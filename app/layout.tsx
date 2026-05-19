@@ -23,15 +23,22 @@ const bodyFont = Manrope({
   variable: "--font-body",
 });
 
-export const metadata: Metadata = {
-  title: "GEEF",
-  description: "Site público do Grupo Espírita Elias Francis.",
-  icons: {
-    icon: "/favicon.png",
-    shortcut: "/favicon.png",
-    apple: "/favicon.png",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+
+  return {
+    title: "GEEF",
+    description:
+      locale === "en"
+        ? "Public site of Grupo Espírita Elias Francis."
+        : "Site público do Grupo Espírita Elias Francis.",
+    icons: {
+      icon: "/favicon.png",
+      shortcut: "/favicon.png",
+      apple: "/favicon.png",
+    },
+  };
+}
 
 export default async function RootLayout({
   children,
