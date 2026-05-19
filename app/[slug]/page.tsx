@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ContentPageView } from "@/components/content-page";
-import { contentPages } from "@/lib/site-data";
+import { getLocalizedContentPage } from "@/lib/multilingual/content";
+import { getRequestLocale } from "@/lib/multilingual/server";
 
 type Params = {
   slug: string;
@@ -12,8 +13,9 @@ export async function generateMetadata({
 }: {
   params: Promise<Params>;
 }): Promise<Metadata> {
+  const locale = await getRequestLocale();
   const { slug } = await params;
-  const page = contentPages[slug];
+  const page = getLocalizedContentPage(slug, locale);
   if (!page) {
     return {};
   }
@@ -24,12 +26,13 @@ export async function generateMetadata({
 }
 
 export default async function Page({ params }: { params: Promise<Params> }) {
+  const locale = await getRequestLocale();
   const { slug } = await params;
-  const page = contentPages[slug];
+  const page = getLocalizedContentPage(slug, locale);
 
   if (!page) {
     notFound();
   }
 
-  return <ContentPageView page={page} />;
+  return <ContentPageView page={page} locale={locale} slug={slug} />;
 }

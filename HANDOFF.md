@@ -158,6 +158,7 @@ Quando o Autoreflex voltar a responder, rodar primeiro:
   - A central ganhou abas por contexto (`geral`, `erros`, `supabase`, `lgpd`, `fila`) para separar triagem técnica, falhas do adapter, trilha LGPD e pedidos do titular sem duplicar pagina.
   - O site público ganhou o módulo de multilinguagem PT/EN, com cookie `geef_locale`, selector discreto no header, html `lang` dinamico, home, login, banner LGPD e rodape traduzidos; o admin continua em PT por escolha de escopo.
   - A area administrativa de idiomas agora vive em `/admin/idiomas` para documentar cobertura, persistencia e proximos passos do módulo de multilinguagem.
+  - A rota dinâmica pública `[slug]` e a página institucional agora também respeitam o locale do módulo, usando conteúdo localizado para PT/EN com fallback seguro em português.
   - Os formulários de documentos e vinculacoes mais sensiveis passaram a exibir o aviso curto do modulo antes do envio, incluindo modelo de documento, consentimento LGPD, termo assinado, servico voluntario e edicao da instituicao.
   - A cobertura de avisos curtos foi ampliada para pessoa, usuario, emprestimo, reserva, recepcao, evangelho no lar, familia APSE, juventude, turmas de estudo, assembleias e grupos mediunicos.
   - Os detalhes editaveis mais sensiveis tambem receberam o aviso curto: pessoa, usuario, crianca, emprestimo, reserva, familia, fraterno, irradiacao, recepcao, evangelizacao e juventude.
