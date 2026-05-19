@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { EnsureUserSystem } from "@/components/ensure-user-system";
+import { LgpdRequestModal } from "@/components/lgpd/lgpd-request-modal";
 import { getCachedUserArea } from "@/lib/areas/user-area";
 import { getRequestLocale } from "@/lib/multilingual";
 import { createClient } from "@/lib/supabase/server";
@@ -239,33 +240,23 @@ async function MinhaAreaContent() {
           <p style={{ marginTop: 0, color: "var(--muted)", lineHeight: 1.6 }}>
             {copy.requestLead}
           </p>
-          <form action={submitTitularRequest} className="area-panel-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))" }}>
-            <label className="profile-form-field">
-              <span>{copy.requestType}</span>
-              <select name="request_type" className="profile-form-input" defaultValue="revogacao">
-                <option value="acesso">{copy.requestTypes.acesso}</option>
-                <option value="correcao">{copy.requestTypes.correcao}</option>
-                <option value="revogacao">{copy.requestTypes.revogacao}</option>
-                <option value="eliminacao">{copy.requestTypes.eliminacao}</option>
-              </select>
-            </label>
-
-            <label className="profile-form-field" style={{ gridColumn: "1 / -1" }}>
-              <span>{copy.detailsLabel}</span>
-              <textarea
-                name="details"
-                className="profile-form-input"
-                rows={4}
-                placeholder={copy.detailsPlaceholder}
-              />
-            </label>
-
-            <div className="area-panel-item" style={{ alignSelf: "end" }}>
-              <button type="submit" className="profile-form-btn profile-form-btn-primary">
-                {copy.send}
-              </button>
-            </div>
-          </form>
+          <LgpdRequestModal
+            title={copy.requestTitle}
+            lead={copy.requestLead}
+            requestTypeLabel={copy.requestType}
+            detailsLabel={copy.detailsLabel}
+            detailsPlaceholder={copy.detailsPlaceholder}
+            sendLabel={copy.send}
+            openLabel={locale === "en" ? "Open request menu" : "Abrir pedido"}
+            closeLabel={locale === "en" ? "Close" : "Fechar"}
+            action={submitTitularRequest}
+            requestTypes={[
+              { value: "acesso", label: copy.requestTypes.acesso },
+              { value: "correcao", label: copy.requestTypes.correcao },
+              { value: "revogacao", label: copy.requestTypes.revogacao },
+              { value: "eliminacao", label: copy.requestTypes.eliminacao },
+            ]}
+          />
         </div>
       </section>
 
