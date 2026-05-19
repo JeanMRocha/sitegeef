@@ -1,5 +1,6 @@
 import { unstable_cache } from "next/cache";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+import { recordSupabaseFailureEvent } from "@/lib/observability";
 
 type UserAreaData = {
   perfil: any | null;
@@ -15,6 +16,35 @@ type UserAreaData = {
   consentimentos: any[];
   pedidosTitular: any[];
 };
+
+async function logUserAreaFallback(
+  operation: string,
+  table: string,
+  error: unknown,
+  fallback: "null" | "empty_list" | "empty_object",
+  payload: Record<string, unknown> = {}
+) {
+  if (!error) {
+    return;
+  }
+
+  await recordSupabaseFailureEvent({
+    source: "user-area/load",
+    operation,
+    table,
+    error,
+    fallback,
+    payload,
+  });
+}
+
+function getQueryError(result: unknown) {
+  if (!result || typeof result !== "object") {
+    return null;
+  }
+
+  return (result as { error?: unknown }).error ?? null;
+}
 
 export async function loadUserArea(userId: string): Promise<UserAreaData> {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -49,6 +79,11 @@ export async function loadUserArea(userId: string): Promise<UserAreaData> {
   const [perfilResult, usuarioResult] = await Promise.all([
     supabase.from("profiles").select("*").eq("id", userId).single(),
     supabase.from("usuarios_sistema").select("*").eq("id", userId).single(),
+  ]);
+
+  await Promise.all([
+    logUserAreaFallback("load profile", "profiles", perfilResult.error, "null", { userId }),
+    logUserAreaFallback("load usuario_sistema", "usuarios_sistema", usuarioResult.error, "null", { userId }),
   ]);
 
   const perfil = perfilResult.data ?? null;
@@ -138,6 +173,17 @@ export async function loadUserArea(userId: string): Promise<UserAreaData> {
         .order("created_at", { ascending: false })
         .limit(8),
     ]);
+
+  await Promise.all([
+    logUserAreaFallback("load pessoa", "pessoas", getQueryError(pessoaResult), "null", { userId, pessoaId }),
+    logUserAreaFallback("load emprestimos", "emprestimos", getQueryError(emprestimosResult), "empty_list", { userId, pessoaId }),
+    logUserAreaFallback("load reservas", "reservas", getQueryError(reservasResult), "empty_list", { userId, pessoaId }),
+    logUserAreaFallback("load movimentos_livraria", "movimentos_livraria", getQueryError(movimentosResult), "empty_list", { userId, pessoaId }),
+    logUserAreaFallback("load escalas", "escala_funcoes", getQueryError(escalasResult), "empty_list", { userId, pessoaId }),
+    logUserAreaFallback("load servicos_voluntarios", "servicos_voluntarios", getQueryError(voluntariosResult), "empty_list", { userId, pessoaId }),
+    logUserAreaFallback("load consentimentos_lgpd", "consentimentos_lgpd", getQueryError(consentimentosResult), "empty_list", { userId, pessoaId }),
+    logUserAreaFallback("load lgpd_solicitacoes", "lgpd_solicitacoes", getQueryError(pedidosResult), "empty_list", { userId, pessoaId }),
+  ]);
 
   return {
     perfil,

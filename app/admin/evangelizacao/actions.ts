@@ -1,7 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
-import { recordLgpdEvents } from '@/lib/lgpd/persistence';
+import { recordSupabaseFailureEvent, recordLgpdEventWithSeverity } from '@/lib/observability';
 import { LGPD_VERSIONS } from '@/lib/lgpd/constants';
 
 // Turmas
@@ -13,7 +13,16 @@ export async function getTurmas() {
     .select('*')
     .order('nome');
 
-  if (error) return [];
+  if (error) {
+    await recordSupabaseFailureEvent({
+      source: 'admin/evangelizacao',
+      operation: 'getTurmas',
+      table: 'turmas_evangelizacao',
+      error,
+      fallback: 'empty_list',
+    });
+    return [];
+  }
 
   return data || [];
 }
@@ -27,7 +36,16 @@ export async function getTurmaById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) return null;
+  if (error) {
+    await recordSupabaseFailureEvent({
+      source: 'admin/evangelizacao',
+      operation: 'getTurmaById',
+      table: 'turmas_evangelizacao',
+      error,
+      fallback: 'null',
+    });
+    return null;
+  }
 
   return data;
 }
@@ -47,7 +65,16 @@ export async function createTurma(formData: {
     .select()
     .single();
 
-  if (error) return null;
+  if (error) {
+    await recordSupabaseFailureEvent({
+      source: 'admin/evangelizacao',
+      operation: 'createTurma',
+      table: 'turmas_evangelizacao',
+      error,
+      fallback: 'null',
+    });
+    return null;
+  }
 
   return data;
 }
@@ -70,7 +97,16 @@ export async function updateTurma(
     .update(formData)
     .eq('id', id);
 
-  if (error) return [];
+  if (error) {
+    await recordSupabaseFailureEvent({
+      source: 'admin/evangelizacao',
+      operation: 'updateTurma',
+      table: 'turmas_evangelizacao',
+      error,
+      fallback: 'empty_list',
+    });
+    return [];
+  }
 
   return { success: true };
 }
@@ -95,7 +131,16 @@ export async function getCriancas(turma_id?: string) {
 
   const { data, error } = await query;
 
-  if (error) return [];
+  if (error) {
+    await recordSupabaseFailureEvent({
+      source: 'admin/evangelizacao',
+      operation: 'getCriancas',
+      table: 'criancas',
+      error,
+      fallback: 'empty_list',
+    });
+    return [];
+  }
 
   return data || [];
 }
@@ -114,7 +159,16 @@ export async function getCriancaById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) return null;
+  if (error) {
+    await recordSupabaseFailureEvent({
+      source: 'admin/evangelizacao',
+      operation: 'getCriancaById',
+      table: 'criancas',
+      error,
+      fallback: 'null',
+    });
+    return null;
+  }
 
   return data;
 }
@@ -136,9 +190,19 @@ export async function createCrianca(formData: {
     .select()
     .single();
 
-  if (error) return null;
+  if (error) {
+    await recordSupabaseFailureEvent({
+      source: 'admin/evangelizacao',
+      operation: 'createCrianca',
+      table: 'criancas',
+      error,
+      fallback: 'null',
+      level: 'error',
+    });
+    return null;
+  }
 
-  await recordLgpdEvents(
+  await Promise.all(
     [
       formData.consentimento_responsavel
         ? {
@@ -149,6 +213,7 @@ export async function createCrianca(formData: {
             origem: 'admin/evangelizacao/criancas',
             canal: 'web',
             pessoaId: formData.pessoa_id,
+            severity: 'high' as const,
             escopo: {
               responsavel_id: formData.responsavel_id,
               turma_id: formData.turma_id,
@@ -164,13 +229,16 @@ export async function createCrianca(formData: {
             origem: 'admin/evangelizacao/criancas',
             canal: 'web',
             pessoaId: formData.pessoa_id,
+            severity: 'high' as const,
             escopo: {
               responsavel_id: formData.responsavel_id,
               autorizacao: 'imagem_voz',
             },
           }
         : null,
-    ].filter(Boolean) as Parameters<typeof recordLgpdEvents>[0]
+    ]
+      .filter(Boolean)
+      .map((input) => recordLgpdEventWithSeverity(input as any))
   );
 
   return data;
@@ -192,7 +260,16 @@ export async function updateCrianca(
     .update(formData)
     .eq('id', id);
 
-  if (error) return [];
+  if (error) {
+    await recordSupabaseFailureEvent({
+      source: 'admin/evangelizacao',
+      operation: 'updateCrianca',
+      table: 'criancas',
+      error,
+      fallback: 'empty_list',
+    });
+    return [];
+  }
 
   return { success: true };
 }
@@ -205,7 +282,16 @@ export async function deleteCrianca(id: string) {
     .delete()
     .eq('id', id);
 
-  if (error) return { success: false };
+  if (error) {
+    await recordSupabaseFailureEvent({
+      source: 'admin/evangelizacao',
+      operation: 'deleteCrianca',
+      table: 'criancas',
+      error,
+      fallback: 'false',
+    });
+    return { success: false };
+  }
 
   return { success: true };
 }
@@ -220,7 +306,16 @@ export async function getAulas(turma_id: string) {
     .eq('turma_id', turma_id)
     .order('data', { ascending: false });
 
-  if (error) return [];
+  if (error) {
+    await recordSupabaseFailureEvent({
+      source: 'admin/evangelizacao',
+      operation: 'getAulas',
+      table: 'aulas_evangelizacao',
+      error,
+      fallback: 'empty_list',
+    });
+    return [];
+  }
 
   return data || [];
 }
@@ -234,7 +329,16 @@ export async function getAulaById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) return null;
+  if (error) {
+    await recordSupabaseFailureEvent({
+      source: 'admin/evangelizacao',
+      operation: 'getAulaById',
+      table: 'aulas_evangelizacao',
+      error,
+      fallback: 'null',
+    });
+    return null;
+  }
 
   return data;
 }
@@ -255,7 +359,16 @@ export async function createAula(formData: {
     .select()
     .single();
 
-  if (error) return null;
+  if (error) {
+    await recordSupabaseFailureEvent({
+      source: 'admin/evangelizacao',
+      operation: 'createAula',
+      table: 'aulas_evangelizacao',
+      error,
+      fallback: 'null',
+    });
+    return null;
+  }
 
   return data;
 }
@@ -277,7 +390,16 @@ export async function updateAula(
     .update(formData)
     .eq('id', id);
 
-  if (error) return { success: false };
+  if (error) {
+    await recordSupabaseFailureEvent({
+      source: 'admin/evangelizacao',
+      operation: 'updateAula',
+      table: 'aulas_evangelizacao',
+      error,
+      fallback: 'false',
+    });
+    return { success: false };
+  }
 
   return { success: true };
 }
@@ -290,7 +412,16 @@ export async function deleteAula(id: string) {
     .delete()
     .eq('id', id);
 
-  if (error) return { success: false };
+  if (error) {
+    await recordSupabaseFailureEvent({
+      source: 'admin/evangelizacao',
+      operation: 'deleteAula',
+      table: 'aulas_evangelizacao',
+      error,
+      fallback: 'false',
+    });
+    return { success: false };
+  }
 
   return { success: true };
 }
@@ -308,7 +439,16 @@ export async function getEvangelizadores(turma_id: string) {
     .eq('turma_id', turma_id)
     .order('pessoa.nome');
 
-  if (error) return [];
+  if (error) {
+    await recordSupabaseFailureEvent({
+      source: 'admin/evangelizacao',
+      operation: 'getEvangelizadores',
+      table: 'turma_evangelizadores',
+      error,
+      fallback: 'empty_list',
+    });
+    return [];
+  }
 
   return data || [];
 }
@@ -322,7 +462,16 @@ export async function addEvangelizador(turma_id: string, pessoa_id: string) {
     .select()
     .single();
 
-  if (error) return null;
+  if (error) {
+    await recordSupabaseFailureEvent({
+      source: 'admin/evangelizacao',
+      operation: 'addEvangelizador',
+      table: 'turma_evangelizadores',
+      error,
+      fallback: 'null',
+    });
+    return null;
+  }
 
   return data;
 }
@@ -335,7 +484,16 @@ export async function removeEvangelizador(id: string) {
     .delete()
     .eq('id', id);
 
-  if (error) return null;
+  if (error) {
+    await recordSupabaseFailureEvent({
+      source: 'admin/evangelizacao',
+      operation: 'removeEvangelizador',
+      table: 'turma_evangelizadores',
+      error,
+      fallback: 'null',
+    });
+    return null;
+  }
 
   return { success: true };
 }
@@ -349,7 +507,16 @@ export async function getPessoasDisponiveis() {
     .eq('status', 'ativo')
     .order('nome');
 
-  if (error) return [];
+  if (error) {
+    await recordSupabaseFailureEvent({
+      source: 'admin/evangelizacao',
+      operation: 'getPessoasDisponiveis',
+      table: 'pessoas',
+      error,
+      fallback: 'empty_list',
+    });
+    return [];
+  }
 
   return data || [];
 }

@@ -2630,6 +2630,15 @@ img {
   background: rgba(34, 31, 29, 0.96);
 }
 
+:root.dark .area-summary-card {
+  background: rgba(34, 31, 29, 0.96);
+  border-color: rgba(229, 218, 206, 0.14);
+}
+
+:root.dark .area-summary-card strong {
+  color: var(--text);
+}
+
 :root.dark .content-panel-label,
 :root.dark .eyebrow,
 :root.dark .site-footer-main p:first-child,

@@ -23,6 +23,18 @@ export default async function AdminLgpdPage() {
   const acceptedCookies = registros.filter((item) => item.categoria === "cookies" && item.status === "aceito").length;
   const marketingOptIns = registros.filter((item) => item.categoria === "marketing" && item.status === "aceito").length;
   const privacyReads = registros.filter((item) => item.categoria === "privacidade").length;
+  const severityCounts = registros.reduce<Record<string, number>>((acc, item) => {
+    const severity = typeof item.escopo?.severity === "string" ? item.escopo.severity : "info";
+    acc[severity] = (acc[severity] || 0) + 1;
+    return acc;
+  }, {});
+  const categorySeverity = registros.reduce<Record<string, string>>((acc, item) => {
+    if (!acc[item.categoria] && typeof item.escopo?.severity === "string") {
+      acc[item.categoria] = item.escopo.severity;
+    }
+
+    return acc;
+  }, {});
 
   const groupedByCategory = Object.values(
     registros.reduce<Record<string, { category: string; total: number; accepted: number; rejected: number; latest: string }>>(
@@ -97,6 +109,15 @@ export default async function AdminLgpdPage() {
             <span>Eventos de auditoria</span>
           </div>
         </div>
+
+        <div className="area-summary-grid" style={{ marginTop: "1rem" }}>
+          {(["info", "low", "medium", "high", "critical"] as const).map((severity) => (
+            <div key={severity} className="area-summary-card">
+              <strong>{severityCounts[severity] || 0}</strong>
+              <span>LGPD {severity}</span>
+            </div>
+          ))}
+        </div>
       </section>
 
       <section className="area-section">
@@ -113,6 +134,7 @@ export default async function AdminLgpdPage() {
                     Total: {item.total} <br />
                     Aceitos: {item.accepted} <br />
                     Recusados: {item.rejected} <br />
+                    Severidade: {categorySeverity[item.category] || "info"} <br />
                     Último: {formatDate(item.latest)}
                   </p>
                 </div>

@@ -8,6 +8,7 @@ export type LgpdEventInput = {
   status?: LgpdStatus;
   versao?: string;
   escopo?: Record<string, unknown>;
+  severity?: LgpdSeverity;
   userId?: string | null;
   pessoaId?: string | null;
   origem?: string | null;
@@ -19,6 +20,36 @@ export type LgpdEventInput = {
   userAgent?: string | null;
   referer?: string | null;
 };
+
+export type LgpdSeverity = "info" | "low" | "medium" | "high" | "critical";
+
+function resolveSeverity(input: LgpdEventInput) {
+  if (input.severity) {
+    return input.severity;
+  }
+
+  if (input.escopo && typeof input.escopo.severity === "string") {
+    return input.escopo.severity as LgpdSeverity;
+  }
+
+  if (input.categoria === "crianca" || input.categoria === "sensivel" || input.categoria === "upload" || input.categoria === "checkout" || input.categoria === "finalidade_nova") {
+    return "high";
+  }
+
+  if (input.categoria === "marketing" || input.categoria === "whatsapp") {
+    return "medium";
+  }
+
+  if (input.status === "revogado" || input.status === "recusado") {
+    return "medium";
+  }
+
+  if (input.categoria === "login") {
+    return "low";
+  }
+
+  return "info";
+}
 
 export function getLgpdVersion(categoria: LgpdCategoria) {
   if (categoria === "cookies") {
@@ -45,6 +76,11 @@ export async function getLgpdRequestMeta() {
 export async function recordLgpdEvent(input: LgpdEventInput) {
   const supabase = createServiceRoleClient();
   const now = new Date().toISOString();
+  const severity = resolveSeverity(input);
+  const escopo = {
+    ...(input.escopo ?? {}),
+    severity,
+  };
 
   const { data, error } = await supabase
     .from("lgpd_registros")
@@ -55,7 +91,7 @@ export async function recordLgpdEvent(input: LgpdEventInput) {
       acao: input.acao,
       status: input.status ?? "registrado",
       versao: input.versao ?? getLgpdVersion(input.categoria),
-      escopo: input.escopo ?? {},
+      escopo,
       origem: input.origem ?? null,
       canal: input.canal ?? "web",
       ip: input.ip ?? null,

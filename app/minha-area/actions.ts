@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { buildFlashNoticeUrl } from "@/lib/notificacoes/flash-notice";
 import { createTitularSolicitacao } from "@/app/admin/documentos/actions";
+import { recordActionFailureEvent, recordSupabaseFailureEvent } from "@/lib/observability";
 
 export async function ensureUserSystemRecord() {
   const supabase = await createClient();
@@ -40,9 +41,16 @@ export async function ensureUserSystemRecord() {
       pode_mediunidade: false,
       pode_atendimento: false,
       pode_apse: false,
-    });
+  });
 
   if (error) {
+    await recordSupabaseFailureEvent({
+      source: "user-area/setup",
+      operation: "ensureUserSystemRecord",
+      table: "usuarios_sistema",
+      error,
+      fallback: "null",
+    });
     return { error: error.message };
   }
 
@@ -75,9 +83,31 @@ export async function submitTitularRequest(formData: FormData) {
   const usuarioResult = await supabase.from("usuarios_sistema").select("pessoa_id").eq("id", user.id).maybeSingle();
   const pessoaId = usuarioResult.data?.pessoa_id ?? null;
 
+  if (usuarioResult.error) {
+    await recordSupabaseFailureEvent({
+      source: "user-area/lgpd",
+      operation: "lookup usuarios_sistema",
+      table: "usuarios_sistema",
+      error: usuarioResult.error,
+      fallback: "null",
+      payload: { userId: user.id },
+    });
+  }
+
   const pessoaResult = pessoaId
     ? await supabase.from("pessoas").select("nome, email").eq("id", pessoaId).maybeSingle()
     : { data: null };
+
+  if ("error" in pessoaResult && pessoaResult.error) {
+    await recordSupabaseFailureEvent({
+      source: "user-area/lgpd",
+      operation: "lookup pessoas",
+      table: "pessoas",
+      error: pessoaResult.error,
+      fallback: "null",
+      payload: { userId: user.id, pessoaId },
+    });
+  }
 
   const titularNome = pessoaResult.data?.nome ?? user.user_metadata?.nome ?? null;
   const titularEmail = pessoaResult.data?.email ?? user.email ?? null;
@@ -93,6 +123,12 @@ export async function submitTitularRequest(formData: FormData) {
   });
 
   if (!solicitacao) {
+    await recordActionFailureEvent({
+      source: "user-area/lgpd",
+      action: "submitTitularRequest",
+      message: "O pedido do titular não foi persistido.",
+      payload: { userId: user.id, pessoaId, requestType },
+    });
     redirect(
       buildFlashNoticeUrl("/minha-area", {
         variant: "error",

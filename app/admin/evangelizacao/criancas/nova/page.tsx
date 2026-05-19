@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { createCrianca, getPessoasDisponiveis, getTurmas } from '../../actions';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
+import { recordActionFailureEvent } from '@/lib/observability';
 
 export const metadata = {
   title: 'Nova Criança - Admin GEEF',
@@ -22,9 +23,23 @@ async function handleSubmit(formData: FormData) {
       consentimento_imagem: formData.get('consentimento_imagem') === 'on',
     });
 
+    if (!crianca) {
+      await recordActionFailureEvent({
+        source: 'admin/evangelizacao/criancas',
+        action: 'createCrianca',
+        message: 'A action retornou sem criar a criança.',
+      });
+      redirect(buildFlashNoticeUrl('/admin/evangelizacao/criancas/nova', { variant: 'error', message: 'Não foi possível criar a criança.' }));
+    }
+
     redirect(buildFlashNoticeUrl(`/admin/evangelizacao/criancas/${crianca.id}`, { variant: 'success', message: 'Criança criada.' }));
   } catch (error) {
-    console.error('Erro:', error);
+    await recordActionFailureEvent({
+      source: 'admin/evangelizacao/criancas',
+      action: 'handleSubmit',
+      message: 'Falha ao processar o cadastro da criança.',
+      error,
+    });
     redirect(buildFlashNoticeUrl('/admin/evangelizacao/criancas', { variant: 'error', message: 'Não foi possível criar a criança.' }));
     return;
   }

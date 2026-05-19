@@ -58,23 +58,13 @@ async function MinhaAreaContent() {
               </span>
             </div>
           ))}
-          {hasAdminAccess && (
-            <div className="area-summary-card" style={{ borderColor: "rgba(138, 0, 90, 0.25)" }}>
-              <strong>Admin</strong>
-              <span>
-                Acesso administrativo
-                <br />
-                Painel liberado
-              </span>
-            </div>
-          )}
         </div>
       </section>
 
-      <section className="area-section">
-        <h2 className="area-section-title">Dados pessoais</h2>
-        <div className="admin-card">
-          {pessoa ? (
+      {pessoa && (
+        <section className="area-section">
+          <h2 className="area-section-title">Dados pessoais</h2>
+          <div className="admin-card">
             <div className="stat-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))" }}>
               <div className="area-panel-item">
                 <strong>Nome</strong>
@@ -105,11 +95,9 @@ async function MinhaAreaContent() {
                 <p>{hasAdminAccess ? "Administrador" : "Usuário público"}</p>
               </div>
             </div>
-          ) : (
-            <div className="area-empty">Dados pessoais não encontrados</div>
-          )}
-        </div>
-      </section>
+          </div>
+        </section>
+      )}
 
       <section className="area-section">
         <h2 className="area-section-title">Privacidade</h2>

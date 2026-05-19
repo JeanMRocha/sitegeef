@@ -7,6 +7,7 @@ import { invalidateAdminDocumentosCache } from '@/lib/admin/cache';
 import { invalidateUserAreaCache } from '@/lib/areas/invalidate-user-area';
 import { sendEmailNotification } from '@/lib/notificacoes/email-service';
 import { recordOpsEvent } from '@/lib/ops-events';
+import { recordActionFailureEvent, recordSupabaseFailureEvent } from '@/lib/observability';
 
 async function recordDocumentosAuditEvent(
   source: string,
@@ -81,7 +82,7 @@ async function notifyTitularRequestStakeholders(
     }
 
     if (targetPessoaId || targetEmail) {
-      const { data: notificacao } = await supabase
+      const { data: notificacao, error: notificacaoError } = await supabase
         .from('notificacoes')
         .insert({
           pessoa_id: targetPessoaId || null,
@@ -95,6 +96,18 @@ async function notifyTitularRequestStakeholders(
         })
         .select('id')
         .single();
+
+      if (notificacaoError) {
+        await recordSupabaseFailureEvent({
+          source: 'admin/documentos/lgpd',
+          operation: 'insert notificacoes',
+          table: 'notificacoes',
+          error: notificacaoError,
+          fallback: 'null',
+          level: 'warn',
+          payload: { solicitacao_id: solicitacao.id, action },
+        });
+      }
 
       notificacaoId = notificacao?.id || null;
     }
@@ -119,10 +132,30 @@ async function notifyTitularRequestStakeholders(
             enviado_em: new Date().toISOString(),
           })
           .eq('id', notificacaoId);
+      } else if (!emailResult.success) {
+        await recordActionFailureEvent({
+          source: 'admin/documentos/lgpd',
+          action: 'sendEmailNotification',
+          message: 'Falha ao enviar notificação LGPD por email.',
+          payload: {
+            solicitacao_id: solicitacao.id,
+            email: targetEmail,
+            action,
+            error: emailResult.error ?? null,
+          },
+          level: 'warn',
+        });
       }
     }
-  } catch {
-    // A notificação não pode bloquear o fluxo principal.
+  } catch (error) {
+    await recordActionFailureEvent({
+      source: 'admin/documentos/lgpd',
+      action: 'notifyTitularRequestStakeholders',
+      message: 'Falha ao processar notificação LGPD.',
+      error,
+      payload: { solicitacao_id: solicitacao.id, action },
+      level: 'warn',
+    });
   }
 }
 
@@ -135,7 +168,16 @@ async function loadModelosDocumentos() {
     .eq('ativo', true)
     .order('tipo');
 
-  if (error) return [];
+  if (error) {
+    await recordSupabaseFailureEvent({
+      source: 'admin/documentos',
+      operation: 'loadModelosDocumentos',
+      table: 'documentos_modelo',
+      error,
+      fallback: 'empty_list',
+    });
+    return [];
+  }
 
   return data || [];
 }
@@ -154,7 +196,16 @@ export async function getModeloById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) return null;
+  if (error) {
+    await recordSupabaseFailureEvent({
+      source: 'admin/documentos',
+      operation: 'getModeloById',
+      table: 'documentos_modelo',
+      error,
+      fallback: 'null',
+    });
+    return null;
+  }
 
   return data;
 }
@@ -273,6 +324,13 @@ async function loadTitularSolicitacoes(page = 1, status?: string) {
   const { data, count, error } = await query;
 
   if (error) {
+    await recordSupabaseFailureEvent({
+      source: 'admin/documentos',
+      operation: 'loadTitularSolicitacoes',
+      table: 'lgpd_solicitacoes',
+      error,
+      fallback: 'empty_list',
+    });
     return {
       solicitacoes: [],
       total: 0,
@@ -302,7 +360,16 @@ export async function getTitularSolicitacaoById(id: string) {
     .eq('id', id)
     .single();
 
-  if (error) return null;
+  if (error) {
+    await recordSupabaseFailureEvent({
+      source: 'admin/documentos',
+      operation: 'getTitularSolicitacaoById',
+      table: 'lgpd_solicitacoes',
+      error,
+      fallback: 'null',
+    });
+    return null;
+  }
 
   return data;
 }
@@ -342,7 +409,17 @@ export async function createTitularSolicitacao(formData: {
     .select()
     .single();
 
-  if (error) return null;
+  if (error) {
+    await recordSupabaseFailureEvent({
+      source: 'admin/documentos',
+      operation: 'createTitularSolicitacao',
+      table: 'lgpd_solicitacoes',
+      error,
+      fallback: 'null',
+      level: 'error',
+    });
+    return null;
+  }
 
   invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
@@ -396,7 +473,17 @@ export async function updateTitularSolicitacao(
     .update(patch)
     .eq('id', id);
 
-  if (error) return { success: false };
+  if (error) {
+    await recordSupabaseFailureEvent({
+      source: 'admin/documentos',
+      operation: 'updateTitularSolicitacao',
+      table: 'lgpd_solicitacoes',
+      error,
+      fallback: 'false',
+      level: 'error',
+    });
+    return { success: false };
+  }
 
   invalidateAdminDocumentosCache();
   invalidateUserAreaCache();
@@ -437,12 +524,21 @@ async function loadTermosAssinados(page = 1) {
     .order('data_assinatura', { ascending: false })
     .range(offset, offset + pageSize - 1);
 
-  if (error) return {
-    termos: [],
-    total: 0,
-    page,
-    pageSize,
-  };
+  if (error) {
+    await recordSupabaseFailureEvent({
+      source: 'admin/documentos',
+      operation: 'loadTermosAssinados',
+      table: 'termos_assinados',
+      error,
+      fallback: 'empty_list',
+    });
+    return {
+      termos: [],
+      total: 0,
+      page,
+      pageSize,
+    };
+  }
 
   return {
     termos: data || [],
@@ -579,12 +675,21 @@ async function loadConsentimentosLGPD(page = 1) {
     .order('data_consentimento', { ascending: false })
     .range(offset, offset + pageSize - 1);
 
-  if (error) return {
-    consentimentos: [],
-    total: 0,
-    page,
-    pageSize,
-  };
+  if (error) {
+    await recordSupabaseFailureEvent({
+      source: 'admin/documentos',
+      operation: 'loadConsentimentosLGPD',
+      table: 'consentimentos_lgpd',
+      error,
+      fallback: 'empty_list',
+    });
+    return {
+      consentimentos: [],
+      total: 0,
+      page,
+      pageSize,
+    };
+  }
 
   return {
     consentimentos: data || [],
@@ -689,12 +794,21 @@ async function loadServicosVoluntarios(page = 1) {
     .order('data_inicio', { ascending: false })
     .range(offset, offset + pageSize - 1);
 
-  if (error) return {
-    servicos: [],
-    total: 0,
-    page,
-    pageSize,
-  };
+  if (error) {
+    await recordSupabaseFailureEvent({
+      source: 'admin/documentos',
+      operation: 'loadServicosVoluntarios',
+      table: 'servicos_voluntarios',
+      error,
+      fallback: 'empty_list',
+    });
+    return {
+      servicos: [],
+      total: 0,
+      page,
+      pageSize,
+    };
+  }
 
   return {
     servicos: data || [],
@@ -826,7 +940,16 @@ export async function getPessoasDisponiveis() {
     .eq('status', 'ativo')
     .order('nome');
 
-  if (error) return [];
+  if (error) {
+    await recordSupabaseFailureEvent({
+      source: 'admin/documentos',
+      operation: 'getPessoasDisponiveis',
+      table: 'pessoas',
+      error,
+      fallback: 'empty_list',
+    });
+    return [];
+  }
 
   return data || [];
 }
@@ -840,7 +963,16 @@ export async function getDepartamentosDisponiveis() {
     .eq('ativo', true)
     .order('nome');
 
-  if (error) return [];
+  if (error) {
+    await recordSupabaseFailureEvent({
+      source: 'admin/documentos',
+      operation: 'getDepartamentosDisponiveis',
+      table: 'departamentos',
+      error,
+      fallback: 'empty_list',
+    });
+    return [];
+  }
 
   return data || [];
 }

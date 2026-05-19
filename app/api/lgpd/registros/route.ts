@@ -8,6 +8,7 @@ type Body = {
   status?: "registrado" | "aceito" | "recusado" | "ciencia" | "revogado" | "informado";
   versao?: string;
   escopo?: Record<string, unknown>;
+  severity?: "info" | "low" | "medium" | "high" | "critical";
   origem?: string;
   canal?: string;
   expiresAt?: string | null;
@@ -45,6 +46,7 @@ export async function POST(request: NextRequest) {
     status: body.status,
     versao: body.versao,
     escopo: body.escopo,
+    severity: body.severity,
     origem: body.origem ?? "api/lgpd/registros",
     canal: body.canal ?? "web",
     expiresAt: body.expiresAt ?? null,

@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 import { redirect } from 'next/navigation';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 import { getPessoasDisponiveis, getTitularSolicitacaoById, updateTitularSolicitacao } from '../../actions';
+import { recordActionFailureEvent } from '@/lib/observability';
 
 export const metadata = {
   title: 'Pedido do Titular - Admin GEEF',
@@ -46,6 +47,12 @@ async function handleSave(id: string, formData: FormData) {
   });
 
   if (!result.success) {
+    await recordActionFailureEvent({
+      source: 'admin/documentos/pedidos',
+      action: 'updateTitularSolicitacao',
+      message: 'Falha ao salvar o pedido do titular.',
+      payload: { id, status, responsavelId: responsavelId || null },
+    });
     redirect(buildFlashNoticeUrl(`/admin/documentos/pedidos/${id}`, { variant: 'error', message: 'Não foi possível atualizar o pedido.' }));
   }
 

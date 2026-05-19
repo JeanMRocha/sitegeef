@@ -7,6 +7,7 @@ export type LgpdRegistro = {
   status: string;
   versao: string;
   escopo: Record<string, unknown>;
+  severity?: string | null;
   origem: string | null;
   canal: string | null;
   consentido_em: string | null;

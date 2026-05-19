@@ -8,6 +8,7 @@ import { getAppOrigin } from "@/lib/security";
 import { invalidateUserAreaCache } from "@/lib/areas/invalidate-user-area";
 import { recordLgpdEvents } from "@/lib/lgpd/persistence";
 import { LGPD_VERSIONS } from "@/lib/lgpd/constants";
+import { recordActionFailureEvent, recordSupabaseFailureEvent } from "@/lib/observability";
 
 async function getRequestHeadersOrigin() {
   const requestHeaders = await headers();
@@ -24,6 +25,14 @@ export async function signInWithEmail(email: string, password: string, nextUrl =
   });
 
   if (error) {
+    await recordActionFailureEvent({
+      source: "auth/signin",
+      action: "signInWithEmail",
+      message: "Falha ao autenticar usuário por email.",
+      error,
+      level: "warn",
+      payload: { emailDomain: normalizedEmail.split("@")[1] ?? null },
+    });
     return { error: error.message };
   }
 
@@ -61,6 +70,13 @@ export async function signUpWithEmail(
   });
 
   if (error) {
+    await recordActionFailureEvent({
+      source: "auth/signup",
+      action: "signUpWithEmail",
+      message: "Falha ao criar conta por email.",
+      error,
+      payload: { emailDomain: normalizedEmail.split("@")[1] ?? null },
+    });
     return { error: error.message };
   }
 
@@ -82,7 +98,15 @@ export async function signUpWithEmail(
       });
 
     if (usersError) {
-      console.error("Erro ao criar usuarios_sistema:", usersError);
+      await recordSupabaseFailureEvent({
+        source: "auth/signup",
+        operation: "insert usuarios_sistema",
+        table: "usuarios_sistema",
+        error: usersError,
+        fallback: "null",
+        level: "warn",
+        payload: { userId: data.user.id },
+      });
     }
 
     if (consentimentos?.termosUso || consentimentos?.politicaPrivacidade || consentimentos?.marketingEmail || consentimentos?.marketingWhatsApp) {
@@ -155,6 +179,12 @@ export async function signInWithGoogle(nextUrl = "/perfil") {
   });
 
   if (error) {
+    await recordActionFailureEvent({
+      source: "auth/google",
+      action: "signInWithGoogle",
+      message: "Falha ao iniciar login com Google.",
+      error,
+    });
     return { error: error.message };
   }
 
@@ -179,7 +209,12 @@ export async function signOut() {
     revalidatePath("/perfil", "layout");
     redirect("/");
   } catch (error) {
-    console.error("Logout error:", error);
+    await recordActionFailureEvent({
+      source: "auth/logout",
+      action: "signOut",
+      message: "Falha ao encerrar a sessão.",
+      error,
+    });
     redirect("/");
   }
 }
@@ -201,6 +236,12 @@ export async function updateProfile(formData: FormData) {
   });
 
   if (authError) {
+    await recordActionFailureEvent({
+      source: "auth/profile",
+      action: "updateProfile",
+      message: "Falha ao atualizar dados do perfil no provedor de autenticação.",
+      error: authError,
+    });
     throw new Error(authError.message);
   }
 
@@ -214,7 +255,15 @@ export async function updateProfile(formData: FormData) {
     .eq("id", user.id);
 
   if (profileError) {
-    console.error("Erro ao atualizar profiles:", profileError);
+    await recordSupabaseFailureEvent({
+      source: "auth/profile",
+      operation: "update profiles",
+      table: "profiles",
+      error: profileError,
+      fallback: "null",
+      level: "warn",
+      payload: { userId: user.id },
+    });
     // Don't throw - this is not critical if profiles table doesn't exist yet
   }
 
@@ -246,10 +295,15 @@ export async function uploadAvatar(formData: FormData) {
     });
 
   if (uploadError) {
-    console.error("Upload error:", {
-      message: uploadError.message,
-      status: (uploadError as any).status,
-      statusCode: (uploadError as any).statusCode,
+    await recordActionFailureEvent({
+      source: "auth/avatar",
+      action: "uploadAvatar",
+      message: "Falha no upload do avatar.",
+      error: uploadError,
+      payload: {
+        status: (uploadError as any).status,
+        statusCode: (uploadError as any).statusCode,
+      },
     });
     throw new Error(`Erro ao fazer upload: ${uploadError.message}`);
   }
@@ -266,6 +320,12 @@ export async function uploadAvatar(formData: FormData) {
   });
 
   if (authError) {
+    await recordActionFailureEvent({
+      source: "auth/avatar",
+      action: "uploadAvatar",
+      message: "Falha ao atualizar o avatar no provedor de autenticação.",
+      error: authError,
+    });
     throw new Error(authError.message);
   }
 
@@ -279,7 +339,15 @@ export async function uploadAvatar(formData: FormData) {
     .eq("id", user.id);
 
   if (profileError) {
-    console.error("Erro ao atualizar profiles:", profileError);
+    await recordSupabaseFailureEvent({
+      source: "auth/avatar",
+      operation: "update profiles avatar_url",
+      table: "profiles",
+      error: profileError,
+      fallback: "null",
+      level: "warn",
+      payload: { userId: user.id },
+    });
     // Don't throw - this is not critical if profiles table doesn't exist
   }
 
