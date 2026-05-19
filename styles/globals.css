@@ -1777,6 +1777,52 @@ img {
   line-height: 1.35;
 }
 
+.instituicao-contatos-layout {
+  display: grid;
+  gap: 1rem;
+}
+
+.instituicao-contatos-section {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: rgba(247, 239, 252, 0.55);
+}
+
+.instituicao-contatos-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.instituicao-contatos-head strong {
+  font-size: 1rem;
+}
+
+.instituicao-contatos-grid {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.instituicao-contatos-form {
+  padding: 0.9rem;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.36);
+  border: 1px solid rgba(225, 212, 238, 0.74);
+}
+
+:root.dark .instituicao-contatos-section {
+  background: rgba(34, 31, 29, 0.82);
+}
+
+:root.dark .instituicao-contatos-form {
+  background: rgba(25, 22, 20, 0.72);
+  border-color: rgba(229, 218, 206, 0.12);
+}
+
 @media (max-width: 960px) {
   .site-header {
     position: static;

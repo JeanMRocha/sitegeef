@@ -587,15 +587,18 @@ async function EditInstituicaoContent({ searchParams }: { searchParams: { tab?: 
           </form>
 
             {activeStep === 'contatos' && (
-              <div className="module-grid">
-                <div className="area-panel-item" style={{ gridColumn: '1 / -1' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
-                    <strong>Contatos</strong>
-                    <InfoHint label="Ajuda sobre contatos" title="Contatos oficiais da instituição. Um ou mais canais podem ser cadastrados aqui." />
+              <div className="instituicao-contatos-layout">
+                <section className="instituicao-contatos-section">
+                  <div className="instituicao-contatos-head">
+                    <div>
+                      <p className="area-subtitle" style={{ marginBottom: '0.35rem' }}>Visualização</p>
+                      <strong>Contatos cadastrados</strong>
+                    </div>
+                    <InfoHint label="Ajuda sobre contatos" title="Contatos oficiais já cadastrados. A edição acontece no bloco abaixo." />
                   </div>
 
                   {contatos.length > 0 ? (
-                    <div className="module-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}>
+                    <div className="module-grid instituicao-contatos-grid">
                       {contatos.map((contato: any) => (
                         <div key={contato.id} className="area-panel-item instituicao-contato-card">
                           <strong>{contato.tipo || 'Contato'}</strong>
@@ -617,16 +620,34 @@ async function EditInstituicaoContent({ searchParams }: { searchParams: { tab?: 
                         </div>
                       ))}
                     </div>
-                ) : (
+                  ) : (
                     <div className="area-empty">Nenhum contato registrado.</div>
                   )}
-                </div>
+                </section>
 
-                <form id="contatos-step-form" action={handleAddContato} style={{ gridColumn: '1 / -1' }}>
-                  <InstituicaoContatoFields pessoas={pessoas} tipos={tiposContato} />
-                </form>
+                <section className="instituicao-contatos-section">
+                  <div className="instituicao-contatos-head">
+                    <div>
+                      <p className="area-subtitle" style={{ marginBottom: '0.35rem' }}>Cadastro</p>
+                      <strong>Novo contato</strong>
+                    </div>
+                    <InfoHint label="Ajuda para cadastro" title="Use este bloco para adicionar um novo contato oficial da instituição." />
+                  </div>
 
-                <InstituicaoContatoTipoManager tipos={tiposContato} />
+                  <form id="contatos-step-form" action={handleAddContato} className="instituicao-contatos-form">
+                    <InstituicaoContatoFields pessoas={pessoas} tipos={tiposContato} />
+                  </form>
+                </section>
+
+                <section className="instituicao-contatos-section">
+                  <div className="instituicao-contatos-head">
+                    <div>
+                      <p className="area-subtitle" style={{ marginBottom: '0.35rem' }}>Opções</p>
+                      <strong>Tipos compartilhados</strong>
+                    </div>
+                  </div>
+                  <InstituicaoContatoTipoManager tipos={tiposContato} />
+                </section>
               </div>
             )}
 
