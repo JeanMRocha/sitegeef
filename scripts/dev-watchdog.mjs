@@ -60,7 +60,7 @@ async function startFreshDev(reason) {
   console.log(`[watchdog] starting dev server on ${url} (${reason})`);
   child = spawn(getNpmCommand(), ["run", "dev"], {
     stdio: "inherit",
-    shell: false,
+    shell: process.platform === "win32",
     env: process.env,
   });
 
