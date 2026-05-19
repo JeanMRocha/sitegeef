@@ -1,14 +1,21 @@
-import { createClient } from "@/lib/supabase/server";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { EnsureUserSystem } from "@/components/ensure-user-system";
 import { getCachedUserArea } from "@/lib/areas/user-area";
+import { getRequestLocale } from "@/lib/multilingual";
+import { createClient } from "@/lib/supabase/server";
 import { submitTitularRequest } from "./actions";
 
-export const metadata = {
-  title: "Minha Área",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+
+  return {
+    title: locale === "en" ? "My Area | GEEF" : "Minha Área",
+  };
+}
 
 async function MinhaAreaContent() {
+  const locale = await getRequestLocale();
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -22,14 +29,116 @@ async function MinhaAreaContent() {
   const today = new Date().toISOString().split("T")[0];
   const emprestimosVencidos = emprestimos.filter((e: any) => e.prazo_devolucao < today);
   const emprestimosAtivos = emprestimos.filter((e: any) => e.prazo_devolucao >= today);
+  const copy =
+    locale === "en"
+      ? {
+          eyebrow: "User area",
+          title: "My Area",
+          subtitle:
+            "Centralized access to personal data, library, books, schedules, volunteering and consents.",
+          summary: [
+            ["Active loans", "Library"],
+            ["Reservations", "Waiting list"],
+            ["Movements", "Bookshop"],
+            ["Schedules", "Appointments"],
+            ["Services", "Volunteering"],
+            ["LGPD", "Consents"],
+          ],
+          personalData: "Personal data",
+          privacy: "Privacy",
+          rights: "Access, correction, consent revocation and information on use.",
+          process: "Use the privacy page or contact the house through the official channel.",
+          policy: "Read privacy policy",
+          details: "More details",
+          download: "Export my data",
+          requestTitle: "Data subject request",
+          requestLead:
+            "If you want to review, correct or request revocation, send a short request here. The record goes to the responsible team.",
+          requestType: "Request type",
+          requestTypes: {
+            acesso: "Access to data",
+            correcao: "Correct data",
+            revogacao: "Consent revocation",
+            eliminacao: "Deletion when applicable",
+          },
+          detailsLabel: "Optional details",
+          detailsPlaceholder: "If you want, briefly explain your request.",
+          send: "Send request",
+          recent: "Recent requests",
+          lib: "Library",
+          overdue: "Overdue loans",
+          activeLoans: "Active loans",
+          dueIn: "Due in",
+          returnsIn: "Returns in",
+          queue: "Queue position",
+          noActive: "No active loan or reservation",
+          movements: "Bookshop",
+          schedules: "Schedules",
+          volunteering: "Volunteering",
+          consents: "LGPD consents",
+          consented: "Consented on",
+          noPersonalData: "No personal data available",
+          roleAdmin: "Administrator",
+          rolePublic: "Public user",
+        }
+      : {
+          eyebrow: "Área do usuário",
+          title: "Minha Área",
+          subtitle:
+            "Centralizada para consultar dados pessoais, biblioteca, livraria, escalas, voluntariado e consentimentos.",
+          summary: [
+            ["Empréstimos ativos", "Biblioteca"],
+            ["Reservas", "Fila de espera"],
+            ["Movimentos", "Livraria"],
+            ["Escalas", "Compromissos"],
+            ["Serviços", "Voluntariado"],
+            ["LGPD", "Consentimentos"],
+          ],
+          personalData: "Dados pessoais",
+          privacy: "Privacidade",
+          rights: "Acesso, correção, revogação de consentimento e informação sobre uso.",
+          process: "Use a página de privacidade ou fale com a casa pelo canal oficial.",
+          policy: "Ler política de privacidade",
+          details: "Mais detalhes",
+          download: "Exportar meus dados",
+          requestTitle: "Pedido do titular",
+          requestLead:
+            "Se quiser revisar, corrigir ou pedir revogação, envie um pedido curto por aqui. O registro vai para a equipe responsável.",
+          requestType: "Tipo do pedido",
+          requestTypes: {
+            acesso: "Acesso aos dados",
+            correcao: "Correção de dados",
+            revogacao: "Revogação de consentimento",
+            eliminacao: "Eliminação quando cabível",
+          },
+          detailsLabel: "Detalhe opcional",
+          detailsPlaceholder: "Se quiser, explique de forma breve o pedido.",
+          send: "Enviar pedido",
+          recent: "Pedidos recentes",
+          lib: "Biblioteca",
+          overdue: "Empréstimos vencidos",
+          activeLoans: "Empréstimos ativos",
+          dueIn: "Devolve em",
+          returnsIn: "Vence em",
+          queue: "Posição na fila",
+          noActive: "Nenhum empréstimo ou reserva ativo",
+          movements: "Livraria",
+          schedules: "Escalas",
+          volunteering: "Voluntariado",
+          consents: "Consentimentos LGPD",
+          consented: "Consentido em",
+          noPersonalData: "Nenhum dado pessoal disponível",
+          roleAdmin: "Administrador",
+          rolePublic: "Usuário público",
+        };
 
   const summaryCards = [
-    { label: "Empréstimos ativos", value: emprestimosAtivos.length, note: "Biblioteca" },
-    { label: "Reservas", value: reservas.length, note: "Fila de espera" },
-    { label: "Movimentos", value: movimentosLivraria.length, note: "Livraria" },
-    { label: "Escalas", value: escalas.length, note: "Compromissos" },
-    { label: "Serviços", value: voluntariados.length, note: "Voluntariado" },
-    { label: "LGPD", value: consentimentos.length, note: "Consentimentos" },
+    { label: copy.summary[0][0], value: emprestimosAtivos.length, note: copy.summary[0][1] },
+    { label: copy.summary[1][0], value: reservas.length, note: copy.summary[1][1] },
+    { label: copy.summary[2][0], value: movimentosLivraria.length, note: copy.summary[2][1] },
+    { label: copy.summary[3][0], value: escalas.length, note: copy.summary[3][1] },
+    { label: copy.summary[4][0], value: voluntariados.length, note: copy.summary[4][1] },
+    { label: copy.summary[5][0], value: consentimentos.length, note: copy.summary[5][1] },
   ];
 
   return (
@@ -38,12 +147,9 @@ async function MinhaAreaContent() {
       <section className="area-hero">
         <div className="area-hero-top">
           <div>
-            <p className="eyebrow">Área do usuário</p>
-            <h1 className="area-hero-title">Minha Área</h1>
-            <p className="area-subtitle">
-              Centralizada para consultar dados pessoais, biblioteca, livraria,
-              escalas, voluntariado e consentimentos.
-            </p>
+            <p className="eyebrow">{copy.eyebrow}</p>
+            <h1 className="area-hero-title">{copy.title}</h1>
+            <p className="area-subtitle">{copy.subtitle}</p>
           </div>
         </div>
 
@@ -63,11 +169,11 @@ async function MinhaAreaContent() {
 
       {pessoa && (
         <section className="area-section">
-          <h2 className="area-section-title">Dados pessoais</h2>
+          <h2 className="area-section-title">{copy.personalData}</h2>
           <div className="admin-card">
             <div className="stat-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))" }}>
               <div className="area-panel-item">
-                <strong>Nome</strong>
+                <strong>{locale === "en" ? "Name" : "Nome"}</strong>
                 <p>{pessoa.nome}</p>
               </div>
               <div className="area-panel-item">
@@ -76,23 +182,23 @@ async function MinhaAreaContent() {
               </div>
               <div className="area-panel-item">
                 <strong>CPF</strong>
-                <p>{pessoa.cpf || "Não informado"}</p>
+                <p>{pessoa.cpf || (locale === "en" ? "Not informed" : "Não informado")}</p>
               </div>
               <div className="area-panel-item">
-                <strong>Telefone</strong>
-                <p>{pessoa.telefone || "Não informado"}</p>
+                <strong>{locale === "en" ? "Phone" : "Telefone"}</strong>
+                <p>{pessoa.telefone || (locale === "en" ? "Not informed" : "Não informado")}</p>
               </div>
               <div className="area-panel-item">
-                <strong>Status</strong>
+                <strong>{locale === "en" ? "Status" : "Status"}</strong>
                 <p>{pessoa.status}</p>
               </div>
               <div className="area-panel-item">
-                <strong>Perfil</strong>
-                <p>{usuario?.perfil || siteRole || "Público"}</p>
+                <strong>{locale === "en" ? "Profile" : "Perfil"}</strong>
+                <p>{usuario?.perfil || siteRole || (locale === "en" ? "Public" : "Público")}</p>
               </div>
               <div className="area-panel-item">
-                <strong>Regra</strong>
-                <p>{hasAdminAccess ? "Administrador" : "Usuário público"}</p>
+                <strong>{locale === "en" ? "Role" : "Regra"}</strong>
+                <p>{hasAdminAccess ? copy.roleAdmin : copy.rolePublic}</p>
               </div>
             </div>
           </div>
@@ -100,27 +206,27 @@ async function MinhaAreaContent() {
       )}
 
       <section className="area-section">
-        <h2 className="area-section-title">Privacidade</h2>
+          <h2 className="area-section-title">{copy.privacy}</h2>
         <div className="admin-card">
           <div className="area-panel-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))" }}>
             <div className="area-panel-item">
-              <strong>O que você pode pedir</strong>
-              <p>Acesso, correção, revogação de consentimento e informação sobre uso.</p>
+              <strong>{locale === "en" ? "What you can request" : "O que você pode pedir"}</strong>
+              <p>{copy.rights}</p>
             </div>
             <div className="area-panel-item">
-              <strong>Como tratar</strong>
-              <p>Use a página de privacidade ou fale com a casa pelo canal oficial.</p>
+              <strong>{locale === "en" ? "How to proceed" : "Como tratar"}</strong>
+              <p>{copy.process}</p>
             </div>
             <div className="area-panel-item">
-              <strong>Onde ver</strong>
+              <strong>{locale === "en" ? "Where to read" : "Onde ver"}</strong>
               <p>
-                <a href="/privacidade">Ler política de privacidade</a> · <a href="/lgpd">Mais detalhes</a>
+                <a href="/privacidade">{copy.policy}</a> · <a href="/lgpd">{copy.details}</a>
               </p>
             </div>
             <div className="area-panel-item">
-              <strong>Baixar dados</strong>
+              <strong>{locale === "en" ? "Download data" : "Baixar dados"}</strong>
               <p>
-                <a href="/api/lgpd/export">Exportar meus dados</a>
+                <a href="/api/lgpd/export">{copy.download}</a>
               </p>
             </div>
           </div>
@@ -128,35 +234,35 @@ async function MinhaAreaContent() {
       </section>
 
       <section className="area-section">
-        <h2 className="area-section-title">Pedido do titular</h2>
+        <h2 className="area-section-title">{copy.requestTitle}</h2>
         <div className="admin-card">
           <p style={{ marginTop: 0, color: "var(--muted)", lineHeight: 1.6 }}>
-            Se quiser revisar, corrigir ou pedir revogação, envie um pedido curto por aqui. O registro vai para a equipe responsável.
+            {copy.requestLead}
           </p>
           <form action={submitTitularRequest} className="area-panel-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))" }}>
             <label className="profile-form-field">
-              <span>Tipo do pedido</span>
+              <span>{copy.requestType}</span>
               <select name="request_type" className="profile-form-input" defaultValue="revogacao">
-                <option value="acesso">Acesso aos dados</option>
-                <option value="correcao">Correção de dados</option>
-                <option value="revogacao">Revogação de consentimento</option>
-                <option value="eliminacao">Eliminação quando cabível</option>
+                <option value="acesso">{copy.requestTypes.acesso}</option>
+                <option value="correcao">{copy.requestTypes.correcao}</option>
+                <option value="revogacao">{copy.requestTypes.revogacao}</option>
+                <option value="eliminacao">{copy.requestTypes.eliminacao}</option>
               </select>
             </label>
 
             <label className="profile-form-field" style={{ gridColumn: "1 / -1" }}>
-              <span>Detalhe opcional</span>
+              <span>{copy.detailsLabel}</span>
               <textarea
                 name="details"
                 className="profile-form-input"
                 rows={4}
-                placeholder="Se quiser, explique de forma breve o pedido."
+                placeholder={copy.detailsPlaceholder}
               />
             </label>
 
             <div className="area-panel-item" style={{ alignSelf: "end" }}>
               <button type="submit" className="profile-form-btn profile-form-btn-primary">
-                Enviar pedido
+                {copy.send}
               </button>
             </div>
           </form>
@@ -165,26 +271,28 @@ async function MinhaAreaContent() {
 
       {pedidosTitular.length > 0 && (
         <section className="area-section">
-          <h2 className="area-section-title">Pedidos recentes</h2>
+          <h2 className="area-section-title">{copy.recent}</h2>
           <div className="admin-card">
             <div className="area-panel-grid">
               {pedidosTitular.map((pedido: any) => (
                 <div key={pedido.id} className="area-panel-item">
                   <strong>
                     {pedido.request_type === "acesso"
-                      ? "Acesso aos dados"
+                      ? copy.requestTypes.acesso
                       : pedido.request_type === "correcao"
-                        ? "Correção de dados"
+                        ? copy.requestTypes.correcao
                         : pedido.request_type === "revogacao"
-                          ? "Revogação"
-                          : "Eliminação"}
+                          ? copy.requestTypes.revogacao
+                          : copy.requestTypes.eliminacao}
                   </strong>
                   <p style={{ marginBottom: '0.25rem' }}>
                     {pedido.status}
-                    {pedido.resolvido_em ? ` · concluído em ${new Date(pedido.resolvido_em).toLocaleDateString("pt-BR")}` : ""}
+                    {pedido.resolvido_em
+                      ? ` · ${locale === "en" ? "completed on" : "concluído em"} ${new Date(pedido.resolvido_em).toLocaleDateString(locale === "en" ? "en-US" : "pt-BR")}`
+                      : ""}
                   </p>
                   <p style={{ color: "var(--muted)" }}>
-                    {new Date(pedido.created_at).toLocaleDateString("pt-BR")}
+                    {new Date(pedido.created_at).toLocaleDateString(locale === "en" ? "en-US" : "pt-BR")}
                   </p>
                 </div>
               ))}
@@ -195,16 +303,20 @@ async function MinhaAreaContent() {
 
       {usuario?.pode_biblioteca && (
         <section className="area-section">
-          <h2 className="area-section-title">Biblioteca</h2>
+          <h2 className="area-section-title">{copy.lib}</h2>
           <div className="admin-card">
             {emprestimosVencidos.length > 0 && (
               <div className="area-panel-item" style={{ marginBottom: "1rem", background: "rgba(239, 68, 68, 0.05)" }}>
-                <strong className="inline-status inline-status-danger">Empréstimos vencidos ({emprestimosVencidos.length})</strong>
+                <strong className="inline-status inline-status-danger">
+                  {locale === "en"
+                    ? `Overdue loans (${emprestimosVencidos.length})`
+                    : `Empréstimos vencidos (${emprestimosVencidos.length})`}
+                </strong>
                 <div className="area-panel-grid" style={{ marginTop: "0.85rem" }}>
                   {emprestimosVencidos.map((e: any) => (
                     <div key={e.id} className="area-panel-item">
                       <strong>{e.exemplares?.obra?.titulo}</strong>
-                      <p>Vence em {e.prazo_devolucao}</p>
+                      <p>{copy.returnsIn} {e.prazo_devolucao}</p>
                     </div>
                   ))}
                 </div>
@@ -213,11 +325,15 @@ async function MinhaAreaContent() {
 
             {emprestimosAtivos.length > 0 && (
               <div className="area-panel-grid" style={{ marginBottom: "1rem" }}>
-                <strong className="area-section-title" style={{ fontSize: "1rem" }}>Empréstimos ativos ({emprestimosAtivos.length})</strong>
+                <strong className="area-section-title" style={{ fontSize: "1rem" }}>
+                  {locale === "en"
+                    ? `Active loans (${emprestimosAtivos.length})`
+                    : `Empréstimos ativos (${emprestimosAtivos.length})`}
+                </strong>
                 {emprestimosAtivos.map((e: any) => (
                   <div key={e.id} className="area-panel-item">
                     <strong>{e.exemplares?.obra?.titulo}</strong>
-                    <p>Devolve em {e.prazo_devolucao}</p>
+                    <p>{copy.dueIn} {e.prazo_devolucao}</p>
                   </div>
                 ))}
               </div>
@@ -225,18 +341,20 @@ async function MinhaAreaContent() {
 
             {reservas.length > 0 && (
               <div className="area-panel-grid">
-                <strong className="area-section-title" style={{ fontSize: "1rem" }}>Reservas ({reservas.length})</strong>
+                <strong className="area-section-title" style={{ fontSize: "1rem" }}>
+                  {locale === "en" ? `Reservations (${reservas.length})` : `Reservas (${reservas.length})`}
+                </strong>
                 {reservas.map((r: any) => (
                   <div key={r.id} className="area-panel-item">
                     <strong>{r.obras?.titulo}</strong>
-                    <p>Posição na fila: {r.posicao_fila}</p>
+                    <p>{copy.queue}: {r.posicao_fila}</p>
                   </div>
                 ))}
               </div>
             )}
 
             {emprestimos.length === 0 && reservas.length === 0 && (
-              <div className="area-empty">Nenhum empréstimo ou reserva ativo</div>
+              <div className="area-empty">{copy.noActive}</div>
             )}
           </div>
         </section>
@@ -244,7 +362,7 @@ async function MinhaAreaContent() {
 
       {usuario?.pode_livraria && movimentosLivraria.length > 0 && (
         <section className="area-section">
-          <h2 className="area-section-title">Livraria</h2>
+          <h2 className="area-section-title">{copy.movements}</h2>
           <div className="admin-card">
             <div className="area-panel-grid">
               {movimentosLivraria.map((m: any) => (
@@ -262,7 +380,7 @@ async function MinhaAreaContent() {
 
       {usuario?.pode_escalas && escalas.length > 0 && (
         <section className="area-section">
-          <h2 className="area-section-title">Escalas</h2>
+          <h2 className="area-section-title">{copy.schedules}</h2>
           <div className="admin-card">
             <div className="area-panel-grid">
               {escalas.map((e: any) => (
@@ -278,7 +396,7 @@ async function MinhaAreaContent() {
 
       {voluntariados.length > 0 && (
         <section className="area-section">
-          <h2 className="area-section-title">Voluntariado</h2>
+          <h2 className="area-section-title">{copy.volunteering}</h2>
           <div className="admin-card">
             <div className="area-panel-grid">
               {voluntariados.map((v: any) => (
@@ -294,13 +412,15 @@ async function MinhaAreaContent() {
 
       {consentimentos.length > 0 && (
         <section className="area-section">
-          <h2 className="area-section-title">Consentimentos LGPD</h2>
+          <h2 className="area-section-title">{copy.consents}</h2>
           <div className="admin-card">
             <div className="area-panel-grid">
               {consentimentos.map((c: any) => (
                 <div key={c.id} className="area-panel-item">
                   <strong>{c.finalidade}</strong>
-                  <p>Consentido em {new Date(c.data_consentimento).toLocaleDateString("pt-BR")}</p>
+                  <p>
+                    {copy.consented} {new Date(c.data_consentimento).toLocaleDateString(locale === "en" ? "en-US" : "pt-BR")}
+                  </p>
                 </div>
               ))}
             </div>
