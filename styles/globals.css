@@ -2099,6 +2099,13 @@ img {
   font-family: var(--font-body);
 }
 
+:root.dark .google-signin-btn {
+  background: rgba(28, 25, 23, 0.98);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #f7f4ef;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+}
+
 .login-submit {
   min-width: 0;
 }
@@ -2108,6 +2115,12 @@ img {
   border-color: #4285F4;
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(66, 133, 244, 0.15);
+}
+
+:root.dark .google-signin-btn:hover:not(:disabled) {
+  background: rgba(40, 35, 33, 0.98);
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.28);
 }
 
 .google-signin-btn:focus {
@@ -2123,6 +2136,11 @@ img {
 .google-signin-btn svg {
   width: 20px;
   height: 20px;
+  flex-shrink: 0;
+}
+
+:root.dark .google-signin-btn span {
+  color: #f7f4ef;
 }
 
 .password-input-wrapper {
