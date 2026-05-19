@@ -5,6 +5,10 @@
   "scripts": {
     "dev": "next dev -p 3500",
     "dev:watchdog": "node scripts/dev-watchdog.mjs",
+    "autoreflex:serve": "node scripts/autoreflex-local.mjs",
+    "autoreflex:index": "node scripts/autoreflex-local.mjs index",
+    "autoreflex:health": "node scripts/autoreflex-local.mjs health",
+    "autoreflex:note": "node scripts/autoreflex-local.mjs note",
     "gate:server": "node scripts/wait-for-server-200.mjs",
     "agent:lint": "node scripts/agent-lint.mjs",
     "agent:map": "node scripts/generate-agent-map.mjs",

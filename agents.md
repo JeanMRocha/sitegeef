@@ -6,7 +6,7 @@ Documento que define a forma correta de trabalhar no projeto GEEF usando Claude 
 
 ## Autoreflex — Servidor local de skills
 
-O Autoreflex é um servidor HTTP em `http://127.0.0.1:8090` que indexa "skills" (unidades de conhecimento) sobre o projeto usando busca semântica.
+O Autoreflex agora é um serviço local do próprio projeto, em `http://127.0.0.1:8090`, com indexação semântica via Ollama e persistência leve em `.autoreflex/`.
 
 **Skills são respostas estruturadas para problemas reutilizáveis:**
 - Padrões de código (ex: como criar módulo admin)
@@ -203,13 +203,13 @@ node scripts/geef-skills.mjs index skills/nome-skill.md
 ## Condições de bloqueio
 
 ⛔ **PARAR IMEDIATAMENTE se:**
-- Curl para http://127.0.0.1:8090 falhar (Autoreflex não está rodando)
+- Curl para http://127.0.0.1:8090 falhar e o serviço local ainda não tiver sido subido com `npm run autoreflex:serve`
 - Autoreflex não responde em < 5s (pode estar sobrecarregado)
 - Sem confirmação do usuário, não execute ações subsequentes
 
 💬 **Informar o usuário:**
-- "Autoreflex não respondeu. Certifique-se de que está rodando."
-- Link com instruções: https://github.com/JeanMRocha/Autoreflex#installation
+- "Autoreflex local não respondeu. Suba com `npm run autoreflex:serve`."
+- Documentação local: `docs/AUTOREFLEX_LOCAL.md`
 
 ---
 

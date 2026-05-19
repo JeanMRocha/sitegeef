@@ -22,10 +22,11 @@ Guia técnico essencial para trabalhar com Claude Code no projeto GEEF ERP.
 
 ## Memória Operacional — Autoreflex
 
-O projeto usa **Autoreflex** como servidor de skills (memória persistente). Consulte `agents.md` para a ordem de decisão e endpoints.
+O projeto usa **Autoreflex local** como servidor de skills (memória persistente). Consulte `agents.md` e `docs/AUTOREFLEX_LOCAL.md` para a ordem de decisão, endpoints e fluxo com Ollama.
 
 **Quick start:**
 ```bash
+npm run autoreflex:serve
 npm run skills:search "padrão admin"
 npm run skills:index
 npm run skills:list
@@ -303,7 +304,7 @@ Usuário não tem permissão. Atribuir em Supabase Dashboard (usuarios_sistema).
 - RLS muito restritivo? Ajustar WHERE clause
 
 ### "Autoreflex not found"
-Instalar e rodar: `python install/install.py` no diretório do Autoreflex.
+Subir o serviço local: `npm run autoreflex:serve`.
 
 ---
 

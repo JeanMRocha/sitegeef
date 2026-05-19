@@ -73,6 +73,7 @@ async function api(endpoint, method, body = null) {
   } catch (error) {
     console.error('❌ Autoreflex não está respondendo.');
     console.error(`   URLs testadas: ${AUTOREFLEX_URLS.join(', ')}`);
+    console.error('   Inicie o serviço local com: npm run autoreflex:serve');
     console.error('   Se ele estiver em outra porta, defina AUTOREFLEX_URL ou AUTOREFLEX_PORT.');
     console.error(`   Erro: ${error.message}`);
     process.exit(1);
@@ -308,9 +309,8 @@ Exemplos:
     const running = await health();
     if (!running) {
       console.error('\n❌ Autoreflex não está respondendo.');
-      console.error('   Certifique-se de que está instalado e rodando:');
-      console.error('   $ cd Autoreflex');
-      console.error('   $ python install/install.py');
+      console.error('   Certifique-se de que o serviço local está rodando:');
+      console.error('   $ npm run autoreflex:serve');
       process.exit(1);
     }
     console.log();

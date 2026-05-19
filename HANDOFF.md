@@ -10,7 +10,8 @@
 6. `docs/ADMIN_REGRESSION_NOTES.md` quando a tarefa tocar admin, permissões, pessoas, governança, assets do Next ou SEO/fallback de layout
 7. `tests/admin-smoke.mjs` para validar rotas admin principais antes de abrir o browser
 8. `docs/ADMIN_MODULE_CHECKLIST.md` quando a tarefa for criar ou alterar qualquer módulo admin
-9. `skills/lgpd-governanca.md` quando a tarefa tocar dados pessoais, consentimento, retenção, logs, incidentes ou privacidade
+9. `docs/AUTOREFLEX_LOCAL.md` quando a tarefa tocar o servidor local de skills, Ollama ou memória persistente
+10. `skills/lgpd-governanca.md` quando a tarefa tocar dados pessoais, consentimento, retenção, logs, incidentes ou privacidade
 
 ## Regra de trabalho
 
@@ -72,6 +73,10 @@ Use esta ordem quando a tarefa envolver estrutura/admin, actions, banco ou segur
 
 Atalhos locais:
 
+- `npm run autoreflex:serve` para subir o servidor local de skills em `8090`
+- `npm run autoreflex:health` para checar a saúde do Autoreflex local
+- `npm run autoreflex:index` para reindexar skills, docs e notas locais
+- `npm run autoreflex:note -- "titulo" "texto"` para registrar um erro/aprendizado
 - `npm run skills:health`
 - `npm run skills:list`
 - `npm run skills:search "termo"`
@@ -79,7 +84,7 @@ Atalhos locais:
 - `npm run skills:index`
 - `npm run dev:watchdog` para subir o `next dev` com restart e health check automáticos
 
-Quando o Autoreflex voltar a responder, rodar primeiro:
+Quando o Autoreflex local voltar a responder, rodar primeiro:
 
 - `npm run skills:index`
 - `npm run skills:list`
@@ -167,6 +172,8 @@ Quando o Autoreflex voltar a responder, rodar primeiro:
   - O servidor local voltou a responder em `http://127.0.0.1:3500` depois do ajuste de porta ocupada, e a rota raiz respondeu `200` durante a validacao final.
   - O gate local `npm run gate:server` confirma `200` antes de devolver a aplicacao e o `npm run test:admin-smoke` passou nas 24 rotas admin principais depois da reorganizacao.
   - O `scripts/dev-watchdog.mjs` foi ajustado para Windows usar `shell: true` no `spawn`, corrigindo o `spawn EINVAL` e permitindo que o watchdog suba o `next dev` normalmente.
+  - O Autoreflex local foi implementado em `scripts/autoreflex-local.mjs`, sobe em `http://127.0.0.1:8090`, usa Ollama com fallback lexical e aceita notas de aprendizado em `.autoreflex/notes/`.
+  - O primeiro erro aprendido foi o `spawn EINVAL` do watchdog no Windows; ele já foi gravado e indexado no Autoreflex local para consulta futura.
   - O header publico foi separado em uma casca server-rendered (`components/site-header.tsx`) e uma camada client para menus/usuario (`components/site-header-actions.tsx`) para o menu principal nao sumir quando a hidratacao falhar depois do logout.
   - Se o Fast Refresh reclamar de arquivo ausente nesse fluxo, reiniciar o `next dev` limpo antes de investigar a UI.
 - `Supabase remoto`
