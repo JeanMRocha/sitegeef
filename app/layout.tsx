@@ -27,7 +27,9 @@ export const metadata: Metadata = {
   title: "GEEF",
   description: "Site público do Grupo Espírita Elias Francis.",
   icons: {
-    icon: "/favicon.ico",
+    icon: "/favicon.png",
+    shortcut: "/favicon.png",
+    apple: "/favicon.png",
   },
 };
 
