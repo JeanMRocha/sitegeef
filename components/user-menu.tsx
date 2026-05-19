@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { getMultilingualCopy, type Locale } from "@/lib/multilingual/client";
+import { LanguageSwitcher } from "@/components/multilingual/language-switcher";
 import { useTheme } from "@/hooks/useTheme";
 import { signOut } from "@/app/login/actions";
 
@@ -91,6 +92,15 @@ export function UserMenu({
               >
                 <span>🛡️</span> {copy.header.privacy}
               </Link>
+              <div className="site-header-user-language">
+                <span className="site-header-user-language-label">
+                  {copy.header.language}
+                </span>
+                <LanguageSwitcher
+                  locale={locale}
+                  onLocaleChange={() => setMenuOpen(false)}
+                />
+              </div>
               <button
                 onClick={toggleTheme}
                 className="site-header-user-item site-header-user-setting"
@@ -174,6 +184,16 @@ export function UserMenu({
             >
               <span>📋</span> {copy.header.myArea}
             </Link>
+
+            <div className="site-header-user-language">
+              <span className="site-header-user-language-label">
+                {copy.header.language}
+              </span>
+              <LanguageSwitcher
+                locale={locale}
+                onLocaleChange={() => setMenuOpen(false)}
+              />
+            </div>
 
             <button
               onClick={toggleTheme}

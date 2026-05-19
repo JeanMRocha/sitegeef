@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { getInstitutionalNavItems, getMultilingualCopy, type Locale } from "@/lib/multilingual/client";
-import { LanguageSwitcher } from "@/components/multilingual/language-switcher";
 import { UserMenu } from "@/components/user-menu";
 
 type SiteHeaderActionsProps = {
@@ -69,8 +68,6 @@ export function SiteHeaderActions({
           </div>
         )}
       </div>
-
-      <LanguageSwitcher locale={locale} />
 
       <UserMenu
         locale={locale}

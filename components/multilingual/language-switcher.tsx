@@ -5,9 +5,10 @@ import { getMultilingualCopy, MULTILINGUAL_COOKIE_NAME, type Locale } from "@/li
 
 type LanguageSwitcherProps = {
   locale: Locale;
+  onLocaleChange?: () => void;
 };
 
-export function LanguageSwitcher({ locale }: Readonly<LanguageSwitcherProps>) {
+export function LanguageSwitcher({ locale, onLocaleChange }: Readonly<LanguageSwitcherProps>) {
   const router = useRouter();
   const copy = getMultilingualCopy(locale);
 
@@ -24,6 +25,7 @@ export function LanguageSwitcher({ locale }: Readonly<LanguageSwitcherProps>) {
       // Cookie already persists the selected locale.
     }
 
+    onLocaleChange?.();
     router.refresh();
   };
 
