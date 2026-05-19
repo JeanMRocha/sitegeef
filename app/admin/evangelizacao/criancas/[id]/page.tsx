@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getCriancaById, updateCrianca, deleteCrianca, getTurmas } from '../../actions';
 import { Suspense } from 'react';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
+import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 
 export const metadata = {
   title: 'Criança - Admin GEEF',
@@ -71,6 +72,7 @@ async function CriancaContent({ id }: { id: string }) {
 
       <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto' }}>
         <form action={(formData) => handleSubmit(id, formData)}>
+          <LgpdFormNotice text="Usamos estes dados para acompanhar a turma e manter as autorizações registradas." />
           <div className="admin-form-group">
             <label>Turma *</label>
             <select

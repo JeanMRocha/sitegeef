@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getEmprestimoById, updateEmprestimo, devolverEmprestimo } from '../actions';
 import { Suspense } from 'react';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
+import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 
 export const metadata = {
   title: 'Detalhes do Empréstimo - Admin GEEF',
@@ -140,6 +141,7 @@ async function EmprestimoContent({ id }: { id: string }) {
         <h2 style={{ margin: '0 0 1.5rem', fontSize: '1.1rem', color: 'var(--text)' }}>Editar Empréstimo</h2>
 
         <form action={(formData) => handleUpdate(id, formData)}>
+          <LgpdFormNotice text="Usamos estes dados para controlar a devolução e o histórico do empréstimo." />
           <div className="admin-form-group">
             <label>Novo Prazo de Devolução</label>
             <input

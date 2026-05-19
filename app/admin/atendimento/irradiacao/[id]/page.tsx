@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getIrradiacaoById, updateIrradiacao, toggleIrradiacaoStatus, getPessoasDisponiveis } from '../../actions';
 import { Suspense } from 'react';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
+import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 
 export const metadata = {
   title: 'Irradiação - Admin GEEF',
@@ -69,6 +70,7 @@ async function Content({ id }: { id: string }) {
 
       <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto' }}>
         <form action={(formData) => handleSubmit(id, formData)}>
+          <LgpdFormNotice text="Usamos estes dados para registrar a solicitação e manter o fluxo de acompanhamento." />
           <div className="admin-form-group">
             <label>Nome da Irradiação *</label>
             <input

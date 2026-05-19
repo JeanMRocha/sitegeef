@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getUsuarioById, updateUsuario, revokeLogin } from '../actions';
 import { Suspense } from 'react';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
+import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 
 export const metadata = {
   title: 'Editar Usuário - Admin GEEF',
@@ -131,6 +132,7 @@ async function EditUsuarioContent({ id }: { id: string }) {
             <p>Defina o perfil e os acessos granulares.</p>
           </div>
           <div className="table-surface">
+            <LgpdFormNotice text="Usamos estes dados para manter o acesso e os registros de permissão da conta." />
             <div className="module-grid">
               <label className="profile-form-field">
                 <span>Perfil do sistema</span>

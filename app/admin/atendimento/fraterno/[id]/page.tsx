@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getAtendimentoFraternoById, updateAtendimentoFraterno, deleteAtendimentoFraterno, getPessoasDisponiveis } from '../../actions';
 import { Suspense } from 'react';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
+import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 
 export const metadata = {
   title: 'Atendimento Fraterno - Admin GEEF',
@@ -80,6 +81,7 @@ async function AtendimentoContent({ id }: { id: string }) {
       {/* Form */}
       <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto' }}>
         <form action={(formData) => handleSubmit(id, formData)}>
+          <LgpdFormNotice text="Usamos estes dados para manter o registro do atendimento e o encaminhamento seguro." />
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
             <div className="admin-form-group">
               <label>Pessoa Atendida *</label>

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getGrupoById, updateGrupo, toggleGrupoStatus, getPessoasDisponiveis } from '../actions';
 import { Suspense } from 'react';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
+import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 
 export const metadata = {
   title: 'Grupo - Admin GEEF',
@@ -68,6 +69,7 @@ async function GrupoContent({ id }: { id: string }) {
 
       <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto' }}>
         <form action={(formData) => handleSubmit(id, formData)}>
+          <LgpdFormNotice text="Usamos estes dados para manter o grupo, a coordenação e a participação registradas." />
           <div className="admin-form-group">
             <label>Nome do Grupo *</label>
             <input

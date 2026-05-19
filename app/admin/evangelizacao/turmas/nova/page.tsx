@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createTurma } from '../../actions';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
+import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 
 export const metadata = {
   title: 'Nova Turma - Admin GEEF',
@@ -39,6 +40,7 @@ export default function NovaTurmaPage() {
 
       <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto' }}>
         <form action={handleSubmit}>
+          <LgpdFormNotice text="Usamos estes dados para organizar a turma e o cuidado com as crianças." />
           <div className="admin-form-group">
             <label>Nome da Turma *</label>
             <input

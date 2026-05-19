@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getPessoaById, updatePessoa, addVinculo, removeVinculo, togglePessoaStatus } from '../actions';
 import { Suspense } from 'react';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
+import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 
 export const metadata = {
   title: 'Editar Pessoa - Admin GEEF',
@@ -145,6 +146,7 @@ async function EditPessoaContent({ id }: { id: string }) {
             <p>Dados principais da pessoa cadastrada.</p>
           </div>
           <div className="table-surface">
+            <LgpdFormNotice text="Usamos estes dados para atualizar o cadastro e manter o vínculo institucional." />
             <div className="module-grid">
               <label className="profile-form-field">
                 <span>Nome completo *</span>

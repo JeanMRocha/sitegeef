@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getReservaById, cancelarReserva, confirmarReserva, getExemplaresdisponiveisParaReserva } from '../actions';
 import { Suspense } from 'react';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
+import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 
 export const metadata = {
   title: 'Reserva - Admin GEEF',
@@ -104,6 +105,7 @@ async function ReservaContent({ id }: { id: string }) {
           </p>
 
           <form action={(formData) => handleConfirm(id, formData)}>
+            <LgpdFormNotice text="Usamos estes dados para confirmar a reserva e manter a fila de espera." />
             <div className="admin-form-group">
               <label>Exemplar Disponível *</label>
               <select

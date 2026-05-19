@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getFamiliaById, updateFamilia, getAtendimentos, createAtendimento, getPessoasDisponiveis } from '../../actions';
 import { Suspense } from 'react';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
+import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 
 export const metadata = {
   title: 'Família - Admin GEEF',
@@ -65,6 +66,7 @@ async function FamiliaContent({ id }: { id: string }) {
       <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto', marginBottom: '2rem' }}>
         <h2 style={{ margin: '0 0 1.5rem', fontSize: '1rem', fontWeight: 600 }}>Editar Família</h2>
         <form action={(formData) => handleSubmitFamilia(id, formData)}>
+          <LgpdFormNotice text="Usamos estes dados para manter o cadastro e o histórico de atendimento da família." />
           <div className="admin-form-group">
             <label>Endereço</label>
             <input
@@ -146,6 +148,9 @@ async function FamiliaContent({ id }: { id: string }) {
         }}>
           <h3 style={{ margin: '0 0 1rem', fontSize: '0.95rem', fontWeight: 600 }}>Registrar Atendimento</h3>
           <form action={(formData) => handleRegistrarAtendimento(id, formData)} style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem' }}>
+            <div style={{ gridColumn: '1 / -1' }}>
+              <LgpdFormNotice text="Usamos os dados do atendimento para registrar o acompanhamento da família." />
+            </div>
             <div>
               <label style={{ fontSize: '0.85rem', display: 'block', marginBottom: '0.25rem' }}>Pessoa Atendida</label>
               <select

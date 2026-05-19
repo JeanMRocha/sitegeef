@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createEscala } from '../actions';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
+import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 
 export const metadata = {
   title: 'Nova Escala - Admin GEEF',
@@ -55,6 +56,7 @@ export default function NovaEscalaPage() {
       {/* Form */}
       <div className="admin-card" style={{ maxWidth: '600px', margin: '0 auto' }}>
         <form action={handleSubmit}>
+          <LgpdFormNotice text="Usamos os dados para organizar a escala e a distribuição de pessoas nos serviços." />
           <p style={{ margin: '0 0 1.5rem', fontSize: '0.95rem', color: 'var(--muted)' }}>
             Selecione o mês e ano para gerar uma nova escala. As reuniões de quinta-feira serão criadas automaticamente.
           </p>

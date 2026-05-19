@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getTurmaById, updateTurma, getCriancas, getEvangelizadores, addEvangelizador, removeEvangelizador, getPessoasDisponiveis, getAulas } from '../../actions';
 import { Suspense } from 'react';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
+import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 
 export const metadata = {
   title: 'Turma - Admin GEEF',
@@ -102,6 +103,7 @@ async function TurmaContent({ id }: { id: string }) {
       <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto', marginBottom: '2rem' }}>
         <h2 style={{ margin: '0 0 1.5rem', fontSize: '1.1rem' }}>Editar Turma</h2>
         <form action={(formData) => handleSubmit(id, formData)}>
+          <LgpdFormNotice text="Usamos estes dados para manter a turma e os vínculos com responsáveis e evangelizadores." />
           <div className="admin-form-group">
             <label>Nome *</label>
             <input
@@ -187,6 +189,7 @@ async function TurmaContent({ id }: { id: string }) {
 
         <div style={{ marginBottom: '1.5rem' }}>
           <form action={(formData) => handleAddEvangelizador(id, formData)}>
+            <LgpdFormNotice text="O vínculo do evangelizador é registrado apenas para a organização da turma." />
             <div style={{ display: 'flex', gap: '0.5rem' }}>
               <select
                 name="pessoa_id"
