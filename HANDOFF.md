@@ -143,6 +143,7 @@ Quando o Autoreflex local voltar a responder, rodar primeiro:
   - O menu institucional agora expõe "Privacidade" para acesso rápido sem destacar demais o tema na primeira dobra.
   - O hero da home agora ocupa a largura total do card e exibe o lema "Fora da Caridade não há salvação" abaixo do título, como elemento fixo da página.
   - O menu de perfil foi compactado: idioma e tema ficaram lado a lado, em botões só com ícone e tooltip, para reduzir áreas vazias no dropdown.
+  - A varredura de contraste do modo escuro passou a cobrir controles recorrentes do site publico: link do header, abas do login, tags, botoes secundarios globais e o upload do perfil, para evitar texto apagado em superficies escuras.
   - A área admin de documentos ganhou uma nota curta de revisão antes de salvar ou revogar consentimento.
   - As telas de `termos` e `voluntariado` seguiram o mesmo padrão discreto: notas curtas, labels reduzidos e guards para registros ausentes.
   - As mutações do módulo agora registram eventos em `ops_events` e a nova tela `/admin/documentos/auditoria` mostra o rastro técnico de LGPD sem expor conteúdo sensível.

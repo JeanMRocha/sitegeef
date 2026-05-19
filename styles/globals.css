@@ -2310,6 +2310,44 @@ img {
   color: var(--text);
 }
 
+:root.dark .profile-compact-form .profile-form-btn-secondary {
+  background: rgba(52, 45, 41, 0.98);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #f7f4ef;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+}
+
+:root.dark .profile-compact-form .profile-form-btn-secondary:hover:not(:disabled) {
+  background: rgba(64, 56, 51, 0.98);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #fffaf4;
+}
+
+:root.dark .profile-compact-form .profile-form-btn-secondary:focus-visible {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.24);
+  box-shadow: 0 0 0 3px rgba(138, 0, 90, 0.18);
+}
+
+:root.dark .profile-compact-form .profile-form-input[type="file"] {
+  color: var(--text);
+  background: rgba(50, 45, 42, 0.96);
+}
+
+:root.dark .profile-compact-form .profile-form-input[type="file"]::file-selector-button {
+  background: rgba(64, 56, 51, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f7f4ef;
+  border-radius: 999px;
+  padding: 0.55rem 0.9rem;
+  margin-right: 0.75rem;
+  cursor: pointer;
+}
+
+:root.dark .profile-compact-form .profile-form-input[type="file"]::file-selector-button:hover {
+  background: rgba(74, 66, 60, 0.98);
+}
+
 .profile-compact-info {
   padding: 1rem 1.1rem;
   border-radius: 18px;
@@ -2802,10 +2840,67 @@ img {
   background: rgba(239, 68, 68, 0.15);
 }
 
+:root.dark .site-nav a {
+  color: #e8dfd3;
+}
+
+:root.dark .site-nav a:hover,
+:root.dark .site-nav a:focus-visible {
+  color: #fff7ef;
+  background: rgba(255, 255, 255, 0.06);
+}
+
 :root.dark .button-secondary {
   background: rgba(34, 31, 29, 0.96);
   border-color: var(--line);
-  color: var(--text);
+  color: #f7f4ef;
+}
+
+:root.dark .button-secondary:hover,
+:root.dark .button-secondary:focus-visible {
+  background: rgba(44, 39, 37, 0.98);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #fffaf4;
+}
+
+:root.dark .login-tab {
+  color: #c9beb2;
+}
+
+:root.dark .login-tab.active {
+  color: #fff7ef;
+  border-bottom-color: var(--accent);
+}
+
+:root.dark .tag {
+  background: rgba(99, 213, 31, 0.16);
+  color: #c8f0ab;
+}
+
+:root.dark .profile-form-btn-secondary {
+  background: rgba(52, 45, 42, 0.98);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #f7f4ef;
+}
+
+:root.dark .profile-form-btn-secondary:hover:not(:disabled) {
+  background: rgba(64, 56, 51, 0.98);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: #fffaf4;
+}
+
+:root.dark .profile-form-btn-secondary:focus-visible {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.24);
+  box-shadow: 0 0 0 3px rgba(138, 0, 90, 0.18);
+}
+
+:root.dark .profile-form-btn-secondary:disabled {
+  color: rgba(247, 244, 239, 0.62);
+}
+
+:root.dark .profile-form-btn-primary {
+  color: #fffaf4;
 }
 
 :root.dark .content-hero-top,
