@@ -136,6 +136,8 @@ Quando o Autoreflex voltar a responder, rodar primeiro:
   - A base pública ganhou uma central discreta de privacidade em `/privacidade` e `/lgpd`, com links também na home, no login, no rodape e em Minha Área.
   - O aviso de login ficou curto por padrão; a orientacao detalhada ficou concentrada na pagina de privacidade.
   - O menu institucional agora expõe "Privacidade" para acesso rápido sem destacar demais o tema na primeira dobra.
+  - O hero da home agora ocupa a largura total do card e exibe o lema "Fora da Caridade não há salvação" abaixo do título, como elemento fixo da página.
+  - O menu de perfil foi compactado: idioma e tema ficaram lado a lado, em botões só com ícone e tooltip, para reduzir áreas vazias no dropdown.
   - A área admin de documentos ganhou uma nota curta de revisão antes de salvar ou revogar consentimento.
   - As telas de `termos` e `voluntariado` seguiram o mesmo padrão discreto: notas curtas, labels reduzidos e guards para registros ausentes.
   - As mutações do módulo agora registram eventos em `ops_events` e a nova tela `/admin/documentos/auditoria` mostra o rastro técnico de LGPD sem expor conteúdo sensível.
@@ -164,6 +166,7 @@ Quando o Autoreflex voltar a responder, rodar primeiro:
   - Os detalhes editaveis mais sensiveis tambem receberam o aviso curto: pessoa, usuario, crianca, emprestimo, reserva, familia, fraterno, irradiacao, recepcao, evangelizacao e juventude.
   - O servidor local voltou a responder em `http://127.0.0.1:3500` depois do ajuste de porta ocupada, e a rota raiz respondeu `200` durante a validacao final.
   - O gate local `npm run gate:server` confirma `200` antes de devolver a aplicacao e o `npm run test:admin-smoke` passou nas 24 rotas admin principais depois da reorganizacao.
+  - O `scripts/dev-watchdog.mjs` foi ajustado para Windows usar `shell: true` no `spawn`, corrigindo o `spawn EINVAL` e permitindo que o watchdog suba o `next dev` normalmente.
   - O header publico foi separado em uma casca server-rendered (`components/site-header.tsx`) e uma camada client para menus/usuario (`components/site-header-actions.tsx`) para o menu principal nao sumir quando a hidratacao falhar depois do logout.
   - Se o Fast Refresh reclamar de arquivo ausente nesse fluxo, reiniciar o `next dev` limpo antes de investigar a UI.
 - `Supabase remoto`
