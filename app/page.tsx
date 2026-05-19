@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
@@ -14,6 +15,16 @@ import { normalizeInternalPath } from "@/lib/security";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+  const copy = getMultilingualCopy(locale);
+
+  return {
+    title: `GEEF | ${copy.home.title}`,
+    description: copy.home.lead,
+  };
+}
 
 type HomePageProps = {
   searchParams?: Promise<{

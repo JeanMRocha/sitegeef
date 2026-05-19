@@ -3,10 +3,15 @@ import Link from "next/link";
 import { LoginForm } from "@/components/auth/login-form";
 import { getMultilingualCopy, getRequestLocale } from "@/lib/multilingual";
 
-export const metadata: Metadata = {
-  title: "Login - GEEF",
-  description: "Entre ou crie sua conta no site do GEEF",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale();
+  const copy = getMultilingualCopy(locale);
+
+  return {
+    title: `GEEF | ${copy.login.title}`,
+    description: copy.login.lead,
+  };
+}
 
 type LoginPageProps = {
   searchParams?: Promise<{
