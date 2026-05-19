@@ -1,15 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import {
-  ArrowIcon,
-  CalendarIcon,
-  GroupIcon,
-  HeartIcon,
-  MailIcon,
-  ShieldIcon,
-} from "@/components/site-icons";
-import { publicHref, site } from "@/lib/site-data";
+import { CalendarIcon, GroupIcon, HeartIcon, MailIcon, ShieldIcon } from "@/components/site-icons";
+import { site } from "@/lib/site-data";
 import { getMultilingualCopy, getRequestLocale } from "@/lib/multilingual";
 import { normalizeInternalPath } from "@/lib/security";
 
@@ -66,21 +59,6 @@ export default async function Home({ searchParams }: HomePageProps) {
             <span>{copy.home.motto.text}</span>
             <em>{copy.home.motto.attribution}</em>
           </p>
-          <p className="hero-lead">{copy.home.lead}</p>
-          <ul className="hero-highlights" aria-label={locale === "en" ? "Page highlights" : "Destaques da página"}>
-            {copy.home.highlights.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-          <div className="hero-actions">
-            <Link href={publicHref("/contato")} className="button button-primary">
-              {copy.home.primaryCta}
-              <ArrowIcon className="button-icon" />
-            </Link>
-            <Link href={publicHref("/agenda")} className="button button-secondary">
-              {copy.home.secondaryCta}
-            </Link>
-          </div>
         </div>
       </section>
 
