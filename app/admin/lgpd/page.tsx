@@ -74,7 +74,7 @@ export default async function AdminLgpdPage() {
             </p>
           </div>
           <div className="admin-actions">
-            <Link href="/admin/observability" className="admin-btn admin-btn-secondary">
+            <Link href="/admin/observability?tab=lgpd" className="admin-btn admin-btn-secondary">
               Observabilidade
             </Link>
             <Link href="/admin/documentos/pedidos" className="admin-btn admin-btn-secondary">

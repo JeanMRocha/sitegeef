@@ -155,6 +155,7 @@ Quando o Autoreflex voltar a responder, rodar primeiro:
   - Os fluxos com dados mais sensiveis ganharam aviso curto de privacidade antes do formulario, com destaque para menores, atendimento fraterno, irradiacao, upload de logo e lancamentos financeiros.
   - A tela propria do modulo LGPD agora vive em `/admin/lgpd`, consolidando registros, fila operacional, consentimentos, notificacoes e eventos tecnicos num unico painel.
   - A central de observabilidade agora vive em `/admin/observability`; `/admin/erros` ficou como alias legado para nao quebrar links antigos.
+  - A central ganhou abas por contexto (`geral`, `erros`, `supabase`, `lgpd`, `fila`) para separar triagem técnica, falhas do adapter, trilha LGPD e pedidos do titular sem duplicar pagina.
   - Os formulários de documentos e vinculacoes mais sensiveis passaram a exibir o aviso curto do modulo antes do envio, incluindo modelo de documento, consentimento LGPD, termo assinado, servico voluntario e edicao da instituicao.
   - A cobertura de avisos curtos foi ampliada para pessoa, usuario, emprestimo, reserva, recepcao, evangelho no lar, familia APSE, juventude, turmas de estudo, assembleias e grupos mediunicos.
   - Os detalhes editaveis mais sensiveis tambem receberam o aviso curto: pessoa, usuario, crianca, emprestimo, reserva, familia, fraterno, irradiacao, recepcao, evangelizacao e juventude.
