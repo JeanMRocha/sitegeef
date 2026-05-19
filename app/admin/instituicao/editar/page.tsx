@@ -429,10 +429,6 @@ async function EditInstituicaoContent({ searchParams }: { searchParams: { tab?: 
 
       <section className="area-section">
         <div className="admin-card admin-step-card">
-          <LgpdFormNotice
-            title="Cadastro institucional"
-            text="Os dados da instituição e dos contatos oficiais são usados para funcionamento, contato e transparência."
-          />
           <form id="instituicao-step-form" action={saveInstituicaoStep}>
             <input type="hidden" name="step" value={activeStep} />
             {activeStep !== 'identificacao' ? (
@@ -601,7 +597,7 @@ async function EditInstituicaoContent({ searchParams }: { searchParams: { tab?: 
                   {contatos.length > 0 ? (
                     <div className="module-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}>
                       {contatos.map((contato: any) => (
-                        <div key={contato.id} className="area-panel-item">
+                        <div key={contato.id} className="area-panel-item instituicao-contato-card">
                           <strong>{contato.tipo || 'Contato'}</strong>
                           <p style={{ marginTop: '0.5rem' }}>
                             {contato.telefone && <>☎️ {contato.telefone}<br /></>}
@@ -722,6 +718,12 @@ async function EditInstituicaoContent({ searchParams }: { searchParams: { tab?: 
                 </form>
               </div>
             )}
+
+          <LgpdFormNotice
+            title="Cadastro institucional"
+            text="Os dados da instituição e dos contatos oficiais são usados para funcionamento, contato e transparência."
+            className="lgpd-form-notice-footer"
+          />
         </div>
       </section>
     </div>

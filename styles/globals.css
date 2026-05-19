@@ -1658,6 +1658,11 @@ img {
   margin-bottom: 0.85rem;
 }
 
+.lgpd-form-notice-footer {
+  margin-top: 1rem;
+  margin-bottom: 0;
+}
+
 .lgpd-upload-notice {
   margin-bottom: 0.85rem;
 }
@@ -1755,6 +1760,21 @@ img {
 .lgpd-consent-stack {
   display: grid;
   gap: 0.55rem;
+}
+
+.instituicao-contato-card {
+  align-content: start;
+}
+
+.instituicao-contato-card p {
+  margin-top: 0.5rem;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.5;
+}
+
+.instituicao-contato-card strong {
+  line-height: 1.35;
 }
 
 @media (max-width: 960px) {

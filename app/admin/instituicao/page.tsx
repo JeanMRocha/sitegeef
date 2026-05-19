@@ -146,7 +146,7 @@ async function InstituicaoContent() {
           ) : (
             <div className="module-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))" }}>
               {contatos.map((contato: any) => (
-                <div key={contato.id} className="area-panel-item">
+                <div key={contato.id} className="area-panel-item instituicao-contato-card">
                   <strong>{contato.tipo || "Contato"}</strong>
                   <p>
                     {contato.telefone && <>☎️ {contato.telefone}<br /></>}

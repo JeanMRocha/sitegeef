@@ -7,12 +7,14 @@ type LgpdFormNoticeProps = {
   locale?: Locale;
   text?: string;
   title?: string;
+  className?: string;
 };
 
 export function LgpdFormNotice({
   locale = "pt",
   title,
   text,
+  className = "",
 }: Readonly<LgpdFormNoticeProps>) {
   const copy = getMultilingualCopy(locale);
   return (
@@ -23,7 +25,7 @@ export function LgpdFormNotice({
       policyLabel={copy.formNotice.policyLabel}
       contactHref="/lgpd"
       contactLabel={copy.formNotice.contactLabel}
-      className="lgpd-form-notice"
+      className={`lgpd-form-notice ${className}`.trim()}
     />
   );
 }
