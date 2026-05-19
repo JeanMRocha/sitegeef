@@ -1,6 +1,8 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
+import { recordLgpdEvents } from '@/lib/lgpd/persistence';
+import { LGPD_VERSIONS } from '@/lib/lgpd/constants';
 
 // Turmas
 export async function getTurmas() {
@@ -123,6 +125,8 @@ export async function createCrianca(formData: {
   turma_id: string;
   restricoes?: string;
   autorizacoes?: string;
+  consentimento_responsavel?: boolean;
+  consentimento_imagem?: boolean;
 }) {
   const supabase = await createClient();
 
@@ -133,6 +137,41 @@ export async function createCrianca(formData: {
     .single();
 
   if (error) return null;
+
+  await recordLgpdEvents(
+    [
+      formData.consentimento_responsavel
+        ? {
+            categoria: 'crianca',
+            acao: 'consentimento_responsavel',
+            status: 'aceito',
+            versao: LGPD_VERSIONS.privacy,
+            origem: 'admin/evangelizacao/criancas',
+            canal: 'web',
+            pessoaId: formData.pessoa_id,
+            escopo: {
+              responsavel_id: formData.responsavel_id,
+              turma_id: formData.turma_id,
+            },
+          }
+        : null,
+      formData.consentimento_imagem
+        ? {
+            categoria: 'crianca',
+            acao: 'autorizacao_imagem',
+            status: 'aceito',
+            versao: LGPD_VERSIONS.privacy,
+            origem: 'admin/evangelizacao/criancas',
+            canal: 'web',
+            pessoaId: formData.pessoa_id,
+            escopo: {
+              responsavel_id: formData.responsavel_id,
+              autorizacao: 'imagem_voz',
+            },
+          }
+        : null,
+    ].filter(Boolean) as Parameters<typeof recordLgpdEvents>[0]
+  );
 
   return data;
 }

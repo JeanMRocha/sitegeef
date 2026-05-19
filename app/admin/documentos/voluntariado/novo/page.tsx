@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createServico, getPessoasDisponiveis, getDepartamentosDisponiveis } from '../../actions';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
+import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 
 export const metadata = {
   title: 'Novo Serviço Voluntário - Admin GEEF',
@@ -51,6 +52,10 @@ export default async function NovoServicoPage() {
 
       {/* Form */}
       <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto' }}>
+        <LgpdFormNotice
+          title="Serviço voluntário"
+          text="Use só o vínculo e o período necessários para gestão interna e comprovação."
+        />
         <form action={handleSubmit}>
           <div className="admin-form-group">
             <label>Voluntário *</label>

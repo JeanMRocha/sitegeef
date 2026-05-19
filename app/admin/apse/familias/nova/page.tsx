@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createFamilia, getPessoasDisponiveis } from '../../actions';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
+import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 
 export const metadata = {
   title: 'Nova Família - Admin GEEF',
@@ -40,6 +41,7 @@ export default async function NovaFamiliaPage() {
 
       <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto' }}>
         <form action={handleSubmit}>
+          <LgpdFormNotice text="Usamos estes dados para registrar a família e acompanhar o atendimento APSE." />
           <div className="admin-form-group">
             <label>Responsável *</label>
             <select

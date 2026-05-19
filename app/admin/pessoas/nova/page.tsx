@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { createPessoa, getPessoaById, removeVinculo, addVinculo, updatePessoa } from '../actions';
 import { type tipo_vinculo } from '@/lib/supabase/types';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
+import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 
 export const metadata = {
   title: 'Nova Pessoa - Admin GEEF',
@@ -304,6 +305,7 @@ async function NovaPessoaContent({ searchParams }: { searchParams: { id?: string
 
       <section className="area-section">
         <div className="admin-card admin-step-card">
+          <LgpdFormNotice text="Usamos os dados desta ficha para manter o cadastro e o atendimento institucional atualizados." />
           <form id="pessoa-step-form" action={savePessoaStep}>
             <input type="hidden" name="step" value={activeStep} />
             {pessoaId ? <input type="hidden" name="pessoa_id" value={pessoaId} /> : null}

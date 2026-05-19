@@ -73,6 +73,7 @@ export const navItems: NavItem[] = [
 
   // Institutional group (in "Mais" dropdown, after divider)
   { href: "/lgpd", label: "Privacidade", group: "institucional" },
+  { href: "/cookies", label: "Cookies", group: "institucional" },
   { href: "/institucional", label: "Credibilidade e Filiações", group: "institucional" },
   { href: "/doacoes", label: "Doações", group: "institucional" },
   { href: "/contato", label: "Contato", group: "institucional" },
@@ -371,6 +372,47 @@ export const contentPages: Record<string, ContentPage> = {
           "E-mail: contatogeef@gmail.com",
           "Telefone: (22) 99725-1807",
           "Endereço: Rua Gwyer de Azevedo, 35, Centro, Santa Maria Madalena-RJ",
+        ],
+      },
+    ],
+  },
+  cookies: {
+    title: "Cookies",
+    summary: "Preferências de cookies, categorias e escolhas do visitante.",
+    intro:
+      "Aqui explicamos quais cookies são necessários para o funcionamento do site e quais dependem de escolha ativa do visitante.",
+    ctaLabel: "Gerenciar preferências",
+    ctaHref: publicHref("/cookies"),
+    sections: [
+      {
+        heading: "Categorias",
+        text: "Cookies essenciais permanecem ativos para navegação, login, segurança e acesso às áreas restritas. Os demais dependem de consentimento.",
+        bullets: [
+          "Essenciais: sessão, segurança e preferências básicas.",
+          "Marketing: comunicações e campanhas.",
+          "Analytics: medição não essencial.",
+          "Rastreamento: remarketing e atribuição de campanhas.",
+        ],
+      },
+      {
+        heading: "Como controlar",
+        text: "No primeiro acesso, o visitante pode aceitar todos, rejeitar os não essenciais ou escolher categoria por categoria.",
+        bullets: [
+          "Aceitar todos.",
+          "Rejeitar não essenciais.",
+          "Gerenciar preferências a qualquer momento.",
+        ],
+      },
+      {
+        heading: "Atualizações",
+        text: "Se novas finalidades forem adicionadas, a política e o banner serão atualizados antes do uso.",
+      },
+      {
+        heading: "Contato",
+        text: "Dúvidas sobre cookies e privacidade podem ser encaminhadas pelos canais oficiais da casa.",
+        bullets: [
+          "E-mail: contatogeef@gmail.com",
+          "Telefone: (22) 99725-1807",
         ],
       },
     ],

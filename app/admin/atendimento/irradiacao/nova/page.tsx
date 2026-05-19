@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createIrradiacao, getPessoasDisponiveis } from '../../actions';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
+import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 
 export const metadata = {
   title: 'Nova Irradiação - Admin GEEF',
@@ -40,6 +41,10 @@ async function NovaPage() {
       </div>
 
       <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto' }}>
+        <LgpdFormNotice
+          title="Irradiação"
+          text="Usamos os dados apenas para registrar a solicitação e manter o sigilo da equipe responsável."
+        />
         <form action={handleSubmit}>
           <div className="admin-form-group">
             <label>Solicitante *</label>

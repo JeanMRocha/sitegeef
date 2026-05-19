@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createCrianca, getPessoasDisponiveis, getTurmas } from '../../actions';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
+import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 
 export const metadata = {
   title: 'Nova Criança - Admin GEEF',
@@ -17,6 +18,8 @@ async function handleSubmit(formData: FormData) {
       turma_id: formData.get('turma_id') as string,
       restricoes: (formData.get('restricoes') as string) || undefined,
       autorizacoes: (formData.get('autorizacoes') as string) || undefined,
+      consentimento_responsavel: formData.get('consentimento_responsavel') === 'on',
+      consentimento_imagem: formData.get('consentimento_imagem') === 'on',
     });
 
     redirect(buildFlashNoticeUrl(`/admin/evangelizacao/criancas/${crianca.id}`, { variant: 'success', message: 'Criança criada.' }));
@@ -41,6 +44,10 @@ async function NovaPage() {
       </div>
 
       <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto' }}>
+        <LgpdFormNotice
+          title="Dados de menores"
+          text="Usamos os dados da criança e do responsável apenas para cadastro, segurança e acompanhamento das atividades."
+        />
         <form action={handleSubmit}>
           <div className="admin-form-group">
             <label>Criança *</label>
@@ -146,6 +153,17 @@ async function NovaPage() {
                 resize: 'vertical',
               }}
             />
+          </div>
+
+          <div className="lgpd-consent-stack" style={{ marginTop: '1rem' }}>
+            <label className="lgpd-consent-check">
+              <input type="checkbox" name="consentimento_responsavel" required />
+              <span>Autorizo o cadastro da criança pelo responsável legal.</span>
+            </label>
+            <label className="lgpd-consent-check">
+              <input type="checkbox" name="consentimento_imagem" required />
+              <span>Autorizo o uso de imagem/voz quando houver registro interno ou divulgação autorizada.</span>
+            </label>
           </div>
 
           <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>

@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createEmprestimo, getPessoasDisponiveis, getExemplaresdisponveisParaEmprestimo } from '../actions';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
+import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 
 export const metadata = {
   title: 'Novo Empréstimo - Admin GEEF',
@@ -48,6 +49,7 @@ export default async function NovoEmprestimoPage() {
       {/* Form */}
       <div className="admin-card" style={{ maxWidth: '600px', margin: '0 auto' }}>
         <form action={handleSubmit}>
+          <LgpdFormNotice text="Usamos os dados para registrar o empréstimo e manter o controle de devolução." />
           <div className="admin-form-group">
             <label>Pessoa *</label>
             <select

@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createModelo } from '../actions';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
+import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 
 export const metadata = {
   title: 'Novo Modelo de Documento - Admin GEEF',
@@ -48,6 +49,10 @@ export default function NovoModeloPage() {
 
       {/* Form */}
       <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto' }}>
+        <LgpdFormNotice
+          title="Modelo de documento"
+          text="Use este cadastro apenas para documentos realmente necessários e com finalidade clara."
+        />
         <form action={handleSubmit}>
           <div className="admin-form-group">
             <label>Tipo de Documento *</label>

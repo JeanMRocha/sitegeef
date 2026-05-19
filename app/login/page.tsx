@@ -27,7 +27,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             <p className="eyebrow">GEEF</p>
             <h1>Acesso à conta</h1>
             <p className="login-modal-lead">
-              Entre para continuar no ecossistema GEEF com a sua área pessoal.
+              Entre para continuar no ecossistema GEEF com a sua área pessoal. Registramos eventos de segurança e acesso conforme a política.
             </p>
           </div>
 
@@ -41,7 +41,8 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         <div className="login-footer">
           <p>
             Ao continuar, você concorda com nossa{" "}
-            <a href="/privacidade">política de privacidade</a>.
+            <a href="/privacidade">política de privacidade</a> e{" "}
+            <a href="/cookies">política de cookies</a>.
           </p>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { site } from "@/lib/site-data";
 import { SiteHeader } from "@/components/site-header";
+import { LgpdCookieBanner } from "@/components/lgpd/lgpd-cookie-banner";
 import type { User } from "@supabase/supabase-js";
 
 type SiteShellProps = {
@@ -31,6 +32,7 @@ export function SiteShell({ user, children }: Readonly<SiteShellProps>) {
         hasAdminAccess={hasAdminAccess}
       />
 
+      <LgpdCookieBanner />
       {children}
 
       <footer className="site-footer">
@@ -48,6 +50,10 @@ export function SiteShell({ user, children }: Readonly<SiteShellProps>) {
             <span className="site-footer-separator" aria-hidden="true">·</span>
             <Link href="/privacidade" className="footer-link">
               Privacidade
+            </Link>
+            <span className="site-footer-separator" aria-hidden="true">·</span>
+            <Link href="/cookies" className="footer-link">
+              Cookies
             </Link>
             <span className="site-footer-separator" aria-hidden="true">·</span>
             <Link href="/institucional" className="footer-link">

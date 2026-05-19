@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getPessoasSemLogin, grantLogin } from '../actions';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
+import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 
 export const metadata = {
   title: 'Novo Usuário - Admin GEEF',
@@ -102,6 +103,7 @@ export default async function NovoUsuarioPage() {
             </div>
           ) : (
             <form action={handleSubmit}>
+              <LgpdFormNotice text="Usamos estes dados para criar o acesso e registrar as permissões da conta." />
               <div className="area-section-title">
                 <h2>Pessoa</h2>
                 <p>Selecione quem receberá o login.</p>

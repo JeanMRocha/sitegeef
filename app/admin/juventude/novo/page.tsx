@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createGrupo, getPessoasDisponiveis } from '../actions';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
+import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 
 export const metadata = {
   title: 'Novo Grupo - Admin GEEF',
@@ -39,6 +40,7 @@ async function NovoPage() {
 
       <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto' }}>
         <form action={handleSubmit}>
+          <LgpdFormNotice text="Usamos os dados para registrar o grupo e manter a coordenação atualizada." />
           <div className="admin-form-group">
             <label>Nome do Grupo *</label>
             <input

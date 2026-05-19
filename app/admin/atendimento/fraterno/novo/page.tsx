@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createAtendimentoFraterno, getPessoasDisponiveis } from '../../actions';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
+import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 
 export const metadata = {
   title: 'Novo Atendimento Fraterno - Admin GEEF',
@@ -48,6 +49,10 @@ async function NovoAtendimentoPage() {
 
       {/* Form */}
       <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto' }}>
+        <LgpdFormNotice
+          title="Atendimento fraterno"
+          text="Os dados informados serão usados para acolhimento, encaminhamento e registro seguro do atendimento."
+        />
         <form action={handleSubmit}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
             <div className="admin-form-group">

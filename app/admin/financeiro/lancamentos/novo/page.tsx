@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { createMovimento, getPlanoContas, getCentrosCusto } from '../../actions';
 import { getPessoas } from '../../../pessoas/actions';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
+import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 
 export const metadata = {
   title: 'Novo Lançamento - Admin GEEF',
@@ -52,6 +53,10 @@ async function NovoLancamentoPage() {
 
       <section className="area-section">
         <div className="table-surface" style={{ maxWidth: '760px', margin: '0 auto' }}>
+          <LgpdFormNotice
+            title="Lançamento financeiro"
+            text="Os dados enviados ao checkout interno e à cobrança serão usados só para o registro financeiro e comprovação."
+          />
           <form action={handleSubmit}>
             <div className="module-grid">
               <label className="profile-form-field">

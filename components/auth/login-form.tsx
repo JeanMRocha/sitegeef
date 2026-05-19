@@ -7,6 +7,7 @@ import {
   signUpWithEmail,
   signInWithGoogle,
 } from "@/app/login/actions";
+import { LgpdFormNotice } from "@/components/lgpd/lgpd-form-notice";
 
 type LoginFormProps = {
   nextUrl?: string;
@@ -20,6 +21,10 @@ export function LoginForm({ nextUrl = "/perfil" }: LoginFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [nomeCompleto, setNomeCompleto] = useState("");
+  const [termosUso, setTermosUso] = useState(false);
+  const [politicaPrivacidade, setPoliticaPrivacidade] = useState(false);
+  const [marketingEmail, setMarketingEmail] = useState(false);
+  const [marketingWhatsApp, setMarketingWhatsApp] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -40,7 +45,16 @@ export function LoginForm({ nextUrl = "/perfil" }: LoginFormProps) {
           setError("Nome completo é obrigatório");
           return;
         }
-        const result = await signUpWithEmail(email, password, nomeCompleto);
+        if (!termosUso || !politicaPrivacidade) {
+          setError("Marque os termos e a ciência da privacidade para continuar.");
+          return;
+        }
+        const result = await signUpWithEmail(email, password, nomeCompleto, {
+          termosUso,
+          politicaPrivacidade,
+          marketingEmail,
+          marketingWhatsApp,
+        });
         if (result?.error) {
           setError(result.error);
         } else {
@@ -48,6 +62,10 @@ export function LoginForm({ nextUrl = "/perfil" }: LoginFormProps) {
           setEmail("");
           setPassword("");
           setNomeCompleto("");
+          setTermosUso(false);
+          setPoliticaPrivacidade(false);
+          setMarketingEmail(false);
+          setMarketingWhatsApp(false);
           alert("Cadastro realizado! Verifique seu email para confirmar.");
           setIsLogin(true);
         }
@@ -72,6 +90,10 @@ export function LoginForm({ nextUrl = "/perfil" }: LoginFormProps) {
 
   return (
     <div className="login-form-container">
+      <LgpdFormNotice
+        text="Usamos seus dados para acesso, confirmação de conta e registros de segurança como IP e tentativas de login."
+      />
+
       <div className="login-tabs">
         <button
           className={`login-tab ${isLogin ? "active" : ""}`}
@@ -124,6 +146,47 @@ export function LoginForm({ nextUrl = "/perfil" }: LoginFormProps) {
               onChange={(e) => setNomeCompleto(e.target.value)}
               disabled={loading}
             />
+          </div>
+        )}
+
+        {!isLogin && (
+          <div className="lgpd-consent-stack">
+            <label className="lgpd-consent-check">
+              <input
+                type="checkbox"
+                checked={termosUso}
+                onChange={(event) => setTermosUso(event.target.checked)}
+                disabled={loading}
+              />
+              <span>Li e aceito os Termos de Uso.</span>
+            </label>
+            <label className="lgpd-consent-check">
+              <input
+                type="checkbox"
+                checked={politicaPrivacidade}
+                onChange={(event) => setPoliticaPrivacidade(event.target.checked)}
+                disabled={loading}
+              />
+              <span>Declaro ciência da Política de Privacidade.</span>
+            </label>
+            <label className="lgpd-consent-check">
+              <input
+                type="checkbox"
+                checked={marketingEmail}
+                onChange={(event) => setMarketingEmail(event.target.checked)}
+                disabled={loading}
+              />
+              <span>Quero receber comunicações por e-mail.</span>
+            </label>
+            <label className="lgpd-consent-check">
+              <input
+                type="checkbox"
+                checked={marketingWhatsApp}
+                onChange={(event) => setMarketingWhatsApp(event.target.checked)}
+                disabled={loading}
+              />
+              <span>Quero receber comunicações por WhatsApp.</span>
+            </label>
           </div>
         )}
 

@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { uploadLogoAction } from '@/app/admin/instituicao/actions';
+import { LgpdNotice } from '@/components/lgpd/lgpd-notice';
 
 interface LogoUploadProps {
   currentLogo?: string;
@@ -72,6 +73,16 @@ export function LogoUpload({ currentLogo, onLogoChange }: LogoUploadProps) {
 
   return (
     <div className="logo-upload-container">
+      <LgpdNotice
+        title="Upload de imagem"
+        text="A imagem enviada será usada apenas no cadastro da instituição e ficará disponível para edição administrativa."
+        policyHref="/privacidade"
+        policyLabel="Ler política"
+        contactHref="/lgpd"
+        contactLabel="Canal LGPD"
+        className="lgpd-upload-notice"
+      />
+
       <style>{`
         .logo-upload-container {
           display: flex;

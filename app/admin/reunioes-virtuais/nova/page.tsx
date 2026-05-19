@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createReuniao, getPessoasDisponiveis } from '../actions';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
+import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 
 export const metadata = {
   title: 'Nova Reunião Virtual - Admin GEEF',
@@ -42,6 +43,7 @@ export default async function NovaReuniao() {
 
       <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto' }}>
         <form action={handleSubmit}>
+          <LgpdFormNotice text="Usamos os dados para organizar a reunião e o acesso dos participantes." />
           <div className="admin-form-group">
             <label>Título *</label>
             <input

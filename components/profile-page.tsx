@@ -2,6 +2,7 @@ import { unstable_noStore as noStore } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { updateProfile, uploadAvatar } from "@/app/login/actions";
+import { LgpdFormNotice } from "@/components/lgpd/lgpd-form-notice";
 
 export async function ProfilePageView() {
   noStore();
@@ -45,6 +46,8 @@ export async function ProfilePageView() {
         </header>
 
         <div className="profile-compact-forms">
+          <LgpdFormNotice text="Usamos seus dados para atualizar seu cadastro e manter a área do usuário segura." />
+
           <form action={updateProfile} className="profile-compact-form">
             <div className="profile-form-field">
               <label htmlFor="nome_completo">Nome Completo</label>

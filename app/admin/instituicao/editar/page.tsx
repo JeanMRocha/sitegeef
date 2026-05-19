@@ -20,6 +20,7 @@ import {
 import { DescritivoField } from '@/components/admin/instituicao-descritivo-fields';
 import { InstituicaoContatoFields, InstituicaoContatoTipoManager } from '@/components/admin/instituicao-contatos-fields';
 import { LogoUploadForm } from '@/components/admin/logo-upload-form';
+import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 import { contentPages, site } from '@/lib/site-data';
 
 export const metadata = {
@@ -428,6 +429,10 @@ async function EditInstituicaoContent({ searchParams }: { searchParams: { tab?: 
 
       <section className="area-section">
         <div className="admin-card admin-step-card">
+          <LgpdFormNotice
+            title="Cadastro institucional"
+            text="Os dados da instituição e dos contatos oficiais são usados para funcionamento, contato e transparência."
+          />
           <form id="instituicao-step-form" action={saveInstituicaoStep}>
             <input type="hidden" name="step" value={activeStep} />
             {activeStep !== 'identificacao' ? (

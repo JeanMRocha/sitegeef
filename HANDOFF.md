@@ -147,6 +147,13 @@ Quando o Autoreflex voltar a responder, rodar primeiro:
   - A limpeza LGPD agora tem agendamento no GitHub Actions em `.github/workflows/lgpd-retention.yml`, com execução diária e suporte a `LGPD_CLEANUP_SECRET` quando configurado.
   - A fila de notificações pendentes também passou a ter agendamento no GitHub Actions em `.github/workflows/notifications-dispatch.yml`, reforçando a entrega fora da interface sem duplicar o envio quando a notificação já saiu no primeiro disparo.
   - Os avisos curtos na UI continuam intencionais e transitórios; eles não são persistidos como conteúdo operacional.
+  - O assunto LGPD virou um modulo proprio, com persistencia tecnica central em `public.lgpd_registros`, banner global de cookies em `components/lgpd/lgpd-cookie-banner.tsx`, avisos curtos reutilizaveis em `components/lgpd/lgpd-notice.tsx` e `components/lgpd/lgpd-form-notice.tsx`, e pagina publica adicional em `/cookies`.
+  - O cadastro de usuario agora exige Termos de Uso e ciencia da Politica de Privacidade no servidor, e grava as versoes aceitas em `lgpd_registros`.
+  - O banner de cookies grava a preferencia na primeira visita, permite aceitar tudo, rejeitar os nao essenciais ou ajustar categorias, e envia o registro para a API `POST /api/lgpd/registros`.
+  - Os fluxos com dados mais sensiveis ganharam aviso curto de privacidade antes do formulario, com destaque para menores, atendimento fraterno, irradiacao, upload de logo e lancamentos financeiros.
+  - A tela propria do modulo agora vive em `/admin/lgpd`, consolidando registros LGPD, fila operacional, consentimentos, notificacoes e eventos tecnicos num unico painel.
+  - Os formulários de documentos e vinculacoes mais sensiveis passaram a exibir o aviso curto do modulo antes do envio, incluindo modelo de documento, consentimento LGPD, termo assinado, servico voluntario e edicao da instituicao.
+  - A cobertura de avisos curtos foi ampliada para pessoa, usuario, emprestimo, reserva, recepcao, evangelho no lar, familia APSE, juventude, turmas de estudo, assembleias e grupos mediunicos.
   - O header publico foi separado em uma casca server-rendered (`components/site-header.tsx`) e uma camada client para menus/usuario (`components/site-header-actions.tsx`) para o menu principal nao sumir quando a hidratacao falhar depois do logout.
   - Se o Fast Refresh reclamar de arquivo ausente nesse fluxo, reiniciar o `next dev` limpo antes de investigar a UI.
 - `Supabase remoto`

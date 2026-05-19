@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createEvangelhoNoLar, getPessoasDisponiveis } from '../../actions';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
+import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 
 export const metadata = {
   title: 'Novo Evangelho no Lar - Admin GEEF',
@@ -43,6 +44,7 @@ async function NovoPage() {
 
       <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto' }}>
         <form action={handleSubmit}>
+          <LgpdFormNotice text="Usamos estes dados para organizar a atividade e manter o histórico do atendimento." />
           <div className="admin-form-group">
             <label>Pessoa *</label>
             <select

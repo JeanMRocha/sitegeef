@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createReserva, getPessoasDisponiveis, getObrasDisponiveis } from '../actions';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
+import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 
 export const metadata = {
   title: 'Nova Reserva - Admin GEEF',
@@ -41,6 +42,7 @@ export default async function NovaReservaPage() {
       {/* Form */}
       <div className="admin-card" style={{ maxWidth: '600px', margin: '0 auto' }}>
         <form action={handleSubmit}>
+          <LgpdFormNotice text="Usamos os dados para registrar a reserva e organizar a fila de espera." />
           <div className="admin-form-group">
             <label>Pessoa *</label>
             <select

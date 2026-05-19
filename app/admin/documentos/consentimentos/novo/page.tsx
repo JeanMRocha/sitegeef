@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createConsentimento, getPessoasDisponiveis } from '../../actions';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
+import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 
 export const metadata = {
   title: 'Novo Consentimento LGPD - Admin GEEF',
@@ -70,6 +71,10 @@ export default async function NovoConsentimentoPage() {
 
       {/* Form */}
       <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto' }}>
+        <LgpdFormNotice
+          title="Consentimento LGPD"
+          text="A finalidade e a base legal precisam estar claras antes de registrar qualquer consentimento."
+        />
         <form action={handleSubmit}>
           <div className="admin-form-group">
             <label>Pessoa *</label>

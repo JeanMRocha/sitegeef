@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createAssembleia } from '../../actions';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
+import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 
 export const metadata = {
   title: 'Nova Assembleia - Admin GEEF',
@@ -37,6 +38,7 @@ export default function NovaAssembleiaPage() {
 
       <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto' }}>
         <form action={handleSubmit}>
+          <LgpdFormNotice text="Usamos os dados para registrar a reunião e manter o histórico de governança." />
           <div className="admin-form-group">
             <label>Tipo *</label>
             <select

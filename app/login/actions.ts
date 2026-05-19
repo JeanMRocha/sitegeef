@@ -6,6 +6,8 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getAppOrigin } from "@/lib/security";
 import { invalidateUserAreaCache } from "@/lib/areas/invalidate-user-area";
+import { recordLgpdEvents } from "@/lib/lgpd/persistence";
+import { LGPD_VERSIONS } from "@/lib/lgpd/constants";
 
 async function getRequestHeadersOrigin() {
   const requestHeaders = await headers();
@@ -29,10 +31,24 @@ export async function signInWithEmail(email: string, password: string, nextUrl =
   redirect(nextUrl);
 }
 
-export async function signUpWithEmail(email: string, password: string, nomeCompleto: string) {
+export async function signUpWithEmail(
+  email: string,
+  password: string,
+  nomeCompleto: string,
+  consentimentos?: {
+    termosUso: boolean;
+    politicaPrivacidade: boolean;
+    marketingEmail?: boolean;
+    marketingWhatsApp?: boolean;
+  }
+) {
   const supabase = await createClient();
   const normalizedEmail = email.trim().toLowerCase();
   const normalizedName = nomeCompleto.trim().slice(0, 120);
+
+  if (!consentimentos?.termosUso || !consentimentos?.politicaPrivacidade) {
+    return { error: "É necessário aceitar os Termos de Uso e a Política de Privacidade." };
+  }
 
   const { data, error } = await supabase.auth.signUp({
     email: normalizedEmail,
@@ -67,6 +83,61 @@ export async function signUpWithEmail(email: string, password: string, nomeCompl
 
     if (usersError) {
       console.error("Erro ao criar usuarios_sistema:", usersError);
+    }
+
+    if (consentimentos?.termosUso || consentimentos?.politicaPrivacidade || consentimentos?.marketingEmail || consentimentos?.marketingWhatsApp) {
+      await recordLgpdEvents(
+        [
+          consentimentos?.termosUso
+            ? {
+                categoria: "termos_uso",
+                acao: "aceitar_termos",
+                status: "aceito",
+                versao: LGPD_VERSIONS.terms,
+                origem: "auth/signup",
+                canal: "web",
+                userId: data.user.id,
+                escopo: { signup: true },
+              }
+            : null,
+          consentimentos?.politicaPrivacidade
+            ? {
+                categoria: "privacidade",
+                acao: "ciencia_privacidade",
+                status: "ciencia",
+                versao: LGPD_VERSIONS.privacy,
+                origem: "auth/signup",
+                canal: "web",
+                userId: data.user.id,
+                escopo: { signup: true },
+              }
+            : null,
+          consentimentos?.marketingEmail
+            ? {
+                categoria: "marketing",
+                acao: "opt_in_email",
+                status: "aceito",
+                versao: LGPD_VERSIONS.privacy,
+                origem: "auth/signup",
+                canal: "web",
+                userId: data.user.id,
+                escopo: { channel: "email" },
+              }
+            : null,
+          consentimentos?.marketingWhatsApp
+            ? {
+                categoria: "whatsapp",
+                acao: "opt_in_whatsapp",
+                status: "aceito",
+                versao: LGPD_VERSIONS.privacy,
+                origem: "auth/signup",
+                canal: "web",
+                userId: data.user.id,
+                escopo: { channel: "whatsapp" },
+              }
+            : null,
+        ].filter(Boolean) as Parameters<typeof recordLgpdEvents>[0]
+      );
     }
   }
 
