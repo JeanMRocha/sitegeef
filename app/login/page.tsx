@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LoginForm } from "@/components/auth/login-form";
+import { getMultilingualCopy, getRequestLocale } from "@/lib/multilingual";
 
 export const metadata: Metadata = {
   title: "Login - GEEF",
@@ -15,6 +16,8 @@ type LoginPageProps = {
 };
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
+  const locale = await getRequestLocale();
+  const copy = getMultilingualCopy(locale);
   const resolvedSearchParams = await searchParams;
   const isPopup = resolvedSearchParams?.popup === "1";
   const nextUrl = resolvedSearchParams?.next || "/perfil";
@@ -25,25 +28,19 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         <div className="login-modal-head">
           <div>
             <p className="eyebrow">GEEF</p>
-            <h1>Acesso à conta</h1>
-            <p className="login-modal-lead">
-              Entre para continuar no ecossistema GEEF com a sua área pessoal. Registramos eventos de segurança e acesso conforme a política.
-            </p>
+            <h1>{copy.login.title}</h1>
+            <p className="login-modal-lead">{copy.login.lead}</p>
           </div>
 
-          <Link href="/" className="login-close-link" aria-label="Fechar login">
+          <Link href="/" className="login-close-link" aria-label={locale === "en" ? "Close login" : "Fechar login"}>
             ×
           </Link>
         </div>
 
-        <LoginForm nextUrl={nextUrl} />
+        <LoginForm locale={locale} nextUrl={nextUrl} />
 
         <div className="login-footer">
-          <p>
-            Ao continuar, você concorda com nossa{" "}
-            <a href="/privacidade">política de privacidade</a> e{" "}
-            <a href="/cookies">política de cookies</a>.
-          </p>
+          <p>{copy.login.footer}</p>
         </div>
       </div>
     </main>

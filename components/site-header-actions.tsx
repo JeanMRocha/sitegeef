@@ -2,10 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { navItems } from "@/lib/site-data";
+import { getInstitutionalNavItems, getMultilingualCopy, type Locale } from "@/lib/multilingual/client";
+import { LanguageSwitcher } from "@/components/multilingual/language-switcher";
 import { UserMenu } from "@/components/user-menu";
 
 type SiteHeaderActionsProps = {
+  locale: Locale;
   userEmail: string | null;
   nomeCompleto: string | null;
   avatarUrl: string | null;
@@ -13,6 +15,7 @@ type SiteHeaderActionsProps = {
 };
 
 export function SiteHeaderActions({
+  locale,
   userEmail,
   nomeCompleto,
   avatarUrl,
@@ -20,6 +23,7 @@ export function SiteHeaderActions({
 }: SiteHeaderActionsProps) {
   const [moreOpen, setMoreOpen] = useState(false);
   const moreRef = useRef<HTMLDivElement>(null);
+  const copy = getMultilingualCopy(locale);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -34,7 +38,7 @@ export function SiteHeaderActions({
     }
   }, [moreOpen]);
 
-  const institutionalLinks = navItems.filter((item) => item.group === "institucional");
+  const institutionalLinks = getInstitutionalNavItems(locale);
 
   return (
     <div className="site-header-right">
@@ -42,10 +46,10 @@ export function SiteHeaderActions({
         <button
           onClick={() => setMoreOpen(!moreOpen)}
           className="site-nav-more-btn"
-          aria-label="Mais opções institucionais"
+          aria-label={copy.header.more}
           aria-expanded={moreOpen}
         >
-          Institucional <span className="site-nav-more-arrow">▼</span>
+          {copy.header.institutional} <span className="site-nav-more-arrow">▼</span>
         </button>
 
         {moreOpen && (
@@ -66,7 +70,10 @@ export function SiteHeaderActions({
         )}
       </div>
 
+      <LanguageSwitcher locale={locale} />
+
       <UserMenu
+        locale={locale}
         userEmail={userEmail}
         nomeCompleto={nomeCompleto}
         avatarUrl={avatarUrl}

@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { UserPersistenceWrapper } from "@/components/user-persistence-wrapper";
 import { NotificationProvider } from "@/components/providers/NotificationProvider";
 import { NotificationFlashBridge } from "@/components/notification-flash-bridge";
+import { getHtmlLang, getRequestLocale } from "@/lib/multilingual";
 import "@/styles/theme.css";
 import "@/styles/globals.css";
 import "@/styles/site-header.css";
@@ -35,20 +36,22 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getRequestLocale();
   const client = await createClient();
   const {
     data: { user },
   } = await client.auth.getUser();
 
-
   return (
-    <html lang="pt-BR" suppressHydrationWarning>
+    <html lang={getHtmlLang(locale)} suppressHydrationWarning>
       <body className={`${headingFont.variable} ${bodyFont.variable}`}>
         <ThemeProvider>
           <NotificationProvider>
             <NotificationFlashBridge />
             <UserPersistenceWrapper user={user}>
-              <SiteShell user={user}>{children}</SiteShell>
+              <SiteShell locale={locale} user={user}>
+                {children}
+              </SiteShell>
             </UserPersistenceWrapper>
           </NotificationProvider>
         </ThemeProvider>

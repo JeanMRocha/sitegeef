@@ -1,0 +1,67 @@
+import Link from "next/link";
+import { getMultilingualCopy } from "@/lib/multilingual";
+
+export const metadata = {
+  title: "Idiomas - Admin GEEF",
+};
+
+export default function AdminIdiomasPage() {
+  const copy = getMultilingualCopy("pt");
+
+  return (
+    <div className="area-page">
+      <section className="area-hero">
+        <div className="area-hero-top">
+          <div>
+            <p className="area-subtitle">Multilíngua</p>
+            <h1 className="area-hero-title">{copy.adminLanguages.title}</h1>
+            <p className="area-subtitle">{copy.adminLanguages.lead}</p>
+          </div>
+          <div className="admin-actions">
+            <Link href="/admin/observability" className="admin-btn admin-btn-secondary">
+              Observabilidade
+            </Link>
+            <Link href="/admin/documentos" className="admin-btn admin-btn-secondary">
+              Documentos
+            </Link>
+          </div>
+        </div>
+
+        <div className="area-summary-grid">
+          <div className="area-summary-card">
+            <strong>PT / EN</strong>
+            <span>{copy.adminLanguages.defaultLanguage}</span>
+          </div>
+          <div className="area-summary-card">
+            <strong>Cookie</strong>
+            <span>{copy.adminLanguages.persistence}</span>
+          </div>
+          <div className="area-summary-card">
+            <strong>Escopo</strong>
+            <span>{copy.adminLanguages.scope}</span>
+          </div>
+        </div>
+      </section>
+
+      <section className="area-section">
+        <h2 className="area-section-title">Cobertura atual</h2>
+        <div className="admin-card">
+          <div className="module-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))" }}>
+            <div className="area-panel-item">
+              <strong>{copy.adminLanguages.publicShell}</strong>
+              <p style={{ marginTop: "0.35rem" }}>{copy.adminLanguages.publicPages}</p>
+            </div>
+            <div className="area-panel-item">
+              <strong>Persistência</strong>
+              <p style={{ marginTop: "0.35rem" }}>{copy.adminLanguages.persistence}</p>
+            </div>
+            <div className="area-panel-item">
+              <strong>Próximos passos</strong>
+              <p style={{ marginTop: "0.35rem" }}>{copy.adminLanguages.nextSteps}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}

@@ -1,24 +1,28 @@
 "use client";
 
+import { getMultilingualCopy, type Locale } from "@/lib/multilingual/client";
 import { LgpdNotice } from "./lgpd-notice";
 
 type LgpdFormNoticeProps = {
+  locale?: Locale;
   text?: string;
   title?: string;
 };
 
 export function LgpdFormNotice({
-  title = "Privacidade no formulário",
-  text = "Usaremos seus dados só para responder sua solicitação e manter o registro do atendimento.",
+  locale = "pt",
+  title,
+  text,
 }: Readonly<LgpdFormNoticeProps>) {
+  const copy = getMultilingualCopy(locale);
   return (
     <LgpdNotice
-      title={title}
-      text={text}
+      title={title || copy.formNotice.title}
+      text={text || copy.formNotice.text}
       policyHref="/privacidade"
-      policyLabel="Ler política"
+      policyLabel={copy.formNotice.policyLabel}
       contactHref="/lgpd"
-      contactLabel="Canal LGPD"
+      contactLabel={copy.formNotice.contactLabel}
       className="lgpd-form-notice"
     />
   );

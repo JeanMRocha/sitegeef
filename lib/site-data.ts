@@ -1,6 +1,7 @@
 export type NavItem = {
   href: string;
   label: string;
+  labelEn?: string;
   icon?: "user";
   primary?: boolean;
   group?: "institucional";
@@ -60,26 +61,26 @@ export function publicHref(path: string) {
 
 export const navItems: NavItem[] = [
   // Primary navigation (visible in header bar on desktop)
-  { href: "/quem-somos", label: "Quem somos", primary: true },
-  { href: "/agenda", label: "Agenda", primary: true },
-  { href: "/escalas", label: "Escalas", primary: true },
-  { href: "/ao-vivo", label: "Ao vivo", primary: true },
-  { href: "/atividades", label: "Atividades", primary: true },
+  { href: "/quem-somos", label: "Quem somos", labelEn: "About us", primary: true },
+  { href: "/agenda", label: "Agenda", labelEn: "Schedule", primary: true },
+  { href: "/escalas", label: "Escalas", labelEn: "Shifts", primary: true },
+  { href: "/ao-vivo", label: "Ao vivo", labelEn: "Live", primary: true },
+  { href: "/atividades", label: "Atividades", labelEn: "Activities", primary: true },
 
   // Secondary navigation (in "Mais" dropdown)
-  { href: "/estudos", label: "Estudos" },
-  { href: "/evangelizacao", label: "Evangelização" },
-  { href: "/atendimento-fraterno", label: "Atendimento fraterno" },
+  { href: "/estudos", label: "Estudos", labelEn: "Studies" },
+  { href: "/evangelizacao", label: "Evangelização", labelEn: "Evangelization" },
+  { href: "/atendimento-fraterno", label: "Atendimento fraterno", labelEn: "Fraternal care" },
 
   // Institutional group (in "Mais" dropdown, after divider)
-  { href: "/lgpd", label: "Privacidade", group: "institucional" },
-  { href: "/cookies", label: "Cookies", group: "institucional" },
-  { href: "/institucional", label: "Credibilidade e Filiações", group: "institucional" },
-  { href: "/doacoes", label: "Doações", group: "institucional" },
-  { href: "/contato", label: "Contato", group: "institucional" },
+  { href: "/lgpd", label: "Privacidade", labelEn: "Privacy", group: "institucional" },
+  { href: "/cookies", label: "Cookies", labelEn: "Cookies", group: "institucional" },
+  { href: "/institucional", label: "Credibilidade e Filiações", labelEn: "Credibility and affiliations", group: "institucional" },
+  { href: "/doacoes", label: "Doações", labelEn: "Donations", group: "institucional" },
+  { href: "/contato", label: "Contato", labelEn: "Contact", group: "institucional" },
 
   // User profile (hidden from nav, used by site-header for button)
-  { href: "/perfil", label: "Perfil do usuário", icon: "user" },
+  { href: "/perfil", label: "Perfil do usuário", labelEn: "User profile", icon: "user" },
 ];
 
 export const featureCards: FeatureCard[] = [

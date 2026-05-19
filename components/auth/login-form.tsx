@@ -8,12 +8,14 @@ import {
   signInWithGoogle,
 } from "@/app/login/actions";
 import { LgpdFormNotice } from "@/components/lgpd/lgpd-form-notice";
+import type { Locale } from "@/lib/multilingual/client";
 
 type LoginFormProps = {
   nextUrl?: string;
+  locale?: Locale;
 };
 
-export function LoginForm({ nextUrl = "/perfil" }: LoginFormProps) {
+export function LoginForm({ nextUrl = "/perfil", locale = "pt" }: LoginFormProps) {
   const searchParams = useSearchParams();
   const resolvedNextUrl = searchParams?.get("next") || nextUrl;
 
@@ -42,11 +44,11 @@ export function LoginForm({ nextUrl = "/perfil" }: LoginFormProps) {
         }
       } else {
         if (!nomeCompleto.trim()) {
-          setError("Nome completo é obrigatório");
+          setError(locale === "en" ? "Full name is required" : "Nome completo é obrigatório");
           return;
         }
         if (!termosUso || !politicaPrivacidade) {
-          setError("Marque os termos e a ciência da privacidade para continuar.");
+          setError(locale === "en" ? "Accept the terms and privacy notice to continue." : "Marque os termos e a ciência da privacidade para continuar.");
           return;
         }
         const result = await signUpWithEmail(email, password, nomeCompleto, {
@@ -66,12 +68,12 @@ export function LoginForm({ nextUrl = "/perfil" }: LoginFormProps) {
           setPoliticaPrivacidade(false);
           setMarketingEmail(false);
           setMarketingWhatsApp(false);
-          alert("Cadastro realizado! Verifique seu email para confirmar.");
+          alert(locale === "en" ? "Account created! Check your email to confirm." : "Cadastro realizado! Verifique seu email para confirmar.");
           setIsLogin(true);
         }
       }
     } catch (err) {
-      setError("Erro ao processar requisição");
+      setError(locale === "en" ? "Request processing error" : "Erro ao processar requisição");
     } finally {
       setLoading(false);
     }
@@ -83,7 +85,7 @@ export function LoginForm({ nextUrl = "/perfil" }: LoginFormProps) {
     try {
       await signInWithGoogle(resolvedNextUrl);
     } catch (err) {
-      setError("Erro ao conectar com Google");
+      setError(locale === "en" ? "Error connecting with Google" : "Erro ao conectar com Google");
       setLoading(false);
     }
   };
@@ -91,7 +93,10 @@ export function LoginForm({ nextUrl = "/perfil" }: LoginFormProps) {
   return (
     <div className="login-form-container">
       <LgpdFormNotice
-        text="Usamos seus dados para acesso, confirmação de conta e registros de segurança como IP e tentativas de login."
+        locale={locale}
+        text={locale === "en"
+          ? "We use your data for access, account confirmation and security records such as IP and login attempts."
+          : "Usamos seus dados para acesso, confirmação de conta e registros de segurança como IP e tentativas de login."}
       />
 
       <div className="login-tabs">
@@ -102,7 +107,7 @@ export function LoginForm({ nextUrl = "/perfil" }: LoginFormProps) {
             setError(null);
           }}
         >
-          Entrar
+          {locale === "en" ? "Sign in" : "Entrar"}
         </button>
         <button
           className={`login-tab ${!isLogin ? "active" : ""}`}
@@ -111,7 +116,7 @@ export function LoginForm({ nextUrl = "/perfil" }: LoginFormProps) {
             setError(null);
           }}
         >
-          Cadastro
+          {locale === "en" ? "Sign up" : "Cadastro"}
         </button>
       </div>
 
@@ -123,11 +128,11 @@ export function LoginForm({ nextUrl = "/perfil" }: LoginFormProps) {
         )}
 
         <div className="form-group">
-          <label htmlFor="email">Email</label>
+          <label htmlFor="email">{locale === "en" ? "Email" : "Email"}</label>
           <input
             id="email"
             type="email"
-            placeholder="seu@email.com"
+            placeholder={locale === "en" ? "you@email.com" : "seu@email.com"}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -137,11 +142,11 @@ export function LoginForm({ nextUrl = "/perfil" }: LoginFormProps) {
 
         {!isLogin && (
           <div className="form-group">
-            <label htmlFor="nomeCompleto">Nome completo</label>
+            <label htmlFor="nomeCompleto">{locale === "en" ? "Full name" : "Nome completo"}</label>
             <input
               id="nomeCompleto"
               type="text"
-              placeholder="Seu nome completo"
+              placeholder={locale === "en" ? "Your full name" : "Seu nome completo"}
               value={nomeCompleto}
               onChange={(e) => setNomeCompleto(e.target.value)}
               disabled={loading}
@@ -158,7 +163,7 @@ export function LoginForm({ nextUrl = "/perfil" }: LoginFormProps) {
                 onChange={(event) => setTermosUso(event.target.checked)}
                 disabled={loading}
               />
-              <span>Li e aceito os Termos de Uso.</span>
+              <span>{locale === "en" ? "I have read and accept the Terms of Use." : "Li e aceito os Termos de Uso."}</span>
             </label>
             <label className="lgpd-consent-check">
               <input
@@ -167,7 +172,7 @@ export function LoginForm({ nextUrl = "/perfil" }: LoginFormProps) {
                 onChange={(event) => setPoliticaPrivacidade(event.target.checked)}
                 disabled={loading}
               />
-              <span>Declaro ciência da Política de Privacidade.</span>
+              <span>{locale === "en" ? "I acknowledge the Privacy Policy." : "Declaro ciência da Política de Privacidade."}</span>
             </label>
             <label className="lgpd-consent-check">
               <input
@@ -176,7 +181,7 @@ export function LoginForm({ nextUrl = "/perfil" }: LoginFormProps) {
                 onChange={(event) => setMarketingEmail(event.target.checked)}
                 disabled={loading}
               />
-              <span>Quero receber comunicações por e-mail.</span>
+              <span>{locale === "en" ? "I want to receive communications by email." : "Quero receber comunicações por e-mail."}</span>
             </label>
             <label className="lgpd-consent-check">
               <input
@@ -185,18 +190,18 @@ export function LoginForm({ nextUrl = "/perfil" }: LoginFormProps) {
                 onChange={(event) => setMarketingWhatsApp(event.target.checked)}
                 disabled={loading}
               />
-              <span>Quero receber comunicações por WhatsApp.</span>
+              <span>{locale === "en" ? "I want to receive communications by WhatsApp." : "Quero receber comunicações por WhatsApp."}</span>
             </label>
           </div>
         )}
 
         <div className="form-group">
-          <label htmlFor="password">Senha</label>
+          <label htmlFor="password">{locale === "en" ? "Password" : "Senha"}</label>
           <div className="password-input-wrapper">
             <input
               id="password"
               type={showPassword ? "text" : "password"}
-              placeholder="••••••••"
+              placeholder={locale === "en" ? "••••••••" : "••••••••"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -207,7 +212,7 @@ export function LoginForm({ nextUrl = "/perfil" }: LoginFormProps) {
               className="password-toggle"
               onClick={() => setShowPassword(!showPassword)}
               disabled={loading}
-              title={showPassword ? "Ocultar senha" : "Mostrar senha"}
+              title={locale === "en" ? (showPassword ? "Hide password" : "Show password") : showPassword ? "Ocultar senha" : "Mostrar senha"}
             >
               {showPassword ? (
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -230,7 +235,11 @@ export function LoginForm({ nextUrl = "/perfil" }: LoginFormProps) {
             className="button button-primary login-submit"
             disabled={loading}
           >
-            {loading ? "Processando..." : isLogin ? "Entrar" : "Cadastrar"}
+            {loading
+              ? (locale === "en" ? "Processing..." : "Processando...")
+              : isLogin
+                ? (locale === "en" ? "Sign in" : "Entrar")
+                : (locale === "en" ? "Create account" : "Cadastrar")}
           </button>
 
           <button
@@ -238,7 +247,7 @@ export function LoginForm({ nextUrl = "/perfil" }: LoginFormProps) {
             onClick={handleGoogleSignIn}
             className="google-signin-btn login-google"
             disabled={loading}
-            title="Entrar com Google"
+            title={locale === "en" ? "Sign in with Google" : "Entrar com Google"}
           >
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
               <g clipPath="url(#clip0)">
@@ -248,7 +257,7 @@ export function LoginForm({ nextUrl = "/perfil" }: LoginFormProps) {
                 <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 4.47 2.18 8.93l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
               </g>
             </svg>
-            <span>{loading ? "Conectando..." : "Google"}</span>
+            <span>{loading ? (locale === "en" ? "Connecting..." : "Conectando...") : "Google"}</span>
           </button>
         </div>
       </form>

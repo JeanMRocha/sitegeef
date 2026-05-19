@@ -74,6 +74,41 @@
   margin-left: auto;
 }
 
+.site-language-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.12rem;
+  padding: 0.22rem;
+  background: var(--dropdown-bg);
+  border: 1px solid var(--dropdown-border);
+  border-radius: 999px;
+  box-shadow: 0 10px 20px rgba(124, 63, 163, 0.06);
+}
+
+.site-language-switcher-button {
+  min-width: 2.05rem;
+  height: 2rem;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--dropdown-item-text);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+}
+
+.site-language-switcher-button:hover {
+  background: var(--dropdown-item-hover);
+  transform: translateY(-1px);
+}
+
+.site-language-switcher-button.active {
+  background: var(--primary);
+  color: #fff;
+}
+
 /* "Mais" Dropdown Menu */
 .site-nav-more {
   position: relative;
@@ -233,7 +268,7 @@
   position: absolute;
   top: calc(100% + var(--space-2));
   right: 0;
-  min-width: 260px;
+  min-width: 240px;
   background: var(--dropdown-bg);
   border: 1px solid var(--dropdown-border);
   border-radius: 22px;
@@ -252,6 +287,10 @@
   padding: var(--space-4);
   background: var(--surface-secondary);
   border-bottom: 1px solid var(--border-medium);
+}
+
+.site-header-user-info-compact {
+  padding: var(--space-3) var(--space-4);
 }
 
 .site-header-user-avatar-lg {
@@ -283,7 +322,7 @@
 .site-header-user-nav {
   display: flex;
   flex-direction: column;
-  padding: var(--space-2) 0;
+  padding: var(--space-1) 0;
 }
 
 .site-header-user-item {
@@ -323,7 +362,7 @@
 .site-header-user-settings {
   display: flex;
   flex-direction: column;
-  padding: var(--space-2) 0;
+  padding: var(--space-1) 0;
 }
 
 .site-header-user-setting {
@@ -343,7 +382,7 @@
 
 /* User Logout */
 .site-header-user-logout-form {
-  padding: var(--space-2) 0;
+  padding: var(--space-1) 0;
 }
 
 .site-header-user-logout {
@@ -442,6 +481,16 @@
     height: 40px;
     font-size: 1.2rem;
     border-width: 1px;
+  }
+
+  .site-language-switcher {
+    gap: 0.08rem;
+  }
+
+  .site-language-switcher-button {
+    min-width: 1.85rem;
+    height: 1.9rem;
+    font-size: 0.68rem;
   }
 
   .site-header-user-initial {

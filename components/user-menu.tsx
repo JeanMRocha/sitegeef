@@ -3,10 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { getMultilingualCopy, type Locale } from "@/lib/multilingual/client";
 import { useTheme } from "@/hooks/useTheme";
 import { signOut } from "@/app/login/actions";
 
 type UserMenuProps = {
+  locale: Locale;
   userEmail?: string | null;
   nomeCompleto?: string | null;
   avatarUrl?: string | null;
@@ -14,6 +16,7 @@ type UserMenuProps = {
 };
 
 export function UserMenu({
+  locale,
   userEmail,
   nomeCompleto,
   avatarUrl,
@@ -22,6 +25,7 @@ export function UserMenu({
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const { theme, toggleTheme } = useTheme();
+  const copy = getMultilingualCopy(locale);
   const normalizedEmail = userEmail?.trim().toLowerCase() || null;
   const isAdminByEmail =
     normalizedEmail === "contatogeef@gmail.com" ||
@@ -41,16 +45,63 @@ export function UserMenu({
     }
   }, [menuOpen]);
 
-  // Not authenticated
   if (!userEmail) {
     return (
-      <Link
-        href="/login?next=/minha-area&popup=1"
-        className="site-header-user-btn site-header-user-login"
-        title="Fazer login"
-      >
-        👤
-      </Link>
+      <div ref={menuRef} className="site-header-user">
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="site-header-user-btn"
+          title={copy.header.account}
+          aria-label={copy.header.account}
+          aria-expanded={menuOpen}
+        >
+          <div className="site-header-user-initial">👤</div>
+        </button>
+
+        {menuOpen && (
+          <div className="site-header-user-dropdown">
+            <div className="site-header-user-info site-header-user-info-compact">
+              <div className="site-header-user-details">
+                <strong>{copy.header.account}</strong>
+                <span>
+                  {locale === "en" ? "Sign in or create access" : "Entrar ou criar acesso"}
+                </span>
+              </div>
+            </div>
+
+            <nav className="site-header-user-nav">
+              <Link
+                href="/login?next=/minha-area&popup=1"
+                className="site-header-user-item"
+                onClick={() => setMenuOpen(false)}
+              >
+                <span>🔐</span> {copy.header.enter}
+              </Link>
+              <Link
+                href="/login?next=/perfil&popup=1"
+                className="site-header-user-item"
+                onClick={() => setMenuOpen(false)}
+              >
+                <span>📝</span> {copy.header.createAccount}
+              </Link>
+              <Link
+                href="/privacidade"
+                className="site-header-user-item"
+                onClick={() => setMenuOpen(false)}
+              >
+                <span>🛡️</span> {copy.header.privacy}
+              </Link>
+              <button
+                onClick={toggleTheme}
+                className="site-header-user-item site-header-user-setting"
+              >
+                <span>{theme === "light" ? "🌙" : "☀️"}</span>
+                {theme === "light" ? copy.header.themeLight : copy.header.themeDark}
+              </button>
+            </nav>
+          </div>
+        )}
+      </div>
     );
   }
 
@@ -60,8 +111,8 @@ export function UserMenu({
       <button
         onClick={() => setMenuOpen(!menuOpen)}
         className="site-header-user-btn"
-        title="Menu de usuário"
-        aria-label="Menu de usuário"
+        title={locale === "en" ? "User menu" : "Menu de usuário"}
+        aria-label={locale === "en" ? "User menu" : "Menu de usuário"}
         aria-expanded={menuOpen}
       >
         {avatarUrl ? (
@@ -80,8 +131,7 @@ export function UserMenu({
 
       {menuOpen && (
         <div className="site-header-user-dropdown">
-          {/* User Info */}
-          <div className="site-header-user-info">
+          <div className="site-header-user-info site-header-user-info-compact">
             {avatarUrl ? (
               <Image
                 src={avatarUrl}
@@ -95,15 +145,11 @@ export function UserMenu({
               <div className="site-header-user-initial-lg">👤</div>
             )}
             <div className="site-header-user-details">
-              <strong>{nomeCompleto || "Usuário"}</strong>
+              <strong>{nomeCompleto || (locale === "en" ? "User" : "Usuário")}</strong>
               <span>{userEmail}</span>
             </div>
           </div>
 
-          {/* Divider */}
-          <div className="site-header-user-divider"></div>
-
-          {/* Navigation Links */}
           <nav className="site-header-user-nav">
             {canAccessAdmin && (
               <Link
@@ -111,7 +157,7 @@ export function UserMenu({
                 className="site-header-user-item"
                 onClick={() => setMenuOpen(false)}
               >
-                <span>🛠️</span> Painel Admin
+                <span>🛠️</span> {copy.header.adminPanel}
               </Link>
             )}
             <Link
@@ -119,41 +165,30 @@ export function UserMenu({
               className="site-header-user-item"
               onClick={() => setMenuOpen(false)}
             >
-              <span>👤</span> Meu Perfil
+              <span>👤</span> {copy.header.myProfile}
             </Link>
             <Link
               href="/minha-area"
               className="site-header-user-item"
               onClick={() => setMenuOpen(false)}
             >
-              <span>📋</span> Minha Área
+              <span>📋</span> {copy.header.myArea}
             </Link>
-          </nav>
 
-          {/* Divider */}
-          <div className="site-header-user-divider"></div>
-
-          {/* Settings */}
-          <div className="site-header-user-settings">
             <button
               onClick={toggleTheme}
               className="site-header-user-item site-header-user-setting"
             >
               <span>{theme === "light" ? "🌙" : "☀️"}</span>
-              {theme === "light" ? "Modo Escuro" : "Modo Claro"}
+              {theme === "light" ? copy.header.themeLight : copy.header.themeDark}
             </button>
-          </div>
-
-          {/* Divider */}
-          <div className="site-header-user-divider"></div>
-
-          {/* Logout */}
-          <button
-            onClick={() => signOut()}
-            className="site-header-user-logout"
-          >
-            <span>🚪</span> Sair
-          </button>
+            <button
+              onClick={() => signOut()}
+              className="site-header-user-logout"
+            >
+              <span>🚪</span> {copy.header.signOut}
+            </button>
+          </nav>
         </div>
       )}
     </div>

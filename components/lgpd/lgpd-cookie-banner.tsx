@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { LGPD_COOKIE_NAME } from "@/lib/lgpd/constants";
+import { getMultilingualCopy, type Locale } from "@/lib/multilingual/client";
 
 type CookiePrefs = {
   version: string;
@@ -52,7 +53,12 @@ async function persistPrefs(payload: Record<string, unknown>) {
   });
 }
 
-export function LgpdCookieBanner() {
+type LgpdCookieBannerProps = {
+  locale?: Locale;
+};
+
+export function LgpdCookieBanner({ locale = "pt" }: Readonly<LgpdCookieBannerProps>) {
+  const copy = getMultilingualCopy(locale);
   const [isVisible, setIsVisible] = useState(false);
   const [showManager, setShowManager] = useState(false);
   const [marketing, setMarketing] = useState(false);
@@ -122,14 +128,11 @@ export function LgpdCookieBanner() {
   }
 
   return (
-    <div className="lgpd-cookie-banner" role="dialog" aria-label="Preferências de cookies">
+    <div className="lgpd-cookie-banner" role="dialog" aria-label={copy.cookieBanner.ariaLabel}>
       <div className="lgpd-cookie-banner-copy">
-        <p className="eyebrow">Cookies</p>
-        <h2>Usamos apenas o necessário para o site funcionar bem.</h2>
-        <p>
-          Cookies essenciais ficam ativos. Os demais dependem da sua escolha.
-          Você pode mudar isso depois na Política de Cookies.
-        </p>
+        <p className="eyebrow">{copy.cookieBanner.eyebrow}</p>
+        <h2>{copy.cookieBanner.title}</h2>
+        <p>{copy.cookieBanner.lead}</p>
       </div>
 
       <div className="lgpd-cookie-banner-actions">
@@ -145,7 +148,7 @@ export function LgpdCookieBanner() {
             })
           }
         >
-          Aceitar todos
+          {copy.cookieBanner.acceptAll}
         </button>
         <button
           type="button"
@@ -159,7 +162,7 @@ export function LgpdCookieBanner() {
             })
           }
         >
-          Rejeitar não essenciais
+          {copy.cookieBanner.rejectNonEssential}
         </button>
         <button
           type="button"
@@ -167,10 +170,10 @@ export function LgpdCookieBanner() {
           disabled={busy}
           onClick={() => setShowManager((value) => !value)}
         >
-          Gerenciar preferências
+          {copy.cookieBanner.managePreferences}
         </button>
         <Link href="/cookies" className="lgpd-cookie-link">
-          Política de Cookies
+          {copy.cookieBanner.policyLink}
         </Link>
       </div>
 
@@ -179,29 +182,29 @@ export function LgpdCookieBanner() {
           <label className="lgpd-switch">
             <input type="checkbox" checked disabled />
             <span>
-              <strong>Essenciais</strong>
-              <small>Necessários para login, segurança e navegação básica.</small>
+              <strong>{copy.cookieBanner.essentialTitle}</strong>
+              <small>{copy.cookieBanner.essentialLead}</small>
             </span>
           </label>
           <label className="lgpd-switch">
             <input type="checkbox" checked={marketing} onChange={(event) => setMarketing(event.target.checked)} />
             <span>
-              <strong>Marketing</strong>
-              <small>Comunicações, ofertas e remarketing.</small>
+              <strong>{copy.cookieBanner.marketingTitle}</strong>
+              <small>{copy.cookieBanner.marketingLead}</small>
             </span>
           </label>
           <label className="lgpd-switch">
             <input type="checkbox" checked={analytics} onChange={(event) => setAnalytics(event.target.checked)} />
             <span>
-              <strong>Analytics</strong>
-              <small>Medição não essencial de uso e navegação.</small>
+              <strong>{copy.cookieBanner.analyticsTitle}</strong>
+              <small>{copy.cookieBanner.analyticsLead}</small>
             </span>
           </label>
           <label className="lgpd-switch">
             <input type="checkbox" checked={tracking} onChange={(event) => setTracking(event.target.checked)} />
             <span>
-              <strong>Rastreamento</strong>
-              <small>Mensuração de campanha e comportamento.</small>
+              <strong>{copy.cookieBanner.trackingTitle}</strong>
+              <small>{copy.cookieBanner.trackingLead}</small>
             </span>
           </label>
           <button
@@ -216,7 +219,7 @@ export function LgpdCookieBanner() {
               })
             }
           >
-            Salvar preferências
+            {copy.cookieBanner.savePreferences}
           </button>
         </div>
       )}

@@ -1,9 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
-import { navItems, site } from "@/lib/site-data";
+import { site } from "@/lib/site-data";
+import { getLocalizedNavItems, type Locale } from "@/lib/multilingual";
 import { SiteHeaderActions } from "@/components/site-header-actions";
 
 type SiteHeaderProps = {
+  locale: Locale;
   userEmail: string | null;
   nomeCompleto: string | null;
   avatarUrl: string | null;
@@ -11,12 +13,13 @@ type SiteHeaderProps = {
 };
 
 export function SiteHeader({
+  locale,
   userEmail,
   nomeCompleto,
   avatarUrl,
   hasAdminAccess,
 }: SiteHeaderProps) {
-  const primaryLinks = navItems.filter((item) => !item.group && !item.icon);
+  const primaryLinks = getLocalizedNavItems(locale).filter((item) => !item.group && !item.icon);
 
   return (
     <header className="site-header">
@@ -42,6 +45,7 @@ export function SiteHeader({
       </nav>
 
       <SiteHeaderActions
+        locale={locale}
         userEmail={userEmail}
         nomeCompleto={nomeCompleto}
         avatarUrl={avatarUrl}

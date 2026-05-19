@@ -8,7 +8,8 @@ import {
   MailIcon,
   ShieldIcon,
 } from "@/components/site-icons";
-import { contentPages, publicHref, site } from "@/lib/site-data";
+import { publicHref, site } from "@/lib/site-data";
+import { getMultilingualCopy, getRequestLocale } from "@/lib/multilingual";
 import { normalizeInternalPath } from "@/lib/security";
 
 export const dynamic = "force-dynamic";
@@ -29,40 +30,9 @@ const iconMap = {
   privacy: ShieldIcon,
 };
 
-const quickLinks = [
-  {
-    href: publicHref("/quem-somos"),
-    title: contentPages["quem-somos"].title,
-    description: contentPages["quem-somos"].summary,
-    icon: "group",
-  },
-  {
-    href: publicHref("/agenda"),
-    title: contentPages["agenda"].title,
-    description: contentPages["agenda"].summary,
-    icon: "calendar",
-  },
-  {
-    href: publicHref("/atendimento-fraterno"),
-    title: contentPages["atendimento-fraterno"].title,
-    description: contentPages["atendimento-fraterno"].summary,
-    icon: "heart",
-  },
-  {
-    href: publicHref("/contato"),
-    title: contentPages["contato"].title,
-    description: contentPages["contato"].summary,
-    icon: "mail",
-  },
-  {
-    href: publicHref("/privacidade"),
-    title: contentPages["privacidade"].title,
-    description: contentPages["privacidade"].summary,
-    icon: "privacy",
-  },
-] as const;
-
 export default async function Home({ searchParams }: HomePageProps) {
+  const locale = await getRequestLocale();
+  const copy = getMultilingualCopy(locale);
   const resolvedSearchParams = await searchParams;
   const authCode = resolvedSearchParams?.code;
 
@@ -80,23 +50,21 @@ export default async function Home({ searchParams }: HomePageProps) {
     <main>
       <section className="hero">
         <div className="hero-copy">
-          <p className="eyebrow">GEEF · site público</p>
-          <h1>{site.name}</h1>
-          <p className="hero-lead">
-            Casa de estudo, acolhimento e serviço fraterno. Um ponto de
-            contato claro para agenda, atendimento, transmissão e informação.
-          </p>
-          <ul className="hero-highlights" aria-label="Destaques da página">
-            <li>Agenda, estudos e atendimento em foco</li>
-            <li>Leitura rápida no celular e no desktop</li>
+          <p className="eyebrow">{copy.home.eyebrow}</p>
+          <h1>{copy.home.title}</h1>
+          <p className="hero-lead">{copy.home.lead}</p>
+          <ul className="hero-highlights" aria-label={locale === "en" ? "Page highlights" : "Destaques da página"}>
+            {copy.home.highlights.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
           </ul>
           <div className="hero-actions">
             <Link href={publicHref("/contato")} className="button button-primary">
-              Falar com a casa
+              {copy.home.primaryCta}
               <ArrowIcon className="button-icon" />
             </Link>
             <Link href={publicHref("/agenda")} className="button button-secondary">
-              Ver agenda
+              {copy.home.secondaryCta}
             </Link>
           </div>
         </div>
@@ -105,17 +73,14 @@ export default async function Home({ searchParams }: HomePageProps) {
       <section className="section" aria-labelledby="quick-links-title">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">Acesso rápido</p>
-            <h2 id="quick-links-title">O que já está pronto no site</h2>
+            <p className="eyebrow">{locale === "en" ? "Quick access" : "Acesso rápido"}</p>
+            <h2 id="quick-links-title">{copy.home.quickLinksTitle}</h2>
           </div>
-          <p>
-            As páginas abaixo levam direto para o conteúdo real que já pode ser
-            consultado pelo visitante.
-          </p>
+          <p>{copy.home.quickLinksLead}</p>
         </div>
 
         <div className="feature-grid">
-          {quickLinks.map((card) => {
+          {copy.home.quickLinks.map((card) => {
             const Icon = iconMap[card.icon];
             return (
               <Link key={card.href} href={card.href} className="feature-card">
@@ -133,22 +98,19 @@ export default async function Home({ searchParams }: HomePageProps) {
       <section className="section" aria-labelledby="contact-title">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">Contato</p>
-            <h2 id="contact-title">Informações para chegar até a casa</h2>
+            <p className="eyebrow">{locale === "en" ? "Contact" : "Contato"}</p>
+            <h2 id="contact-title">{copy.home.contactTitle}</h2>
           </div>
-          <p>
-            Tudo o que importa para contato rápido já fica visível na página
-            inicial.
-          </p>
+          <p>{copy.home.contactLead}</p>
         </div>
 
         <div className="contact-grid">
           <article className="contact-card">
-            <h3>Endereço</h3>
+            <h3>{locale === "en" ? "Address" : "Endereço"}</h3>
             <p>{site.address}</p>
           </article>
           <article className="contact-card">
-            <h3>Conexões</h3>
+            <h3>{locale === "en" ? "Connections" : "Conexões"}</h3>
             <ul className="contact-list">
               <li>
                 <a href={`mailto:${site.email}`}>{site.email}</a>

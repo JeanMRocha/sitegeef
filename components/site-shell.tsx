@@ -1,15 +1,18 @@
 import Link from "next/link";
 import { site } from "@/lib/site-data";
+import { getMultilingualCopy, type Locale } from "@/lib/multilingual";
 import { SiteHeader } from "@/components/site-header";
 import { LgpdCookieBanner } from "@/components/lgpd/lgpd-cookie-banner";
 import type { User } from "@supabase/supabase-js";
 
 type SiteShellProps = {
+  locale: Locale;
   user: User | null;
   children: React.ReactNode;
 };
 
-export function SiteShell({ user, children }: Readonly<SiteShellProps>) {
+export function SiteShell({ locale, user, children }: Readonly<SiteShellProps>) {
+  const copy = getMultilingualCopy(locale);
   const userEmail = user?.email || null;
   const normalizedEmail = userEmail?.trim().toLowerCase() || null;
   const nomeCompleto = (user?.user_metadata?.full_name as string) || null;
@@ -25,6 +28,7 @@ export function SiteShell({ user, children }: Readonly<SiteShellProps>) {
   return (
     <div className="site-shell">
       <SiteHeader
+        locale={locale}
         key={user?.id ?? "anonymous"}
         userEmail={userEmail}
         nomeCompleto={nomeCompleto}
@@ -32,7 +36,7 @@ export function SiteShell({ user, children }: Readonly<SiteShellProps>) {
         hasAdminAccess={hasAdminAccess}
       />
 
-      <LgpdCookieBanner />
+      <LgpdCookieBanner locale={locale} />
       {children}
 
       <footer className="site-footer">
@@ -40,24 +44,24 @@ export function SiteShell({ user, children }: Readonly<SiteShellProps>) {
           <div className="site-footer-main">
             <strong>{site.name}</strong>
             <span className="site-footer-separator" aria-hidden="true">·</span>
-            <span>{site.address}</span>
+            <span>{copy.shell.siteAddress}</span>
             <span className="site-footer-separator" aria-hidden="true">·</span>
             <span>{site.email}</span>
             <span className="site-footer-separator" aria-hidden="true">·</span>
             <Link href="/lgpd" className="footer-link">
-              LGPD
+              {copy.shell.footer.lgpd}
             </Link>
             <span className="site-footer-separator" aria-hidden="true">·</span>
             <Link href="/privacidade" className="footer-link">
-              Privacidade
+              {copy.shell.footer.privacy}
             </Link>
             <span className="site-footer-separator" aria-hidden="true">·</span>
             <Link href="/cookies" className="footer-link">
-              Cookies
+              {copy.shell.footer.cookies}
             </Link>
             <span className="site-footer-separator" aria-hidden="true">·</span>
             <Link href="/institucional" className="footer-link">
-              Credibilidade e Filiações
+              {copy.shell.footer.credibility}
             </Link>
           </div>
 
