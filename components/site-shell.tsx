@@ -82,10 +82,10 @@ export function SiteShell({ locale, user, children }: Readonly<SiteShellProps>) 
             </a>
             <a
               href="/institucional"
-              title="45º Centro Espírita Unificado"
+              title="45º CEU"
               className="footer-badge"
             >
-              <span className="footer-badge-label">45º</span>
+              <span className="footer-badge-label">45 CEU</span>
             </a>
           </div>
         </div>

@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 
 type DescritivoFieldProps = {
-  name: "descricao" | "historia" | "missao" | "visao" | "valores";
+  name: string;
   label: string;
   defaultValue?: string;
   rows: number;

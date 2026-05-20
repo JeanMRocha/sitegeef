@@ -73,11 +73,12 @@ export const navItems: NavItem[] = [
   { href: "/atendimento-fraterno", label: "Atendimento fraterno", labelEn: "Fraternal care" },
 
   // Institutional group (in "Mais" dropdown, after divider)
-  { href: "/lgpd", label: "Privacidade", labelEn: "Privacy", group: "institucional" },
-  { href: "/cookies", label: "Cookies", labelEn: "Cookies", group: "institucional" },
   { href: "/institucional", label: "Credibilidade e Filiações", labelEn: "Credibility and affiliations", group: "institucional" },
+  { href: "/identidade-visual", label: "Identidade visual", labelEn: "Visual identity", group: "institucional" },
   { href: "/doacoes", label: "Doações", labelEn: "Donations", group: "institucional" },
   { href: "/contato", label: "Contato", labelEn: "Contact", group: "institucional" },
+  { href: "/lgpd", label: "Privacidade", labelEn: "Privacy", group: "institucional" },
+  { href: "/cookies", label: "Cookies", labelEn: "Cookies", group: "institucional" },
 
   // User profile (hidden from nav, used by site-header for button)
   { href: "/perfil", label: "Perfil do usuário", labelEn: "User profile", icon: "user" },

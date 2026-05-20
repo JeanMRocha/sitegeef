@@ -19,7 +19,7 @@ import {
 } from '../actions';
 import { DescritivoField } from '@/components/admin/instituicao-descritivo-fields';
 import { InstituicaoContatoFields, InstituicaoContatoTipoManager } from '@/components/admin/instituicao-contatos-fields';
-import { LogoUploadForm } from '@/components/admin/logo-upload-form';
+import { BrandAssetUpload } from '@/components/admin/brand-asset-upload';
 import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 import { contentPages, site } from '@/lib/site-data';
 
@@ -29,6 +29,7 @@ export const metadata = {
 
 const INSTITUICAO_STEPS = [
   { key: 'identificacao', label: 'Identificação' },
+  { key: 'identidade_visual', label: 'Identidade visual' },
   { key: 'endereco', label: 'Endereço' },
   { key: 'descritivo', label: 'Descritivo' },
   { key: 'valores', label: 'Missão e valores' },
@@ -47,6 +48,7 @@ const FALLBACK_INSTITUICAO = {
   natureza_juridica: undefined as string | undefined,
   data_fundacao: undefined as string | undefined,
   logo_url: undefined as string | undefined,
+  logo_com_fundo_url: undefined as string | undefined,
   descricao: QUEM_SOMOS?.intro,
   historia: QUEM_SOMOS?.sections.find((section) => section.heading === 'Nossa história')?.text,
   missao: QUEM_SOMOS?.sections.find((section) => section.heading === 'Nossa missão')?.text,
@@ -55,6 +57,14 @@ const FALLBACK_INSTITUICAO = {
     QUEM_SOMOS?.sections
       .find((section) => section.heading === 'Nossos valores')
       ?.bullets?.join('\n') ?? QUEM_SOMOS?.sections.find((section) => section.heading === 'Nossos valores')?.text,
+  identidade_visual_descricao:
+    'A marca do GEEF comunica acolhimento, sobriedade e clareza. A composição prioriza legibilidade e uso consistente em contextos institucionais.',
+  identidade_visual_composicao:
+    'A composição combina símbolo e tipografia em equilíbrio, com respiro adequado, sem distorções, sombras excessivas ou efeitos que comprometam a leitura.',
+  identidade_visual_uso:
+    'Use a logo sem fundo em fundos claros, cabeçalhos e materiais digitais. Use a versão com fundo quando for preciso contraste imediato ou apoio visual mais marcante.',
+  identidade_visual_exemplos:
+    'Exemplos de uso: topo do site, capa de documentos, avatar institucional, cartão de apresentação, assinatura e peças de divulgação.',
   estatuto_url: undefined as string | undefined,
 };
 
@@ -125,6 +135,18 @@ function buildInstituicaoPatch(instituicaoAtual: typeof FALLBACK_INSTITUICAO | n
     };
   }
 
+  if (step === 'identidade_visual') {
+    return {
+      nome_oficial: nomeOficial,
+      logo_url: textValue(formData, 'logo_url'),
+      logo_com_fundo_url: textValue(formData, 'logo_com_fundo_url'),
+      identidade_visual_descricao: textValue(formData, 'identidade_visual_descricao'),
+      identidade_visual_composicao: textValue(formData, 'identidade_visual_composicao'),
+      identidade_visual_uso: textValue(formData, 'identidade_visual_uso'),
+      identidade_visual_exemplos: textValue(formData, 'identidade_visual_exemplos'),
+    };
+  }
+
   if (step === 'descritivo') {
     return {
       nome_oficial: nomeOficial,
@@ -183,6 +205,7 @@ function TabHeaderAction({ activeStep }: { activeStep: InstituicaoStep }) {
     identificacao: 'instituicao-step-form',
     endereco: 'instituicao-step-form',
     descritivo: 'instituicao-step-form',
+    identidade_visual: 'instituicao-step-form',
     valores: 'instituicao-step-form',
     documentos: 'instituicao-step-form',
     contatos: 'contatos-step-form',
@@ -482,6 +505,61 @@ async function EditInstituicaoContent({ searchParams }: { searchParams: { tab?: 
               </div>
             )}
 
+            {activeStep === 'identidade_visual' && (
+              <div className="module-grid">
+                <div style={{ gridColumn: '1 / -1' }}>
+                  <BrandAssetUpload
+                    title="Logo sem fundo"
+                    description="Versão principal para o site, documentos e materiais com fundo claro."
+                    fieldName="logo_url"
+                    currentAsset={instituicaoBase.logo_url || ''}
+                  />
+                </div>
+
+                <div style={{ gridColumn: '1 / -1' }}>
+                  <BrandAssetUpload
+                    title="Logo com fundo"
+                    description="Versão alternativa para fundos irregulares ou peças que precisam de contraste imediato."
+                    fieldName="logo_com_fundo_url"
+                    currentAsset={instituicaoBase.logo_com_fundo_url || ''}
+                  />
+                </div>
+
+                <DescritivoField
+                  name="identidade_visual_descricao"
+                  label="Descrição da marca"
+                  defaultValue={instituicaoBase.identidade_visual_descricao || ''}
+                  rows={4}
+                  recommendedLength={360}
+                  placeholder="Descreva a ideia central da marca e o que ela comunica."
+                />
+                <DescritivoField
+                  name="identidade_visual_composicao"
+                  label="Composição e tipografia"
+                  defaultValue={instituicaoBase.identidade_visual_composicao || ''}
+                  rows={4}
+                  recommendedLength={500}
+                  placeholder="Explique a composição, a letra e o comportamento visual da marca."
+                />
+                <DescritivoField
+                  name="identidade_visual_uso"
+                  label="Como usar a marca"
+                  defaultValue={instituicaoBase.identidade_visual_uso || ''}
+                  rows={4}
+                  recommendedLength={500}
+                  placeholder="Informe quando usar cada versão e quais cuidados adotar."
+                />
+                <DescritivoField
+                  name="identidade_visual_exemplos"
+                  label="Exemplos de uso"
+                  defaultValue={instituicaoBase.identidade_visual_exemplos || ''}
+                  rows={4}
+                  recommendedLength={500}
+                  placeholder="Liste exemplos práticos de uso da marca."
+                />
+              </div>
+            )}
+
             {activeStep === 'endereco' && (
               <div className="module-grid">
                 <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
@@ -571,13 +649,6 @@ async function EditInstituicaoContent({ searchParams }: { searchParams: { tab?: 
 
             {activeStep === 'documentos' && (
               <div className="module-grid">
-                <div style={{ gridColumn: '1 / -1' }}>
-                  <label>
-                    <span style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>Logo</span>
-                  </label>
-                  <LogoUploadForm currentLogo={instituicaoBase.logo_url || ''} />
-                </div>
-                <input type="hidden" name="logo_url" value={instituicaoBase.logo_url || ''} />
                 <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
                   <span>Estatuto (URL do PDF)</span>
                   <input type="url" name="estatuto_url" defaultValue={instituicaoBase.estatuto_url || ''} className="profile-form-input" />

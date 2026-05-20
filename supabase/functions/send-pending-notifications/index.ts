@@ -7,7 +7,7 @@ const supabaseUrl = Deno.env.get('SUPABASE_URL');
 const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 const resendApiKey = Deno.env.get('RESEND_API_KEY');
 
-if (!supabaseUrl || !supabaseKey || !resendApiKey) {
+if (!supabaseUrl || !supabaseKey) {
   throw new Error('Missing required environment variables');
 }
 
@@ -31,6 +31,10 @@ interface Pessoa {
 }
 
 async function sendEmailViaResend(email: string, titulo: string, mensagem: string, tipo: string) {
+  if (!resendApiKey) {
+    throw new Error('RESEND_API_KEY not configured');
+  }
+
   const response = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
