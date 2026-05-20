@@ -1,5 +1,7 @@
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 import { createClient } from "@/lib/supabase/server";
+import { NotificationFlashBridge } from "@/components/notification-flash-bridge";
 
 export default async function MinhaAreaLayout({
   children,
@@ -15,5 +17,10 @@ export default async function MinhaAreaLayout({
     redirect("/login?next=/minha-area");
   }
 
-  return children;
+  return (
+    <Suspense fallback={null}>
+      <NotificationFlashBridge />
+      {children}
+    </Suspense>
+  );
 }

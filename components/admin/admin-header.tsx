@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { signOut } from '@/app/login/actions';
 import { clearUserData } from '@/hooks/useUserPersistence';
 
 interface AdminHeaderProps {
@@ -30,15 +29,13 @@ export function AdminHeader({ user, usuarioSistema }: AdminHeaderProps) {
           <span className="admin-user-role">{usuarioSistema.perfil}</span>
         </div>
 
-        <button
-          onClick={async () => {
-            clearUserData();
-            await signOut();
-          }}
+        <a
+          href="/logout"
+          onClick={() => clearUserData()}
           className="admin-logout-btn"
         >
           Sair
-        </button>
+        </a>
       </div>
     </header>
   );

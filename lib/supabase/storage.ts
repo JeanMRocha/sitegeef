@@ -8,6 +8,13 @@ const LOGO_PATH = 'logo/logo.png';
 const LOGO_CACHE_TIME = 86400;
 
 export async function uploadLogo(file: File): Promise<{ success: boolean; url?: string; error?: string }> {
+  return uploadStorageAsset(file, LOGO_PATH);
+}
+
+export async function uploadStorageAsset(
+  file: File,
+  storagePath: string,
+): Promise<{ success: boolean; url?: string; error?: string }> {
   try {
     const buffer = await file.arrayBuffer();
     const supabase = createServiceRoleClient();
@@ -15,7 +22,7 @@ export async function uploadLogo(file: File): Promise<{ success: boolean; url?: 
     // Remove arquivo anterior se existir
     const { error: deleteError } = await supabase.storage
       .from(LOGO_BUCKET)
-      .remove([LOGO_PATH]);
+      .remove([storagePath]);
 
     // Log do erro de delete (pode não existir)
     if (deleteError && deleteError.name !== 'NotFoundError') {
@@ -25,7 +32,7 @@ export async function uploadLogo(file: File): Promise<{ success: boolean; url?: 
     // Faz upload do novo arquivo
     const { data, error: uploadError } = await supabase.storage
       .from(LOGO_BUCKET)
-      .upload(LOGO_PATH, buffer, {
+      .upload(storagePath, buffer, {
         contentType: file.type,
         upsert: true,
       });
@@ -37,7 +44,7 @@ export async function uploadLogo(file: File): Promise<{ success: boolean; url?: 
     // Gera URL pública
     const { data: urlData } = supabase.storage
       .from(LOGO_BUCKET)
-      .getPublicUrl(LOGO_PATH);
+      .getPublicUrl(storagePath);
 
     return { success: true, url: urlData.publicUrl };
   } catch (error) {

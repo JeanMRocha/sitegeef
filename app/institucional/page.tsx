@@ -122,7 +122,7 @@ export default async function InstitucionalPage() {
       </section>
 
       <section className="public-showcase">
-        <article className="content-card">
+          <article className="content-card">
           <p className="eyebrow">FEB</p>
           <h2>{copy.feb}</h2>
           <p>{copy.febText}</p>
@@ -150,41 +150,24 @@ export default async function InstitucionalPage() {
               {copy.visit}
             </a>
           </div>
-        </article>
 
-        <aside className="public-showcase-panel">
-          <p className="content-panel-label">{copy.structure}</p>
-          <div className="public-trust-grid" style={{ gridTemplateColumns: "1fr", marginTop: "0.85rem" }}>
-            <div className="public-trust-item">
-              <strong>REUNIR II Serrana</strong>
-              <span>{copy.reunirText}</span>
-            </div>
-            <div className="public-trust-item">
-              <strong>45º CEU</strong>
-              <span>{copy.ceuText}</span>
-            </div>
-            <div className="public-trust-item">
-              <strong>GEEF</strong>
-              <span>{copy.geefText}</span>
+          <div style={{ marginTop: "1.5rem" }}>
+            <p className="content-panel-label">{copy.structure}</p>
+            <div className="public-trust-grid" style={{ gridTemplateColumns: "1fr", marginTop: "0.85rem" }}>
+              <div className="public-trust-item">
+                <strong>REUNIR II Serrana</strong>
+                <span>{copy.reunirText}</span>
+              </div>
+              <div className="public-trust-item">
+                <strong>45º CEU</strong>
+                <span>{copy.ceuText}</span>
+              </div>
+              <div className="public-trust-item">
+                <strong>GEEF</strong>
+                <span>{copy.geefText}</span>
+              </div>
             </div>
           </div>
-        </aside>
-      </section>
-
-      <section className="public-feature-band">
-        <article className="public-feature-tile">
-          <h2 className="public-feature-title">REUNIR II Serrana</h2>
-          <p className="public-feature-text">{copy.reunirText}</p>
-        </article>
-
-        <article className="public-feature-tile">
-          <h2 className="public-feature-title">45º Centro Espírita Unificado</h2>
-          <p className="public-feature-text">{copy.ceuText}</p>
-        </article>
-
-        <article className="public-feature-tile">
-          <h2 className="public-feature-title">{copy.regionalCompromiseTitle}</h2>
-          <p className="public-feature-text">{copy.regionalCompromiseText}</p>
         </article>
       </section>
 
@@ -203,7 +186,9 @@ export default async function InstitucionalPage() {
             </li>
             <li>
               <span className="mini-dot" aria-hidden="true" />
-              {locale === "en" ? "Coordination in 45th CEU" : "Coordenação no 45º CEU"}
+              {locale === "en"
+                ? "Coordination in 45th CEU"
+                : "Coordenação no 45º CEU"}
             </li>
           </ul>
         </article>

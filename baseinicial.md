@@ -8,7 +8,7 @@ Orientações do site sistema:
 - gestão das redes sociais - todas cadastradas e o conteúdo do site com controle para publicação simultâneo facebook/ instagram / youtube
 - salas direcionadas - temos as reuniões públicas com palestras onde podemos ter o resumo, o vídeo embebed do youtube da palestra/evento, tela geral de busca e tela de detalhes.
 - Dados gerais da instituição, estatuto, regulamentos, orientações, normas, departamentos, responsáveis por cada departamento, validade de cada chapa com os representantes e históricos de cada pasta(similar a um sistema de prefeito e secretarias)
-- vínculos com organizações a agrupamentos de nível superior, GEEF faz parte do 45° CEU - Reunir - CEERJ - FEB. Hierarquia da casa.
+- vínculos com organizações a agrupamentos de nível superior, GEEF faz parte do 45° CEU, ligado ao REUNIR II Serrana - CEERJ - FEB. Hierarquia da casa.
 - Possibilidade de que outras casas espiritas possam usar o sistema;
 - Sala de palestra ao vivo online - transmitida via youtube ou aplicativo como zoom, meeet, etc, uma aba do ao vivo com possibilidade de notificações, tempo para iniciar, informações do evento, etc.
 - Cadastro de Palestrantes -

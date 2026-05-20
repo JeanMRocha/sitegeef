@@ -1,7 +1,9 @@
 import { redirect } from 'next/navigation';
+import { Suspense } from 'react';
 import { createClient } from '@/lib/supabase/server';
 import { AdminSidebar } from '@/components/admin/admin-sidebar';
 import { AdminHeader } from '@/components/admin/admin-header';
+import { NotificationFlashBridge } from '@/components/notification-flash-bridge';
 import '@/styles/admin.css';
 import '@/styles/admin-sidebar.css';
 
@@ -83,6 +85,9 @@ export default async function AdminLayout({
 
   return (
     <div className="admin-layout">
+      <Suspense fallback={null}>
+        <NotificationFlashBridge />
+      </Suspense>
       <AdminHeader user={user} usuarioSistema={resolvedUsuarioSistema} />
       <div className="admin-container">
         <AdminSidebar usuarioSistema={resolvedUsuarioSistema} />

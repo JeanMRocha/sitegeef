@@ -4,7 +4,7 @@ import { revalidateTag, unstable_cache, revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
-import { uploadLogo } from '@/lib/supabase/storage';
+import { uploadStorageAsset } from '@/lib/supabase/storage';
 
 function hasMeaningfulError(error: unknown) {
   if (!error || typeof error !== 'object') {
@@ -171,11 +171,18 @@ export async function updateInstituicao(formData: {
   natureza_juridica?: string;
   data_fundacao?: string;
   logo_url?: string;
+  logo_com_fundo_url?: string;
   descricao?: string;
   historia?: string;
   missao?: string;
   visao?: string;
   valores?: string;
+  identidade_visual_descricao?: string;
+  identidade_visual_letras_descricao?: string;
+  identidade_visual_visual_descricao?: string;
+  identidade_visual_composicao?: string;
+  identidade_visual_uso?: string;
+  identidade_visual_exemplos?: string;
   estatuto_url?: string;
 }) {
   const supabase = createServiceRoleClient();
@@ -194,11 +201,18 @@ export async function updateInstituicao(formData: {
         natureza_juridica?: string | null;
         data_fundacao?: string | null;
         logo_url?: string | null;
+        logo_com_fundo_url?: string | null;
         descricao?: string | null;
         historia?: string | null;
         missao?: string | null;
         visao?: string | null;
         valores?: string | null;
+        identidade_visual_descricao?: string | null;
+        identidade_visual_letras_descricao?: string | null;
+        identidade_visual_visual_descricao?: string | null;
+        identidade_visual_composicao?: string | null;
+        identidade_visual_uso?: string | null;
+        identidade_visual_exemplos?: string | null;
         estatuto_url?: string | null;
       }
     | null = null;
@@ -206,7 +220,7 @@ export async function updateInstituicao(formData: {
   try {
     const { data, error } = await supabase
       .from('instituicao')
-      .select('id, nome_oficial, nome_curto, cnpj, natureza_juridica, data_fundacao, logo_url, descricao, historia, missao, visao, valores, estatuto_url')
+      .select('id, nome_oficial, nome_curto, cnpj, natureza_juridica, data_fundacao, logo_url, logo_com_fundo_url, descricao, historia, missao, visao, valores, identidade_visual_descricao, identidade_visual_letras_descricao, identidade_visual_visual_descricao, identidade_visual_composicao, identidade_visual_uso, identidade_visual_exemplos, estatuto_url')
       .order('criado_em', { ascending: true })
       .limit(1)
       .maybeSingle();
@@ -227,11 +241,18 @@ export async function updateInstituicao(formData: {
       natureza_juridica: patch.natureza_juridica ?? existingRow?.natureza_juridica ?? null,
       data_fundacao: patch.data_fundacao ?? existingRow?.data_fundacao ?? null,
       logo_url: patch.logo_url ?? existingRow?.logo_url ?? null,
+      logo_com_fundo_url: patch.logo_com_fundo_url ?? existingRow?.logo_com_fundo_url ?? null,
       descricao: patch.descricao ?? existingRow?.descricao ?? null,
       historia: patch.historia ?? existingRow?.historia ?? null,
       missao: patch.missao ?? existingRow?.missao ?? null,
       visao: patch.visao ?? existingRow?.visao ?? null,
       valores: patch.valores ?? existingRow?.valores ?? null,
+      identidade_visual_descricao: patch.identidade_visual_descricao ?? existingRow?.identidade_visual_descricao ?? null,
+      identidade_visual_letras_descricao: patch.identidade_visual_letras_descricao ?? existingRow?.identidade_visual_letras_descricao ?? null,
+      identidade_visual_visual_descricao: patch.identidade_visual_visual_descricao ?? existingRow?.identidade_visual_visual_descricao ?? null,
+      identidade_visual_composicao: patch.identidade_visual_composicao ?? existingRow?.identidade_visual_composicao ?? null,
+      identidade_visual_uso: patch.identidade_visual_uso ?? existingRow?.identidade_visual_uso ?? null,
+      identidade_visual_exemplos: patch.identidade_visual_exemplos ?? existingRow?.identidade_visual_exemplos ?? null,
       estatuto_url: patch.estatuto_url ?? existingRow?.estatuto_url ?? null,
       atualizado_em: new Date().toISOString(),
     };
@@ -502,19 +523,28 @@ export async function deleteContaBancaria(id: string) {
 }
 
 export async function uploadLogoAction(formData: FormData) {
+  return uploadBrandAssetAction(formData);
+}
+
+export async function uploadBrandAssetAction(formData: FormData) {
   const file = formData.get('file') as File;
+  const slot = typeof formData.get('slot') === 'string' ? String(formData.get('slot')) : 'logo_url';
+  const fieldName = typeof formData.get('field_name') === 'string' ? String(formData.get('field_name')) : slot;
+  const storagePath =
+    slot === 'logo_com_fundo_url'
+      ? 'brand/logo-oficial.jpg'
+      : 'brand/logo-oficial-transparent.png';
 
   if (!file) {
     return { success: false, error: 'Nenhum arquivo foi selecionado.' };
   }
 
-  const result = await uploadLogo(file);
+  const result = await uploadStorageAsset(file, storagePath);
 
   if (!result.success) {
     return { success: false, error: result.error };
   }
 
-  // Atualizar logo_url na instituição
   const supabase = createServiceRoleClient();
   let instituicaoId: string | null = null;
 
@@ -534,7 +564,7 @@ export async function uploadLogoAction(formData: FormData) {
   if (instituicaoId) {
     const { error } = await supabase
       .from('instituicao')
-      .update({ logo_url: result.url, atualizado_em: new Date().toISOString() })
+      .update({ [fieldName]: result.url, atualizado_em: new Date().toISOString() })
       .eq('id', instituicaoId);
 
     if (error) {

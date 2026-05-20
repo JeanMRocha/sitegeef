@@ -23,6 +23,7 @@ type MultilingualCopy = {
     institutional: string;
     more: string;
     account: string;
+    contact: string;
     enter: string;
     createAccount: string;
     privacy: string;
@@ -178,6 +179,7 @@ const multilingualCopy: Record<Locale, MultilingualCopy> = {
       institutional: "Institucional",
       more: "Mais opções institucionais",
       account: "Acesso à conta",
+      contact: "Contato",
       enter: "Entrar",
       createAccount: "Criar conta",
       privacy: "Privacidade",
@@ -266,6 +268,7 @@ const multilingualCopy: Record<Locale, MultilingualCopy> = {
       institutional: "Institutional",
       more: "Institutional options",
       account: "Account access",
+      contact: "Contact",
       enter: "Sign in",
       createAccount: "Create account",
       privacy: "Privacy",
