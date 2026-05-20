@@ -9,5 +9,18 @@ export function getLocalizedNavItems(locale: Locale): NavItem[] {
 }
 
 export function getInstitutionalNavItems(locale: Locale): NavItem[] {
-  return getLocalizedNavItems(locale).filter((item) => item.group === "institucional");
+  const localized = getLocalizedNavItems(locale);
+  const byHref = new Map(localized.map((item) => [item.href, item]));
+  const orderedHrefs = [
+    "/ao-vivo",
+    "/escalas",
+    "/estudos",
+    "/institucional",
+    "/identidade-visual",
+    "/doacoes",
+    "/lgpd",
+    "/cookies",
+  ];
+
+  return orderedHrefs.map((href) => byHref.get(href)).filter((item): item is NavItem => Boolean(item));
 }

@@ -19,7 +19,7 @@ export function SiteHeader({
   avatarUrl,
   hasAdminAccess,
 }: SiteHeaderProps) {
-  const primaryLinks = getLocalizedNavItems(locale).filter((item) => !item.group && !item.icon);
+  const primaryLinks = getLocalizedNavItems(locale).filter((item) => item.primary);
 
   return (
     <header className="site-header">

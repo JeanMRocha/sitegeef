@@ -41,6 +41,10 @@ export function SiteHeaderActions({
 
   return (
     <div className="site-header-right">
+      <Link href="/contato" className="site-nav-contact-btn">
+        {copy.header.contact}
+      </Link>
+
       <div ref={moreRef} className="site-nav-more">
         <button
           onClick={() => setMoreOpen(!moreOpen)}
