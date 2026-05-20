@@ -7,7 +7,6 @@ import { getMultilingualCopy, type Locale } from "@/lib/multilingual/client";
 import { LanguageSwitcher } from "@/components/multilingual/language-switcher";
 import { useTheme } from "@/hooks/useTheme";
 import { MoonIcon, SunIcon } from "@/components/site-icons";
-import { signOut } from "@/app/login/actions";
 
 type UserMenuProps = {
   locale: Locale;
@@ -206,12 +205,9 @@ export function UserMenu({
                 )}
               </button>
             </div>
-            <button
-              onClick={() => signOut()}
-              className="site-header-user-logout"
-            >
+            <a href="/logout" className="site-header-user-logout">
               <span>🚪</span> {copy.header.signOut}
-            </button>
+            </a>
           </nav>
         </div>
       )}

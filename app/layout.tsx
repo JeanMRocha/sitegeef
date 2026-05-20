@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { Manrope, Fredoka } from "next/font/google";
 import { SiteShell } from "@/components/site-shell";
 import { ThemeProvider } from "@/lib/theme/theme-provider";
 import { createClient } from "@/lib/supabase/server";
 import { UserPersistenceWrapper } from "@/components/user-persistence-wrapper";
 import { NotificationProvider } from "@/components/providers/NotificationProvider";
-import { NotificationFlashBridge } from "@/components/notification-flash-bridge";
 import { getHtmlLang, getRequestLocale } from "@/lib/multilingual";
 import "@/styles/theme.css";
 import "@/styles/globals.css";
@@ -57,9 +55,6 @@ export default async function RootLayout({
       <body className={`${headingFont.variable} ${bodyFont.variable}`}>
         <ThemeProvider>
           <NotificationProvider>
-            <Suspense fallback={null}>
-              <NotificationFlashBridge />
-            </Suspense>
             <UserPersistenceWrapper user={user}>
               <SiteShell locale={locale} user={user}>
                 {children}

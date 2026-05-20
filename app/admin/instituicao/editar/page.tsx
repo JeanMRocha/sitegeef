@@ -59,6 +59,10 @@ const FALLBACK_INSTITUICAO = {
       ?.bullets?.join('\n') ?? QUEM_SOMOS?.sections.find((section) => section.heading === 'Nossos valores')?.text,
   identidade_visual_descricao:
     'A marca do GEEF comunica acolhimento, sobriedade e clareza. A composição prioriza legibilidade e uso consistente em contextos institucionais.',
+  identidade_visual_letras_descricao:
+    'As letras usam uma composição acolhedora, legível e equilibrada, com desenho pensado para leitura rápida em diferentes tamanhos.',
+  identidade_visual_visual_descricao:
+    'A leitura visual privilegia contraste, respiro e presença institucional sem exageros, preservando a identidade da casa em cada aplicação.',
   identidade_visual_composicao:
     'A composição combina símbolo e tipografia em equilíbrio, com respiro adequado, sem distorções, sombras excessivas ou efeitos que comprometam a leitura.',
   identidade_visual_uso:
@@ -141,6 +145,8 @@ function buildInstituicaoPatch(instituicaoAtual: typeof FALLBACK_INSTITUICAO | n
       logo_url: textValue(formData, 'logo_url'),
       logo_com_fundo_url: textValue(formData, 'logo_com_fundo_url'),
       identidade_visual_descricao: textValue(formData, 'identidade_visual_descricao'),
+      identidade_visual_letras_descricao: textValue(formData, 'identidade_visual_letras_descricao'),
+      identidade_visual_visual_descricao: textValue(formData, 'identidade_visual_visual_descricao'),
       identidade_visual_composicao: textValue(formData, 'identidade_visual_composicao'),
       identidade_visual_uso: textValue(formData, 'identidade_visual_uso'),
       identidade_visual_exemplos: textValue(formData, 'identidade_visual_exemplos'),
@@ -532,6 +538,22 @@ async function EditInstituicaoContent({ searchParams }: { searchParams: { tab?: 
                   rows={4}
                   recommendedLength={360}
                   placeholder="Descreva a ideia central da marca e o que ela comunica."
+                />
+                <DescritivoField
+                  name="identidade_visual_letras_descricao"
+                  label="Descrição das letras"
+                  defaultValue={instituicaoBase.identidade_visual_letras_descricao || ''}
+                  rows={4}
+                  recommendedLength={420}
+                  placeholder="Explique o desenho das letras, legibilidade e comportamento tipográfico."
+                />
+                <DescritivoField
+                  name="identidade_visual_visual_descricao"
+                  label="Descrição visual"
+                  defaultValue={instituicaoBase.identidade_visual_visual_descricao || ''}
+                  rows={4}
+                  recommendedLength={420}
+                  placeholder="Descreva a aparência geral da marca e como ela deve ser percebida."
                 />
                 <DescritivoField
                   name="identidade_visual_composicao"

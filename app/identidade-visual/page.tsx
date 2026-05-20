@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getRequestLocale } from "@/lib/multilingual/server";
 import { getInstitutionBrand } from "@/lib/institution-brand";
+import { BrandLogoDisclosure } from "@/components/brand-logo-disclosure";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
@@ -30,7 +31,11 @@ export default async function IdentidadeVisualPage() {
           altLogo: "Alternative logo with background",
           download: "Download",
           open: "Open file",
+          expand: "Expand",
+          compact: "Compact preview",
           descriptionTitle: "Logo description",
+          lettersTitle: "Lettering description",
+          visualTitle: "Visual description",
           compositionTitle: "Lettering and composition",
           useTitle: "How to use",
           examplesTitle: "Examples",
@@ -45,7 +50,11 @@ export default async function IdentidadeVisualPage() {
           altLogo: "Logo alternativa com fundo",
           download: "Baixar",
           open: "Abrir arquivo",
+          expand: "Expandir",
+          compact: "Prévia compacta",
           descriptionTitle: "Descritivo da logo",
+          lettersTitle: "Descrição das letras",
+          visualTitle: "Descrição visual",
           compositionTitle: "Letra e composição",
           useTitle: "Como usar",
           examplesTitle: "Exemplos de uso",
@@ -77,6 +86,71 @@ export default async function IdentidadeVisualPage() {
 
   return (
     <main className="public-page">
+      <style>{`
+        .brand-disclosure {
+          border: 1px solid var(--line);
+          border-radius: 1rem;
+          background: rgba(255, 255, 255, 0.55);
+        }
+
+        .brand-disclosure > summary {
+          list-style: none;
+          cursor: pointer;
+        }
+
+        .brand-disclosure > summary::-webkit-details-marker {
+          display: none;
+        }
+
+        .brand-disclosure-summary {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 0.5rem;
+          padding-bottom: 0.1rem;
+          font-weight: 700;
+        }
+
+        .brand-disclosure-hint {
+          font-size: 0.72rem;
+          font-weight: 600;
+          color: var(--muted);
+          white-space: nowrap;
+        }
+
+        .brand-disclosure-indicator {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 1.5rem;
+          height: 1.5rem;
+          border-radius: 999px;
+          border: 1px solid var(--line);
+          color: var(--muted);
+          background: rgba(255, 255, 255, 0.45);
+          flex: 0 0 auto;
+          font-size: 0.8rem;
+        }
+
+        .brand-disclosure-summary:hover .brand-disclosure-indicator,
+        .brand-disclosure-summary:focus-visible .brand-disclosure-indicator {
+          color: var(--uva);
+          border-color: rgba(138, 0, 90, 0.2);
+          background: rgba(138, 0, 90, 0.06);
+        }
+
+        .brand-disclosure:not([open]) .brand-disclosure-expanded {
+          display: none;
+        }
+
+        .brand-disclosure[open] .brand-disclosure-summary {
+          padding-bottom: 0.4rem;
+        }
+
+        .brand-disclosure[open] {
+          gap: 0.85rem;
+        }
+      `}</style>
       <section className="content-hero public-hero-shell">
         <div className="public-hero-grid">
           <div className="content-copy">
@@ -93,41 +167,51 @@ export default async function IdentidadeVisualPage() {
         </div>
       </section>
 
-      <section className="public-showcase" style={{ alignItems: "start" }}>
-        <article className="content-card" style={{ alignSelf: "start" }}>
-          <p className="eyebrow">{copy.compositionTitle}</p>
-          <p>{brand.composicao}</p>
-        </article>
+      <section className="public-showcase" style={{ alignItems: "start", gap: "1.25rem" }}>
+        <div
+          className="public-trust-grid"
+          style={{
+            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+            gap: "1rem",
+          }}
+        >
+          <article className="content-card" style={{ alignSelf: "start" }}>
+            <p className="eyebrow">{copy.lettersTitle}</p>
+            <p>{brand.letrasDescricao}</p>
+          </article>
 
-        <div className="public-trust-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "1rem" }}>
+          <article className="content-card" style={{ alignSelf: "start" }}>
+            <p className="eyebrow">{copy.visualTitle}</p>
+            <p>{brand.visualDescricao}</p>
+          </article>
+
+          <article className="content-card" style={{ alignSelf: "start" }}>
+            <p className="eyebrow">{copy.compositionTitle}</p>
+            <p>{brand.composicao}</p>
+          </article>
+        </div>
+
+        <div
+          className="public-trust-grid"
+          style={{
+            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+            gap: "1rem",
+          }}
+        >
           {brandItems.map((item) => (
-            <article key={item.title} className="public-trust-item" style={{ padding: "1rem", display: "grid", gap: "0.85rem" }}>
-              <strong>{item.title}</strong>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  minHeight: "180px",
-                  borderRadius: "1rem",
-                  border: "1px solid var(--line)",
-                  background: item.previewBackground,
-                  overflow: "hidden",
-                  boxShadow: item.title === copy.mainLogo ? "inset 0 0 0 1px rgba(255,255,255,0.6)" : "none",
-                }}
-              >
-                <img src={item.src} alt={item.title} style={{ maxWidth: "100%", maxHeight: "160px", objectFit: "contain" }} />
-              </div>
-              <p style={{ margin: 0, color: "var(--muted)", lineHeight: 1.55 }}>{item.description}</p>
-              <div className="hero-actions" style={{ marginTop: "0.15rem", flexWrap: "wrap" }}>
-                <a href={item.src} download={item.downloadName} className="button button-secondary">
-                  {copy.download}
-                </a>
-                <a href={item.src} target="_blank" rel="noreferrer" className="button button-secondary">
-                  {copy.open}
-                </a>
-              </div>
-            </article>
+            <BrandLogoDisclosure
+              key={item.title}
+              title={item.title}
+              src={item.src}
+              description={item.description}
+              previewBackground={item.previewBackground}
+              downloadName={item.downloadName}
+              downloadLabel={copy.download}
+              openLabel={copy.open}
+              expandLabel={copy.expand}
+              compactLabel={copy.compact}
+              accentPreview={item.title === copy.mainLogo}
+            />
           ))}
         </div>
       </section>

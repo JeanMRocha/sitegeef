@@ -178,6 +178,8 @@ export async function updateInstituicao(formData: {
   visao?: string;
   valores?: string;
   identidade_visual_descricao?: string;
+  identidade_visual_letras_descricao?: string;
+  identidade_visual_visual_descricao?: string;
   identidade_visual_composicao?: string;
   identidade_visual_uso?: string;
   identidade_visual_exemplos?: string;
@@ -206,6 +208,8 @@ export async function updateInstituicao(formData: {
         visao?: string | null;
         valores?: string | null;
         identidade_visual_descricao?: string | null;
+        identidade_visual_letras_descricao?: string | null;
+        identidade_visual_visual_descricao?: string | null;
         identidade_visual_composicao?: string | null;
         identidade_visual_uso?: string | null;
         identidade_visual_exemplos?: string | null;
@@ -216,7 +220,7 @@ export async function updateInstituicao(formData: {
   try {
     const { data, error } = await supabase
       .from('instituicao')
-      .select('id, nome_oficial, nome_curto, cnpj, natureza_juridica, data_fundacao, logo_url, logo_com_fundo_url, descricao, historia, missao, visao, valores, identidade_visual_descricao, identidade_visual_composicao, identidade_visual_uso, identidade_visual_exemplos, estatuto_url')
+      .select('id, nome_oficial, nome_curto, cnpj, natureza_juridica, data_fundacao, logo_url, logo_com_fundo_url, descricao, historia, missao, visao, valores, identidade_visual_descricao, identidade_visual_letras_descricao, identidade_visual_visual_descricao, identidade_visual_composicao, identidade_visual_uso, identidade_visual_exemplos, estatuto_url')
       .order('criado_em', { ascending: true })
       .limit(1)
       .maybeSingle();
@@ -244,6 +248,8 @@ export async function updateInstituicao(formData: {
       visao: patch.visao ?? existingRow?.visao ?? null,
       valores: patch.valores ?? existingRow?.valores ?? null,
       identidade_visual_descricao: patch.identidade_visual_descricao ?? existingRow?.identidade_visual_descricao ?? null,
+      identidade_visual_letras_descricao: patch.identidade_visual_letras_descricao ?? existingRow?.identidade_visual_letras_descricao ?? null,
+      identidade_visual_visual_descricao: patch.identidade_visual_visual_descricao ?? existingRow?.identidade_visual_visual_descricao ?? null,
       identidade_visual_composicao: patch.identidade_visual_composicao ?? existingRow?.identidade_visual_composicao ?? null,
       identidade_visual_uso: patch.identidade_visual_uso ?? existingRow?.identidade_visual_uso ?? null,
       identidade_visual_exemplos: patch.identidade_visual_exemplos ?? existingRow?.identidade_visual_exemplos ?? null,
