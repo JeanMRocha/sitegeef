@@ -15,7 +15,6 @@ export const ThemeContext = createContext<ThemeContextType | undefined>(
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<Theme>("light");
-  const [mounted, setMounted] = useState(false);
 
   // Carregar tema preferido do localStorage
   useEffect(() => {
@@ -25,7 +24,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const initialTheme = isPublicSurface ? "light" : (saved || "light");
     setThemeState(initialTheme);
     applyTheme(initialTheme);
-    setMounted(true);
   }, []);
 
   const setTheme = (newTheme: Theme) => {
@@ -40,7 +38,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
-      {mounted ? children : null}
+      {children}
     </ThemeContext.Provider>
   );
 }

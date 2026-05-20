@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { getRequestLocale } from "@/lib/multilingual/server";
 import { getInstitutionBrand } from "@/lib/institution-brand";
 
@@ -26,8 +25,7 @@ export default async function IdentidadeVisualPage() {
           title: "Visual identity manual",
           summary:
             "This page gathers the official logo versions, usage guidelines and short examples so the brand stays consistent in every area.",
-          lead:
-            "The admin area is the source of truth. If a logo changes there, this page reflects the same reference automatically.",
+          lead: "Official versions, usage guidance and download links are shown here in a simple, readable layout.",
           mainLogo: "Primary logo without background",
           altLogo: "Alternative logo with background",
           download: "Download",
@@ -36,17 +34,14 @@ export default async function IdentidadeVisualPage() {
           compositionTitle: "Lettering and composition",
           useTitle: "How to use",
           examplesTitle: "Examples",
-          adminLink: "Update in admin",
-          adminHint: "The institutional editor keeps the official assets and text up to date.",
         }
       : {
           eyebrow: "Marca oficial",
           title: "Manual de identidade visual",
           summary:
             "Esta página reúne as versões oficiais da logo, o guia de uso e exemplos curtos para manter a marca consistente em todas as áreas.",
-          lead:
-            "A área administrativa é a fonte da verdade. Se a logo mudar lá, esta página reflete a mesma referência automaticamente.",
-          mainLogo: "Logo principal sem fundo",
+          lead: "As versões oficiais, o guia de uso e os links de download ficam reunidos em uma apresentação simples e legível.",
+          mainLogo: "Logo principal fundo transparente",
           altLogo: "Logo alternativa com fundo",
           download: "Baixar",
           open: "Abrir arquivo",
@@ -54,8 +49,6 @@ export default async function IdentidadeVisualPage() {
           compositionTitle: "Letra e composição",
           useTitle: "Como usar",
           examplesTitle: "Exemplos de uso",
-          adminLink: "Atualizar no admin",
-          adminHint: "O editor da instituição mantém os ativos oficiais e os textos atualizados.",
         };
 
   const brandItems = [
@@ -66,7 +59,9 @@ export default async function IdentidadeVisualPage() {
         locale === "en"
           ? "Preferred version for light backgrounds, headers and documents."
           : "Versão preferencial para fundos claros, cabeçalhos e documentos.",
-      downloadName: "geef-logo-sem-fundo",
+      previewBackground:
+        "repeating-conic-gradient(#e5e7eb 0% 25%, #f8fafc 0% 50%) 0 0 / 22px 22px",
+      downloadName: "geef-logo-fundo-transparente",
     },
     {
       title: copy.altLogo,
@@ -75,6 +70,7 @@ export default async function IdentidadeVisualPage() {
         locale === "en"
           ? "Alternative version for busy backgrounds or when extra contrast is needed."
           : "Versão alternativa para fundos mais carregados ou quando for preciso mais contraste.",
+      previewBackground: "#fff",
       downloadName: "geef-logo-com-fundo",
     },
   ];
@@ -97,16 +93,10 @@ export default async function IdentidadeVisualPage() {
         </div>
       </section>
 
-      <section className="public-showcase">
-        <article className="content-card">
+      <section className="public-showcase" style={{ alignItems: "start" }}>
+        <article className="content-card" style={{ alignSelf: "start" }}>
           <p className="eyebrow">{copy.compositionTitle}</p>
           <p>{brand.composicao}</p>
-          <div className="hero-actions" style={{ marginTop: "1.25rem", flexWrap: "wrap" }}>
-            <Link href="/admin/instituicao/editar?tab=identidade_visual" className="button button-secondary">
-              {copy.adminLink}
-            </Link>
-            <span style={{ alignSelf: "center", color: "var(--muted)", fontSize: "0.9rem" }}>{copy.adminHint}</span>
-          </div>
         </article>
 
         <div className="public-trust-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "1rem" }}>
@@ -121,8 +111,9 @@ export default async function IdentidadeVisualPage() {
                   minHeight: "180px",
                   borderRadius: "1rem",
                   border: "1px solid var(--line)",
-                  background: item.title === copy.altLogo ? "#fff" : "rgba(255,255,255,0.8)",
+                  background: item.previewBackground,
                   overflow: "hidden",
+                  boxShadow: item.title === copy.mainLogo ? "inset 0 0 0 1px rgba(255,255,255,0.6)" : "none",
                 }}
               >
                 <img src={item.src} alt={item.title} style={{ maxWidth: "100%", maxHeight: "160px", objectFit: "contain" }} />

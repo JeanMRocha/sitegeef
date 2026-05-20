@@ -62,7 +62,7 @@ const FALLBACK_INSTITUICAO = {
   identidade_visual_composicao:
     'A composição combina símbolo e tipografia em equilíbrio, com respiro adequado, sem distorções, sombras excessivas ou efeitos que comprometam a leitura.',
   identidade_visual_uso:
-    'Use a logo sem fundo em fundos claros, cabeçalhos e materiais digitais. Use a versão com fundo quando for preciso contraste imediato ou apoio visual mais marcante.',
+    'Use a logo com fundo transparente em fundos claros, cabeçalhos e materiais digitais. Use a versão com fundo quando for preciso contraste imediato ou apoio visual mais marcante.',
   identidade_visual_exemplos:
     'Exemplos de uso: topo do site, capa de documentos, avatar institucional, cartão de apresentação, assinatura e peças de divulgação.',
   estatuto_url: undefined as string | undefined,
@@ -509,7 +509,7 @@ async function EditInstituicaoContent({ searchParams }: { searchParams: { tab?: 
               <div className="module-grid">
                 <div style={{ gridColumn: '1 / -1' }}>
                   <BrandAssetUpload
-                    title="Logo sem fundo"
+                    title="Logo fundo transparente"
                     description="Versão principal para o site, documentos e materiais com fundo claro."
                     fieldName="logo_url"
                     currentAsset={instituicaoBase.logo_url || ''}

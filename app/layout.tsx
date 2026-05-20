@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Manrope, Fredoka } from "next/font/google";
 import { SiteShell } from "@/components/site-shell";
 import { ThemeProvider } from "@/lib/theme/theme-provider";
@@ -56,7 +57,9 @@ export default async function RootLayout({
       <body className={`${headingFont.variable} ${bodyFont.variable}`}>
         <ThemeProvider>
           <NotificationProvider>
-            <NotificationFlashBridge />
+            <Suspense fallback={null}>
+              <NotificationFlashBridge />
+            </Suspense>
             <UserPersistenceWrapper user={user}>
               <SiteShell locale={locale} user={user}>
                 {children}

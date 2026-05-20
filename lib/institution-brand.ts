@@ -17,16 +17,33 @@ const FALLBACK_BRAND: InstitutionBrand = {
   composicao:
     "A composição privilegia leitura rápida, equilíbrio entre símbolo e tipografia e uso consistente em fundos claros ou escuros, sem aplicar efeitos que alterem a marca.",
   uso:
-    "Use a logo sem fundo em fundos chapados, cabeçalhos e materiais digitais. Use a versão com fundo quando a área precisar de contraste imediato ou apoio visual mais marcante.",
+    "Use a logo com fundo transparente em fundos chapados, cabeçalhos e materiais digitais. Use a versão com fundo quando a área precisar de contraste imediato ou apoio visual mais marcante.",
   exemplos:
     "Exemplos de aplicação: topo do site, capa de documentos, card institucional, assinaturas de comunicação e materiais de divulgação da casa.",
 };
+
+async function withTimeout<T>(promise: PromiseLike<T>, timeoutMs: number, fallback: T): Promise<T> {
+  let timeoutHandle: ReturnType<typeof setTimeout> | undefined;
+
+  try {
+    return (await Promise.race([
+      promise,
+      new Promise<T>((resolve) => {
+        timeoutHandle = setTimeout(() => resolve(fallback), timeoutMs);
+      }),
+    ])) as T;
+  } finally {
+    if (timeoutHandle) {
+      clearTimeout(timeoutHandle);
+    }
+  }
+}
 
 export async function getInstitutionBrand(): Promise<InstitutionBrand> {
   const supabase = createServiceRoleClient();
 
   try {
-    const { data, error } = await supabase
+    const query = supabase
       .from("instituicao")
       .select(
         "logo_url, logo_com_fundo_url, identidade_visual_descricao, identidade_visual_composicao, identidade_visual_uso, identidade_visual_exemplos"
@@ -34,6 +51,9 @@ export async function getInstitutionBrand(): Promise<InstitutionBrand> {
       .order("criado_em", { ascending: true })
       .limit(1)
       .maybeSingle();
+
+    const result = await withTimeout(query as PromiseLike<any>, 1800, { data: null, error: null });
+    const { data, error } = result as { data: any; error: unknown };
 
     if (error || !data) {
       return FALLBACK_BRAND;
