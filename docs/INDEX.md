@@ -32,6 +32,7 @@
 - [Testing report](../TESTING_REPORT.md)
 - [Session summary](../SESSION_SUMMARY.md)
 - [Status](../STATUS.md)
+- [Engineering guidelines](./ENGINEERING_GUIDELINES.md)
 
 ### Dominios
 

@@ -4,6 +4,15 @@
 
 Padronizar como o agente encontra o que alterar, como aplica mudancas e como evita retrabalho.
 
+## Principios de engenharia
+
+- Seguir SOLID de forma pragmatica: responsabilidades pequenas, contratos estaveis e dependencias invertidas quando fizer sentido.
+- Documentar sempre que a mudanca alterar regra, contrato, schema, UX ou fluxo operacional.
+- Preferir composicao a duplicacao.
+- Separar leitura, mutacao, validacao e apresentacao.
+- Manter a fonte de verdade no banco quando o dado for compartilhado.
+- Validar build e fluxo afetado antes de encerrar.
+
 ## Leitura recomendada
 
 1. `agente.md`

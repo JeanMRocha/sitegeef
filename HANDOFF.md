@@ -122,6 +122,13 @@ Quando o Autoreflex local voltar a responder, rodar primeiro:
 - Status atual do PR: aberto, limpo e com checks aprovados.
 - Proximo passo natural: revisar/mesclar o PR ou continuar a partir dele em uma nova tarefa.
 
+## Diretriz de engenharia
+
+- O projeto agora explicita SOLID e boas praticas em `docs/ENGINEERING_GUIDELINES.md`.
+- Mudancas relevantes devem documentar regra, contrato, schema, UX ou fluxo operacional.
+- Sempre que houver dado compartilhado, a fonte de verdade deve ficar no banco.
+- Antes de finalizar qualquer entrega, validar build e o fluxo afetado.
+
 ## Mudancas recentes para nao regredir
 
 - `app/admin/usuarios/actions.ts`
