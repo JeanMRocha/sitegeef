@@ -1,5 +1,3 @@
-'use server';
-
 export type SafeResult<T> = {
   data: T;
   error: unknown | null;
@@ -19,6 +17,23 @@ export function safeFallback<T>(fallback: T) {
     data: fallback,
     error: null,
   } as SafeResult<T>;
+}
+
+export async function withTimeout<T>(promise: PromiseLike<T>, timeoutMs: number, fallback: T): Promise<T> {
+  let timeoutHandle: ReturnType<typeof setTimeout> | undefined;
+
+  try {
+    return await Promise.race([
+      promise,
+      new Promise<T>((resolve) => {
+        timeoutHandle = setTimeout(() => resolve(fallback), timeoutMs);
+      }),
+    ]);
+  } finally {
+    if (timeoutHandle) {
+      clearTimeout(timeoutHandle);
+    }
+  }
 }
 
 export function swallowExpectedError<T>(error: unknown, fallback: T): SafeResult<T> {

@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { createClient } from '@/lib/supabase/server';
+import { withTimeout } from '@/lib/admin/safe-supabase';
 import { AdminSidebar } from '@/components/admin/admin-sidebar';
 import { AdminHeader } from '@/components/admin/admin-header';
 import { NotificationFlashBridge } from '@/components/notification-flash-bridge';
@@ -23,7 +24,11 @@ export default async function AdminLayout({
   let user = null;
 
   try {
-    const authResult = await supabase.auth.getUser();
+    const authResult = await withTimeout(
+      supabase.auth.getUser() as Promise<any>,
+      4500,
+      { data: { user: null }, error: null } as any,
+    );
     user = authResult.data.user;
   } catch (error) {
     console.error('Falha ao obter usuário autenticado no AdminLayout:', error);
@@ -41,11 +46,15 @@ export default async function AdminLayout({
   let usuarioSistema = null;
 
   try {
-    const { data, error } = await supabase
-      .from('usuarios_sistema')
-      .select('perfil, pode_mediunidade, pode_escalas, pode_biblioteca, pode_livraria, pode_financeiro, pode_pessoas, pode_publicar, pode_atendimento, pode_apse')
-      .eq('id', user.id)
-      .maybeSingle();
+    const { data, error } = await withTimeout(
+      supabase
+        .from('usuarios_sistema')
+        .select('perfil, pode_mediunidade, pode_escalas, pode_biblioteca, pode_livraria, pode_financeiro, pode_pessoas, pode_publicar, pode_atendimento, pode_apse')
+        .eq('id', user.id)
+        .maybeSingle(),
+      4500,
+      { data: null, error: null } as any,
+    );
 
     if (!error) {
       usuarioSistema = data;
@@ -83,14 +92,26 @@ export default async function AdminLayout({
     pode_apse: appMetadata.pode_apse === true,
   };
 
+  const displayName =
+    (user.user_metadata?.full_name as string | undefined) ||
+    (user.user_metadata?.name as string | undefined) ||
+    user.email ||
+    'Usuário';
+
   return (
     <div className="admin-layout">
       <Suspense fallback={null}>
         <NotificationFlashBridge />
       </Suspense>
-      <AdminHeader user={user} usuarioSistema={resolvedUsuarioSistema} />
+      <AdminHeader
+        user={{ email: user.email, fullName: displayName }}
+        usuarioSistema={resolvedUsuarioSistema}
+      />
       <div className="admin-container">
-        <AdminSidebar usuarioSistema={resolvedUsuarioSistema} />
+        <AdminSidebar
+          user={{ email: user.email, fullName: displayName }}
+          usuarioSistema={resolvedUsuarioSistema}
+        />
         <main className="admin-main">
           {children}
         </main>

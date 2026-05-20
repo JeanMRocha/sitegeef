@@ -120,6 +120,8 @@ Quando o Autoreflex local voltar a responder, rodar primeiro:
 - O merge finalizou em `f578fd1` e o checkout local agora acompanha `main`.
 - O PR saiu de draft, passou pelos checks e foi incorporado sem conflitos.
 - Proximo passo natural: seguir a partir de `main` em um novo ciclo de trabalho.
+- A area interna recebeu um refinamento visual no shell do admin e na pagina de perfil, com destaque para leitura mais rapida, blocos de contexto e atalhos mais claros.
+- O carregamento autenticado do admin e do perfil ganhou timeout seguro para evitar travamento visivel quando o Supabase estiver lento.
 
 ## Diretriz de engenharia
 

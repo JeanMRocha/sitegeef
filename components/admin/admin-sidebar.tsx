@@ -5,6 +5,10 @@ import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
 type AdminSidebarProps = {
+  user?: {
+    email?: string;
+    fullName?: string;
+  };
   usuarioSistema?: {
     perfil?: string;
     pode_escalas?: boolean;
@@ -19,12 +23,24 @@ type AdminSidebarProps = {
   };
 };
 
-export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
+function getInitials(value?: string) {
+  if (!value) {
+    return 'GE';
+  }
+
+  const parts = value.trim().split(/\s+/).filter(Boolean);
+  const initials = parts.slice(0, 2).map((part) => part[0]).join('');
+  return (initials || value.slice(0, 2)).toUpperCase();
+}
+
+export function AdminSidebar({ user, usuarioSistema }: AdminSidebarProps) {
   const pathname = usePathname();
   const currentPath = pathname ?? '';
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
   const isAdministrador = usuarioSistema?.perfil === 'administrador';
   const currentPerfil = usuarioSistema?.perfil ?? '';
+  const displayName = user?.fullName || user?.email || 'Usuário';
+  const initials = getInitials(displayName);
 
   const canAccess = (flag: keyof NonNullable<AdminSidebarProps['usuarioSistema']>) => {
     if (isAdministrador) {
@@ -105,6 +121,37 @@ export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
 
   return (
     <aside className="admin-sidebar">
+      <div className="admin-sidebar-hero">
+        <div className="admin-sidebar-hero-top">
+          <div className="admin-sidebar-avatar">{initials}</div>
+          <div className="admin-sidebar-hero-copy">
+            <span className="admin-sidebar-hero-kicker">Sessão ativa</span>
+            <h2>{displayName}</h2>
+            <p>{user?.email}</p>
+          </div>
+        </div>
+
+        <div className="admin-sidebar-hero-chip-row">
+          <span className="admin-sidebar-hero-chip">
+            {isAdministrador ? 'Administrador' : currentPerfil || 'Acesso operacional'}
+          </span>
+          {canAccess('pode_pessoas') && <span className="admin-sidebar-hero-chip">Pessoas</span>}
+          {canAccess('pode_escalas') && <span className="admin-sidebar-hero-chip">Escalas</span>}
+        </div>
+
+        <div className="admin-sidebar-quick-links">
+          <Link href="/admin" className="admin-sidebar-quick-link">
+            Painel
+          </Link>
+          <Link href="/perfil" className="admin-sidebar-quick-link">
+            Perfil
+          </Link>
+          <Link href="/minha-area" className="admin-sidebar-quick-link">
+            Minha área
+          </Link>
+        </div>
+      </div>
+
       <nav className="admin-nav">
         {/* Dashboard */}
         <div className="admin-nav-section">
