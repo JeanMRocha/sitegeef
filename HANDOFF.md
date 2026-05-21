@@ -113,6 +113,12 @@ Quando o Autoreflex local voltar a responder, rodar primeiro:
 
 ## Ultima entrega
 
+- O shell do admin foi reorganizado com top menu por área e lateral reativa, para permitir que `Perfil`, `Pessoas`, `Governança`, `Documentos`, `Operação` e `Sistema` apareçam conforme a area ativa.
+- A lateral ganhou a seção `Perfil` com `Meu perfil` e `Minha área`, e o seletor de área foi sincronizado com o topo por estado compartilhado no cliente.
+- A área de governança recebeu a primeira versão do workspace de documentos institucionais em `/admin/governanca/documentos`, com leitura online para `Estatuto Social`, `CNPJ`, `Registro em Cartório`, `Diretoria constituída` e `Regimento Interno`.
+- O workspace dos documentos institucionais inclui índice lateral, leitor central contínuo, metadados e ações de exportar, imprimir e copiar link.
+- A visão geral de governança agora expõe um card de acesso direto para os documentos institucionais.
+- A validação local do shell passou com `npm run build` e a rota `http://127.0.0.1:3500/admin` respondeu `200` durante a checagem final.
 - Foi criado o agente customizado do GitHub Copilot Cloud Agent em `.github/agents/geef-implementador.agent.md`.
 - As configuracoes de seguranca do repositório foram registradas em `.github/SECURITY.md` e `.github/dependabot.yml`.
 - A entrega foi mesclada em `main` via PR [#1](https://github.com/JeanMRocha/sitegeef/pull/1).
