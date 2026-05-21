@@ -57,6 +57,10 @@ async function GovernancaContent() {
             <p className="module-title">🏛️ Assembleias</p>
             <p>Reuniões e atas institucionais.</p>
           </Link>
+          <Link href="/admin/governanca/documentos" className="module-card">
+            <p className="module-title">📚 Documentos institucionais</p>
+            <p>Leitura online do estatuto, CNPJ, cartório e regimento.</p>
+          </Link>
         </div>
       </section>
 

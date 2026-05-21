@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { clearUserData } from '@/hooks/useUserPersistence';
+import { useAdminShellArea } from '@/components/admin/use-admin-shell-area';
 
 interface AdminHeaderProps {
   user: {
@@ -29,6 +30,8 @@ export function AdminHeader({ user, usuarioSistema }: AdminHeaderProps) {
   const roleLabel = usuarioSistema.perfil === 'administrador'
     ? 'Administrador'
     : usuarioSistema.perfil;
+  const { area, setSelectedArea, areas } = useAdminShellArea();
+  const currentArea = areas.find((item) => item.key === area) ?? areas[0];
 
   return (
     <header className="admin-header">
@@ -45,6 +48,21 @@ export function AdminHeader({ user, usuarioSistema }: AdminHeaderProps) {
         <span className="admin-header-kicker">Gestão institucional</span>
         <strong>Fluxo moderno, leitura rápida e ações diretas.</strong>
         <p>Rotinas administrativas, conteúdo e acompanhamento em um único lugar.</p>
+        <div className="admin-shell-tabs" aria-label="Seções do painel">
+          {areas.map((item) => (
+            <button
+              key={item.key}
+              type="button"
+              onClick={() => setSelectedArea(item.key)}
+              className={`admin-shell-tab ${area === item.key ? 'active' : ''}`}
+              aria-pressed={area === item.key}
+              title={item.note}
+            >
+              <span>{item.label}</span>
+              <small>{item.note}</small>
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="admin-header-right">
@@ -66,6 +84,11 @@ export function AdminHeader({ user, usuarioSistema }: AdminHeaderProps) {
         >
           Sair
         </a>
+      </div>
+
+      <div className="admin-header-context">
+        <span className="admin-header-context-kicker">Área ativa</span>
+        <strong>{currentArea.label}</strong>
       </div>
     </header>
   );

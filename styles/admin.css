@@ -144,6 +144,56 @@
   line-height: 1.45;
 }
 
+.admin-shell-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.85rem;
+}
+
+.admin-shell-tab {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  padding: 0.55rem 0.8rem;
+  border-radius: 16px;
+  border: 1px solid rgba(138, 0, 90, 0.08);
+  background: rgba(255, 255, 255, 0.58);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 160ms ease;
+  min-width: 0;
+}
+
+.admin-shell-tab span {
+  font-size: 0.86rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.admin-shell-tab small {
+  font-size: 0.68rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.admin-shell-tab:hover,
+.admin-shell-tab:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(138, 0, 90, 0.18);
+  box-shadow: 0 10px 20px rgba(124, 63, 163, 0.08);
+}
+
+.admin-shell-tab.active {
+  background: linear-gradient(135deg, rgba(138, 0, 90, 0.14), rgba(99, 213, 31, 0.08));
+  border-color: rgba(138, 0, 90, 0.18);
+  color: var(--uva-700);
+}
+
+.admin-shell-tab.active small {
+  color: var(--uva-700);
+}
+
 .admin-user-card {
   display: flex;
   align-items: center;
@@ -200,6 +250,29 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-weight: 700;
+}
+
+.admin-header-context {
+  display: grid;
+  gap: 0.1rem;
+  align-content: center;
+  padding-left: 0.85rem;
+  border-left: 1px solid rgba(138, 0, 90, 0.1);
+  min-width: 7.5rem;
+}
+
+.admin-header-context-kicker {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.admin-header-context strong {
+  font-size: 0.95rem;
+  line-height: 1.1;
+  color: var(--text);
 }
 
 .admin-logout-btn {
@@ -875,6 +948,11 @@
     border: 0;
   }
 
+  .admin-header-context {
+    padding-left: 0;
+    border-left: 0;
+  }
+
   .admin-summary-strip,
   .admin-dashboard-lower-grid {
     grid-template-columns: 1fr;
@@ -910,6 +988,11 @@
     gap: 0.5rem;
     width: 100%;
     justify-content: space-between;
+  }
+
+  .admin-shell-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .admin-user-card {
