@@ -3,21 +3,19 @@
 import { useState, type FormEvent } from "react";
 
 type ContactMessageFormProps = {
-  sendLabel: string;
+  formId: string;
   sendingLabel: string;
   successTitle: string;
   successText: string;
   errorText: string;
-  idleText: string;
 };
 
 export function ContactMessageForm({
-  sendLabel,
+  formId,
   sendingLabel,
   successTitle,
   successText,
   errorText,
-  idleText,
 }: Readonly<ContactMessageFormProps>) {
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [statusMessage, setStatusMessage] = useState<string>("");
@@ -66,53 +64,47 @@ export function ContactMessageForm({
   }
 
   return (
-    <form className="contact-message-form" onSubmit={handleSubmit}>
-      <div className="contact-form-grid">
-        <label className="contact-form-field">
-          <span>Nome</span>
-          <input name="nome" type="text" className="contact-form-input" autoComplete="name" required />
-        </label>
+    <form id={formId} className="contact-message-form" onSubmit={handleSubmit}>
+      <div className="contact-message-form-split">
+        <div className="contact-message-form-column contact-message-form-column--fields">
+          <label className="contact-form-field">
+            <span>Nome</span>
+            <input name="nome" type="text" className="contact-form-input" autoComplete="name" required />
+          </label>
 
-        <label className="contact-form-field">
-          <span>E-mail</span>
-          <input name="email" type="email" className="contact-form-input" autoComplete="email" required />
-        </label>
+          <label className="contact-form-field">
+            <span>E-mail</span>
+            <input name="email" type="email" className="contact-form-input" autoComplete="email" required />
+          </label>
 
-        <label className="contact-form-field">
-          <span>Telefone</span>
-          <input name="telefone" type="tel" className="contact-form-input" autoComplete="tel" />
-        </label>
+          <label className="contact-form-field">
+            <span>Telefone</span>
+            <input name="telefone" type="tel" className="contact-form-input" autoComplete="tel" />
+          </label>
 
-        <label className="contact-form-field">
-          <span>Assunto</span>
-          <input name="assunto" type="text" className="contact-form-input" placeholder="Ex.: atendimento, agenda, informação" required />
-        </label>
-      </div>
+          <label className="contact-form-field">
+            <span>Assunto</span>
+            <input name="assunto" type="text" className="contact-form-input" placeholder="Ex.: atendimento, agenda, informação" required />
+          </label>
+        </div>
 
-      <label className="contact-form-field contact-form-field--full">
+      <label className="contact-form-field contact-message-form-column contact-message-form-column--message">
         <span>Mensagem</span>
         <textarea
           name="mensagem"
-          className="contact-form-input contact-form-textarea"
-          rows={7}
-          placeholder="Escreva sua mensagem com clareza. A equipe interna receberá o registro no painel do admin."
+          className="contact-form-input contact-form-textarea contact-message-form-textarea"
+          rows={9}
           required
         />
       </label>
+      </div>
 
       <label className="contact-form-honeypot" aria-hidden="true">
         <span>Website</span>
         <input name="website" type="text" tabIndex={-1} autoComplete="off" />
       </label>
 
-      <div className="contact-form-actions">
-        <button type="submit" className="button button-primary contact-form-submit" disabled={status === "sending"}>
-          {status === "sending" ? sendingLabel : sendLabel}
-        </button>
-        <p className={`contact-form-status ${status}`}>
-          {statusMessage || idleText}
-        </p>
-      </div>
+      {statusMessage ? <p className={`contact-form-status ${status}`}>{statusMessage}</p> : null}
     </form>
   );
 }

@@ -3,7 +3,7 @@ import { getMultilingualCopy, type Locale } from "@/lib/multilingual";
 import { SiteHeader } from "@/components/site-header";
 import { LgpdCookieBanner } from "@/components/lgpd/lgpd-cookie-banner";
 import type { User } from "@supabase/supabase-js";
-import { getPublicContactData } from "@/lib/site-contact";
+import { getPublicContactDataStatic } from "@/lib/site-contact-public";
 
 type SiteShellProps = {
   locale: Locale;
@@ -13,7 +13,7 @@ type SiteShellProps = {
 
 export async function SiteShell({ locale, user, children }: Readonly<SiteShellProps>) {
   const copy = getMultilingualCopy(locale);
-  const contact = await getPublicContactData();
+  const contact = getPublicContactDataStatic();
   const userEmail = user?.email || null;
   const normalizedEmail = userEmail?.trim().toLowerCase() || null;
   const nomeCompleto = (user?.user_metadata?.full_name as string) || null;

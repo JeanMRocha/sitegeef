@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { CalendarIcon, GroupIcon, HeartIcon, MailIcon, ShieldIcon } from "@/components/site-icons";
 import { getMultilingualCopy, getRequestLocale } from "@/lib/multilingual";
 import { normalizeInternalPath } from "@/lib/security";
-import { getPublicContactData } from "@/lib/site-contact";
+import { getPublicContactDataStatic } from "@/lib/site-contact-public";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -39,7 +39,7 @@ export default async function Home({ searchParams }: HomePageProps) {
   const copy = getMultilingualCopy(locale);
   const resolvedSearchParams = await searchParams;
   const authCode = resolvedSearchParams?.code;
-  const contact = await getPublicContactData();
+  const contact = getPublicContactDataStatic();
 
   if (authCode) {
     const nextUrl = normalizeInternalPath(resolvedSearchParams?.next, "/perfil");
