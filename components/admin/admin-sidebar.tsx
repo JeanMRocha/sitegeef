@@ -6,10 +6,6 @@ import { useState, useEffect } from 'react';
 import { useAdminShellArea } from '@/components/admin/use-admin-shell-area';
 
 type AdminSidebarProps = {
-  user?: {
-    email?: string;
-    fullName?: string;
-  };
   usuarioSistema?: {
     perfil?: string;
     pode_escalas?: boolean;
@@ -24,27 +20,14 @@ type AdminSidebarProps = {
   };
 };
 
-function getInitials(value?: string) {
-  if (!value) {
-    return 'GE';
-  }
-
-  const parts = value.trim().split(/\s+/).filter(Boolean);
-  const initials = parts.slice(0, 2).map((part) => part[0]).join('');
-  return (initials || value.slice(0, 2)).toUpperCase();
-}
-
-export function AdminSidebar({ user, usuarioSistema }: AdminSidebarProps) {
+export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
   const pathname = usePathname();
   const currentPath = pathname ?? '';
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
   const isAdministrador = usuarioSistema?.perfil === 'administrador';
   const currentPerfil = usuarioSistema?.perfil ?? '';
   const { area } = useAdminShellArea();
-  const displayName = user?.fullName || user?.email || 'Usuário';
-  const initials = getInitials(displayName);
-  const showProfileArea = area === 'perfil';
-  const showUserArea = area === 'perfil' || area === 'pessoas';
+  const showUserArea = area === 'pessoas';
   const showGovernanceArea = area === 'governanca';
   const showDocumentsArea = area === 'documentos';
   const showOperationArea = area === 'operacao';
@@ -130,37 +113,6 @@ export function AdminSidebar({ user, usuarioSistema }: AdminSidebarProps) {
 
   return (
     <aside className="admin-sidebar">
-      <div className="admin-sidebar-hero">
-        <div className="admin-sidebar-hero-top">
-          <div className="admin-sidebar-avatar">{initials}</div>
-          <div className="admin-sidebar-hero-copy">
-            <span className="admin-sidebar-hero-kicker">Sessão ativa</span>
-            <h2>{displayName}</h2>
-            <p>{user?.email}</p>
-          </div>
-        </div>
-
-        <div className="admin-sidebar-hero-chip-row">
-          <span className="admin-sidebar-hero-chip">
-            {isAdministrador ? 'Administrador' : currentPerfil || 'Acesso operacional'}
-          </span>
-          {canAccess('pode_pessoas') && <span className="admin-sidebar-hero-chip">Pessoas</span>}
-          {canAccess('pode_escalas') && <span className="admin-sidebar-hero-chip">Escalas</span>}
-        </div>
-
-        <div className="admin-sidebar-quick-links">
-          <Link href="/admin" className="admin-sidebar-quick-link">
-            Painel
-          </Link>
-          <Link href="/perfil" className="admin-sidebar-quick-link">
-            Perfil
-          </Link>
-          <Link href="/minha-area" className="admin-sidebar-quick-link">
-            Minha área
-          </Link>
-        </div>
-      </div>
-
       <nav className="admin-nav">
         {/* Dashboard */}
         {showDashboardArea && (
@@ -170,25 +122,6 @@ export function AdminSidebar({ user, usuarioSistema }: AdminSidebarProps) {
               className={`admin-nav-item ${isActive('/admin') && currentPath === '/admin' ? 'active' : ''}`}
             >
               📊 Dashboard
-            </Link>
-          </div>
-        )}
-
-        {/* Perfil */}
-        {showProfileArea && (
-          <div className="admin-nav-section">
-            <h3 className="admin-nav-title">Perfil</h3>
-            <Link
-              href="/perfil"
-              className={`admin-nav-item ${isActive('/perfil') ? 'active' : ''}`}
-            >
-              👤 Meu perfil
-            </Link>
-            <Link
-              href="/minha-area"
-              className={`admin-nav-item ${isActive('/minha-area') ? 'active' : ''}`}
-            >
-              🧭 Minha área
             </Link>
           </div>
         )}

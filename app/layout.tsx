@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { UserPersistenceWrapper } from "@/components/user-persistence-wrapper";
 import { NotificationProvider } from "@/components/providers/NotificationProvider";
 import { getHtmlLang, getRequestLocale } from "@/lib/multilingual";
+import { withTimeout } from "@/lib/admin/safe-supabase";
 import "@/styles/theme.css";
 import "@/styles/globals.css";
 import "@/styles/site-header.css";
@@ -46,9 +47,12 @@ export default async function RootLayout({
 }>) {
   const locale = await getRequestLocale();
   const client = await createClient();
-  const {
-    data: { user },
-  } = await client.auth.getUser();
+  const authResult = await withTimeout(
+    client.auth.getUser() as Promise<any>,
+    4500,
+    { data: { user: null }, error: null } as any,
+  );
+  const user = authResult.data.user;
 
   return (
     <html lang={getHtmlLang(locale)} suppressHydrationWarning>

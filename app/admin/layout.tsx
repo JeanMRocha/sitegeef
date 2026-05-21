@@ -105,13 +105,9 @@ export default async function AdminLayout({
       </Suspense>
       <AdminHeader
         user={{ email: user.email, fullName: displayName }}
-        usuarioSistema={resolvedUsuarioSistema}
       />
       <div className="admin-container">
-        <AdminSidebar
-          user={{ email: user.email, fullName: displayName }}
-          usuarioSistema={resolvedUsuarioSistema}
-        />
+        <AdminSidebar usuarioSistema={resolvedUsuarioSistema} />
         <main className="admin-main">
           {children}
         </main>
