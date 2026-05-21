@@ -5,7 +5,7 @@ import { getAppOrigin, normalizeInternalPath } from "@/lib/security";
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
-  const next = normalizeInternalPath(searchParams.get("next"), "/perfil");
+  const next = normalizeInternalPath(searchParams.get("next"), "/minha-area");
   const appOrigin = getAppOrigin(request.headers);
 
   if (code) {

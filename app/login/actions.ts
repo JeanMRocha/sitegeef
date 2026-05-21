@@ -168,7 +168,7 @@ export async function signUpWithEmail(
   return { success: true };
 }
 
-export async function signInWithGoogle(nextUrl = "/perfil") {
+export async function signInWithGoogle(nextUrl = "/minha-area") {
   const supabase = await createClient();
   const appOrigin = await getRequestHeadersOrigin();
   const { data, error } = await supabase.auth.signInWithOAuth({

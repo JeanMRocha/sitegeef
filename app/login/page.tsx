@@ -25,7 +25,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
   const copy = getMultilingualCopy(locale);
   const resolvedSearchParams = await searchParams;
   const isPopup = resolvedSearchParams?.popup === "1";
-  const nextUrl = resolvedSearchParams?.next || "/perfil";
+  const nextUrl = resolvedSearchParams?.next || "/minha-area";
 
   return (
     <main className={`login-page ${isPopup ? "login-page-popup" : ""}`}>

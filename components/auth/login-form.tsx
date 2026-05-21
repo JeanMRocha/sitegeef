@@ -15,7 +15,7 @@ type LoginFormProps = {
   locale?: Locale;
 };
 
-export function LoginForm({ nextUrl = "/perfil", locale = "pt" }: LoginFormProps) {
+export function LoginForm({ nextUrl = "/minha-area", locale = "pt" }: LoginFormProps) {
   const searchParams = useSearchParams();
   const resolvedNextUrl = searchParams?.get("next") || nextUrl;
 

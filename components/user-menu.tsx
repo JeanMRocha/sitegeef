@@ -79,7 +79,7 @@ export function UserMenu({
                 <span>🔐</span> {copy.header.enter}
               </Link>
               <Link
-                href="/login?next=/perfil&popup=1"
+                href="/login?next=/minha-area&popup=1"
                 className="site-header-user-item"
                 onClick={() => setMenuOpen(false)}
               >

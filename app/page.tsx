@@ -42,7 +42,7 @@ export default async function Home({ searchParams }: HomePageProps) {
   const contact = getPublicContactDataStatic();
 
   if (authCode) {
-    const nextUrl = normalizeInternalPath(resolvedSearchParams?.next, "/perfil");
+    const nextUrl = normalizeInternalPath(resolvedSearchParams?.next, "/minha-area");
     const search = new URLSearchParams({
       code: authCode,
       next: nextUrl,
