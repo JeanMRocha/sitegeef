@@ -113,6 +113,12 @@ Quando o Autoreflex local voltar a responder, rodar primeiro:
 
 ## Ultima entrega
 
+- A home do dashboard foi enxugada para ficar apenas com cards essenciais, sem forms, cadastros, CTAs de criação ou blocos longos de ação.
+- O cabeçalho do admin agora ficou praticamente só com o ícone da marca, as abas de área e o menu do usuário no canto direito.
+- O perfil saiu da sidebar e foi concentrado no menu do ícone do usuário, com `Perfil`, `Minha área`, `Painel` e `Sair` no popover.
+- A sidebar do admin foi compactada e perdeu o bloco de sessão/perfil, para reduzir poluição visual e liberar espaço útil.
+- O layout raiz do site passou a usar timeout seguro no `getUser()` do Supabase para evitar travamento visível quando a autenticação demorar.
+- A validação local recente passou com `npm run build`, e o servidor de desenvolvimento voltou a responder `200` em `http://127.0.0.1:3500/`.
 - O shell do admin foi reorganizado com top menu por área e lateral reativa, para permitir que `Perfil`, `Pessoas`, `Governança`, `Documentos`, `Operação` e `Sistema` apareçam conforme a area ativa.
 - A lateral ganhou a seção `Perfil` com `Meu perfil` e `Minha área`, e o seletor de área foi sincronizado com o topo por estado compartilhado no cliente.
 - A área de governança recebeu a primeira versão do workspace de documentos institucionais em `/admin/governanca/documentos`, com leitura online para `Estatuto Social`, `CNPJ`, `Registro em Cartório`, `Diretoria constituída` e `Regimento Interno`.
