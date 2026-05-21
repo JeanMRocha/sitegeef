@@ -85,7 +85,7 @@ export default async function IdentidadeVisualPage() {
   ];
 
   return (
-    <main className="public-page">
+    <main className="public-page public-page--animated">
       <style>{`
         .brand-disclosure {
           border: 1px solid var(--line);
@@ -156,8 +156,10 @@ export default async function IdentidadeVisualPage() {
           <div className="content-copy">
             <p className="eyebrow">{copy.eyebrow}</p>
             <h1>{copy.title}</h1>
-            <p className="content-summary">{copy.summary}</p>
-            <p className="content-intro">{copy.lead}</p>
+            <div className="content-copy-body">
+              <p className="content-summary">{copy.summary}</p>
+              <p className="content-intro">{copy.lead}</p>
+            </div>
           </div>
 
           <aside className="content-panel">

@@ -82,7 +82,7 @@ Atalhos locais:
 - `npm run skills:search "termo"`
 - `npm run skills:recommend "frase da tarefa"`
 - `npm run skills:index`
-- `npm run dev:watchdog` para subir o `next dev` com restart e health check automáticos
+- `npm run dev` para subir o `next dev` direto, sem supervisor de restart
 
 Quando o Autoreflex local voltar a responder, rodar primeiro:
 
@@ -108,9 +108,8 @@ Quando o Autoreflex local voltar a responder, rodar primeiro:
 
 ## Subida local
 
-- Preferir `npm run dev:watchdog` para o trabalho diário no checkout local.
-- Usar `npm run dev` apenas quando precisar isolar o `next dev` sem o supervisor.
-- Se o navegador mostrar erro de chunk/CSS depois de build, reiniciar pelo watchdog antes de investigar o browser.
+- Preferir `npm run dev` para o trabalho diário no checkout local.
+- Se o navegador mostrar erro de chunk/CSS depois de build, reiniciar o `next dev` limpo antes de investigar o browser.
 
 ## Ultima entrega
 
@@ -193,9 +192,8 @@ Quando o Autoreflex local voltar a responder, rodar primeiro:
   - Os detalhes editaveis mais sensiveis tambem receberam o aviso curto: pessoa, usuario, crianca, emprestimo, reserva, familia, fraterno, irradiacao, recepcao, evangelizacao e juventude.
   - O servidor local voltou a responder em `http://127.0.0.1:3500` depois do ajuste de porta ocupada, e a rota raiz respondeu `200` durante a validacao final.
   - O gate local `npm run gate:server` confirma `200` antes de devolver a aplicacao e o `npm run test:admin-smoke` passou nas 24 rotas admin principais depois da reorganizacao.
-  - O `scripts/dev-watchdog.mjs` foi ajustado para Windows usar `shell: true` no `spawn`, corrigindo o `spawn EINVAL` e permitindo que o watchdog suba o `next dev` normalmente.
   - O Autoreflex local foi implementado em `scripts/autoreflex-local.mjs`, sobe em `http://127.0.0.1:8090`, usa Ollama com fallback lexical e aceita notas de aprendizado em `.autoreflex/notes/`.
-  - O primeiro erro aprendido foi o `spawn EINVAL` do watchdog no Windows; ele já foi gravado e indexado no Autoreflex local para consulta futura.
+  - O fluxo local agora usa `npm run dev` direto como caminho principal para desenvolvimento.
   - O header publico foi separado em uma casca server-rendered (`components/site-header.tsx`) e uma camada client para menus/usuario (`components/site-header-actions.tsx`) para o menu principal nao sumir quando a hidratacao falhar depois do logout.
   - Se o Fast Refresh reclamar de arquivo ausente nesse fluxo, reiniciar o `next dev` limpo antes de investigar a UI.
 - `Supabase remoto`

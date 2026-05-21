@@ -14,17 +14,11 @@ export const ThemeContext = createContext<ThemeContextType | undefined>(
 );
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>("light");
+  const [theme, setThemeState] = useState<Theme>(() => getInitialTheme());
 
-  // Carregar tema preferido do localStorage
   useEffect(() => {
-    const saved = localStorage.getItem("geef-theme") as Theme | null;
-    const isPublicSurface = isPublicRoute(window.location.pathname);
-
-    const initialTheme = isPublicSurface ? "light" : (saved || "light");
-    setThemeState(initialTheme);
-    applyTheme(initialTheme);
-  }, []);
+    applyTheme(theme);
+  }, [theme]);
 
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
@@ -55,6 +49,16 @@ function applyTheme(theme: Theme) {
   }
 }
 
-function isPublicRoute(pathname: string) {
-  return !pathname.startsWith("/admin") && pathname !== "/login" && pathname !== "/minha-area" && pathname !== "/perfil";
+function getInitialTheme(): Theme {
+  if (typeof window === "undefined") {
+    return "light";
+  }
+
+  const preset = (window as Window & { __GEEF_THEME__?: Theme }).__GEEF_THEME__;
+  if (preset === "light" || preset === "dark") {
+    return preset;
+  }
+
+  const saved = localStorage.getItem("geef-theme");
+  return saved === "dark" ? "dark" : "light";
 }

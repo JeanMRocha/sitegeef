@@ -63,16 +63,16 @@ export const navItems: NavItem[] = [
   // Primary navigation (visible in header bar on desktop)
   { href: "/quem-somos", label: "Quem somos", labelEn: "About us", primary: true },
   { href: "/agenda", label: "Agenda", labelEn: "Schedule", primary: true },
-  { href: "/escalas", label: "Escalas", labelEn: "Shifts", primary: true },
-  { href: "/ao-vivo", label: "Ao vivo", labelEn: "Live", primary: true },
   { href: "/atividades", label: "Atividades", labelEn: "Activities", primary: true },
-  { href: "/estudos", label: "Estudos", labelEn: "Studies", primary: true },
   { href: "/evangelizacao", label: "Evangelização", labelEn: "Evangelization", primary: true },
   { href: "/atendimento-fraterno", label: "Atendimento fraterno", labelEn: "Fraternal care", primary: true },
 
   // Institutional group (in "Mais" dropdown, ordered by relevance)
   { href: "/institucional", label: "Credibilidade e Filiações", labelEn: "Credibility and affiliations", group: "institucional" },
   { href: "/identidade-visual", label: "Identidade visual", labelEn: "Visual identity", group: "institucional" },
+  { href: "/escalas", label: "Escalas", labelEn: "Shifts", group: "institucional" },
+  { href: "/ao-vivo", label: "Ao vivo", labelEn: "Live", group: "institucional" },
+  { href: "/estudos", label: "Estudos", labelEn: "Studies", group: "institucional" },
   { href: "/doacoes", label: "Doações", labelEn: "Donations", group: "institucional" },
   { href: "/lgpd", label: "Privacidade", labelEn: "Privacy", group: "institucional" },
   { href: "/cookies", label: "Cookies", labelEn: "Cookies", group: "institucional" },

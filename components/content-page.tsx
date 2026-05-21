@@ -20,37 +20,16 @@ export function ContentPageView({ page, locale, slug }: Readonly<ContentPageView
               {locale === "en" ? "Grupo Espírita Elias Francis" : "Grupo Espírita Elias Francis"}
             </span>
           </div>
-          <div className="content-badge">
-            <span className="content-badge-label">
-              {locale === "en" ? "Official identity" : "Identidade oficial"}
-            </span>
-          </div>
         </div>
 
         <div className="content-hero-body">
           <div className="content-copy">
             <h1>{page.title}</h1>
-            <p className="content-summary">{page.summary}</p>
-            <p className="content-intro">{page.intro}</p>
-          </div>
-
-          {!isAgenda ? (
-            <div className="content-panel">
-              <p className="content-panel-label">
-                {locale === "en" ? "Page summary" : "Resumo da página"}
-              </p>
-              <ul className="content-panel-list">
-                <li>
-                  <span className="mini-dot" aria-hidden="true" />
-                  {locale === "en" ? "Content prepared for quick reading" : "Conteúdo preparado para leitura rápida"}
-                </li>
-                <li>
-                  <span className="mini-dot" aria-hidden="true" />
-                  {locale === "en" ? "Structure compatible with mobile and desktop" : "Estrutura compatível com celular e desktop"}
-                </li>
-              </ul>
+            <div className="content-copy-body">
+              <p className="content-summary">{page.summary}</p>
+              <p className="content-intro">{page.intro}</p>
             </div>
-          ) : null}
+          </div>
         </div>
       </section>
 

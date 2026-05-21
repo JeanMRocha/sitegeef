@@ -12,11 +12,11 @@ export function getInstitutionalNavItems(locale: Locale): NavItem[] {
   const localized = getLocalizedNavItems(locale);
   const byHref = new Map(localized.map((item) => [item.href, item]));
   const orderedHrefs = [
-    "/ao-vivo",
     "/escalas",
-    "/estudos",
     "/institucional",
     "/identidade-visual",
+    "/ao-vivo",
+    "/estudos",
     "/doacoes",
     "/lgpd",
     "/cookies",

@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { CalendarIcon, GroupIcon, HeartIcon, MailIcon, ShieldIcon } from "@/components/site-icons";
-import { site } from "@/lib/site-data";
 import { getMultilingualCopy, getRequestLocale } from "@/lib/multilingual";
 import { normalizeInternalPath } from "@/lib/security";
+import { getPublicContactData } from "@/lib/site-contact";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -39,6 +39,7 @@ export default async function Home({ searchParams }: HomePageProps) {
   const copy = getMultilingualCopy(locale);
   const resolvedSearchParams = await searchParams;
   const authCode = resolvedSearchParams?.code;
+  const contact = await getPublicContactData();
 
   if (authCode) {
     const nextUrl = normalizeInternalPath(resolvedSearchParams?.next, "/perfil");
@@ -99,31 +100,27 @@ export default async function Home({ searchParams }: HomePageProps) {
         <div className="contact-grid">
           <article className="contact-card">
             <h3>{locale === "en" ? "Address" : "Endereço"}</h3>
-            <p>{site.address}</p>
+            <p>{contact.address.value}</p>
           </article>
           <article className="contact-card">
             <h3>{locale === "en" ? "Connections" : "Conexões"}</h3>
             <ul className="contact-list">
               <li>
-                <a href={`mailto:${site.email}`}>{site.email}</a>
+                <a href={contact.email?.href || `mailto:${contact.email?.value || ""}`}>{contact.email?.value || "E-mail institucional"}</a>
               </li>
               <li>
-                <a href={`tel:${site.phone.replace(/[^\d+]/g, "")}`}>{site.phone}</a>
+                <a href={contact.phone?.href || `tel:${contact.phone?.value?.replace(/[^\d+]/g, "") || ""}`}>{contact.phone?.value || "Telefone institucional"}</a>
               </li>
               <li>
-                <a href={`https://${site.youtube}`} target="_blank" rel="noreferrer">
-                  YouTube
-                </a>
+                <Link href="/contato">Ver canais oficiais</Link>
               </li>
-              <li>
-                <a
-                  href={`https://instagram.com/${site.instagram.replace(/^@/, "")}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Instagram
-                </a>
-              </li>
+              {contact.socials.slice(0, 3).map((social) => (
+                <li key={social.href}>
+                  <a href={social.href} target="_blank" rel="noreferrer">
+                    {social.label}: {social.display}
+                  </a>
+                </li>
+              ))}
             </ul>
           </article>
         </div>

@@ -87,14 +87,16 @@ export default async function InstitucionalPage() {
         };
 
   return (
-    <main className="public-page">
+    <main className="public-page public-page--animated">
       <section className="content-hero public-hero-shell">
         <div className="public-hero-grid">
           <div className="content-copy">
             <p className="eyebrow">{copy.eyebrow}</p>
             <h1>{copy.title}</h1>
-            <p className="content-summary">{copy.summary}</p>
-            <p className="content-intro">{copy.intro}</p>
+            <div className="content-copy-body">
+              <p className="content-summary">{copy.summary}</p>
+              <p className="content-intro">{copy.intro}</p>
+            </div>
           </div>
 
           <aside className="content-panel">

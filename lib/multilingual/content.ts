@@ -173,15 +173,15 @@ const englishContentPages: LocalizedContent = {
   },
   contato: {
     title: "Contact",
-    summary: "How to talk to the house and reach the physical space.",
+    summary: "Official channels, social links and message form for the house.",
     intro:
-      "Initial contact should be easy, clear and available in the first click.",
-    ctaLabel: "View LGPD",
-    ctaHref: publicHref("/lgpd"),
+      "Contact flows should come from the institutional record and keep address, channels and internal receipt in one place.",
+    ctaLabel: "Send message",
+    ctaHref: publicHref("/contato#mensagem"),
     sections: [
       {
-        heading: "Information",
-        text: "Phone, email, address and social channels are gathered below for quick use.",
+        heading: "Official information",
+        text: "Phone, email, address and visible social channels are gathered from the institution record.",
       },
     ],
   },

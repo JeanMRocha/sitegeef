@@ -60,7 +60,6 @@ site-geef/
 ├── supabase/               # Configurações do Supabase
 ├── mcp/                    # MCP-related files
 ├── scripts/                # Scripts auxiliares
-│   └── dev-watchdog.mjs     # Monitor de desenvolvimento
 ├── .github/                # Workflows e CI/CD
 ├── .githooks/              # Git hooks customizados
 ├── docs/                   # Documentação adicional
@@ -202,12 +201,6 @@ Acesse: `http://localhost:3500`
 npm run build
 npm start
 ```
-
-### Watchdog de desenvolvimento
-```powershell
-npm run dev:watchdog
-```
-Monitor de status durante o desenvolvimento.
 
 ---
 

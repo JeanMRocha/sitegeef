@@ -380,6 +380,12 @@ export function AdminSidebar({ user, usuarioSistema }: AdminSidebarProps) {
             >
               📢 Comunicação
             </Link>
+            <Link
+              href="/admin/comunicacao/mensagens"
+              className={`admin-nav-item ${isActive('/admin/comunicacao/mensagens') ? 'active' : ''}`}
+            >
+              📨 Mensagens do site
+            </Link>
           </div>
         )}
 

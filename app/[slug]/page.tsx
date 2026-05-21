@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { ContactPageView } from "@/components/contact-page";
 import { ContentPageView } from "@/components/content-page";
 import { getLocalizedContentPage } from "@/lib/multilingual/content";
 import { getRequestLocale } from "@/lib/multilingual/server";
+import { getPublicContactData } from "@/lib/site-contact";
 
 type Params = {
   slug: string;
@@ -32,6 +34,11 @@ export default async function Page({ params }: { params: Promise<Params> }) {
 
   if (!page) {
     notFound();
+  }
+
+  if (slug === "contato") {
+    const contact = await getPublicContactData();
+    return <ContactPageView page={page} locale={locale} contact={contact} />;
   }
 
   return <ContentPageView page={page} locale={locale} slug={slug} />;

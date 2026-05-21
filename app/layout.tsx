@@ -52,6 +52,27 @@ export default async function RootLayout({
 
   return (
     <html lang={getHtmlLang(locale)} suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function () {
+  try {
+    var saved = localStorage.getItem('geef-theme');
+    var theme = saved === 'dark' ? 'dark' : 'light';
+    window.__GEEF_THEME__ = theme;
+    var root = document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+      root.style.colorScheme = 'dark';
+    } else {
+      root.classList.remove('dark');
+      root.style.colorScheme = 'light';
+    }
+  } catch (e) {}
+})();`,
+          }}
+        />
+      </head>
       <body className={`${headingFont.variable} ${bodyFont.variable}`}>
         <ThemeProvider>
           <NotificationProvider>

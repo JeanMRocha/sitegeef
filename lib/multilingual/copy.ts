@@ -232,8 +232,8 @@ const multilingualCopy: Record<Locale, MultilingualCopy> = {
       secondaryCta: "Ver agenda",
       quickLinksTitle: "O que já está pronto no site",
       quickLinksLead: "As páginas abaixo levam direto para o conteúdo real que já pode ser consultado pelo visitante.",
-      contactTitle: "Informações para chegar até a casa",
-      contactLead: "Tudo o que importa para contato rápido já fica visível na página inicial.",
+      contactTitle: "Informações oficiais para chegar até a casa",
+      contactLead: "Endereço, telefone e redes principais ficam visíveis já na página inicial.",
       quickLinks: commonQuickLinks.pt,
     },
     login: {
@@ -321,8 +321,8 @@ const multilingualCopy: Record<Locale, MultilingualCopy> = {
       secondaryCta: "View schedule",
       quickLinksTitle: "What is already available on the site",
       quickLinksLead: "The pages below go straight to real content that visitors can already browse.",
-      contactTitle: "Information to reach the house",
-      contactLead: "Everything needed for quick contact is visible on the home page.",
+      contactTitle: "Official information to reach the house",
+      contactLead: "Address, phone and main social links are visible on the home page.",
       quickLinks: commonQuickLinks.en,
     },
     login: {

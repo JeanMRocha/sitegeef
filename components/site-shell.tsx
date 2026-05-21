@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { site } from "@/lib/site-data";
 import { getMultilingualCopy, type Locale } from "@/lib/multilingual";
 import { SiteHeader } from "@/components/site-header";
 import { LgpdCookieBanner } from "@/components/lgpd/lgpd-cookie-banner";
 import type { User } from "@supabase/supabase-js";
+import { getPublicContactData } from "@/lib/site-contact";
 
 type SiteShellProps = {
   locale: Locale;
@@ -11,8 +11,9 @@ type SiteShellProps = {
   children: React.ReactNode;
 };
 
-export function SiteShell({ locale, user, children }: Readonly<SiteShellProps>) {
+export async function SiteShell({ locale, user, children }: Readonly<SiteShellProps>) {
   const copy = getMultilingualCopy(locale);
+  const contact = await getPublicContactData();
   const userEmail = user?.email || null;
   const normalizedEmail = userEmail?.trim().toLowerCase() || null;
   const nomeCompleto = (user?.user_metadata?.full_name as string) || null;
@@ -42,11 +43,11 @@ export function SiteShell({ locale, user, children }: Readonly<SiteShellProps>) 
       <footer className="site-footer">
         <div className="site-footer-content">
           <div className="site-footer-main">
-            <strong>{site.name}</strong>
+            <strong>{contact.institutionName}</strong>
             <span className="site-footer-separator" aria-hidden="true">·</span>
-            <span>{copy.shell.siteAddress}</span>
+            <span>{contact.address.value}</span>
             <span className="site-footer-separator" aria-hidden="true">·</span>
-            <span>{site.email}</span>
+            <span>{contact.email?.value || "contato institucional"}</span>
             <span className="site-footer-separator" aria-hidden="true">·</span>
             <Link href="/lgpd" className="footer-link">
               {copy.shell.footer.lgpd}
