@@ -31,6 +31,8 @@ export default function IdentificacaoForm({ initialData }: IdentificacaoFormProp
     natureza_juridica: initialData?.natureza_juridica || '',
     porte: initialData?.porte || '',
     data_fundacao: initialData?.data_fundacao?.slice(0, 10) || '',
+    cnae_principal: initialData?.cnae_principal || '',
+    cnae_descricao: initialData?.cnae_descricao || '',
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -55,6 +57,8 @@ export default function IdentificacaoForm({ initialData }: IdentificacaoFormProp
         natureza_juridica: formData.natureza_juridica || undefined,
         porte: formData.porte || undefined,
         data_fundacao: formData.data_fundacao || undefined,
+        cnae_principal: formData.cnae_principal || undefined,
+        cnae_descricao: formData.cnae_descricao || undefined,
       });
 
       if (result.success) {
@@ -245,34 +249,54 @@ export default function IdentificacaoForm({ initialData }: IdentificacaoFormProp
       </div>
 
       <div style={{ marginBottom: '1.5rem', padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '0.5rem' }}>
-        <h3 style={{ marginTop: 0, marginBottom: '0.75rem' }}>Atividade econômica</h3>
-        <p style={{ marginTop: 0, marginBottom: '1rem', color: 'var(--muted)' }}>
-          O CNAE agora é mantido em tabela própria, com vínculo explícito à instituição.
-        </p>
-        <div style={{ display: 'grid', gap: '0.75rem' }}>
-          <div>
-            <strong style={{ display: 'block', marginBottom: '0.25rem' }}>CNAE principal</strong>
-            <p style={{ margin: 0 }}>{initialData?.cnae_principal || '—'}</p>
-          </div>
-          <div>
-            <strong style={{ display: 'block', marginBottom: '0.25rem' }}>Descrição principal</strong>
-            <p style={{ margin: 0 }}>{initialData?.cnae_descricao || '—'}</p>
-          </div>
-          <div>
-            <strong style={{ display: 'block', marginBottom: '0.25rem' }}>CNAEs secundários</strong>
-            {initialData?.cnaes_secundarios?.length ? (
-              <div style={{ display: 'grid', gap: '0.5rem' }}>
-                {initialData.cnaes_secundarios.map((cnae) => (
-                  <div key={cnae.codigo} style={{ padding: '0.65rem 0.75rem', border: '1px solid var(--border)', borderRadius: '0.5rem' }}>
-                    <strong>{cnae.codigo}</strong>
-                    <p style={{ margin: '0.25rem 0 0 0' }}>{cnae.descricao || 'Sem descrição'}</p>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p style={{ margin: 0 }}>—</p>
-            )}
-          </div>
+        <h3 style={{ marginTop: 0, marginBottom: '1rem' }}>Atividade Econômica Principal (CNAE)</h3>
+        <div style={{ marginBottom: '1rem' }}>
+          <label htmlFor="cnae_principal" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+            Código CNAE
+          </label>
+          <select
+            id="cnae_principal"
+            name="cnae_principal"
+            value={formData.cnae_principal}
+            onChange={handleChange}
+            style={{
+              width: '100%',
+              padding: '0.75rem',
+              border: '1px solid var(--border)',
+              borderRadius: '0.5rem',
+              fontSize: '1rem',
+            }}
+          >
+            <option value="">Selecione uma atividade</option>
+            <option value="94.91-0-00">94.91-0-00 - Atividades de organizações religiosas ou filosóficas</option>
+            <option value="94.92-8-00">94.92-8-00 - Atividades de organizações políticas</option>
+            <option value="94.93-6-00">94.93-6-00 - Atividades de organizações sindicais</option>
+            <option value="94.99-5-00">94.99-5-00 - Outras atividades associativas não especificadas anteriormente</option>
+            <option value="85.92-8-00">85.92-8-00 - Ensino superior (não comercial)</option>
+            <option value="85.91-0-00">85.91-0-00 - Ensino profissional (não comercial)</option>
+            <option value="80.10-4-00">80.10-4-00 - Serviços privados de vigilância</option>
+            <option value="outro">Outro - Especificar manualmente</option>
+          </select>
+        </div>
+        <div>
+          <label htmlFor="cnae_descricao" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+            Descrição da Atividade
+          </label>
+          <input
+            type="text"
+            id="cnae_descricao"
+            name="cnae_descricao"
+            value={formData.cnae_descricao}
+            onChange={handleChange}
+            placeholder="Descrição da atividade econômica principal"
+            style={{
+              width: '100%',
+              padding: '0.75rem',
+              border: '1px solid var(--border)',
+              borderRadius: '0.5rem',
+              fontSize: '1rem',
+            }}
+          />
         </div>
       </div>
 

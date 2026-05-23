@@ -54,6 +54,16 @@ async function EnderecoContent() {
                 <strong>Estado</strong>
                 <p>{endereco.estado || "—"}</p>
               </div>
+              {endereco.maps_link && (
+                <div className="area-panel-item" style={{ gridColumn: '1 / -1' }}>
+                  <strong>Google Maps</strong>
+                  <p>
+                    <a href={endereco.maps_link} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)' }}>
+                      Abrir no Google Maps
+                    </a>
+                  </p>
+                </div>
+              )}
             </div>
           ) : (
             <div className="area-empty">Nenhum endereço registrado.</div>

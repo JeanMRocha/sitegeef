@@ -1,11 +1,14 @@
 import Link from "next/link";
+import { getInstituicao } from "../actions";
 import { Suspense } from "react";
 
 export const metadata = {
   title: "Documentos - Instituição - Admin GEEF",
 };
 
-function DocumentosContent() {
+async function DocumentosContent() {
+  const instituicao = await getInstituicao();
+
   return (
     <div className="area-page">
       <section className="area-hero">
@@ -24,7 +27,18 @@ function DocumentosContent() {
 
       <section className="area-section">
         <div className="table-surface">
-          <div className="area-empty">Gerenciar documentos legais, certificados e registros.</div>
+          {instituicao?.estatuto_url ? (
+            <div className="area-panel-item">
+              <strong>Estatuto Social</strong>
+              <p style={{ marginTop: "0.5rem" }}>
+                <a href={instituicao.estatuto_url} target="_blank" rel="noopener noreferrer" style={{ color: "var(--primary)" }}>
+                  📄 Baixar documento
+                </a>
+              </p>
+            </div>
+          ) : (
+            <div className="area-empty">Nenhum documento registrado.</div>
+          )}
         </div>
       </section>
     </div>

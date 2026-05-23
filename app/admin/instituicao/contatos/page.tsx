@@ -38,12 +38,20 @@ async function ContatosContent() {
                     <strong>{contato.tipo || "Contato"}</strong>
                     <ContatosDeleteButton contatoId={contato.id} />
                   </div>
-                  <p style={{ margin: '0.5rem 0 0 0' }}>
+                  <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.9rem' }}>
                     {contato.telefone && <>☎️ {contato.telefone}<br /></>}
                     {contato.whatsapp && <>💬 {contato.whatsapp}<br /></>}
                     {contato.email && <>📧 {contato.email}<br /></>}
-                    {contato.instagram && <>📸 {contato.instagram}</>}
+                    {contato.instagram && <>📸 @{contato.instagram}<br /></>}
+                    {contato.facebook && <>f {contato.facebook}<br /></>}
+                    {contato.youtube && <>▶️ {contato.youtube}<br /></>}
+                    {contato.site && <><🌐 {contato.site}<br /></>}
                   </p>
+                  {contato.pessoas?.nome && (
+                    <p style={{ margin: '0.75rem 0 0 0', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                      👤 {contato.pessoas.nome}
+                    </p>
+                  )}
                 </div>
               ))}
             </div>

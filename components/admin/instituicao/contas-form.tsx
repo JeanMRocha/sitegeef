@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { addContaBancaria } from '@/app/admin/instituicao/actions';
 
 export default function ContasForm() {
   const router = useRouter();
@@ -10,11 +11,16 @@ export default function ContasForm() {
   const [success, setSuccess] = useState(false);
 
   const [formData, setFormData] = useState({
+    nome: '',
     banco: '',
     agencia: '',
     conta: '',
-    finalidade: '',
+    tipo_conta: '',
+    titular: '',
+    cpf_cnpj_titular: '',
     chave_pix: '',
+    tipo_chave_pix: '',
+    finalidade: '',
     visibilidade: 'privada' as 'privada' | 'publica',
   });
 
@@ -32,28 +38,49 @@ export default function ContasForm() {
     setError('');
     setSuccess(false);
 
-    if (!formData.banco) {
-      setError('Selecione um banco');
+    if (!formData.nome) {
+      setError('Informe um nome para a conta');
       setIsLoading(false);
       return;
     }
 
     try {
-      // Placeholder para implementação completa
-      // const result = await addContaBancaria({ ... });
-      setSuccess(true);
-      setFormData({
-        banco: '',
-        agencia: '',
-        conta: '',
-        finalidade: '',
-        chave_pix: '',
-        visibilidade: 'privada',
+      const result = await addContaBancaria({
+        nome: formData.nome,
+        banco: formData.banco || undefined,
+        agencia: formData.agencia || undefined,
+        conta: formData.conta || undefined,
+        tipo_conta: formData.tipo_conta || undefined,
+        titular: formData.titular || undefined,
+        cpf_cnpj_titular: formData.cpf_cnpj_titular || undefined,
+        chave_pix: formData.chave_pix || undefined,
+        tipo_chave_pix: formData.tipo_chave_pix || undefined,
+        finalidade: formData.finalidade || undefined,
+        visibilidade: formData.visibilidade || undefined,
       });
-      setTimeout(() => {
-        router.push('/admin/instituicao/contas');
-        router.refresh();
-      }, 1000);
+
+      if (result.success) {
+        setSuccess(true);
+        setFormData({
+          nome: '',
+          banco: '',
+          agencia: '',
+          conta: '',
+          tipo_conta: '',
+          titular: '',
+          cpf_cnpj_titular: '',
+          chave_pix: '',
+          tipo_chave_pix: '',
+          finalidade: '',
+          visibilidade: 'privada',
+        });
+        setTimeout(() => {
+          router.push('/admin/instituicao/contas');
+          router.refresh();
+        }, 1000);
+      } else {
+        setError(result.error || 'Erro ao salvar conta');
+      }
     } catch (err) {
       setError('Erro ao salvar conta');
       console.error(err);
@@ -91,8 +118,30 @@ export default function ContasForm() {
       )}
 
       <div style={{ marginBottom: '1.5rem' }}>
+        <label htmlFor="nome" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+          Nome da Conta *
+        </label>
+        <input
+          type="text"
+          id="nome"
+          name="nome"
+          value={formData.nome}
+          onChange={handleChange}
+          placeholder="Ex: Conta de Doações"
+          required
+          style={{
+            width: '100%',
+            padding: '0.75rem',
+            border: '1px solid var(--border)',
+            borderRadius: '0.5rem',
+            fontSize: '1rem',
+          }}
+        />
+      </div>
+
+      <div style={{ marginBottom: '1.5rem' }}>
         <label htmlFor="banco" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
-          Banco *
+          Banco
         </label>
         <input
           type="text"
@@ -101,7 +150,6 @@ export default function ContasForm() {
           value={formData.banco}
           onChange={handleChange}
           placeholder="Nome do banco"
-          required
           style={{
             width: '100%',
             padding: '0.75rem',
@@ -156,6 +204,72 @@ export default function ContasForm() {
       </div>
 
       <div style={{ marginBottom: '1.5rem' }}>
+        <label htmlFor="tipo_conta" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+          Tipo de Conta
+        </label>
+        <select
+          id="tipo_conta"
+          name="tipo_conta"
+          value={formData.tipo_conta}
+          onChange={handleChange}
+          style={{
+            width: '100%',
+            padding: '0.75rem',
+            border: '1px solid var(--border)',
+            borderRadius: '0.5rem',
+            fontSize: '1rem',
+          }}
+        >
+          <option value="">Selecione</option>
+          <option value="corrente">Corrente</option>
+          <option value="poupanca">Poupança</option>
+          <option value="investimento">Investimento</option>
+        </select>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
+        <div>
+          <label htmlFor="titular" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+            Titular da Conta
+          </label>
+          <input
+            type="text"
+            id="titular"
+            name="titular"
+            value={formData.titular}
+            onChange={handleChange}
+            style={{
+              width: '100%',
+              padding: '0.75rem',
+              border: '1px solid var(--border)',
+              borderRadius: '0.5rem',
+              fontSize: '1rem',
+            }}
+          />
+        </div>
+        <div>
+          <label htmlFor="cpf_cnpj_titular" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+            CPF/CNPJ
+          </label>
+          <input
+            type="text"
+            id="cpf_cnpj_titular"
+            name="cpf_cnpj_titular"
+            value={formData.cpf_cnpj_titular}
+            onChange={handleChange}
+            placeholder="XXX.XXX.XXX-XX ou XX.XXX.XXX/XXXX-XX"
+            style={{
+              width: '100%',
+              padding: '0.75rem',
+              border: '1px solid var(--border)',
+              borderRadius: '0.5rem',
+              fontSize: '1rem',
+            }}
+          />
+        </div>
+      </div>
+
+      <div style={{ marginBottom: '1.5rem' }}>
         <label htmlFor="finalidade" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
           Finalidade
         </label>
@@ -176,25 +290,52 @@ export default function ContasForm() {
         />
       </div>
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label htmlFor="chave_pix" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
-          Chave PIX
-        </label>
-        <input
-          type="text"
-          id="chave_pix"
-          name="chave_pix"
-          value={formData.chave_pix}
-          onChange={handleChange}
-          placeholder="Email, CNPJ, CPF ou chave aleatória"
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            fontSize: '1rem',
-          }}
-        />
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
+        <div>
+          <label htmlFor="chave_pix" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+            Chave PIX
+          </label>
+          <input
+            type="text"
+            id="chave_pix"
+            name="chave_pix"
+            value={formData.chave_pix}
+            onChange={handleChange}
+            placeholder="Email, CNPJ, CPF ou chave aleatória"
+            style={{
+              width: '100%',
+              padding: '0.75rem',
+              border: '1px solid var(--border)',
+              borderRadius: '0.5rem',
+              fontSize: '1rem',
+            }}
+          />
+        </div>
+        <div>
+          <label htmlFor="tipo_chave_pix" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+            Tipo de Chave
+          </label>
+          <select
+            id="tipo_chave_pix"
+            name="tipo_chave_pix"
+            value={formData.tipo_chave_pix}
+            onChange={handleChange}
+            style={{
+              width: '100%',
+              padding: '0.75rem',
+              border: '1px solid var(--border)',
+              borderRadius: '0.5rem',
+              fontSize: '1rem',
+            }}
+          >
+            <option value="">Selecione</option>
+            <option value="email">Email</option>
+            <option value="cpf">CPF</option>
+            <option value="cnpj">CNPJ</option>
+            <option value="telefone">Telefone</option>
+            <option value="aleatoria">Chave Aleatória</option>
+          </select>
+        </div>
       </div>
 
       <div style={{ marginBottom: '1.5rem' }}>
