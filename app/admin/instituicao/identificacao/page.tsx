@@ -13,6 +13,7 @@ const FALLBACK_INSTITUICAO = {
   nome_oficial: site.name,
   nome_curto: site.shortName,
   cnpj: undefined as string | undefined,
+  natureza_juridica: undefined as string | undefined,
   data_fundacao: undefined as string | undefined,
 };
 
@@ -74,6 +75,10 @@ async function IdentificacaoContent() {
             <div className="area-panel-item">
               <strong>CNPJ</strong>
               <p>{formatCnpj(instituicaoBase.cnpj)}</p>
+            </div>
+            <div className="area-panel-item">
+              <strong>Natureza Jurídica</strong>
+              <p>{instituicaoBase.natureza_juridica || "—"}</p>
             </div>
             <div className="area-panel-item">
               <strong>Data de fundação</strong>

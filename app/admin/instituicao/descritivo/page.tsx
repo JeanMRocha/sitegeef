@@ -27,10 +27,23 @@ async function DescritivoContent() {
 
       <section className="area-section">
         <div className="table-surface">
-          <div className="area-panel-item">
-            <strong>Descrição</strong>
-            <p>{instituicao?.descricao || "Nenhuma descrição registrada."}</p>
-          </div>
+          {instituicao?.descricao && (
+            <div className="area-panel-item" style={{ marginBottom: '1.5rem' }}>
+              <strong>Descrição</strong>
+              <p style={{ whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>{instituicao.descricao}</p>
+            </div>
+          )}
+
+          {instituicao?.historia && (
+            <div className="area-panel-item">
+              <strong>História</strong>
+              <p style={{ whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>{instituicao.historia}</p>
+            </div>
+          )}
+
+          {!instituicao?.descricao && !instituicao?.historia && (
+            <div className="area-empty">Nenhum descritivo registrado.</div>
+          )}
         </div>
       </section>
     </div>

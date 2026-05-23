@@ -27,10 +27,30 @@ async function MissaoValoresContent() {
 
       <section className="area-section">
         <div className="table-surface">
-          <div className="area-panel-item">
-            <strong>Missão</strong>
-            <p>{instituicao?.missao || "Nenhuma missão registrada."}</p>
-          </div>
+          {instituicao?.missao && (
+            <div className="area-panel-item" style={{ marginBottom: '1.5rem' }}>
+              <strong>Missão</strong>
+              <p style={{ whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>{instituicao.missao}</p>
+            </div>
+          )}
+
+          {instituicao?.visao && (
+            <div className="area-panel-item" style={{ marginBottom: '1.5rem' }}>
+              <strong>Visão</strong>
+              <p style={{ whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>{instituicao.visao}</p>
+            </div>
+          )}
+
+          {instituicao?.valores && (
+            <div className="area-panel-item">
+              <strong>Valores</strong>
+              <p style={{ whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>{instituicao.valores}</p>
+            </div>
+          )}
+
+          {!instituicao?.missao && !instituicao?.visao && !instituicao?.valores && (
+            <div className="area-empty">Nenhuma missão ou valores registrados.</div>
+          )}
         </div>
       </section>
     </div>
