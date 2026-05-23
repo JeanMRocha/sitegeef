@@ -3,9 +3,12 @@
 import { useState } from 'react';
 import { updateInstituicao } from '@/app/admin/instituicao/actions';
 import { useRouter } from 'next/navigation';
+import { BrandAssetUpload } from '@/components/admin/brand-asset-upload';
 
 interface IdentidadeVisualFormProps {
   initialData?: {
+    logo_url?: string;
+    logo_com_fundo_url?: string;
     identidade_visual_descricao?: string;
     identidade_visual_letras_descricao?: string;
     identidade_visual_visual_descricao?: string;
@@ -20,6 +23,8 @@ export default function IdentidadeVisualForm({ initialData }: IdentidadeVisualFo
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>('');
   const [success, setSuccess] = useState(false);
+  const [logoUrl, setLogoUrl] = useState(initialData?.logo_url || '');
+  const [logoComFundoUrl, setLogoComFundoUrl] = useState(initialData?.logo_com_fundo_url || '');
 
   const [formData, setFormData] = useState({
     identidade_visual_descricao: initialData?.identidade_visual_descricao || '',
@@ -46,6 +51,8 @@ export default function IdentidadeVisualForm({ initialData }: IdentidadeVisualFo
 
     try {
       const result = await updateInstituicao({
+        logo_url: logoUrl || undefined,
+        logo_com_fundo_url: logoComFundoUrl || undefined,
         identidade_visual_descricao: formData.identidade_visual_descricao || undefined,
         identidade_visual_letras_descricao: formData.identidade_visual_letras_descricao || undefined,
         identidade_visual_visual_descricao: formData.identidade_visual_visual_descricao || undefined,
@@ -98,6 +105,24 @@ export default function IdentidadeVisualForm({ initialData }: IdentidadeVisualFo
           Dados salvos com sucesso!
         </div>
       )}
+
+      <div style={{ marginBottom: '2rem', padding: '1.5rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '0.5rem' }}>
+        <h3 style={{ marginBottom: '1.5rem' }}>Logotipos</h3>
+        <BrandAssetUpload
+          title="Logo"
+          description="Logo sem fundo (transparente) para uso em fundos claros e materiais digitais"
+          fieldName="logo_url"
+          currentAsset={logoUrl}
+        />
+        <div style={{ marginTop: '1.5rem' }}>
+          <BrandAssetUpload
+            title="Logo com Fundo"
+            description="Logo com fundo para contraste imediato e apoio visual mais marcante"
+            fieldName="logo_com_fundo_url"
+            currentAsset={logoComFundoUrl}
+          />
+        </div>
+      </div>
 
       <div style={{ marginBottom: '1.5rem' }}>
         <label htmlFor="identidade_visual_descricao" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>

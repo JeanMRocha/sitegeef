@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getContasBancarias } from "../actions";
 import { Suspense } from "react";
+import ContasDeleteButton from "@/components/admin/instituicao/contas-delete-button";
 
 export const metadata = {
   title: "Contas Bancárias - Instituição - Admin GEEF",
@@ -19,7 +20,7 @@ async function ContasContent() {
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap", justifyContent: "flex-end" }}>
             <Link href="/admin/instituicao/contas/editar" className="profile-form-btn profile-form-btn-primary">
-              Editar
+              + Adicionar Conta
             </Link>
           </div>
         </div>
@@ -39,6 +40,7 @@ async function ContasContent() {
                   <th>PIX</th>
                   <th>Visibilidade</th>
                   <th>Status</th>
+                  <th style={{ width: '50px', textAlign: 'center' }}>Ações</th>
                 </tr>
               </thead>
               <tbody>
@@ -57,6 +59,9 @@ async function ContasContent() {
                       <span className={conta.ativo ? "inline-status inline-status-success" : "inline-status inline-status-danger"}>
                         {conta.ativo ? "Ativa" : "Inativa"}
                       </span>
+                    </td>
+                    <td style={{ textAlign: 'center' }}>
+                      <ContasDeleteButton contaId={conta.id} />
                     </td>
                   </tr>
                 ))}

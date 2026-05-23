@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getContatos } from "../actions";
 import { Suspense } from "react";
+import ContatosDeleteButton from "@/components/admin/instituicao/contatos-delete-button";
 
 export const metadata = {
   title: "Contatos - Instituição - Admin GEEF",
@@ -19,7 +20,7 @@ async function ContatosContent() {
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap", justifyContent: "flex-end" }}>
             <Link href="/admin/instituicao/contatos/editar" className="profile-form-btn profile-form-btn-primary">
-              Editar
+              + Adicionar Contato
             </Link>
           </div>
         </div>
@@ -32,9 +33,12 @@ async function ContatosContent() {
           ) : (
             <div className="module-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))" }}>
               {contatos.map((contato: any) => (
-                <div key={contato.id} className="area-panel-item instituicao-contato-card">
-                  <strong>{contato.tipo || "Contato"}</strong>
-                  <p>
+                <div key={contato.id} className="area-panel-item instituicao-contato-card" style={{ position: 'relative', paddingRight: '2.5rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                    <strong>{contato.tipo || "Contato"}</strong>
+                    <ContatosDeleteButton contatoId={contato.id} />
+                  </div>
+                  <p style={{ margin: '0.5rem 0 0 0' }}>
                     {contato.telefone && <>☎️ {contato.telefone}<br /></>}
                     {contato.whatsapp && <>💬 {contato.whatsapp}<br /></>}
                     {contato.email && <>📧 {contato.email}<br /></>}

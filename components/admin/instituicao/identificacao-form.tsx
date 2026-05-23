@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { updateInstituicao } from '@/app/admin/instituicao/actions';
 import { useRouter } from 'next/navigation';
-import { BrandAssetUpload } from '@/components/admin/brand-asset-upload';
 
 interface IdentificacaoFormProps {
   initialData?: {
@@ -12,8 +11,6 @@ interface IdentificacaoFormProps {
     cnpj?: string;
     natureza_juridica?: string;
     data_fundacao?: string;
-    logo_url?: string;
-    logo_com_fundo_url?: string;
   } | null;
 }
 
@@ -22,8 +19,6 @@ export default function IdentificacaoForm({ initialData }: IdentificacaoFormProp
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>('');
   const [success, setSuccess] = useState(false);
-  const [logoUrl, setLogoUrl] = useState(initialData?.logo_url || '');
-  const [logoComFundoUrl, setLogoComFundoUrl] = useState(initialData?.logo_com_fundo_url || '');
 
   const [formData, setFormData] = useState({
     nome_oficial: initialData?.nome_oficial || '',
@@ -54,8 +49,6 @@ export default function IdentificacaoForm({ initialData }: IdentificacaoFormProp
         cnpj: formData.cnpj || undefined,
         natureza_juridica: formData.natureza_juridica || undefined,
         data_fundacao: formData.data_fundacao || undefined,
-        logo_url: logoUrl || undefined,
-        logo_com_fundo_url: logoComFundoUrl || undefined,
       });
 
       if (result.success) {
@@ -211,24 +204,6 @@ export default function IdentificacaoForm({ initialData }: IdentificacaoFormProp
         />
       </div>
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <h3 style={{ marginBottom: '1rem' }}>Logotipos</h3>
-        <BrandAssetUpload
-          title="Logo"
-          description="Logo sem fundo (transparente) para uso em fundos claros e materiais digitais"
-          fieldName="logo_url"
-          currentAsset={logoUrl}
-        />
-      </div>
-
-      <div style={{ marginBottom: '1.5rem' }}>
-        <BrandAssetUpload
-          title="Logo com Fundo"
-          description="Logo com fundo para contraste imediato e apoio visual mais marcante"
-          fieldName="logo_com_fundo_url"
-          currentAsset={logoComFundoUrl}
-        />
-      </div>
 
       <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
         <button
