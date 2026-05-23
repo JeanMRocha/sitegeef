@@ -4,6 +4,28 @@ Guia técnico essencial para trabalhar com Claude Code no projeto GEEF ERP.
 
 ---
 
+## ⚠️ AVISO CRÍTICO: Regra de Refatoração
+
+**PROIBIDO reduzir funcionalidades, campos de dados ou opções sem autorização explícita.**
+
+Exemplos de ações proibidas:
+- ❌ Remover upload de logos porque "parece redundante"
+- ❌ Simplificar 8 opções de seleção em 3 sem justificativa
+- ❌ Consolidar formulários sem plano de migração
+- ❌ Remover features e deixar como "placeholder"
+
+**Leia:** `REFACTORING_RULES.md` antes de fazer qualquer mudança estrutural.
+
+Resumo rápido:
+1. **Sempre documente** o estado atual antes de refatorar
+2. **Sempre obtenha aprovação** antes de simplificar
+3. **Sempre migre dados** existentes com segurança
+4. **Sempre atualize documentação** após mudanças
+
+Se tiver dúvida se uma refatoração é permitida: **pergunte antes de fazer.**
+
+---
+
 ## O Projeto
 
 **GEEF ERP** é um sistema completo de gestão para organizações espíritas (GEEF = Grupo de Estudos Espíritas de Franquia). Implementado em **Next.js 15** + **Supabase** + **PostgreSQL**, com 27+ módulos admin cobrindo todas as áreas operacionais.
