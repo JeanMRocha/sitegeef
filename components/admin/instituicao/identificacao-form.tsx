@@ -3,13 +3,17 @@
 import { useState } from 'react';
 import { updateInstituicao } from '@/app/admin/instituicao/actions';
 import { useRouter } from 'next/navigation';
+import { BrandAssetUpload } from '@/components/admin/brand-asset-upload';
 
 interface IdentificacaoFormProps {
   initialData?: {
     nome_oficial?: string;
     nome_curto?: string;
     cnpj?: string;
+    natureza_juridica?: string;
     data_fundacao?: string;
+    logo_url?: string;
+    logo_com_fundo_url?: string;
   } | null;
 }
 
@@ -18,15 +22,18 @@ export default function IdentificacaoForm({ initialData }: IdentificacaoFormProp
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>('');
   const [success, setSuccess] = useState(false);
+  const [logoUrl, setLogoUrl] = useState(initialData?.logo_url || '');
+  const [logoComFundoUrl, setLogoComFundoUrl] = useState(initialData?.logo_com_fundo_url || '');
 
   const [formData, setFormData] = useState({
     nome_oficial: initialData?.nome_oficial || '',
     nome_curto: initialData?.nome_curto || '',
     cnpj: initialData?.cnpj || '',
+    natureza_juridica: initialData?.natureza_juridica || '',
     data_fundacao: initialData?.data_fundacao?.slice(0, 10) || '',
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -45,7 +52,10 @@ export default function IdentificacaoForm({ initialData }: IdentificacaoFormProp
         nome_oficial: formData.nome_oficial || undefined,
         nome_curto: formData.nome_curto || undefined,
         cnpj: formData.cnpj || undefined,
+        natureza_juridica: formData.natureza_juridica || undefined,
         data_fundacao: formData.data_fundacao || undefined,
+        logo_url: logoUrl || undefined,
+        logo_com_fundo_url: logoComFundoUrl || undefined,
       });
 
       if (result.success) {
@@ -135,6 +145,32 @@ export default function IdentificacaoForm({ initialData }: IdentificacaoFormProp
       </div>
 
       <div style={{ marginBottom: '1.5rem' }}>
+        <label htmlFor="natureza_juridica" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+          Natureza Jurídica
+        </label>
+        <select
+          id="natureza_juridica"
+          name="natureza_juridica"
+          value={formData.natureza_juridica}
+          onChange={handleChange}
+          style={{
+            width: '100%',
+            padding: '0.75rem',
+            border: '1px solid var(--border)',
+            borderRadius: '0.5rem',
+            fontSize: '1rem',
+          }}
+        >
+          <option value="">Selecione</option>
+          <option value="associacao">Associação</option>
+          <option value="fundacao">Fundação</option>
+          <option value="cooperativa">Cooperativa</option>
+          <option value="empresa">Empresa</option>
+          <option value="outro">Outro</option>
+        </select>
+      </div>
+
+      <div style={{ marginBottom: '1.5rem' }}>
         <label htmlFor="cnpj" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
           CNPJ
         </label>
@@ -172,6 +208,25 @@ export default function IdentificacaoForm({ initialData }: IdentificacaoFormProp
             borderRadius: '0.5rem',
             fontSize: '1rem',
           }}
+        />
+      </div>
+
+      <div style={{ marginBottom: '1.5rem' }}>
+        <h3 style={{ marginBottom: '1rem' }}>Logotipos</h3>
+        <BrandAssetUpload
+          title="Logo"
+          description="Logo sem fundo (transparente) para uso em fundos claros e materiais digitais"
+          fieldName="logo_url"
+          currentAsset={logoUrl}
+        />
+      </div>
+
+      <div style={{ marginBottom: '1.5rem' }}>
+        <BrandAssetUpload
+          title="Logo com Fundo"
+          description="Logo com fundo para contraste imediato e apoio visual mais marcante"
+          fieldName="logo_com_fundo_url"
+          currentAsset={logoComFundoUrl}
         />
       </div>
 

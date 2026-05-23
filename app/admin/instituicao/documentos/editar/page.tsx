@@ -1,10 +1,14 @@
+import { getInstituicao } from "../../actions";
 import { Suspense } from "react";
+import DocumentosForm from "@/components/admin/instituicao/documentos-form";
 
 export const metadata = {
   title: "Editar Documentos - Instituição - Admin GEEF",
 };
 
-function DocumentosEditContent() {
+async function DocumentosEditContent() {
+  const instituicao = await getInstituicao();
+
   return (
     <div className="area-page">
       <section className="area-hero">
@@ -18,10 +22,7 @@ function DocumentosEditContent() {
 
       <section className="area-section">
         <div className="table-surface">
-          <div className="area-empty">
-            <p>Gerenciamento de documentos legais, certificados e registros.</p>
-            <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Esta funcionalidade será expandida em breve.</p>
-          </div>
+          <DocumentosForm initialData={instituicao} />
         </div>
       </section>
     </div>
