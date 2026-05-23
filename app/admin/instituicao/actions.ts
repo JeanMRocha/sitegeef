@@ -169,7 +169,10 @@ export async function updateInstituicao(formData: {
   nome_curto?: string;
   cnpj?: string;
   natureza_juridica?: string;
+  porte?: string;
   data_fundacao?: string;
+  cnae_principal?: string;
+  cnae_descricao?: string;
   logo_url?: string;
   logo_com_fundo_url?: string;
   descricao?: string;

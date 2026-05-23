@@ -14,7 +14,10 @@ const FALLBACK_INSTITUICAO = {
   nome_curto: site.shortName,
   cnpj: undefined as string | undefined,
   natureza_juridica: undefined as string | undefined,
+  porte: undefined as string | undefined,
   data_fundacao: undefined as string | undefined,
+  cnae_principal: undefined as string | undefined,
+  cnae_descricao: undefined as string | undefined,
 };
 
 function formatCnpj(value: string | undefined) {
@@ -81,8 +84,20 @@ async function IdentificacaoContent() {
               <p>{instituicaoBase.natureza_juridica || "—"}</p>
             </div>
             <div className="area-panel-item">
+              <strong>Porte</strong>
+              <p>{instituicaoBase.porte || "—"}</p>
+            </div>
+            <div className="area-panel-item">
               <strong>Data de fundação</strong>
               <p>{formatDate(instituicaoBase.data_fundacao)}</p>
+            </div>
+            <div className="area-panel-item">
+              <strong>Código CNAE</strong>
+              <p>{instituicaoBase.cnae_principal || "—"}</p>
+            </div>
+            <div className="area-panel-item">
+              <strong>Descrição da Atividade</strong>
+              <p>{instituicaoBase.cnae_descricao || "—"}</p>
             </div>
           </div>
         </div>

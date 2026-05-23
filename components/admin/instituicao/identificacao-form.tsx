@@ -10,7 +10,10 @@ interface IdentificacaoFormProps {
     nome_curto?: string;
     cnpj?: string;
     natureza_juridica?: string;
+    porte?: string;
     data_fundacao?: string;
+    cnae_principal?: string;
+    cnae_descricao?: string;
   } | null;
 }
 
@@ -25,7 +28,10 @@ export default function IdentificacaoForm({ initialData }: IdentificacaoFormProp
     nome_curto: initialData?.nome_curto || '',
     cnpj: initialData?.cnpj || '',
     natureza_juridica: initialData?.natureza_juridica || '',
+    porte: initialData?.porte || '',
     data_fundacao: initialData?.data_fundacao?.slice(0, 10) || '',
+    cnae_principal: initialData?.cnae_principal || '',
+    cnae_descricao: initialData?.cnae_descricao || '',
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -48,7 +54,10 @@ export default function IdentificacaoForm({ initialData }: IdentificacaoFormProp
         nome_curto: formData.nome_curto || undefined,
         cnpj: formData.cnpj || undefined,
         natureza_juridica: formData.natureza_juridica || undefined,
+        porte: formData.porte || undefined,
         data_fundacao: formData.data_fundacao || undefined,
+        cnae_principal: formData.cnae_principal || undefined,
+        cnae_descricao: formData.cnae_descricao || undefined,
       });
 
       if (result.success) {
@@ -155,10 +164,18 @@ export default function IdentificacaoForm({ initialData }: IdentificacaoFormProp
           }}
         >
           <option value="">Selecione</option>
-          <option value="associacao">Associação</option>
-          <option value="fundacao">Fundação</option>
-          <option value="cooperativa">Cooperativa</option>
-          <option value="empresa">Empresa</option>
+          <option value="100-8">100-8 - Empresa Pública</option>
+          <option value="200-4">200-4 - Empresa Privada</option>
+          <option value="300-0">300-0 - Sociedade Anônima Aberta</option>
+          <option value="399-9">399-9 - Associação Privada</option>
+          <option value="400-5">400-5 - Sociedade Anônima Fechada</option>
+          <option value="500-1">500-1 - Sociedade Limitada</option>
+          <option value="600-7">600-7 - Sociedade em Nome Coletivo</option>
+          <option value="700-3">700-3 - Sociedade em Comandita Simples</option>
+          <option value="800-9">800-9 - Sociedade em Comandita por Ações</option>
+          <option value="900-5">900-5 - Fundação Privada</option>
+          <option value="1000-1">1000-1 - Cooperativa</option>
+          <option value="1100-7">1100-7 - Empresa Individual de Responsabilidade Limitada</option>
           <option value="outro">Outro</option>
         </select>
       </div>
@@ -184,24 +201,102 @@ export default function IdentificacaoForm({ initialData }: IdentificacaoFormProp
         />
       </div>
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label htmlFor="data_fundacao" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
-          Data de fundação
-        </label>
-        <input
-          type="date"
-          id="data_fundacao"
-          name="data_fundacao"
-          value={formData.data_fundacao}
-          onChange={handleChange}
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            fontSize: '1rem',
-          }}
-        />
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
+        <div>
+          <label htmlFor="porte" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+            Porte
+          </label>
+          <select
+            id="porte"
+            name="porte"
+            value={formData.porte}
+            onChange={handleChange}
+            style={{
+              width: '100%',
+              padding: '0.75rem',
+              border: '1px solid var(--border)',
+              borderRadius: '0.5rem',
+              fontSize: '1rem',
+            }}
+          >
+            <option value="">Selecione</option>
+            <option value="microempresa">Microempresa</option>
+            <option value="pequena">Pequena</option>
+            <option value="media">Média</option>
+            <option value="grande">Grande</option>
+          </select>
+        </div>
+        <div>
+          <label htmlFor="data_fundacao" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+            Data de fundação
+          </label>
+          <input
+            type="date"
+            id="data_fundacao"
+            name="data_fundacao"
+            value={formData.data_fundacao}
+            onChange={handleChange}
+            style={{
+              width: '100%',
+              padding: '0.75rem',
+              border: '1px solid var(--border)',
+              borderRadius: '0.5rem',
+              fontSize: '1rem',
+            }}
+          />
+        </div>
+      </div>
+
+      <div style={{ marginBottom: '1.5rem', padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '0.5rem' }}>
+        <h3 style={{ marginTop: 0, marginBottom: '1rem' }}>Atividade Econômica Principal (CNAE)</h3>
+        <div style={{ marginBottom: '1rem' }}>
+          <label htmlFor="cnae_principal" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+            Código CNAE
+          </label>
+          <select
+            id="cnae_principal"
+            name="cnae_principal"
+            value={formData.cnae_principal}
+            onChange={handleChange}
+            style={{
+              width: '100%',
+              padding: '0.75rem',
+              border: '1px solid var(--border)',
+              borderRadius: '0.5rem',
+              fontSize: '1rem',
+            }}
+          >
+            <option value="">Selecione uma atividade</option>
+            <option value="94.91-0-00">94.91-0-00 - Atividades de organizações religiosas ou filosóficas</option>
+            <option value="94.92-8-00">94.92-8-00 - Atividades de organizações políticas</option>
+            <option value="94.93-6-00">94.93-6-00 - Atividades de organizações sindicais</option>
+            <option value="94.99-5-00">94.99-5-00 - Outras atividades associativas não especificadas anteriormente</option>
+            <option value="85.92-8-00">85.92-8-00 - Ensino superior (não comercial)</option>
+            <option value="85.91-0-00">85.91-0-00 - Ensino profissional (não comercial)</option>
+            <option value="80.10-4-00">80.10-4-00 - Serviços privados de vigilância</option>
+            <option value="outro">Outro - Especificar manualmente</option>
+          </select>
+        </div>
+        <div>
+          <label htmlFor="cnae_descricao" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+            Descrição da Atividade
+          </label>
+          <input
+            type="text"
+            id="cnae_descricao"
+            name="cnae_descricao"
+            value={formData.cnae_descricao}
+            onChange={handleChange}
+            placeholder="Descrição da atividade econômica principal"
+            style={{
+              width: '100%',
+              padding: '0.75rem',
+              border: '1px solid var(--border)',
+              borderRadius: '0.5rem',
+              fontSize: '1rem',
+            }}
+          />
+        </div>
       </div>
 
 
