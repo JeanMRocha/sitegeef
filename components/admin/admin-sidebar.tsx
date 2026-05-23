@@ -57,6 +57,8 @@ export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
     return profiles.includes(currentPerfil);
   };
 
+  const showGeefArea = area === 'geef';
+
   useEffect(() => {
     // Load expanded groups from localStorage
     const saved = localStorage.getItem('admin-sidebar-expanded');
@@ -126,17 +128,58 @@ export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
           </div>
         )}
 
-        {/* Instituição */}
-        {showUserArea && canAccessModule('pode_pessoas', ['diretoria', 'secretaria']) && (
-          <div className="admin-nav-section">
-            <h3 className="admin-nav-title">Instituição</h3>
+        {/* Instituição (GEEF) */}
+        {showGeefArea && canAccessModule('pode_pessoas', ['diretoria', 'secretaria']) && (
+          <NavGroup name="instituicao" title="Instituição" collapsible>
             <Link
-              href="/admin/instituicao"
-              className={`admin-nav-item ${isActive('/admin/instituicao') ? 'active' : ''}`}
+              href="/admin/instituicao/identificacao"
+              className={`admin-nav-item ${isActive('/admin/instituicao/identificacao') ? 'active' : ''}`}
             >
-              🏛️ Dados Institucionais
+              📌 Identificação
             </Link>
-          </div>
+            <Link
+              href="/admin/instituicao/identidade-visual"
+              className={`admin-nav-item ${isActive('/admin/instituicao/identidade-visual') ? 'active' : ''}`}
+            >
+              🎨 Identidade Visual
+            </Link>
+            <Link
+              href="/admin/instituicao/endereco"
+              className={`admin-nav-item ${isActive('/admin/instituicao/endereco') ? 'active' : ''}`}
+            >
+              📍 Endereço
+            </Link>
+            <Link
+              href="/admin/instituicao/descritivo"
+              className={`admin-nav-item ${isActive('/admin/instituicao/descritivo') ? 'active' : ''}`}
+            >
+              📝 Descritivo
+            </Link>
+            <Link
+              href="/admin/instituicao/missao-valores"
+              className={`admin-nav-item ${isActive('/admin/instituicao/missao-valores') ? 'active' : ''}`}
+            >
+              ✨ Missão e Valores
+            </Link>
+            <Link
+              href="/admin/instituicao/documentos"
+              className={`admin-nav-item ${isActive('/admin/instituicao/documentos') ? 'active' : ''}`}
+            >
+              📄 Documentos
+            </Link>
+            <Link
+              href="/admin/instituicao/contatos"
+              className={`admin-nav-item ${isActive('/admin/instituicao/contatos') ? 'active' : ''}`}
+            >
+              📞 Contatos
+            </Link>
+            <Link
+              href="/admin/instituicao/contas"
+              className={`admin-nav-item ${isActive('/admin/instituicao/contas') ? 'active' : ''}`}
+            >
+              💰 Contas Bancárias
+            </Link>
+          </NavGroup>
         )}
 
         {/* Pessoas */}
@@ -502,21 +545,23 @@ export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
         )}
 
         {/* Site */}
-        <div className="admin-nav-section">
-          <h3 className="admin-nav-title">Site</h3>
-          <Link href="/escalas" target="_blank" rel="noopener noreferrer" className="admin-nav-item">
-            👁️ Escalas Públicas →
-          </Link>
-          <Link href="/leitor" target="_blank" rel="noopener noreferrer" className="admin-nav-item">
-            📖 Área do Leitor →
-          </Link>
-          <Link href="/" target="_blank" rel="noopener noreferrer" className="admin-nav-item">
-            🏠 Home →
-          </Link>
-          <Link href="/admin/idiomas" className={`admin-nav-item ${isActive('/admin/idiomas') ? 'active' : ''}`}>
-            🌐 Idiomas
-          </Link>
-        </div>
+        {showDashboardArea && (
+          <div className="admin-nav-section">
+            <h3 className="admin-nav-title">Site</h3>
+            <Link href="/escalas" target="_blank" rel="noopener noreferrer" className="admin-nav-item">
+              👁️ Escalas Públicas →
+            </Link>
+            <Link href="/leitor" target="_blank" rel="noopener noreferrer" className="admin-nav-item">
+              📖 Área do Leitor →
+            </Link>
+            <Link href="/" target="_blank" rel="noopener noreferrer" className="admin-nav-item">
+              🏠 Home →
+            </Link>
+            <Link href="/admin/idiomas" className={`admin-nav-item ${isActive('/admin/idiomas') ? 'active' : ''}`}>
+              🌐 Idiomas
+            </Link>
+          </div>
+        )}
       </nav>
     </aside>
   );
