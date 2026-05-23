@@ -41,7 +41,7 @@
 - `lib/escalas/public-escalas.ts` = cache publico das escalas.
 - `docs/MCP_SUPABASE_GEEF.md` = recuperar e validar o MCP `supabase-geef`.
 - `docs/SUPABASE_MIGRATION_MAP.md` = mapa local -> checkpoint remoto das migrations aplicadas.
-- Cadastro da instituicao: o singleton e as policies ficam em `supabase/migrations/20260517_instituicao_singleton_and_policies.sql`.
+- Cadastro da instituicao: a modelagem consolidada fica em `supabase/migrations/20260523_instituicao_modelagem_total.sql`.
 
 ## Ordem das skills
 
@@ -159,7 +159,7 @@ Quando o Autoreflex local voltar a responder, rodar primeiro:
   - O fluxo por abas deve continuar responsivo e salvar etapa por etapa.
   - O cabeçalho deve manter apenas `Nova Pessoa` e os botoes de acao alinhados a direita.
 - `app/admin/instituicao/*`
-  - O cadastro da instituicao usa `supabase/migrations/20260517_instituicao_singleton_and_policies.sql` como fonte de verdade para singleton e acesso.
+  - O cadastro da instituicao usa `supabase/migrations/20260523_instituicao_modelagem_total.sql` como fonte de verdade para singleton, relacoes e acesso.
   - `data_fundacao` deve persistir como `date` em formato `YYYY-MM-DD`.
   - `updateInstituicao()` deve enviar apenas o patch da aba ativa e mesclar no servidor com a linha existente.
   - Nao reintroduzir telas paralelas para contatos/contas fora do editor principal.

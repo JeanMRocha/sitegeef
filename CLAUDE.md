@@ -56,6 +56,31 @@ npm run skills:list
 
 ---
 
+## MCP do Projeto — Supabase GEEF
+
+Para acessar o Supabase remoto deste repositório, use o MCP isolado `supabase-geef`.
+
+**Leitura obrigatória:**
+- `docs/MCP_SUPABASE_GEEF.md`
+
+**Arquivos de configuração:**
+- `.mcp.json` declara `supabase-geef` com o `project_ref` deste projeto
+- `.claude/settings.json` habilita `supabase-geef` nesta sessão
+
+**Verificação rápida:**
+```bash
+codex mcp list
+codex mcp get supabase-geef
+codex mcp login supabase-geef
+```
+
+**Regra:**
+- Não usar o MCP genérico `supabase`
+- Não misturar este projeto com outras contas ou outros projetos
+- Antes de qualquer ação remota, confirmar que `supabase-geef` está `enabled` e autenticado
+
+---
+
 ## Estrutura do projeto
 
 ### Diretórios principais

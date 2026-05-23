@@ -18,6 +18,7 @@ const FALLBACK_INSTITUICAO = {
   data_fundacao: undefined as string | undefined,
   cnae_principal: undefined as string | undefined,
   cnae_descricao: undefined as string | undefined,
+  cnaes_secundarios: [] as Array<{ codigo: string; descricao?: string | null }>,
 };
 
 function formatCnpj(value: string | undefined) {
@@ -98,6 +99,21 @@ async function IdentificacaoContent() {
             <div className="area-panel-item">
               <strong>Descrição da Atividade</strong>
               <p>{instituicaoBase.cnae_descricao || "—"}</p>
+            </div>
+            <div className="area-panel-item" style={{ gridColumn: '1 / -1' }}>
+              <strong>CNAEs secundários</strong>
+              {Array.isArray(instituicaoBase.cnaes_secundarios) && instituicaoBase.cnaes_secundarios.length > 0 ? (
+                <div style={{ marginTop: '0.5rem', display: 'grid', gap: '0.45rem' }}>
+                  {instituicaoBase.cnaes_secundarios.map((cnae: { codigo: string; descricao?: string | null }, index: number) => (
+                    <div key={`${cnae.codigo}-${index}`} className="area-panel-item" style={{ padding: '0.75rem 0.85rem' }}>
+                      <strong>{cnae.codigo}</strong>
+                      <p style={{ marginTop: '0.25rem' }}>{cnae.descricao || 'Sem descrição'}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p>—</p>
+              )}
             </div>
           </div>
         </div>

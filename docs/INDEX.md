@@ -23,6 +23,7 @@
 - [Mapa de modulos](./MODULE_MAP.md)
 - [Agent Playbook](./AGENT_PLAYBOOK.md)
 - [MCP Supabase GEEF](./MCP_SUPABASE_GEEF.md)
+- [Modelo relacional da instituicao](./INSTITUICAO_MODELO_RELACIONAL.md)
 - [Aplicar migracao](../APPLY_MIGRATION.md)
 - [Status de deploy](../DEPLOYMENT_STATUS.md)
 

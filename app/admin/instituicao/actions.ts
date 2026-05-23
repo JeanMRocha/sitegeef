@@ -33,8 +33,158 @@ function normalizeDate(value?: string) {
   return trimmed.slice(0, 10);
 }
 
+function normalizePorte(value?: string) {
+  const normalized = value?.trim();
+
+  if (!normalized) {
+    return undefined;
+  }
+
+  const lower = normalized.toLowerCase();
+
+  if (lower === 'microempresa') {
+    return 'Microempresa';
+  }
+
+  if (lower === 'pequena') {
+    return 'Pequena';
+  }
+
+  if (lower === 'média' || lower === 'media') {
+    return 'Média';
+  }
+
+  if (lower === 'grande') {
+    return 'Grande';
+  }
+
+  return normalized;
+}
+
 function stripUndefined<T extends Record<string, unknown>>(value: T) {
   return Object.fromEntries(Object.entries(value).filter(([, item]) => item !== undefined)) as Partial<T>;
+}
+
+async function getMainInstituicaoId() {
+  const supabase = createServiceRoleClient();
+
+  try {
+    const { data, error } = await supabase
+      .from('instituicao')
+      .select('id')
+      .order('criado_em', { ascending: true })
+      .limit(1)
+      .maybeSingle();
+
+    if (error || !data?.id) {
+      return null;
+    }
+
+    return data.id as string;
+  } catch {
+    return null;
+  }
+}
+
+async function loadInstituicaoCnaes(instituicaoId: string) {
+  const supabase = createServiceRoleClient();
+
+  try {
+    const { data, error } = await supabase
+      .from('instituicao_cnaes')
+      .select('tipo, codigo, descricao, ordem, ativo')
+      .eq('instituicao_id', instituicaoId)
+      .eq('ativo', true)
+      .order('tipo', { ascending: true })
+      .order('ordem', { ascending: true })
+      .order('codigo', { ascending: true });
+
+    if (error) {
+      return { principal: null, secundarios: [] as Array<{ codigo: string; descricao?: string | null; ordem?: number | null }> };
+    }
+
+    const rows = data ?? [];
+    const principal = rows.find((item) => item.tipo === 'principal') ?? null;
+    const secundarios = rows
+      .filter((item) => item.tipo === 'secundario')
+      .map((item) => ({
+        codigo: item.codigo,
+        descricao: item.descricao ?? null,
+        ordem: item.ordem ?? null,
+      }));
+
+    return {
+      principal: principal
+        ? {
+            codigo: principal.codigo,
+            descricao: principal.descricao ?? null,
+          }
+        : null,
+      secundarios,
+    };
+  } catch {
+    return { principal: null, secundarios: [] as Array<{ codigo: string; descricao?: string | null; ordem?: number | null }> };
+  }
+}
+
+async function resolveContatoTipoId(
+  instituicaoId: string,
+  tipoId: string | undefined,
+  tipoLabel: string | undefined
+) {
+  const supabase = createServiceRoleClient();
+
+  if (tipoId) {
+    const { data } = await supabase
+      .from('instituicao_contato_tipos')
+      .select('id')
+      .eq('id', tipoId)
+      .eq('instituicao_id', instituicaoId)
+      .maybeSingle();
+
+    if (data?.id) {
+      return data.id as string;
+    }
+  }
+
+  const normalizedLabel = normalizeContatoTipoLabel(tipoLabel);
+  if (!normalizedLabel) {
+    return null;
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('instituicao_contato_tipos')
+      .select('id')
+      .eq('instituicao_id', instituicaoId)
+      .eq('label', normalizedLabel)
+      .maybeSingle();
+
+    if (!error && data?.id) {
+      return data.id as string;
+    }
+
+    const { data: inserted, error: insertError } = await supabase
+      .from('instituicao_contato_tipos')
+      .insert([
+        {
+          instituicao_id: instituicaoId,
+          label: normalizedLabel,
+          ordem: 999,
+          ativo: true,
+        },
+      ])
+      .select('id')
+      .maybeSingle();
+
+    if (insertError || !inserted?.id) {
+      return null;
+    }
+
+    return inserted.id as string;
+  } catch {
+    return null;
+  }
 }
 
 export async function getInstituicao() {
@@ -52,7 +202,18 @@ export async function getInstituicao() {
       return null;
     }
 
-    return data;
+    if (!data?.id) {
+      return data ?? null;
+    }
+
+    const cnaes = await loadInstituicaoCnaes(data.id);
+
+    return {
+      ...data,
+      cnae_principal: cnaes.principal?.codigo ?? null,
+      cnae_descricao: cnaes.principal?.descricao ?? null,
+      cnaes_secundarios: cnaes.secundarios,
+    };
   } catch (error) {
     return null;
   }
@@ -60,9 +221,14 @@ export async function getInstituicao() {
 
 export async function getEnderecos() {
   const supabase = createServiceRoleClient();
+  const instituicaoId = await getMainInstituicaoId();
+
+  if (!instituicaoId) {
+    return [];
+  }
 
   try {
-    const { data, error } = await supabase.from('instituicao_enderecos').select('*');
+    const { data, error } = await supabase.from('instituicao_enderecos').select('*').eq('instituicao_id', instituicaoId);
 
     if (error) {
       return [];
@@ -76,22 +242,28 @@ export async function getEnderecos() {
 
 export async function getContatos() {
   const supabase = createServiceRoleClient();
+  const instituicaoId = await getMainInstituicaoId();
+
+  if (!instituicaoId) {
+    return [];
+  }
 
   try {
-    const { data, error } = await supabase
-      .from('instituicao_contatos')
-      .select(
-        `
-        *,
-        pessoas (nome, email)
-      `
-      );
+    const [contatosResult, tiposResult] = await Promise.all([
+      supabase.from('instituicao_contatos').select('*').eq('instituicao_id', instituicaoId),
+      supabase.from('instituicao_contato_tipos').select('id, label').eq('instituicao_id', instituicaoId),
+    ]);
 
-    if (error) {
+    if (contatosResult.error) {
       return [];
     }
 
-    return data || [];
+    const tiposMap = new Map((tiposResult.data || []).map((tipo) => [tipo.id, tipo.label]));
+
+    return (contatosResult.data || []).map((contato) => ({
+      ...contato,
+      tipo: contato.tipo || (contato.tipo_id ? tiposMap.get(contato.tipo_id) ?? null : null),
+    }));
   } catch (error) {
     return [];
   }
@@ -99,9 +271,14 @@ export async function getContatos() {
 
 export async function getContasBancarias() {
   const supabase = createServiceRoleClient();
+  const instituicaoId = await getMainInstituicaoId();
+
+  if (!instituicaoId) {
+    return [];
+  }
 
   try {
-    const { data, error } = await supabase.from('contas_bancarias').select('*');
+    const { data, error } = await supabase.from('contas_bancarias').select('*').eq('instituicao_id', instituicaoId);
 
     if (error) {
       return [];
@@ -115,11 +292,17 @@ export async function getContasBancarias() {
 
 async function loadContatoTipos() {
   const supabase = createServiceRoleClient();
+  const instituicaoId = await getMainInstituicaoId();
+
+  if (!instituicaoId) {
+    return [];
+  }
 
   try {
     const { data, error } = await supabase
       .from('instituicao_contato_tipos')
       .select('id, label, ordem, ativo')
+      .eq('instituicao_id', instituicaoId)
       .eq('ativo', true)
       .order('ordem', { ascending: true })
       .order('label', { ascending: true });
@@ -171,8 +354,6 @@ export async function updateInstituicao(formData: {
   natureza_juridica?: string;
   porte?: string;
   data_fundacao?: string;
-  cnae_principal?: string;
-  cnae_descricao?: string;
   logo_url?: string;
   logo_com_fundo_url?: string;
   descricao?: string;
@@ -193,6 +374,7 @@ export async function updateInstituicao(formData: {
     ...formData,
     cnpj: normalizeCnpj(formData.cnpj),
     data_fundacao: normalizeDate(formData.data_fundacao),
+    porte: normalizePorte(formData.porte),
   });
 
   if (!patch.nome_oficial) {
@@ -250,33 +432,52 @@ export async function updateEndereco(formData: {
   longitude?: number;
 }) {
   const supabase = createServiceRoleClient();
+  const instituicaoId = await getMainInstituicaoId();
 
-  let existingId: string | null = null;
-
-  try {
-    const { data, error } = await supabase.from('instituicao_enderecos').select('id').limit(1).maybeSingle();
-    if (!(error?.code && error.code !== 'PGRST116' && hasMeaningfulError(error))) {
-      existingId = data?.id ?? null;
-    }
-  } catch (error) {
-    void error;
+  if (!instituicaoId) {
+    return { success: false, error: 'Instituição principal não encontrada.' };
   }
 
-  if (existingId) {
-    const { error } = await supabase.from('instituicao_enderecos').update(formData).eq('id', existingId);
+  try {
+    const { data, error } = await supabase
+      .from('instituicao_enderecos')
+      .select('id')
+      .eq('instituicao_id', instituicaoId)
+      .limit(1)
+      .maybeSingle();
 
-    if (error) return { success: false, error: error.message };
-  } else {
-    const { error } = await supabase.from('instituicao_enderecos').insert([formData]);
+    if (error?.code && error.code !== 'PGRST116' && hasMeaningfulError(error)) {
+      return { success: false, error: error.message };
+    }
 
-    if (error) return { success: false, error: error.message };
+    if (data?.id) {
+      const { error: updateError } = await supabase
+        .from('instituicao_enderecos')
+        .update(formData)
+        .eq('id', data.id)
+        .eq('instituicao_id', instituicaoId);
+
+      if (updateError) return { success: false, error: updateError.message };
+    } else {
+      const { error: insertError } = await supabase.from('instituicao_enderecos').insert([
+        {
+          ...formData,
+          instituicao_id: instituicaoId,
+        },
+      ]);
+
+      if (insertError) return { success: false, error: insertError.message };
+    }
+  } catch (error) {
+    return { success: false, error: 'Erro ao salvar endereço' };
   }
 
   return { success: true };
 }
 
 export async function addContato(formData: {
-  tipo: string;
+  tipo?: string;
+  tipo_id?: string;
   telefone?: string;
   whatsapp?: string;
   email?: string;
@@ -287,6 +488,11 @@ export async function addContato(formData: {
   responsavel_id?: string;
 }) {
   const supabase = createServiceRoleClient();
+  const instituicaoId = await getMainInstituicaoId();
+
+  if (!instituicaoId) {
+    return { success: false, error: 'Instituição principal não encontrada.' };
+  }
 
   if (formData.responsavel_id) {
     const { data, error } = await supabase.from('pessoas').select('id').eq('id', formData.responsavel_id).maybeSingle();
@@ -296,7 +502,23 @@ export async function addContato(formData: {
     }
   }
 
-  const { error } = await supabase.from('instituicao_contatos').insert([{ ...formData, ativo: true }]);
+  const tipoId = await resolveContatoTipoId(instituicaoId, formData.tipo_id, formData.tipo);
+
+  const { error } = await supabase.from('instituicao_contatos').insert([
+    {
+      instituicao_id: instituicaoId,
+      tipo_id: tipoId,
+      telefone: formData.telefone,
+      whatsapp: formData.whatsapp,
+      email: formData.email,
+      instagram: formData.instagram,
+      facebook: formData.facebook,
+      youtube: formData.youtube,
+      site: formData.site,
+      responsavel_id: formData.responsavel_id,
+      ativo: true,
+    },
+  ]);
 
   if (error) return { success: false, error: error.message };
 
@@ -315,14 +537,27 @@ function formDataText(formData: FormData, name: string) {
 export async function addContatoTipo(formData: FormData) {
   const supabase = createServiceRoleClient();
   const label = normalizeContatoTipoLabel(formDataText(formData, 'label'));
+  const instituicaoId = await getMainInstituicaoId();
 
   if (!label) {
     redirect(buildFlashNoticeUrl('/admin/instituicao/editar?tab=contatos', { variant: 'error', message: 'Informe o nome do tipo.' }));
   }
 
-  const { error } = await supabase
-    .from('instituicao_contato_tipos')
-    .insert([{ label, ordem: 999, ativo: true }]);
+  if (!instituicaoId) {
+    redirect(buildFlashNoticeUrl('/admin/instituicao/editar?tab=contatos', { variant: 'error', message: 'Instituição principal não encontrada.' }));
+  }
+
+  const { error } = await supabase.from('instituicao_contato_tipos').upsert(
+    [
+      {
+        instituicao_id: instituicaoId,
+        label,
+        ordem: 999,
+        ativo: true,
+      },
+    ],
+    { onConflict: 'instituicao_id,label' }
+  );
 
   if (error) {
     redirect(buildFlashNoticeUrl('/admin/instituicao/editar?tab=contatos', { variant: 'error', message: `Não foi possível salvar o tipo: ${error.message}` }));
@@ -337,6 +572,7 @@ export async function updateContatoTipo(formData: FormData) {
   const id = formDataText(formData, 'id');
   const label = normalizeContatoTipoLabel(formDataText(formData, 'label'));
   const ordemRaw = formDataText(formData, 'ordem');
+  const instituicaoId = await getMainInstituicaoId();
 
   if (!id) {
     redirect(buildFlashNoticeUrl('/admin/instituicao/editar?tab=contatos', { variant: 'error', message: 'Tipo inválido.' }));
@@ -346,6 +582,10 @@ export async function updateContatoTipo(formData: FormData) {
     redirect(buildFlashNoticeUrl('/admin/instituicao/editar?tab=contatos', { variant: 'error', message: 'Informe o nome do tipo.' }));
   }
 
+  if (!instituicaoId) {
+    redirect(buildFlashNoticeUrl('/admin/instituicao/editar?tab=contatos', { variant: 'error', message: 'Instituição principal não encontrada.' }));
+  }
+
   const { error } = await supabase
     .from('instituicao_contato_tipos')
     .update({
@@ -353,7 +593,8 @@ export async function updateContatoTipo(formData: FormData) {
       ordem: ordemRaw && !Number.isNaN(Number(ordemRaw)) ? Number(ordemRaw) : 999,
       atualizado_em: new Date().toISOString(),
     })
-    .eq('id', id);
+    .eq('id', id)
+    .eq('instituicao_id', instituicaoId);
 
   if (error) {
     redirect(buildFlashNoticeUrl('/admin/instituicao/editar?tab=contatos', { variant: 'error', message: `Não foi possível atualizar o tipo: ${error.message}` }));
@@ -366,12 +607,17 @@ export async function updateContatoTipo(formData: FormData) {
 export async function deleteContatoTipo(formData: FormData) {
   const supabase = createServiceRoleClient();
   const id = formDataText(formData, 'id');
+  const instituicaoId = await getMainInstituicaoId();
 
   if (!id) {
     redirect(buildFlashNoticeUrl('/admin/instituicao/editar?tab=contatos', { variant: 'error', message: 'Tipo inválido.' }));
   }
 
-  const { error } = await supabase.from('instituicao_contato_tipos').delete().eq('id', id);
+  if (!instituicaoId) {
+    redirect(buildFlashNoticeUrl('/admin/instituicao/editar?tab=contatos', { variant: 'error', message: 'Instituição principal não encontrada.' }));
+  }
+
+  const { error } = await supabase.from('instituicao_contato_tipos').delete().eq('id', id).eq('instituicao_id', instituicaoId);
 
   if (error) {
     redirect(buildFlashNoticeUrl('/admin/instituicao/editar?tab=contatos', { variant: 'error', message: `Não foi possível remover o tipo: ${error.message}` }));
@@ -385,6 +631,7 @@ export async function updateContato(
   id: string,
   formData: {
     tipo?: string;
+    tipo_id?: string;
     telefone?: string;
     whatsapp?: string;
     email?: string;
@@ -396,6 +643,11 @@ export async function updateContato(
   }
 ) {
   const supabase = createServiceRoleClient();
+  const instituicaoId = await getMainInstituicaoId();
+
+  if (!instituicaoId) {
+    return { success: false, error: 'Instituição principal não encontrada.' };
+  }
 
   if (formData.responsavel_id) {
     const { data, error } = await supabase.from('pessoas').select('id').eq('id', formData.responsavel_id).maybeSingle();
@@ -405,7 +657,23 @@ export async function updateContato(
     }
   }
 
-  const { error } = await supabase.from('instituicao_contatos').update(formData).eq('id', id);
+  const tipoId = await resolveContatoTipoId(instituicaoId, formData.tipo_id, formData.tipo);
+
+  const { error } = await supabase
+    .from('instituicao_contatos')
+    .update({
+      telefone: formData.telefone,
+      whatsapp: formData.whatsapp,
+      email: formData.email,
+      instagram: formData.instagram,
+      facebook: formData.facebook,
+      youtube: formData.youtube,
+      site: formData.site,
+      responsavel_id: formData.responsavel_id,
+      tipo_id: tipoId,
+    })
+    .eq('id', id)
+    .eq('instituicao_id', instituicaoId);
 
   if (error) return { success: false, error: error.message };
 
@@ -414,8 +682,13 @@ export async function updateContato(
 
 export async function deleteContato(id: string) {
   const supabase = createServiceRoleClient();
+  const instituicaoId = await getMainInstituicaoId();
 
-  const { error } = await supabase.from('instituicao_contatos').delete().eq('id', id);
+  if (!instituicaoId) {
+    return { success: false };
+  }
+
+  const { error } = await supabase.from('instituicao_contatos').delete().eq('id', id).eq('instituicao_id', instituicaoId);
 
   if (error) return { success: false };
 
@@ -436,8 +709,19 @@ export async function addContaBancaria(formData: {
   visibilidade?: string;
 }) {
   const supabase = createServiceRoleClient();
+  const instituicaoId = await getMainInstituicaoId();
 
-  const { error } = await supabase.from('contas_bancarias').insert([{ ...formData, ativo: true }]);
+  if (!instituicaoId) {
+    return { success: false };
+  }
+
+  const { error } = await supabase.from('contas_bancarias').insert([
+    {
+      ...formData,
+      instituicao_id: instituicaoId,
+      ativo: true,
+    },
+  ]);
 
   if (error) return { success: false };
 
@@ -461,8 +745,17 @@ export async function updateContaBancaria(
   }
 ) {
   const supabase = createServiceRoleClient();
+  const instituicaoId = await getMainInstituicaoId();
 
-  const { error } = await supabase.from('contas_bancarias').update(formData).eq('id', id);
+  if (!instituicaoId) {
+    return { success: false };
+  }
+
+  const { error } = await supabase
+    .from('contas_bancarias')
+    .update(formData)
+    .eq('id', id)
+    .eq('instituicao_id', instituicaoId);
 
   if (error) return { success: false };
 
@@ -471,8 +764,13 @@ export async function updateContaBancaria(
 
 export async function deleteContaBancaria(id: string) {
   const supabase = createServiceRoleClient();
+  const instituicaoId = await getMainInstituicaoId();
 
-  const { error } = await supabase.from('contas_bancarias').delete().eq('id', id);
+  if (!instituicaoId) {
+    return { success: false };
+  }
+
+  const { error } = await supabase.from('contas_bancarias').delete().eq('id', id).eq('instituicao_id', instituicaoId);
 
   if (error) return { success: false };
 

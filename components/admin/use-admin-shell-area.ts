@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 
 export type AdminShellArea =
   | "painel"
+  | "perfil"
   | "geef"
   | "pessoas"
   | "governanca"
@@ -20,6 +21,7 @@ export type AdminShellAreaItem = {
 
 export const ADMIN_SHELL_AREAS: AdminShellAreaItem[] = [
   { key: "painel", label: "Painel", note: "Resumo" },
+  { key: "perfil", label: "Perfil", note: "Conta e acesso" },
   { key: "geef", label: "Geef", note: "Gestão da instituição" },
   { key: "pessoas", label: "Pessoas", note: "Cadastro e vínculo" },
   { key: "governanca", label: "Governança", note: "Gestão e direção" },

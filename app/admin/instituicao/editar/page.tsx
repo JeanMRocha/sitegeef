@@ -135,6 +135,7 @@ function buildInstituicaoPatch(instituicaoAtual: typeof FALLBACK_INSTITUICAO | n
       nome_curto: textValue(formData, 'nome_curto'),
       cnpj: normalizeCnpj(textValue(formData, 'cnpj')),
       natureza_juridica: textValue(formData, 'natureza_juridica'),
+      porte: textValue(formData, 'porte'),
       data_fundacao: textValue(formData, 'data_fundacao'),
     };
   }
@@ -497,6 +498,16 @@ async function EditInstituicaoContent({ searchParams }: { searchParams: { tab?: 
                 <label className="profile-form-field">
                   <span>Data de fundação</span>
                   <input type="date" name="data_fundacao" defaultValue={normalizeDateInput(instituicaoBase.data_fundacao)} className="profile-form-input" />
+                </label>
+                <label className="profile-form-field">
+                  <span>Porte</span>
+                  <select name="porte" defaultValue={instituicaoBase.porte || ''} className="profile-form-input">
+                    <option value="">Selecione o porte</option>
+                    <option value="Microempresa">Microempresa</option>
+                    <option value="Pequena">Pequena</option>
+                    <option value="Média">Média</option>
+                    <option value="Grande">Grande</option>
+                  </select>
                 </label>
                 <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
                   <span>Natureza jurídica</span>

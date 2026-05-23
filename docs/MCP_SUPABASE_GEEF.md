@@ -31,9 +31,14 @@ Arquivo local do Codex:
 ```json
 {
   "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": ["supabase"]
+  "enabledMcpjsonServers": ["supabase-geef"]
 }
 ```
+
+Arquivo local do projeto:
+
+- `.mcp.json` deve conter o servidor `supabase-geef`
+- `.claude/settings.json` deve permitir o servidor `supabase-geef`
 
 ## Como validar
 

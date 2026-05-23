@@ -17,6 +17,28 @@ O Autoreflex agora é um serviço local do próprio projeto, em `http://127.0.0.
 
 ---
 
+## MCP do projeto — Supabase GEEF
+
+Para acessar o banco remoto deste projeto, use somente o MCP isolado `supabase-geef`.
+
+**Fonte de verdade local:**
+- `.mcp.json` declara o servidor `supabase-geef`
+- `docs/MCP_SUPABASE_GEEF.md` explica como validar e recuperar a conexão
+
+**Comandos de verificação:**
+```bash
+codex mcp list
+codex mcp get supabase-geef
+codex mcp login supabase-geef
+```
+
+**Regra operacional:**
+- Nunca trocar `supabase-geef` por um MCP genérico
+- Nunca misturar este projeto com outras contas ou outros projetos Supabase
+- Antes de qualquer leitura/escrita remota, confirmar que o MCP correto está `enabled` e autenticado por OAuth
+
+---
+
 ## Ordem de decisão — Como trabalhar
 
 **1. Memória da conversa**

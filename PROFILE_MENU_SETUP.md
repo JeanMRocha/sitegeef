@@ -16,7 +16,7 @@
 ✅ **Supabase Migrations Automáticas**
 - Migrations detectadas automaticamente via GitHub
 - Aplicadas ao fazer push para `main`
-- Arquivo combinado: `supabase/combined-migrations.sql`
+- Migration consolidada da instituição: `supabase/migrations/20260523_instituicao_modelagem_total.sql`
 - Mapa local -> checkpoint remoto: `docs/SUPABASE_MIGRATION_MAP.md`
 
 ---
@@ -26,7 +26,7 @@
 ### ⚙️ No Supabase Dashboard
 
 1. Abra: https://supabase.com/dashboard/project/nycgpokqlmrfzegjlrwa/sql/new
-2. Cole o SQL do arquivo: `supabase/combined-migrations.sql`
+2. Cole o SQL do arquivo: `supabase/migrations/20260523_instituicao_modelagem_total.sql`
 3. Clique em **Run**
 
 **Isso vai criar:**
@@ -74,9 +74,8 @@ supabase/
     ├── 20260515_geef_erp.sql
     ├── 20260515_rls_sensitive_modules.sql
     ├── 20260516_fix_profiles_and_storage.sql
-    ├── 20260517_instituicao_safe_fallback.sql
-    ├── 20260517_instituicao_singleton_and_policies.sql
-    └── 20260517_pessoas_usuarios_policies.sql
+    ├── 20260517_pessoas_usuarios_policies.sql
+    └── 20260523_instituicao_modelagem_total.sql
 
 scripts/
 ├── geef-migrations.mjs              ← Runner de migrations
