@@ -192,89 +192,43 @@ export async function updateInstituicao(formData: {
     data_fundacao: normalizeDate(formData.data_fundacao),
   });
 
-  let existingId: string | null = null;
-  let existingRow:
-    | {
-        nome_oficial?: string | null;
-        nome_curto?: string | null;
-        cnpj?: string | null;
-        natureza_juridica?: string | null;
-        data_fundacao?: string | null;
-        logo_url?: string | null;
-        logo_com_fundo_url?: string | null;
-        descricao?: string | null;
-        historia?: string | null;
-        missao?: string | null;
-        visao?: string | null;
-        valores?: string | null;
-        identidade_visual_descricao?: string | null;
-        identidade_visual_letras_descricao?: string | null;
-        identidade_visual_visual_descricao?: string | null;
-        identidade_visual_composicao?: string | null;
-        identidade_visual_uso?: string | null;
-        identidade_visual_exemplos?: string | null;
-        estatuto_url?: string | null;
-      }
-    | null = null;
-
-  try {
-    const { data, error } = await supabase
-      .from('instituicao')
-      .select('id, nome_oficial, nome_curto, cnpj, natureza_juridica, data_fundacao, logo_url, logo_com_fundo_url, descricao, historia, missao, visao, valores, identidade_visual_descricao, identidade_visual_letras_descricao, identidade_visual_visual_descricao, identidade_visual_composicao, identidade_visual_uso, identidade_visual_exemplos, estatuto_url')
-      .order('criado_em', { ascending: true })
-      .limit(1)
-      .maybeSingle();
-
-    if (!(error?.code && error.code !== 'PGRST116' && hasMeaningfulError(error))) {
-      existingId = data?.id ?? null;
-      existingRow = data ?? null;
-    }
-  } catch (error) {
-    void error;
+  if (!patch.nome_oficial) {
+    return { success: false, error: 'Nome oficial é obrigatório.' };
   }
 
-  if (existingId) {
+  try {
+    // Tentar GET do registro único
+    const { data: existing, error: selectError } = await supabase
+      .from('instituicao')
+      .select('id')
+      .maybeSingle();
+
+    if (selectError && selectError.code !== 'PGRST116') {
+      return { success: false, error: selectError.message };
+    }
+
     const payload = {
-      nome_oficial: patch.nome_oficial ?? existingRow?.nome_oficial,
-      nome_curto: patch.nome_curto ?? existingRow?.nome_curto ?? null,
-      cnpj: patch.cnpj ?? existingRow?.cnpj ?? null,
-      natureza_juridica: patch.natureza_juridica ?? existingRow?.natureza_juridica ?? null,
-      data_fundacao: patch.data_fundacao ?? existingRow?.data_fundacao ?? null,
-      logo_url: patch.logo_url ?? existingRow?.logo_url ?? null,
-      logo_com_fundo_url: patch.logo_com_fundo_url ?? existingRow?.logo_com_fundo_url ?? null,
-      descricao: patch.descricao ?? existingRow?.descricao ?? null,
-      historia: patch.historia ?? existingRow?.historia ?? null,
-      missao: patch.missao ?? existingRow?.missao ?? null,
-      visao: patch.visao ?? existingRow?.visao ?? null,
-      valores: patch.valores ?? existingRow?.valores ?? null,
-      identidade_visual_descricao: patch.identidade_visual_descricao ?? existingRow?.identidade_visual_descricao ?? null,
-      identidade_visual_letras_descricao: patch.identidade_visual_letras_descricao ?? existingRow?.identidade_visual_letras_descricao ?? null,
-      identidade_visual_visual_descricao: patch.identidade_visual_visual_descricao ?? existingRow?.identidade_visual_visual_descricao ?? null,
-      identidade_visual_composicao: patch.identidade_visual_composicao ?? existingRow?.identidade_visual_composicao ?? null,
-      identidade_visual_uso: patch.identidade_visual_uso ?? existingRow?.identidade_visual_uso ?? null,
-      identidade_visual_exemplos: patch.identidade_visual_exemplos ?? existingRow?.identidade_visual_exemplos ?? null,
-      estatuto_url: patch.estatuto_url ?? existingRow?.estatuto_url ?? null,
+      ...patch,
       atualizado_em: new Date().toISOString(),
     };
 
-    if (!payload.nome_oficial) {
-      return { success: false, error: 'Nome oficial é obrigatório.' };
+    // Se existe, UPDATE; senão INSERT
+    if (existing?.id) {
+      const { error: updateError } = await supabase
+        .from('instituicao')
+        .update(payload)
+        .eq('id', existing.id);
+
+      if (updateError) return { success: false, error: updateError.message };
+    } else {
+      const { error: insertError } = await supabase
+        .from('instituicao')
+        .insert([payload]);
+
+      if (insertError) return { success: false, error: insertError.message };
     }
-
-    const { error: updateError } = await supabase
-      .from('instituicao')
-      .update(payload)
-      .eq('id', existingId);
-
-    if (updateError) return { success: false, error: updateError.message };
-  } else {
-    if (!patch.nome_oficial) {
-      return { success: false, error: 'Nome oficial é obrigatório.' };
-    }
-
-    const { error: insertError } = await supabase.from('instituicao').insert([patch]);
-
-    if (insertError) return { success: false, error: insertError.message };
+  } catch (error) {
+    return { success: false, error: 'Erro ao atualizar instituição' };
   }
 
   return { success: true };
