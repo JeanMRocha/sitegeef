@@ -42,6 +42,9 @@
 - `docs/MCP_SUPABASE_GEEF.md` = recuperar e validar o MCP `supabase-geef`.
 - `docs/SUPABASE_MIGRATION_MAP.md` = mapa local -> checkpoint remoto das migrations aplicadas.
 - Cadastro da instituicao: a modelagem consolidada fica em `supabase/migrations/20260523_instituicao_modelagem_total.sql`.
+- Em base já povoada, trate a migration como aditiva e faça backup antes de qualquer limpeza manual de colunas legadas ou dados históricos.
+- A limpeza destrutiva separada fica em `supabase/migrations/20260524_instituicao_cleanup_legado.sql` e só deve rodar depois do backup e da validação do backfill.
+- O roteiro de execução fica em `docs/INSTITUICAO_MIGRATION_RUNBOOK.md`.
 
 ## Ordem das skills
 

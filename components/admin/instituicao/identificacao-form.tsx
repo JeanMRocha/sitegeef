@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { updateInstituicao } from '@/app/admin/instituicao/actions';
+import { PORTE_CNPJ_OPTIONS } from '@/lib/instituicao/porte';
 import { useRouter } from 'next/navigation';
 
 interface IdentificacaoFormProps {
@@ -12,9 +13,6 @@ interface IdentificacaoFormProps {
     natureza_juridica?: string;
     porte?: string;
     data_fundacao?: string;
-    cnae_principal?: string;
-    cnae_descricao?: string;
-    cnaes_secundarios?: Array<{ codigo: string; descricao?: string | null }>;
   } | null;
 }
 
@@ -31,8 +29,6 @@ export default function IdentificacaoForm({ initialData }: IdentificacaoFormProp
     natureza_juridica: initialData?.natureza_juridica || '',
     porte: initialData?.porte || '',
     data_fundacao: initialData?.data_fundacao?.slice(0, 10) || '',
-    cnae_principal: initialData?.cnae_principal || '',
-    cnae_descricao: initialData?.cnae_descricao || '',
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -57,8 +53,6 @@ export default function IdentificacaoForm({ initialData }: IdentificacaoFormProp
         natureza_juridica: formData.natureza_juridica || undefined,
         porte: formData.porte || undefined,
         data_fundacao: formData.data_fundacao || undefined,
-        cnae_principal: formData.cnae_principal || undefined,
-        cnae_descricao: formData.cnae_descricao || undefined,
       });
 
       if (result.success) {
@@ -205,7 +199,7 @@ export default function IdentificacaoForm({ initialData }: IdentificacaoFormProp
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
         <div>
           <label htmlFor="porte" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
-            Porte
+            Porte do CNPJ
           </label>
           <select
             id="porte"
@@ -221,10 +215,11 @@ export default function IdentificacaoForm({ initialData }: IdentificacaoFormProp
             }}
           >
             <option value="">Selecione</option>
-            <option value="Microempresa">Microempresa</option>
-            <option value="Pequena">Pequena</option>
-            <option value="Média">Média</option>
-            <option value="Grande">Grande</option>
+            {PORTE_CNPJ_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </select>
         </div>
         <div>
@@ -247,59 +242,6 @@ export default function IdentificacaoForm({ initialData }: IdentificacaoFormProp
           />
         </div>
       </div>
-
-      <div style={{ marginBottom: '1.5rem', padding: '1rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '0.5rem' }}>
-        <h3 style={{ marginTop: 0, marginBottom: '1rem' }}>Atividade Econômica Principal (CNAE)</h3>
-        <div style={{ marginBottom: '1rem' }}>
-          <label htmlFor="cnae_principal" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
-            Código CNAE
-          </label>
-          <select
-            id="cnae_principal"
-            name="cnae_principal"
-            value={formData.cnae_principal}
-            onChange={handleChange}
-            style={{
-              width: '100%',
-              padding: '0.75rem',
-              border: '1px solid var(--border)',
-              borderRadius: '0.5rem',
-              fontSize: '1rem',
-            }}
-          >
-            <option value="">Selecione uma atividade</option>
-            <option value="94.91-0-00">94.91-0-00 - Atividades de organizações religiosas ou filosóficas</option>
-            <option value="94.92-8-00">94.92-8-00 - Atividades de organizações políticas</option>
-            <option value="94.93-6-00">94.93-6-00 - Atividades de organizações sindicais</option>
-            <option value="94.99-5-00">94.99-5-00 - Outras atividades associativas não especificadas anteriormente</option>
-            <option value="85.92-8-00">85.92-8-00 - Ensino superior (não comercial)</option>
-            <option value="85.91-0-00">85.91-0-00 - Ensino profissional (não comercial)</option>
-            <option value="80.10-4-00">80.10-4-00 - Serviços privados de vigilância</option>
-            <option value="outro">Outro - Especificar manualmente</option>
-          </select>
-        </div>
-        <div>
-          <label htmlFor="cnae_descricao" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
-            Descrição da Atividade
-          </label>
-          <input
-            type="text"
-            id="cnae_descricao"
-            name="cnae_descricao"
-            value={formData.cnae_descricao}
-            onChange={handleChange}
-            placeholder="Descrição da atividade econômica principal"
-            style={{
-              width: '100%',
-              padding: '0.75rem',
-              border: '1px solid var(--border)',
-              borderRadius: '0.5rem',
-              fontSize: '1rem',
-            }}
-          />
-        </div>
-      </div>
-
 
       <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
         <button

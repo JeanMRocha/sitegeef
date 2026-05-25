@@ -24,6 +24,7 @@
     "db:status": "npx supabase migration list --linked",
     "db:push": "npx supabase db push",
     "db:pull": "npx supabase db pull",
+    "instituicao:migrate-safe": "node scripts/instituicao-migrate-safe.mjs",
     "geef:migrations": "node scripts/geef-migrations.mjs",
     "geef:sql": "node scripts/copy-and-open-sql.mjs",
     "skills:search": "node scripts/geef-skills.mjs search",

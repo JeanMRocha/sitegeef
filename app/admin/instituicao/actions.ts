@@ -3,6 +3,7 @@
 import { revalidateTag, unstable_cache, revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
+import { normalizePorteCnpj } from '@/lib/instituicao/porte';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 import { uploadStorageAsset } from '@/lib/supabase/storage';
 
@@ -31,34 +32,6 @@ function normalizeDate(value?: string) {
   }
 
   return trimmed.slice(0, 10);
-}
-
-function normalizePorte(value?: string) {
-  const normalized = value?.trim();
-
-  if (!normalized) {
-    return undefined;
-  }
-
-  const lower = normalized.toLowerCase();
-
-  if (lower === 'microempresa') {
-    return 'Microempresa';
-  }
-
-  if (lower === 'pequena') {
-    return 'Pequena';
-  }
-
-  if (lower === 'média' || lower === 'media') {
-    return 'Média';
-  }
-
-  if (lower === 'grande') {
-    return 'Grande';
-  }
-
-  return normalized;
 }
 
 function stripUndefined<T extends Record<string, unknown>>(value: T) {
@@ -210,9 +183,7 @@ export async function getInstituicao() {
 
     return {
       ...data,
-      cnae_principal: cnaes.principal?.codigo ?? null,
-      cnae_descricao: cnaes.principal?.descricao ?? null,
-      cnaes_secundarios: cnaes.secundarios,
+      cnaes,
     };
   } catch (error) {
     return null;
@@ -374,7 +345,7 @@ export async function updateInstituicao(formData: {
     ...formData,
     cnpj: normalizeCnpj(formData.cnpj),
     data_fundacao: normalizeDate(formData.data_fundacao),
-    porte: normalizePorte(formData.porte),
+    porte: normalizePorteCnpj(formData.porte),
   });
 
   if (!patch.nome_oficial) {
@@ -712,7 +683,7 @@ export async function addContaBancaria(formData: {
   const instituicaoId = await getMainInstituicaoId();
 
   if (!instituicaoId) {
-    return { success: false };
+    return { success: false, error: 'Instituição principal não encontrada.' };
   }
 
   const { error } = await supabase.from('contas_bancarias').insert([
@@ -723,7 +694,7 @@ export async function addContaBancaria(formData: {
     },
   ]);
 
-  if (error) return { success: false };
+  if (error) return { success: false, error: error.message };
 
   return { success: true };
 }

@@ -45,7 +45,7 @@ async function ContatosContent() {
                     {contato.instagram && <>📸 @{contato.instagram}<br /></>}
                     {contato.facebook && <>f {contato.facebook}<br /></>}
                     {contato.youtube && <>▶️ {contato.youtube}<br /></>}
-                    {contato.site && <><🌐 {contato.site}<br /></>}
+                    {contato.site && <>🌐 {contato.site}<br /></>}
                   </p>
                   {contato.pessoas?.nome && (
                     <p style={{ margin: '0.75rem 0 0 0', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>

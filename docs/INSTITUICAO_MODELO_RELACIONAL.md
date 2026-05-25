@@ -20,7 +20,7 @@ Campos centrais e estáveis:
 - nome curto
 - CNPJ
 - natureza jurídica
-- porte
+- porte oficial do CNPJ (`00`, `01`, `03`, `05`)
 - data de fundação
 - identidade visual
 - descritivos institucionais
@@ -77,8 +77,14 @@ Campos centrais e estáveis:
 - Se surgir suporte a múltiplas instituições no futuro, esse modelo já está preparado
 - Se a casa continuar singleton, as constraints ajudam a evitar duplicação acidental
 - O próximo passo de limpeza é revisar se algum campo ainda está livre demais, como alguns textos auxiliares e enums implícitos
+- `porte` não deve voltar a receber rótulo livre; a interface precisa mostrar descrição, mas armazenar o código oficial do CNPJ
 
 ## Migration de referência
 
 - A implementação desta modelagem fica concentrada em `supabase/migrations/20260523_instituicao_modelagem_total.sql`
 - As migrations antigas de instituição foram removidas para evitar fontes paralelas de verdade
+- A migration consolidada está em modo aditivo para preservar bases já povoada
+- Se houver necessidade de limpeza ou remoção de colunas legadas, faça backup completo antes e só então execute a etapa destrutiva em separado
+- A limpeza destrutiva pós-backup fica em `supabase/migrations/20260524_instituicao_cleanup_legado.sql`
+- O passo a passo operacional está em `docs/INSTITUICAO_MIGRATION_RUNBOOK.md`
+- Os comandos exatos de execução ficam em `docs/INSTITUICAO_MIGRATION_COMMANDS.md`

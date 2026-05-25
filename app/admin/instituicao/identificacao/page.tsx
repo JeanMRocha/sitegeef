@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getInstituicao } from "../actions";
 import { Suspense } from "react";
+import { formatPorteCnpj } from "@/lib/instituicao/porte";
 import { contentPages, site } from "@/lib/site-data";
 
 export const metadata = {
@@ -16,9 +17,10 @@ const FALLBACK_INSTITUICAO = {
   natureza_juridica: undefined as string | undefined,
   porte: undefined as string | undefined,
   data_fundacao: undefined as string | undefined,
-  cnae_principal: undefined as string | undefined,
-  cnae_descricao: undefined as string | undefined,
-  cnaes_secundarios: [] as Array<{ codigo: string; descricao?: string | null }>,
+  cnaes: {
+    principal: null as { codigo: string; descricao?: string | null } | null,
+    secundarios: [] as Array<{ codigo: string; descricao?: string | null; ordem?: number | null }>,
+  },
 };
 
 function formatCnpj(value: string | undefined) {
@@ -85,8 +87,8 @@ async function IdentificacaoContent() {
               <p>{instituicaoBase.natureza_juridica || "—"}</p>
             </div>
             <div className="area-panel-item">
-              <strong>Porte</strong>
-              <p>{instituicaoBase.porte || "—"}</p>
+              <strong>Porte do CNPJ</strong>
+              <p>{formatPorteCnpj(instituicaoBase.porte)}</p>
             </div>
             <div className="area-panel-item">
               <strong>Data de fundação</strong>
@@ -94,17 +96,17 @@ async function IdentificacaoContent() {
             </div>
             <div className="area-panel-item">
               <strong>Código CNAE</strong>
-              <p>{instituicaoBase.cnae_principal || "—"}</p>
+              <p>{instituicaoBase.cnaes?.principal?.codigo || "—"}</p>
             </div>
             <div className="area-panel-item">
               <strong>Descrição da Atividade</strong>
-              <p>{instituicaoBase.cnae_descricao || "—"}</p>
+              <p>{instituicaoBase.cnaes?.principal?.descricao || "—"}</p>
             </div>
             <div className="area-panel-item" style={{ gridColumn: '1 / -1' }}>
               <strong>CNAEs secundários</strong>
-              {Array.isArray(instituicaoBase.cnaes_secundarios) && instituicaoBase.cnaes_secundarios.length > 0 ? (
+              {Array.isArray(instituicaoBase.cnaes?.secundarios) && instituicaoBase.cnaes?.secundarios.length > 0 ? (
                 <div style={{ marginTop: '0.5rem', display: 'grid', gap: '0.45rem' }}>
-                  {instituicaoBase.cnaes_secundarios.map((cnae: { codigo: string; descricao?: string | null }, index: number) => (
+                  {instituicaoBase.cnaes.secundarios.map((cnae: { codigo: string; descricao?: string | null }, index: number) => (
                     <div key={`${cnae.codigo}-${index}`} className="area-panel-item" style={{ padding: '0.75rem 0.85rem' }}>
                       <strong>{cnae.codigo}</strong>
                       <p style={{ marginTop: '0.25rem' }}>{cnae.descricao || 'Sem descrição'}</p>

@@ -446,19 +446,6 @@ on conflict (id) do nothing;
 update public.instituicao
 set singleton_guard = true;
 
-with ranked as (
-  select
-    id,
-    row_number() over (
-      order by criado_em nulls last, id asc
-    ) as rn
-  from public.instituicao
-)
-delete from public.instituicao i
-using ranked r
-where i.id = r.id
-  and r.rn > 1;
-
 do $$
 begin
   if not exists (
@@ -752,33 +739,5 @@ where tipo_id is not null
     from public.instituicao_contato_tipos t
     where t.id = public.instituicao_contatos.tipo_id
   );
-
-delete from public.instituicao_enderecos e
-using (
-  select
-    id,
-    row_number() over (partition by instituicao_id order by id asc) as rn
-  from public.instituicao_enderecos
-) ranked
-where e.id = ranked.id
-  and ranked.rn > 1;
-
-delete from public.instituicao_cnaes c
-using (
-  select
-    id,
-    row_number() over (partition by instituicao_id, tipo, codigo order by id asc) as rn
-  from public.instituicao_cnaes
-) ranked
-where c.id = ranked.id
-  and ranked.rn > 1;
-
-alter table public.instituicao
-  drop column if exists cnae_principal,
-  drop column if exists cnae_descricao,
-  drop column if exists cnaes_secundarios;
-
-alter table public.instituicao_contatos
-  drop column if exists tipo;
 
 commit;

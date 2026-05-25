@@ -21,6 +21,7 @@ import { DescritivoField } from '@/components/admin/instituicao-descritivo-field
 import { InstituicaoContatoFields, InstituicaoContatoTipoManager } from '@/components/admin/instituicao-contatos-fields';
 import { BrandAssetUpload } from '@/components/admin/brand-asset-upload';
 import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
+import { PORTE_CNPJ_OPTIONS } from '@/lib/instituicao/porte';
 import { contentPages, site } from '@/lib/site-data';
 
 export const metadata = {
@@ -500,13 +501,14 @@ async function EditInstituicaoContent({ searchParams }: { searchParams: { tab?: 
                   <input type="date" name="data_fundacao" defaultValue={normalizeDateInput(instituicaoBase.data_fundacao)} className="profile-form-input" />
                 </label>
                 <label className="profile-form-field">
-                  <span>Porte</span>
+                  <span>Porte do CNPJ</span>
                   <select name="porte" defaultValue={instituicaoBase.porte || ''} className="profile-form-input">
                     <option value="">Selecione o porte</option>
-                    <option value="Microempresa">Microempresa</option>
-                    <option value="Pequena">Pequena</option>
-                    <option value="Média">Média</option>
-                    <option value="Grande">Grande</option>
+                    {PORTE_CNPJ_OPTIONS.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
                   </select>
                 </label>
                 <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
