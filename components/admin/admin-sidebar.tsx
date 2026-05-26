@@ -28,6 +28,7 @@ export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
   const currentPerfil = usuarioSistema?.perfil ?? '';
   const { area } = useAdminShellArea();
   const showUserArea = area === 'pessoas' || area === 'perfil';
+  const showReuniaoPublicaArea = area === 'reuniao-publica';
   const showGovernanceArea = area === 'governanca';
   const showDocumentsArea = area === 'documentos';
   const showSystemArea = area === 'sistema';
@@ -167,12 +168,6 @@ export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
               📄 Documentos
             </Link>
             <Link
-              href="/admin/instituicao/musicas"
-              className={`admin-nav-item ${isActive('/admin/instituicao/musicas') ? 'active' : ''}`}
-            >
-              🎵 Músicas
-            </Link>
-            <Link
               href="/admin/instituicao/contatos"
               className={`admin-nav-item ${isActive('/admin/instituicao/contatos') ? 'active' : ''}`}
             >
@@ -183,6 +178,18 @@ export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
               className={`admin-nav-item ${isActive('/admin/instituicao/contas') ? 'active' : ''}`}
             >
               💰 Contas Bancárias
+            </Link>
+          </NavGroup>
+        )}
+
+        {/* Reunião pública */}
+        {showReuniaoPublicaArea && canAccessModule('pode_publicar', ['comunicacao', 'secretaria']) && (
+          <NavGroup name="reuniao-publica" title="Reunião pública" collapsible>
+            <Link
+              href="/admin/reuniao-publica/musicas"
+              className={`admin-nav-item ${isActive('/admin/reuniao-publica/musicas') ? 'active' : ''}`}
+            >
+              🎵 Músicas
             </Link>
           </NavGroup>
         )}

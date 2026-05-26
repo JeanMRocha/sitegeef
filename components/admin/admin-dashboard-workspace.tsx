@@ -128,7 +128,6 @@ export function AdminDashboardWorkspace({ summary }: AdminDashboardWorkspaceProp
               { href: "/admin/funcoes", label: "Funções" },
               { href: "/admin/departamentos", label: "Departamentos" },
               { href: "/admin/instituicao/documentos", label: "Documentos" },
-              { href: "/admin/instituicao/musicas", label: "Músicas" },
             ]}
           />
 
@@ -141,6 +140,52 @@ export function AdminDashboardWorkspace({ summary }: AdminDashboardWorkspaceProp
                   <p className="admin-stat-label">{card.label}</p>
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (area === "reuniao-publica") {
+    return (
+      <div className="admin-dashboard-page">
+        <section className="admin-page-header admin-card admin-page-header--hero">
+          <div className="admin-page-header-copy">
+            <span className="admin-dashboard-kicker">Reunião pública</span>
+            <h1 className="admin-page-title">Músicas e exibição</h1>
+            <p className="admin-page-subtitle">
+              Cadastre, revise e controle a exibição pública das músicas com pareamento por código.
+            </p>
+          </div>
+
+          <div className="admin-actions">
+            <Link href="/admin/reuniao-publica/musicas" className="admin-btn admin-btn-primary">🎵 Abrir músicas</Link>
+            <Link href="/musicas/exibir" className="admin-btn admin-btn-secondary" target="_blank" rel="noreferrer">🖥️ Exibição pública</Link>
+          </div>
+        </section>
+
+        <div className="admin-dashboard-hero">
+          <SectionCard
+            title="Controle ao vivo"
+            description="Use este espaço para acessar o catálogo, parear a tela e alterar a música exibida."
+            actions={[
+              { href: "/admin/reuniao-publica/musicas", label: "Músicas" },
+              { href: "/musicas/exibir", label: "Exibição pública" },
+            ]}
+          />
+
+          <div className="admin-card admin-dashboard-panel admin-subtle-card">
+            <span className="admin-inline-pill">Operação rápida</span>
+            <div className="admin-card-grid admin-metric-grid">
+              <div className="admin-card admin-stat-card">
+                <p className="admin-stat-value">16:9</p>
+                <p className="admin-stat-label">Formato de tela</p>
+              </div>
+              <div className="admin-card admin-stat-card">
+                <p className="admin-stat-value">1</p>
+                <p className="admin-stat-label">Tela vinculada por vez</p>
+              </div>
             </div>
           </div>
         </div>

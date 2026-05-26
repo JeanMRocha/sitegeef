@@ -65,4 +65,6 @@ export function invalidateMusicasCache() {
   revalidatePath("/musicas/[slug]");
   revalidatePath("/musicas/exibir");
   revalidatePath("/admin/instituicao/musicas");
+  revalidatePath("/admin/reuniao-publica");
+  revalidatePath("/admin/reuniao-publica/musicas");
 }

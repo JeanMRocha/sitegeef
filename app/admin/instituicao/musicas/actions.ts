@@ -31,7 +31,7 @@ export async function saveMusicaAction(formData: FormData) {
   const partesRaw = readString(formData, "partes_json");
 
   if (!titulo || !autor) {
-    redirect("/admin/instituicao/musicas?erro=preencha-titulo-autor");
+    redirect("/admin/reuniao-publica/musicas?erro=preencha-titulo-autor");
   }
 
   let partes = normalizePartes([]);
@@ -53,18 +53,18 @@ export async function saveMusicaAction(formData: FormData) {
   });
 
   invalidateMusicasCache();
-  redirect(`/admin/instituicao/musicas?id=${musica?.id ?? id ?? ""}&salvo=1`);
+  redirect(`/admin/reuniao-publica/musicas?id=${musica?.id ?? id ?? ""}&salvo=1`);
 }
 
 export async function deleteMusicaAction(formData: FormData) {
   const id = readOptionalString(formData, "id");
   if (!id) {
-    redirect("/admin/instituicao/musicas?erro=musica-sem-id");
+    redirect("/admin/reuniao-publica/musicas?erro=musica-sem-id");
   }
 
   await deleteMusica(id);
   invalidateMusicasCache();
-  redirect("/admin/instituicao/musicas?excluida=1");
+  redirect("/admin/reuniao-publica/musicas?excluida=1");
 }
 
 export async function saveMusicaSessaoAction(formData: FormData) {
@@ -75,7 +75,7 @@ export async function saveMusicaSessaoAction(formData: FormData) {
   const ativo = readString(formData, "ativo") === "on" || readString(formData, "ativo") === "true";
 
   if (!codigo) {
-    redirect("/admin/instituicao/musicas?erro=codigo-pareamento");
+    redirect("/admin/reuniao-publica/musicas?erro=codigo-pareamento");
   }
 
   await saveMusicaSessao({
@@ -88,11 +88,11 @@ export async function saveMusicaSessaoAction(formData: FormData) {
   });
 
   invalidateMusicasCache();
-  redirect(`/admin/instituicao/musicas?codigo=${encodeURIComponent(codigo.toUpperCase())}&salvo_sessao=1`);
+  redirect(`/admin/reuniao-publica/musicas?codigo=${encodeURIComponent(codigo.toUpperCase())}&salvo_sessao=1`);
 }
 
 export async function createMusicaSessaoAction() {
   const sessao = await createMusicaSessao();
   invalidateMusicasCache();
-  redirect(`/admin/instituicao/musicas?codigo=${encodeURIComponent(sessao.codigo_pareamento)}&nova_sessao=1`);
+  redirect(`/admin/reuniao-publica/musicas?codigo=${encodeURIComponent(sessao.codigo_pareamento)}&nova_sessao=1`);
 }

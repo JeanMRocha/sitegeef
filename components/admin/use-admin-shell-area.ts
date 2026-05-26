@@ -7,6 +7,7 @@ export type AdminShellArea =
   | "perfil"
   | "geef"
   | "pessoas"
+  | "reuniao-publica"
   | "governanca"
   | "documentos"
   | "operacao"
@@ -23,6 +24,7 @@ export const ADMIN_SHELL_AREAS: AdminShellAreaItem[] = [
   { key: "perfil", label: "Perfil", note: "Conta e acesso" },
   { key: "geef", label: "Geef", note: "Gestão da instituição" },
   { key: "pessoas", label: "Pessoas", note: "Cadastro e vínculo" },
+  { key: "reuniao-publica", label: "Reunião pública", note: "Músicas e exibição" },
   { key: "governanca", label: "Governança", note: "Gestão e direção" },
   { key: "documentos", label: "Documentos", note: "LGPD e registros" },
   { key: "operacao", label: "Operação", note: "Rotinas do dia a dia" },
@@ -38,6 +40,7 @@ export const ADMIN_SHELL_ROUTES: Record<AdminShellArea, string> = {
   perfil: "/admin/perfil",
   geef: "/admin/geef",
   pessoas: "/admin/pessoas",
+  "reuniao-publica": "/admin/reuniao-publica",
   governanca: "/admin/governanca",
   documentos: "/admin/documentos",
   operacao: "/admin/operacao",
@@ -102,6 +105,12 @@ export function getAdminShellAreaFromPath(pathname?: string | null): AdminShellA
     return "perfil";
   }
 
+  if (
+    normalizedPath.startsWith("/admin/reuniao-publica") ||
+    normalizedPath.startsWith("/admin/instituicao/musicas")
+  ) {
+    return "reuniao-publica";
+  }
   if (
     normalizedPath.startsWith("/admin/geef") ||
     normalizedPath.startsWith("/admin/instituicao") ||
