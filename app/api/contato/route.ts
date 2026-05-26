@@ -21,6 +21,35 @@ function normalize(value?: string) {
   return value?.trim() ?? "";
 }
 
+function digitsOnly(value: string) {
+  return value.replace(/\D/g, "");
+}
+
+function isValidEmail(value: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+}
+
+function normalizeTelefone(value: string) {
+  const digits = digitsOnly(value);
+
+  if (!digits) {
+    return "";
+  }
+
+  if (digits.length < 10 || digits.length > 11) {
+    return null;
+  }
+
+  const ddd = digits.slice(0, 2);
+  const numero = digits.slice(2);
+
+  if (numero.length === 8) {
+    return `(${ddd}) ${numero.slice(0, 4)}-${numero.slice(4)}`;
+  }
+
+  return `(${ddd}) ${numero.slice(0, 5)}-${numero.slice(5)}`;
+}
+
 function getRateLimitKey(request: NextRequest) {
   return (
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
@@ -86,6 +115,16 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "invalid_payload" }, { status: 400 });
   }
 
+  if (!isValidEmail(email)) {
+    return NextResponse.json({ error: "invalid_email" }, { status: 400 });
+  }
+
+  const telefoneNormalizado = normalizeTelefone(telefone);
+
+  if (telefoneNormalizado === null) {
+    return NextResponse.json({ error: "invalid_phone" }, { status: 400 });
+  }
+
   const supabase = createServiceRoleClient();
   const now = new Date().toISOString();
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null;
@@ -98,7 +137,7 @@ export async function POST(request: NextRequest) {
     {
       nome,
       email,
-      telefone: telefone || null,
+      telefone: telefoneNormalizado || null,
       assunto: assunto.slice(0, 180),
       mensagem: mensagem.slice(0, 8000),
       pagina_origem: paginaOrigem.slice(0, 120),
