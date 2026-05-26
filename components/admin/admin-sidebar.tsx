@@ -197,6 +197,12 @@ export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
             >
               Sessões
             </Link>
+            <Link
+              href="/admin/reuniao-publica/musicas/autores"
+              className={`admin-nav-item ${isActive('/admin/reuniao-publica/musicas/autores') ? 'active' : ''}`}
+            >
+              Autores
+            </Link>
           </NavGroup>
         )}
 
