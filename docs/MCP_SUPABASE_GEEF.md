@@ -47,6 +47,17 @@ Arquivo local do projeto:
 3. Confirmar que o status esta `enabled` e que a autenticacao esta por OAuth.
 4. Se necessario, testar leitura do servidor via MCP.
 
+## Quando o MCP nao basta
+
+Se o servidor MCP estiver habilitado, mas a sessão não expuser uma ferramenta de escrita, use o token do projeto para operar pela Management API do Supabase:
+
+1. Reautentique o MCP com `codex mcp login supabase-geef`.
+2. Exporte `SUPABASE_ACCESS_TOKEN` a partir do token de acesso do projeto.
+3. Use a CLI em workdir temporario ou a API `POST /v1/projects/{ref}/database/migrations` para aplicar schema.
+4. Use `POST /v1/projects/{ref}/database/query` para leitura/diagnóstico pontual quando a rota direta do banco falhar.
+
+Esse fluxo foi o que funcionou quando o `db.nycgpokqlmrfzegjlrwa.supabase.co` nao respondeu por acesso direto neste ambiente.
+
 ## Sintoma de problema
 
 Quando a entrada aparece no `codex mcp list`, mas a leitura falha com algo como:

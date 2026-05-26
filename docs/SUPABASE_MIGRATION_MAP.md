@@ -14,9 +14,11 @@ Este documento alinha os nomes dos arquivos locais de migration com os checkpoin
 | `supabase/migrations/20260517_pessoas_usuarios_policies.sql` | `pessoas_usuarios_policies_exact` |
 | `supabase/migrations/20260518_admin_user_jwt_fallback.sql` | `admin_user_jwt_fallback` |
 | `supabase/migrations/20260523_instituicao_modelagem_total.sql` | `instituicao_modelagem_total` |
+| `supabase/migrations/20260527_musica_autores_normalizacao.sql` | `20260527_musica_autores_normalizacao` |
 
 ## Observações
 
 - O remoto registrou os blocos por checkpoints idempotentes, não por replay bruto dos nomes originais.
 - As migrations antigas de instituição foram consolidadas em um único arquivo local.
 - Os arquivos locais continuam como fonte de verdade para o repositório e para scripts existentes.
+- A migration de autores de música entrou no histórico remoto em 2026-05-26 via Management API do Supabase.

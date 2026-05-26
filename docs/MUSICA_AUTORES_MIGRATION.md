@@ -14,13 +14,24 @@ A tabela de músicas foi normalizada para usar uma tabela separada de autores (`
 4. Copie o conteúdo de `supabase/migrations/20260527_musica_autores_normalizacao.sql`
 5. Cole no editor e clique **▶ Run**
 
-### Opção 2: Via CLI (se DATABASE_URL estiver configurado)
+### Opção 2: Via CLI linkada
+
+Se o projeto estiver linkado e você tiver `SUPABASE_ACCESS_TOKEN` configurado, use:
+
+```bash
+supabase link --project-ref nycgpokqlmrfzegjlrwa
+npx supabase db push
+```
+
+### Opção 3: Via CLI com DATABASE_URL
 
 ```bash
 npm run apply-migration
 ```
 
 > ⚠️ Requer `DATABASE_URL` ou `SUPABASE_DB_URL` configurado nas variáveis de ambiente
+
+Se a conexão direta falhar por IPv6 ou o `.env` não estiver parseando corretamente, use a Opção 1 ou a Management API do Supabase para aplicar a migration com o token do projeto.
 
 ## 📊 O que a Migração Faz
 
@@ -78,6 +89,6 @@ SELECT id, nome FROM musica_autores LIMIT 5;
 
 ---
 
-**Status**: Implementado em 2026-05-27  
+**Status**: Aplicada remotamente em 2026-05-26  
 **Migração**: `20260527_musica_autores_normalizacao.sql`  
 **Compatibilidade**: ✅ Backwards-compatible

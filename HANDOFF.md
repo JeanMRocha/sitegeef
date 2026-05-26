@@ -41,6 +41,8 @@
 - `lib/escalas/public-escalas.ts` = cache publico das escalas.
 - `docs/MCP_SUPABASE_GEEF.md` = recuperar e validar o MCP `supabase-geef`.
 - `docs/SUPABASE_MIGRATION_MAP.md` = mapa local -> checkpoint remoto das migrations aplicadas.
+- Quando o CLI local precisar aplicar migration, preferir `SUPABASE_ACCESS_TOKEN` + `supabase link` em workdir temporario e, para escrita remota, usar a Management API `POST /v1/projects/{ref}/database/migrations`.
+- Se o host direto do banco falhar por IPv6 ou o `.env` estiver malformado para a CLI, usar o pooler do `supabase-geef` ou a Management API `POST /v1/projects/{ref}/database/query` para leitura/diagnostico pontual.
 - Cadastro da instituicao: a modelagem consolidada fica em `supabase/migrations/20260523_instituicao_modelagem_total.sql`.
 - Em base já povoada, trate a migration como aditiva e faça backup antes de qualquer limpeza manual de colunas legadas ou dados históricos.
 - A limpeza destrutiva separada fica em `supabase/migrations/20260524_instituicao_cleanup_legado.sql` e só deve rodar depois do backup e da validação do backfill.
@@ -124,6 +126,7 @@ Quando o Autoreflex local voltar a responder, rodar primeiro:
 - O catalogo publico de musicas ficou em `/musicas` e a leitura individual em `/musicas/[slug]`.
 - A tela de exibicao pareada ficou em `/musicas/exibir/[codigo]`, e `/musicas/exibir` cria uma sessao nova e redireciona para o codigo gerado.
 - A sincronizacao ao vivo usa `GET /api/musicas/sessoes/[codigo]` para devolver sessao + musica e atualizar `ultimo_acesso_em`.
+- A migration de normalizacao de autores `supabase/migrations/20260527_musica_autores_normalizacao.sql` foi aplicada remotamente em `2026-05-26`, criando `musica_autores` e a coluna `musicas.autor_id` com backfill.
 - A migration `supabase/migrations/20260526011410_musicas_institucionais.sql` foi aplicada remotamente com sucesso, criando `musicas`, `musica_partes` e `musica_sessoes` com RLS e policies de `service_role`.
 - O helper central ficou em `lib/musicas.ts`, com leitura, busca, salvamento, exclusao, pareamento e touch da sessao.
 - O editor interno aceita letra, cifra, partes por ordem, destaque visual e busca por autor/titulo/trecho.
