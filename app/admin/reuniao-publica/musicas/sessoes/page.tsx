@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { AdminModuleGate } from "@/components/admin/admin-module-gate";
+import { IconArrowLeft, IconPlus, IconEdit, IconExternalLink, IconPower, IconTrash } from "@/components/icons";
 import { EncerrarMusicasSessoesButton } from "@/components/admin/encerrar-musicas-sessoes-button";
 import {
   encerrarTodasMusicaSessoesAction,
@@ -31,8 +32,8 @@ async function SessoesContent({ searchParams }: PageProps) {
           <span className="admin-dashboard-kicker">Músicas</span>
           <h1 className="admin-page-title">Sessões de pareamento</h1>
         </div>
-        <Link href="/admin/reuniao-publica/musicas" className="admin-btn admin-btn-secondary">
-          Voltar
+        <Link href="/admin/reuniao-publica/musicas" className="admin-btn admin-btn-secondary" title="Voltar">
+          <IconArrowLeft size={18} />
         </Link>
       </div>
 
@@ -83,8 +84,8 @@ async function SessoesContent({ searchParams }: PageProps) {
       <section className="area-section">
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
           <h2 style={{ margin: 0 }}>Sessões ativas</h2>
-          <Link href="/admin/reuniao-publica/musicas/sessoes/novo" className="admin-btn admin-btn-primary">
-            + Nova sessão
+          <Link href="/admin/reuniao-publica/musicas/sessoes/novo" className="admin-btn admin-btn-primary" title="Nova sessão">
+            <IconPlus size={18} />
           </Link>
         </div>
 
@@ -133,18 +134,20 @@ async function SessoesContent({ searchParams }: PageProps) {
                       <td style={{ textAlign: "right" }}>
                         <div style={{ display: "flex", gap: "0.5rem", justifyContent: "flex-end" }}>
                           <Link
-                            href={`/admin/reuniao-publica/musicas/sessoes?codigo=${sessao.codigo_pareamento}`}
+                            href={`/admin/reuniao-publica/musicas/sessoes/novo?codigo=${sessao.codigo_pareamento}`}
                             className="admin-btn admin-btn-small"
+                            title="Editar"
                           >
-                            Editar
+                            <IconEdit size={16} />
                           </Link>
                           <Link
                             href={`/musicas/exibir/${sessao.codigo_pareamento}`}
                             className="admin-btn admin-btn-small"
                             target="_blank"
                             rel="noreferrer"
+                            title="Abrir em nova aba"
                           >
-                            Abrir
+                            <IconExternalLink size={16} />
                           </Link>
                           {sessao.ativo ? (
                             <form action={setMusicaSessaoAtivaAction} style={{ display: "inline" }}>
@@ -154,8 +157,9 @@ async function SessoesContent({ searchParams }: PageProps) {
                                 type="submit"
                                 className="admin-btn admin-btn-small"
                                 style={{ color: "var(--danger)", borderColor: "rgba(239, 68, 68, 0.25)" }}
+                                title="Encerrar sessão"
                               >
-                                Encerrar
+                                <IconPower size={16} />
                               </button>
                             </form>
                           ) : (
@@ -165,8 +169,9 @@ async function SessoesContent({ searchParams }: PageProps) {
                                 type="submit"
                                 className="admin-btn admin-btn-small"
                                 style={{ color: "var(--danger)", borderColor: "rgba(239, 68, 68, 0.25)" }}
+                                title="Excluir sessão"
                               >
-                                Excluir
+                                <IconTrash size={16} />
                               </button>
                             </form>
                           )}

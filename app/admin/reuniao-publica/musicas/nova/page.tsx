@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { IconArrowLeft } from "@/components/icons";
 import { MusicaEditorForm } from "@/components/admin/musicas/musica-editor-form";
 import { saveMusicaAction } from "../actions";
 import { listMusicaAutores } from "@/lib/musicas";
@@ -17,8 +18,8 @@ export default async function NovaMusicaPage() {
           <span className="admin-dashboard-kicker">Músicas</span>
           <h1 className="admin-page-title">Nova música</h1>
         </div>
-        <Link href="/admin/reuniao-publica/musicas" className="admin-btn admin-btn-secondary">
-          Voltar
+        <Link href="/admin/reuniao-publica/musicas" className="admin-btn admin-btn-secondary" title="Voltar">
+          <IconArrowLeft size={18} />
         </Link>
       </div>
 

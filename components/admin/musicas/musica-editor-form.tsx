@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { IconPlus, IconTrash } from "@/components/icons";
 import type { Musica, MusicaParte, MusicaParteTipo, MusicaAutor } from "@/lib/musicas";
 
 type MusicaEditorFormProps = {
@@ -140,7 +141,8 @@ export function MusicaEditorForm({ musica, autores = [], action, submitLabel = "
               Organize estrofes e refrões em blocos. A tela pública vai respeitar a ordem e o destaque.
             </p>
           </div>
-          <button type="button" className="profile-form-btn profile-form-btn-secondary" onClick={addParte}>
+          <button type="button" className="profile-form-btn profile-form-btn-secondary" onClick={addParte} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            <IconPlus size={16} />
             Adicionar parte
           </button>
         </div>
@@ -154,9 +156,10 @@ export function MusicaEditorForm({ musica, autores = [], action, submitLabel = "
               <button
                 type="button"
                 className="profile-form-btn profile-form-btn-secondary"
-                style={{ fontSize: "0.875rem", padding: "0.3rem 0.6rem", color: "#8a005a" }}
+                style={{ fontSize: "0.875rem", padding: "0.3rem 0.6rem", color: "#8a005a", display: "flex", alignItems: "center", gap: "0.25rem" }}
                 onClick={() => removeParte(index)}
               >
+                <IconTrash size={14} />
                 Remover
               </button>
             </div>

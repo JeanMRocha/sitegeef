@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { IconArrowLeft } from "@/components/icons";
 import { DeleteMusicaButton } from "@/components/admin/musicas/delete-musica-button";
 import { MusicaEditorForm } from "@/components/admin/musicas/musica-editor-form";
 import { getMusicaById, listMusicaAutores } from "@/lib/musicas";
@@ -28,8 +29,8 @@ export default async function EditarMusicaPage({ params }: PageProps) {
           <span className="admin-dashboard-kicker">Músicas</span>
           <h1 className="admin-page-title">Editar música</h1>
         </div>
-        <Link href="/admin/reuniao-publica/musicas" className="admin-btn admin-btn-secondary">
-          Voltar
+        <Link href="/admin/reuniao-publica/musicas" className="admin-btn admin-btn-secondary" title="Voltar">
+          <IconArrowLeft size={18} />
         </Link>
       </div>
 

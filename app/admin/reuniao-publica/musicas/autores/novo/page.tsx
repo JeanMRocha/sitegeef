@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { AdminModuleGate } from "@/components/admin/admin-module-gate";
+import { IconArrowLeft, IconSave } from "@/components/icons";
 import { saveMusicaAutorAction } from "../actions";
 import { getMusicaAutorById } from "@/lib/musicas";
 
@@ -27,8 +28,8 @@ async function NovoAutorContent({ searchParams }: PageProps) {
           <span className="admin-dashboard-kicker">Músicas</span>
           <h1 className="admin-page-title">{isEditing ? "Editar autor" : "Novo autor"}</h1>
         </div>
-        <Link href="/admin/reuniao-publica/musicas/autores" className="admin-btn admin-btn-secondary">
-          Voltar
+        <Link href="/admin/reuniao-publica/musicas/autores" className="admin-btn admin-btn-secondary" title="Voltar">
+          <IconArrowLeft size={18} />
         </Link>
       </div>
 
@@ -60,7 +61,8 @@ async function NovoAutorContent({ searchParams }: PageProps) {
             </label>
 
             <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem" }}>
-              <button type="submit" className="profile-form-btn profile-form-btn-primary">
+              <button type="submit" className="profile-form-btn profile-form-btn-primary" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <IconSave size={16} />
                 {isEditing ? "Salvar alterações" : "Criar autor"}
               </button>
             </div>

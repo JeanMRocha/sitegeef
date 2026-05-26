@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { AdminModuleGate } from "@/components/admin/admin-module-gate";
+import { IconArrowLeft, IconPlus, IconEdit, IconTrash, IconSearch } from "@/components/icons";
 import { deleteMusicaAutorAction } from "./actions";
 import { listMusicaAutores } from "@/lib/musicas";
 
@@ -25,8 +26,8 @@ async function AutoresContent({ searchParams }: PageProps) {
           <span className="admin-dashboard-kicker">Músicas</span>
           <h1 className="admin-page-title">Autores</h1>
         </div>
-        <Link href="/admin/reuniao-publica/musicas" className="admin-btn admin-btn-secondary">
-          Voltar
+        <Link href="/admin/reuniao-publica/musicas" className="admin-btn admin-btn-secondary" title="Voltar">
+          <IconArrowLeft size={18} />
         </Link>
       </div>
 
@@ -47,12 +48,12 @@ async function AutoresContent({ searchParams }: PageProps) {
               className="profile-form-input"
               style={{ flex: 1 }}
             />
-            <button type="submit" className="admin-btn admin-btn-secondary">
-              Buscar
+            <button type="submit" className="admin-btn admin-btn-secondary" title="Buscar">
+              <IconSearch size={18} />
             </button>
           </form>
-          <Link href="/admin/reuniao-publica/musicas/autores/novo" className="admin-btn admin-btn-primary">
-            + Novo autor
+          <Link href="/admin/reuniao-publica/musicas/autores/novo" className="admin-btn admin-btn-primary" title="Novo autor">
+            <IconPlus size={18} />
           </Link>
         </div>
 
@@ -78,8 +79,9 @@ async function AutoresContent({ searchParams }: PageProps) {
                         <Link
                           href={`/admin/reuniao-publica/musicas/autores/novo?id=${autor.id}`}
                           className="admin-btn admin-btn-small"
+                          title="Editar"
                         >
-                          Editar
+                          <IconEdit size={16} />
                         </Link>
                         <form action={deleteMusicaAutorAction} style={{ display: "inline" }}>
                           <input type="hidden" name="id" value={autor.id} />
@@ -87,8 +89,9 @@ async function AutoresContent({ searchParams }: PageProps) {
                             type="submit"
                             className="admin-btn admin-btn-small"
                             style={{ color: "var(--danger)", borderColor: "rgba(239, 68, 68, 0.25)" }}
+                            title="Excluir"
                           >
-                            Excluir
+                            <IconTrash size={16} />
                           </button>
                         </form>
                       </div>

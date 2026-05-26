@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { AdminModuleGate } from "@/components/admin/admin-module-gate";
+import { IconPlus, IconSearch } from "@/components/icons";
 import { getMusicasResumo, listMusicas } from "@/lib/musicas";
 
 export const metadata = {
@@ -25,13 +26,14 @@ async function MusicasContent({ searchParams }: PageProps) {
           <h1 className="admin-page-title">Músicas</h1>
         </div>
         <div style={{ display: "flex", gap: "0.5rem" }}>
-          <Link href="/admin/reuniao-publica/musicas/autores" className="admin-btn admin-btn-secondary">
+          <Link href="/admin/reuniao-publica/musicas/autores" className="admin-btn admin-btn-secondary" title="Gerenciar autores">
             Autores
           </Link>
-          <Link href="/admin/reuniao-publica/musicas/sessoes" className="admin-btn admin-btn-secondary">
+          <Link href="/admin/reuniao-publica/musicas/sessoes" className="admin-btn admin-btn-secondary" title="Sessões de pareamento">
             Sessões
           </Link>
-          <Link href="/admin/reuniao-publica/musicas/nova" className="admin-btn admin-btn-primary">
+          <Link href="/admin/reuniao-publica/musicas/nova" className="admin-btn admin-btn-primary" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            <IconPlus size={18} />
             Nova música
           </Link>
         </div>
@@ -67,7 +69,8 @@ async function MusicasContent({ searchParams }: PageProps) {
               defaultValue={q}
               placeholder="Buscar por autor, título ou letra..."
             />
-            <button type="submit" className="profile-form-btn profile-form-btn-secondary">
+            <button type="submit" className="profile-form-btn profile-form-btn-secondary" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+              <IconSearch size={16} />
               Buscar
             </button>
           </form>

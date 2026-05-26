@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { AdminModuleGate } from "@/components/admin/admin-module-gate";
+import { IconArrowLeft, IconSave, IconPlus } from "@/components/icons";
 import { saveMusicaSessaoAction, createMusicaSessaoAction } from "../../actions";
 import { getMusicasResumo, listMusicaSessoes } from "@/lib/musicas";
 
@@ -30,8 +31,8 @@ async function NovoSessaoContent({ searchParams }: PageProps) {
           <span className="admin-dashboard-kicker">Músicas</span>
           <h1 className="admin-page-title">{isEditing ? "Editar sessão" : "Nova sessão de pareamento"}</h1>
         </div>
-        <Link href="/admin/reuniao-publica/musicas/sessoes" className="admin-btn admin-btn-secondary">
-          Voltar
+        <Link href="/admin/reuniao-publica/musicas/sessoes" className="admin-btn admin-btn-secondary" title="Voltar">
+          <IconArrowLeft size={18} />
         </Link>
       </div>
 
@@ -96,7 +97,8 @@ async function NovoSessaoContent({ searchParams }: PageProps) {
             </label>
 
             <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem" }}>
-              <button type="submit" className="profile-form-btn profile-form-btn-primary">
+              <button type="submit" className="profile-form-btn profile-form-btn-primary" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <IconSave size={16} />
                 {isEditing ? "Salvar alterações" : "Salvar sessão"}
               </button>
             </div>
@@ -104,8 +106,9 @@ async function NovoSessaoContent({ searchParams }: PageProps) {
 
           {!isEditing && (
             <form action={createMusicaSessaoAction} style={{ marginTop: "1.5rem", paddingTop: "1.5rem", borderTop: "1px solid var(--border-medium)" }}>
-              <button type="submit" className="profile-form-btn profile-form-btn-secondary">
-                Gerar nova sessão (auto-código)
+              <button type="submit" className="profile-form-btn profile-form-btn-secondary" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <IconPlus size={16} />
+                Gerar nova sessão
               </button>
             </form>
           )}
