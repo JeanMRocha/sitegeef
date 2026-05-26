@@ -28,7 +28,6 @@ export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
   const currentPerfil = usuarioSistema?.perfil ?? '';
   const { area } = useAdminShellArea();
   const showUserArea = area === 'pessoas' || area === 'perfil';
-  const showReuniaoPublicaArea = area === 'reuniao-publica';
   const showGovernanceArea = area === 'governanca';
   const showDocumentsArea = area === 'documentos';
   const showSystemArea = area === 'sistema';
@@ -183,7 +182,7 @@ export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
         )}
 
         {/* Reunião pública */}
-        {showReuniaoPublicaArea && canAccessModule('pode_publicar', ['comunicacao', 'secretaria']) && (
+        {canAccessModule('pode_publicar', ['comunicacao', 'secretaria']) && (
           <NavGroup name="reuniao-publica" title="Reunião pública" collapsible>
             <Link
               href="/admin/reuniao-publica/musicas"

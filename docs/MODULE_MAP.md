@@ -136,6 +136,23 @@
 - `app/admin/reunioes-virtuais/[id]/page.tsx`
 - Guarda: `pode_publicar` ou perfis `comunicacao` / `secretaria`
 
+### Reuniao publica e musicas
+
+- `app/admin/reuniao-publica/page.tsx`
+- `app/admin/reuniao-publica/musicas/page.tsx`
+- `app/admin/instituicao/musicas/page.tsx` - alias legado para a nova area
+- `app/admin/instituicao/musicas/actions.ts` - actions compartilhadas do editor
+- `app/musicas/page.tsx`
+- `app/musicas/[slug]/page.tsx`
+- `app/musicas/exibir/page.tsx`
+- `app/musicas/exibir/[codigo]/page.tsx`
+- `app/api/musicas/sessoes/[codigo]/route.ts`
+- `components/admin/musicas/musica-editor-form.tsx`
+- `components/musicas/musica-reader.tsx`
+- `components/musicas/musica-display-live.tsx`
+- `lib/musicas.ts`
+- Guarda: `pode_publicar` ou perfis `comunicacao` / `secretaria` / `diretoria`
+
 ### Livraria
 
 - `app/admin/livraria/page.tsx`

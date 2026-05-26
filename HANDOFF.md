@@ -116,6 +116,18 @@ Quando o Autoreflex local voltar a responder, rodar primeiro:
 
 ## Ultima entrega
 
+- Foi criado o modulo de `Reuniao publica` para musicas, com menu proprio no topo do admin e submenu lateral dedicado.
+- O caminho oficial de administracao de musicas agora e `/admin/reuniao-publica/musicas`; o caminho legado `/admin/instituicao/musicas` apenas redireciona.
+- O catalogo publico de musicas ficou em `/musicas` e a leitura individual em `/musicas/[slug]`.
+- A tela de exibicao pareada ficou em `/musicas/exibir/[codigo]`, e `/musicas/exibir` cria uma sessao nova e redireciona para o codigo gerado.
+- A sincronizacao ao vivo usa `GET /api/musicas/sessoes/[codigo]` para devolver sessao + musica e atualizar `ultimo_acesso_em`.
+- A migration `supabase/migrations/20260526011410_musicas_institucionais.sql` foi aplicada remotamente com sucesso, criando `musicas`, `musica_partes` e `musica_sessoes` com RLS e policies de `service_role`.
+- O helper central ficou em `lib/musicas.ts`, com leitura, busca, salvamento, exclusao, pareamento e touch da sessao.
+- O editor interno aceita letra, cifra, partes por ordem, destaque visual e busca por autor/titulo/trecho.
+- O menu do admin foi ajustado para mostrar `Reuniao publica` como area propria no topo e na sidebar, sem depender da area `Instituicao`.
+- O cache de musicas agora invalida tanto as rotas publicas quanto as rotas do admin novo.
+- O `npm run build` passou apos a consolidacao do modulo.
+- A entrega detalhada do modulo ficou registrada em `docs/REUNIAO_PUBLICA_MUSICAS.md` e o handoff de continuidade em `docs/REUNIAO_PUBLICA_MUSICAS_HANDOFF.md`.
 - A home do dashboard foi enxugada para ficar apenas com cards essenciais, sem forms, cadastros, CTAs de criação ou blocos longos de ação.
 - O cabeçalho do admin agora ficou praticamente só com o ícone da marca, as abas de área e o menu do usuário no canto direito.
 - O perfil saiu da sidebar e foi concentrado no menu do ícone do usuário, com `Perfil`, `Minha área`, `Painel` e `Sair` no popover.
