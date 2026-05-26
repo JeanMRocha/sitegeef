@@ -1,0 +1,34 @@
+import Link from "next/link";
+import { MusicaEditorForm } from "@/components/admin/musicas/musica-editor-form";
+import { saveMusicaAction } from "../actions";
+
+export const metadata = {
+  title: "Nova música - Admin GEEF",
+};
+
+export default function NovaMusicaPage() {
+  return (
+    <div className="area-page">
+      <div className="admin-page-header">
+        <div>
+          <span className="admin-dashboard-kicker">Músicas</span>
+          <h1 className="admin-page-title">Nova música</h1>
+        </div>
+        <Link href="/admin/reuniao-publica/musicas" className="admin-btn admin-btn-secondary">
+          Voltar
+        </Link>
+      </div>
+
+      <section className="area-section">
+        <div className="admin-card table-surface">
+          <div className="area-section-title">
+            <h2>Detalhes da música</h2>
+            <p>Preencha os campos básicos e organize as partes da letra (estrofes, refrões, pontes).</p>
+          </div>
+
+          <MusicaEditorForm action={saveMusicaAction} submitLabel="Criar música" />
+        </div>
+      </section>
+    </div>
+  );
+}

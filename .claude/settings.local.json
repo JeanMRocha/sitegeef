@@ -7,7 +7,12 @@
       "Bash(curl -s http://localhost:3500)",
       "Bash(curl -s http://localhost:3500/login)",
       "Bash(git add *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Bash(npx next *)",
+      "Bash(curl -s http://localhost:3500/admin/reuniao-publica/musicas)",
+      "Bash(cat /tmp/dev.log | tail -100)",
+      "Read(//tmp/**)",
+      "Bash(curl -s http://localhost:3500/musicas -L)"
     ]
   }
 }

@@ -188,7 +188,13 @@ export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
               href="/admin/reuniao-publica/musicas"
               className={`admin-nav-item ${isActive('/admin/reuniao-publica/musicas') ? 'active' : ''}`}
             >
-              🎵 Músicas
+              Músicas
+            </Link>
+            <Link
+              href="/admin/reuniao-publica/musicas/sessoes"
+              className={`admin-nav-item ${isActive('/admin/reuniao-publica/musicas/sessoes') ? 'active' : ''}`}
+            >
+              Sessões
             </Link>
           </NavGroup>
         )}
