@@ -86,3 +86,29 @@ Failed to load resource: the server responded with a status of 404
 ## Observacao operacional
 
 O `next build` pode deixar a `.next` em estado diferente do `next dev` se os dois rodarem no mesmo checkout ao mesmo tempo. Depois de build, sempre suba o dev server de novo antes de confiar nos chunks/CSS do browser.
+
+## Incidente de assets Next
+
+### Sintoma
+
+- O browser pode mostrar `Refused to apply style from ... MIME type ('text/plain')`.
+- Em paralelo, podem aparecer `404` para `/_next/static/css/app/layout.css`, `/_next/static/css/app/admin/layout.css`, `/_next/static/chunks/main-app.js`, `/_next/static/chunks/app-pages-internals.js` e `/_next/static/chunks/app/layout.js`.
+
+### Diagnostico rapido
+
+1. Verificar se existe apenas um runtime ativo na porta `3500`.
+2. Testar a URL exata do asset no navegador ou com `curl`.
+3. Confirmar se o arquivo responde `200` com `text/css` ou `application/javascript`.
+4. Se o HTML vier de uma sessao antiga, fazer hard refresh ou abrir aba anonima.
+
+### Solucao
+
+- Se o problema surgir depois de `next build`, reiniciar o `next dev` antes de testar o browser.
+- Se o servidor estiver em modo standalone, nao misturar a validacao com o `next dev` aberto no mesmo checkout.
+- Se a rota continuar devolvendo `404 text/plain`, tratar como mismatch de cache/build antes de suspeitar do CSS.
+
+### Prevencao
+
+- Sempre validar assets diretos antes de mexer em layout.
+- Nao concluir que a pagina "sem estilo" significa CSS quebrado.
+- Manter a verificacao minima com os assets de layout e `main-app.js` antes de encerrar um ajuste visual.

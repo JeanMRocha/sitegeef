@@ -113,6 +113,9 @@ Quando o Autoreflex local voltar a responder, rodar primeiro:
 
 - Preferir `npm run dev` para o trabalho diário no checkout local.
 - Se o navegador mostrar erro de chunk/CSS depois de build, reiniciar o `next dev` limpo antes de investigar o browser.
+- Se aparecer `Refused to apply style ... MIME type ('text/plain')`, testar a URL do asset direto antes de culpar o CSS.
+- Se o asset responder `404 text/plain`, tratar como mismatch de cache/build ou runtime misturado, nao como bug de estilo.
+- A validacao correta e: um runtime por vez, hard refresh quando necessario, e conferencia de `/_next/static/css/app/layout.css` e `/_next/static/chunks/main-app.js` com `200`.
 
 ## Ultima entrega
 

@@ -60,6 +60,38 @@ Resumo operacional para continuidade sem reexplorar o codigo.
   - `/_next/static/css/app/layout.css` -> `200 text/css`
   - `/_next/static/chunks/main-app.js` -> `200 application/javascript`
 
+## Incidente de assets
+
+### Sintomas
+
+- O browser exibiu `Refused to apply style ... MIME type ('text/plain')`.
+- Tambem apareceram `404` para `main-app.js`, `app-pages-internals.js`, `app/layout.js`, `app/admin/layout.js` e os CSS de `app/layout.css` e `app/admin/layout.css`.
+- A pagina parecia "sem CSS" porque o navegador recebia resposta textual de erro no lugar do asset esperado.
+
+### Causa raiz
+
+- O checkout ficou com estado misturado entre `next dev` e `next start`/standalone no mesmo diretório.
+- O browser manteve HTML/asset antigos em cache e continuou pedindo nomes logicos de `dev`.
+- Quando o runtime correto nao estava ativo, o Next respondia `404 text/plain`, e o navegador recusava aplicar CSS/JS.
+
+### Solucao aplicada
+
+- Subir apenas um runtime por vez na porta `3500`.
+- Preferir `npm run dev` para depuracao visual local.
+- Se `next build` for executado, reiniciar o `next dev` antes de validar o browser.
+- Fazer hard refresh ou abrir a pagina em aba anonima quando o console ficar preso em assets antigos.
+- Confirmar que os assets abaixo respondem `200` antes de mexer em layout:
+  - `/_next/static/css/app/layout.css`
+  - `/_next/static/css/app/admin/layout.css`
+  - `/_next/static/chunks/main-app.js`
+  - `/_next/static/chunks/app-pages-internals.js`
+
+### Como evitar repeticao
+
+- Nao rodar `next dev` e `next build` simultaneamente no mesmo checkout.
+- Nao assumir que `text/plain` e problema de CSS antes de testar a rota do asset direto.
+- Se o browser apontar para chunks antigos, validar primeiro o estado do servidor e do cache, depois revisar o layout.
+
 ## Ponto de atencao
 
 - Se o browser mostrar `Refused to apply style ... MIME type ('text/plain')`, o problema quase sempre e cache/build inconsistente do Next, nao o CSS em si.

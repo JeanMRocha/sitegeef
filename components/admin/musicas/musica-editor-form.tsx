@@ -74,8 +74,8 @@ export function MusicaEditorForm({ musica, autores = [], action, submitLabel = "
 
         <label className="profile-form-field">
           <span>Autor</span>
-          {autores.length > 0 ? (
-            <select className="profile-form-input" name="autor" defaultValue={musica?.autor ?? ""}>
+          <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+            <select className="profile-form-input" name="autor" defaultValue={musica?.autor ?? ""} style={{ flex: 1 }}>
               <option value="">Selecione um autor...</option>
               {autores.map((autor) => (
                 <option key={autor.id} value={autor.nome}>
@@ -83,8 +83,21 @@ export function MusicaEditorForm({ musica, autores = [], action, submitLabel = "
                 </option>
               ))}
             </select>
-          ) : (
-            <input className="profile-form-input" name="autor" defaultValue={musica?.autor ?? ""} placeholder="Nome do autor" />
+            <a
+              href="/admin/reuniao-publica/musicas/autores/novo"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="admin-btn admin-btn-small"
+              style={{ whiteSpace: "nowrap", padding: "0.5rem 1rem" }}
+              title="Criar novo autor"
+            >
+              + Novo
+            </a>
+          </div>
+          {autores.length === 0 && (
+            <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", margin: "0.5rem 0 0" }}>
+              Nenhum autor cadastrado. <a href="/admin/reuniao-publica/musicas/autores/novo" target="_blank" rel="noopener noreferrer" style={{ color: "var(--primary)" }}>Criar novo autor</a>
+            </p>
           )}
         </label>
 
