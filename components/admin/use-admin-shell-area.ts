@@ -29,6 +29,10 @@ export const ADMIN_SHELL_AREAS: AdminShellAreaItem[] = [
   { key: "sistema", label: "Sistema", note: "Saúde e suporte" },
 ];
 
+export const ADMIN_SHELL_TOP_AREAS: AdminShellAreaItem[] = ADMIN_SHELL_AREAS.filter(
+  (item) => item.key !== "perfil" && item.key !== "governanca" && item.key !== "documentos",
+);
+
 export const ADMIN_SHELL_ROUTES: Record<AdminShellArea, string> = {
   painel: "/admin/painel",
   perfil: "/admin/perfil",
@@ -125,5 +129,5 @@ export function useAdminShellArea() {
   const pathname = usePathname();
   const area = getAdminShellAreaFromPath(pathname);
 
-  return { area, areas: ADMIN_SHELL_AREAS, routes: ADMIN_SHELL_ROUTES };
+  return { area, areas: ADMIN_SHELL_AREAS, topAreas: ADMIN_SHELL_TOP_AREAS, routes: ADMIN_SHELL_ROUTES };
 }

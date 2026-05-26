@@ -13,7 +13,7 @@ interface AdminHeaderProps {
 
 export function AdminHeader({ user }: AdminHeaderProps) {
   const displayName = user.fullName || user.email || 'Usuário';
-  const { area, areas, routes } = useAdminShellArea();
+  const { area, topAreas, routes } = useAdminShellArea();
 
   return (
     <header className="admin-header">
@@ -22,7 +22,7 @@ export function AdminHeader({ user }: AdminHeaderProps) {
 
       <div className="admin-header-middle">
         <div className="admin-shell-tabs" aria-label="Seções do painel">
-          {areas.map((item) => (
+          {topAreas.map((item) => (
             <Link
               key={item.key}
               href={routes[item.key]}

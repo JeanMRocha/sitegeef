@@ -27,10 +27,9 @@ export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
   const isAdministrador = usuarioSistema?.perfil === 'administrador';
   const currentPerfil = usuarioSistema?.perfil ?? '';
   const { area } = useAdminShellArea();
-  const showUserArea = area === 'pessoas';
+  const showUserArea = area === 'pessoas' || area === 'perfil';
   const showGovernanceArea = area === 'governanca';
   const showDocumentsArea = area === 'documentos';
-  const showOperationArea = area === 'operacao';
   const showSystemArea = area === 'sistema';
   const showDashboardArea = area === 'painel';
 
@@ -168,6 +167,12 @@ export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
               📄 Documentos
             </Link>
             <Link
+              href="/admin/instituicao/musicas"
+              className={`admin-nav-item ${isActive('/admin/instituicao/musicas') ? 'active' : ''}`}
+            >
+              🎵 Músicas
+            </Link>
+            <Link
               href="/admin/instituicao/contatos"
               className={`admin-nav-item ${isActive('/admin/instituicao/contatos') ? 'active' : ''}`}
             >
@@ -182,28 +187,9 @@ export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
           </NavGroup>
         )}
 
-        {/* Pessoas */}
-        {showUserArea && canAccess('pode_pessoas') && (
-          <div className="admin-nav-section">
-            <h3 className="admin-nav-title">Pessoas</h3>
-            <Link
-              href="/admin/pessoas"
-              className={`admin-nav-item ${isActive('/admin/pessoas') ? 'active' : ''}`}
-            >
-              👥 Cadastro
-            </Link>
-            <Link
-              href="/admin/usuarios"
-              className={`admin-nav-item ${isActive('/admin/usuarios') ? 'active' : ''}`}
-            >
-              🔑 Usuários e Permissões
-            </Link>
-          </div>
-        )}
-
         {/* Governança */}
-        {showGovernanceArea && canAccessModule('pode_pessoas', ['diretoria', 'secretaria']) && (
-          <NavGroup name="governanca" title="Governança" collapsible>
+        {showGeefArea && canAccessModule('pode_pessoas', ['diretoria', 'secretaria']) && (
+          <NavGroup name="governanca-geef" title="Governança" collapsible>
             <Link
               href="/admin/governanca"
               className={`admin-nav-item ${isActive('/admin/governanca') ? 'active' : ''}`}
@@ -219,209 +205,9 @@ export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
           </NavGroup>
         )}
 
-        {/* Departamentos */}
-        {showUserArea && canAccessModule('pode_pessoas', ['diretoria', 'secretaria']) && (
-          <div className="admin-nav-section">
-            <Link
-              href="/admin/departamentos"
-              className={`admin-nav-item ${isActive('/admin/departamentos') ? 'active' : ''}`}
-            >
-              🗂️ Departamentos
-            </Link>
-          </div>
-        )}
-
-        {/* Escalas */}
-        {showOperationArea && canAccess('pode_escalas') && (
-        <NavGroup name="escalas" title="Escalas" collapsible>
-          <Link
-            href="/admin/escalas"
-            className={`admin-nav-item ${isActive('/admin/escalas') ? 'active' : ''}`}
-          >
-            📅 Montar Escala
-          </Link>
-          <Link
-            href="/admin/funcoes"
-            className={`admin-nav-item ${isActive('/admin/funcoes') ? 'active' : ''}`}
-          >
-            🎯 Funções
-          </Link>
-          <Link
-            href="/admin/funcoes/temas"
-            className={`admin-nav-item ${isActive('/admin/funcoes/temas') ? 'active' : ''}`}
-          >
-            📚 Temas
-          </Link>
-        </NavGroup>
-        )}        
-
-        {/* Atendimento Espiritual */}
-        {showOperationArea && canAccess('pode_atendimento') && (
-          <div className="admin-nav-section">
-            <h3 className="admin-nav-title">Atendimento Espiritual</h3>
-            <Link
-              href="/admin/operacao"
-              className={`admin-nav-item ${isActive('/admin/operacao') ? 'active' : ''}`}
-            >
-              🙏 Operação
-            </Link>
-            <Link
-              href="/admin/atendimento/recepcao"
-              className={`admin-nav-item ${isActive('/admin/atendimento/recepcao') ? 'active' : ''}`}
-            >
-              👋 Recepção
-            </Link>
-            <Link
-              href="/admin/atendimento/fraterno"
-              className={`admin-nav-item ${isActive('/admin/atendimento/fraterno') ? 'active' : ''}`}
-            >
-              💬 Atendimento Fraterno
-            </Link>
-            <Link
-              href="/admin/atendimento/evangelhos-lar"
-              className={`admin-nav-item ${isActive('/admin/atendimento/evangelhos-lar') ? 'active' : ''}`}
-            >
-              🏠 Evangelhos no Lar
-            </Link>
-            <Link
-              href="/admin/atendimento/irradiacao"
-              className={`admin-nav-item ${isActive('/admin/atendimento/irradiacao') ? 'active' : ''}`}
-            >
-              ✨ Irradiação
-            </Link>
-          </div>
-        )}
-
-        {/* Evangelização */}
-        {showOperationArea && canAccessModule('pode_publicar', ['evangelizador', 'coord_juventude']) && (
-          <div className="admin-nav-section">
-            <h3 className="admin-nav-title">Evangelização</h3>
-            <Link
-              href="/admin/evangelizacao"
-              className={`admin-nav-item ${isActive('/admin/evangelizacao') ? 'active' : ''}`}
-            >
-              ✝️ Infantil
-            </Link>
-            <Link
-              href="/admin/juventude"
-              className={`admin-nav-item ${isActive('/admin/juventude') ? 'active' : ''}`}
-            >
-              🧑 Juventude
-            </Link>
-          </div>
-        )}
-
-        {/* Estudos */}
-        {showOperationArea && canAccessModule('pode_publicar', ['coord_estudos']) && (
-          <div className="admin-nav-section">
-            <Link
-              href="/admin/estudos"
-              className={`admin-nav-item ${isActive('/admin/estudos') ? 'active' : ''}`}
-            >
-              📖 Estudos
-            </Link>
-          </div>
-        )}
-
-        {/* Mediunidade */}
-        {showOperationArea && canAccessModule('pode_mediunidade') && (
-          <NavGroup name="mediunidade" title="Mediunidade" collapsible>
-            <Link
-              href="/admin/mediunidade"
-              className={`admin-nav-item ${isActive('/admin/mediunidade') ? 'active' : ''}`}
-            >
-              🔒 Grupos Mediúnicos
-            </Link>
-          </NavGroup>
-        )}
-
-        {/* Biblioteca */}
-        {showOperationArea && canAccessModule('pode_biblioteca', ['bibliotecario']) && (
-        <NavGroup name="biblioteca" title="Biblioteca" collapsible>
-          <Link
-            href="/admin/biblioteca"
-            className={`admin-nav-item ${isActive('/admin/biblioteca') && currentPath !== '/admin/biblioteca/emprestimos' ? 'active' : ''}`}
-          >
-            📚 Obras e Exemplares
-          </Link>
-          <Link
-            href="/admin/biblioteca/emprestimos"
-            className={`admin-nav-item ${isActive('/admin/biblioteca/emprestimos') ? 'active' : ''}`}
-          >
-            📤 Empréstimos
-          </Link>
-        </NavGroup>
-        )}
-
-        {/* Livraria */}
-        {showOperationArea && canAccessModule('pode_livraria', ['livraria']) && (
-          <div className="admin-nav-section">
-            <Link
-              href="/admin/livraria"
-              className={`admin-nav-item ${isActive('/admin/livraria') ? 'active' : ''}`}
-            >
-              🛒 Livraria
-            </Link>
-          </div>
-        )}
-
-        {/* APSE */}
-        {showOperationArea && canAccessModule('pode_apse', ['coord_apse']) && (
-          <div className="admin-nav-section">
-            <Link
-              href="/admin/apse"
-              className={`admin-nav-item ${isActive('/admin/apse') ? 'active' : ''}`}
-            >
-              🤝 APSE
-            </Link>
-          </div>
-        )}
-
-        {/* Comunicação */}
-        {showOperationArea && canAccessModule('pode_publicar', ['comunicacao', 'secretaria']) && (
-          <div className="admin-nav-section">
-            <Link
-              href="/admin/comunicacao"
-              className={`admin-nav-item ${isActive('/admin/comunicacao') ? 'active' : ''}`}
-            >
-              📢 Comunicação
-            </Link>
-            <Link
-              href="/admin/comunicacao/mensagens"
-              className={`admin-nav-item ${isActive('/admin/comunicacao/mensagens') ? 'active' : ''}`}
-            >
-              📨 Mensagens do site
-            </Link>
-          </div>
-        )}
-
-        {/* Financeiro */}
-        {showOperationArea && canAccessModule('pode_financeiro', ['financeiro']) && (
-          <div className="admin-nav-section">
-            <Link
-              href="/admin/financeiro"
-              className={`admin-nav-item ${isActive('/admin/financeiro') ? 'active' : ''}`}
-            >
-              💰 Financeiro
-            </Link>
-          </div>
-        )}
-
-        {/* Patrimônio */}
-        {showOperationArea && canAccessModule('pode_financeiro', ['patrimonio']) && (
-          <div className="admin-nav-section">
-            <Link
-              href="/admin/patrimonio"
-              className={`admin-nav-item ${isActive('/admin/patrimonio') ? 'active' : ''}`}
-            >
-              🏗️ Patrimônio
-            </Link>
-          </div>
-        )}
-
         {/* Documentos */}
-        {showGovernanceArea && canAccessModule('pode_publicar', ['comunicacao', 'secretaria']) && (
-          <div className="admin-nav-section">
+        {showGeefArea && canAccessModule('pode_publicar', ['comunicacao', 'secretaria']) && (
+          <NavGroup name="documentos-geef" title="Documentos" collapsible>
             <Link
               href="/admin/documentos"
               className={`admin-nav-item ${isActive('/admin/documentos') ? 'active' : ''}`}
@@ -433,6 +219,60 @@ export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
               className={`admin-nav-item ${isActive('/admin/lgpd') ? 'active' : ''}`}
             >
               🛡️ Central LGPD
+            </Link>
+            <Link
+              href="/admin/documentos/pedidos"
+              className={`admin-nav-item ${isActive('/admin/documentos/pedidos') ? 'active' : ''}`}
+            >
+              📮 Pedidos do Titular
+            </Link>
+            <Link
+              href="/admin/documentos/auditoria"
+              className={`admin-nav-item ${isActive('/admin/documentos/auditoria') ? 'active' : ''}`}
+            >
+              🧭 Auditoria LGPD
+            </Link>
+          </NavGroup>
+        )}
+
+        {/* Pessoas */}
+        {showUserArea && canAccess('pode_pessoas') && (
+          <NavGroup name="pessoas" title="Pessoas" collapsible>
+            <Link
+              href="/admin/pessoas"
+              className={`admin-nav-item ${isActive('/admin/pessoas') ? 'active' : ''}`}
+            >
+              👥 Cadastro
+            </Link>
+            <Link
+              href="/admin/usuarios"
+              className={`admin-nav-item ${isActive('/admin/usuarios') ? 'active' : ''}`}
+            >
+              🔑 Usuários e Permissões
+            </Link>
+            <Link
+              href="/admin/perfil"
+              className={`admin-nav-item ${isActive('/admin/perfil') ? 'active' : ''}`}
+            >
+              👤 Meu perfil
+            </Link>
+            <Link
+              href="/minha-area"
+              className={`admin-nav-item ${isActive('/minha-area') ? 'active' : ''}`}
+            >
+              🧭 Minha área
+            </Link>
+          </NavGroup>
+        )}
+
+        {/* Departamentos */}
+        {showUserArea && canAccessModule('pode_pessoas', ['diretoria', 'secretaria']) && (
+          <div className="admin-nav-section">
+            <Link
+              href="/admin/departamentos"
+              className={`admin-nav-item ${isActive('/admin/departamentos') ? 'active' : ''}`}
+            >
+              🗂️ Departamentos
             </Link>
           </div>
         )}
@@ -462,54 +302,6 @@ export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
               className={`admin-nav-item ${isActive('/admin/documentos/auditoria') ? 'active' : ''}`}
             >
               🧭 Auditoria LGPD
-            </Link>
-          </div>
-        )}
-
-        {/* Reuniões Virtuais */}
-        {showOperationArea && canAccessModule('pode_publicar', ['secretaria', 'diretoria']) && (
-          <div className="admin-nav-section">
-            <Link
-              href="/admin/reunioes-virtuais"
-              className={`admin-nav-item ${isActive('/admin/reunioes-virtuais') ? 'active' : ''}`}
-            >
-              🎥 Reuniões Virtuais
-            </Link>
-          </div>
-        )}
-
-        {/* Planejamento */}
-        {showOperationArea && canAccessModule('pode_publicar', ['diretoria']) && (
-          <div className="admin-nav-section">
-            <Link
-              href="/admin/planejamento"
-              className={`admin-nav-item ${isActive('/admin/planejamento') ? 'active' : ''}`}
-            >
-              📈 Planejamento
-            </Link>
-          </div>
-        )}
-
-        {/* Notificações */}
-        {showOperationArea && canAccessModule('pode_publicar', ['secretaria', 'comunicacao']) && (
-          <div className="admin-nav-section">
-            <Link
-              href="/admin/notificacoes"
-              className={`admin-nav-item ${isActive('/admin/notificacoes') ? 'active' : ''}`}
-            >
-              🔔 Notificações
-            </Link>
-          </div>
-        )}
-
-        {/* Relatórios */}
-        {showOperationArea && canAccessModule('pode_publicar', ['diretoria', 'secretaria']) && (
-          <div className="admin-nav-section">
-            <Link
-              href="/admin/relatorios"
-              className={`admin-nav-item ${isActive('/admin/relatorios') ? 'active' : ''}`}
-            >
-              📊 Relatórios
             </Link>
           </div>
         )}

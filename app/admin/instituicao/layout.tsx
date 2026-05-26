@@ -12,7 +12,7 @@ export default function InstituicaoLayout({
   return (
     <AdminModuleGate
       permission="pode_pessoas"
-      profiles={['diretoria', 'secretaria']}
+      profiles={['diretoria', 'secretaria', 'comunicacao']}
       redirectPath="/admin/instituicao"
       title="Instituição"
     >

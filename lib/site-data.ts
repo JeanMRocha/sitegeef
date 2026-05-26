@@ -73,6 +73,7 @@ export const navItems: NavItem[] = [
   { href: "/escalas", label: "Escalas", labelEn: "Shifts", group: "institucional" },
   { href: "/ao-vivo", label: "Ao vivo", labelEn: "Live", group: "institucional" },
   { href: "/estudos", label: "Estudos", labelEn: "Studies", group: "institucional" },
+  { href: "/musicas", label: "Músicas", labelEn: "Songs", group: "institucional" },
   { href: "/doacoes", label: "Doações", labelEn: "Donations", group: "institucional" },
   { href: "/lgpd", label: "Privacidade", labelEn: "Privacy", group: "institucional" },
   { href: "/cookies", label: "Cookies", labelEn: "Cookies", group: "institucional" },

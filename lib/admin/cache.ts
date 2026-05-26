@@ -12,6 +12,7 @@ export const ADMIN_ATENDIMENTO_FRATERNO_CACHE_TAG = "admin-atendimento-fraterno"
 export const ADMIN_ATENDIMENTO_EVANGELHOS_LAR_CACHE_TAG = "admin-atendimento-evangelhos-lar";
 export const ADMIN_ATENDIMENTO_IRRADIACAO_CACHE_TAG = "admin-atendimento-irradiacao";
 export const ADMIN_ATENDIMENTO_PESSOAS_CACHE_TAG = "admin-atendimento-pessoas";
+export const MUSICAS_CACHE_TAG = "musicas";
 
 export function invalidateAdminDashboardCache() {
   revalidateTag(ADMIN_DASHBOARD_CACHE_TAG);
@@ -56,4 +57,12 @@ export function invalidateAdminAtendimentoCache() {
   revalidatePath("/admin/atendimento/fraterno");
   revalidatePath("/admin/atendimento/evangelhos-lar");
   revalidatePath("/admin/atendimento/irradiacao");
+}
+
+export function invalidateMusicasCache() {
+  revalidateTag(MUSICAS_CACHE_TAG);
+  revalidatePath("/musicas");
+  revalidatePath("/musicas/[slug]");
+  revalidatePath("/musicas/exibir");
+  revalidatePath("/admin/instituicao/musicas");
 }

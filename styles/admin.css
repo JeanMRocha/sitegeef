@@ -1213,3 +1213,171 @@
   background: rgba(40, 36, 33, 0.96);
   border-color: rgba(255, 255, 255, 0.08);
 }
+
+.admin-grid-two {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.admin-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.admin-search-bar input {
+  flex: 1;
+  min-width: 16rem;
+  padding: 0.9rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--admin-border);
+  background: rgba(255, 255, 255, 0.76);
+  color: var(--text);
+  font: inherit;
+}
+
+.musica-editor-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.musica-editor-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.musica-field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.musica-field span {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.musica-field input,
+.musica-field select,
+.musica-field textarea {
+  width: 100%;
+  padding: 0.82rem 0.95rem;
+  border: 1px solid var(--admin-border);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.74);
+  color: var(--text);
+  font: inherit;
+}
+
+.musica-field textarea {
+  resize: vertical;
+}
+
+.musica-field--wide {
+  grid-column: 1 / -1;
+}
+
+.musica-field--checkbox {
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.musica-field--checkbox input {
+  width: 1rem;
+  height: 1rem;
+  padding: 0;
+}
+
+.musica-field--checkbox span {
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.musica-editor-parts-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.musica-editor-hint {
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+}
+
+.musica-editor-parts {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.musica-editor-part {
+  padding: 1rem;
+  border-radius: 1.25rem;
+  border: 1px solid var(--admin-border);
+  background: rgba(255, 255, 255, 0.52);
+}
+
+.musica-editor-part-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.9rem;
+}
+
+.musica-editor-remove {
+  border: 0;
+  background: transparent;
+  color: var(--uva);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.musica-editor-part-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.musica-editor-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.music-pairing-form {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (max-width: 900px) {
+  .admin-grid-two,
+  .musica-editor-grid,
+  .musica-editor-part-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .musica-editor-parts-header,
+  .musica-editor-part-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+:root.dark .musica-field input,
+:root.dark .musica-field select,
+:root.dark .musica-field textarea,
+:root.dark .admin-search-bar input,
+:root.dark .musica-editor-part {
+  background: rgba(40, 36, 33, 0.96);
+  color: var(--text);
+}

@@ -24,6 +24,389 @@
   --font-body: "Manrope", system-ui, sans-serif;
 }
 
+/* Músicas */
+.musica-page {
+  width: min(1200px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 1rem 0 2rem;
+}
+
+.musica-page--display {
+  width: min(1440px, calc(100% - 1rem));
+  min-height: calc(100vh - 2rem);
+  padding: 0.5rem 0 1rem;
+}
+
+.musica-hero {
+  margin-bottom: 1rem;
+}
+
+.musica-hero-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.musica-brand-block {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.musica-brand-logo {
+  flex: 0 0 auto;
+  width: min(10rem, 32vw);
+}
+
+.musica-brand-block h1 {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: clamp(2.1rem, 4vw, 3.35rem);
+  line-height: 0.95;
+}
+
+.musica-hero-subtitle {
+  margin: 0.45rem 0 0;
+  color: var(--muted);
+}
+
+.musica-hero-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.musica-code-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(138, 0, 90, 0.08);
+  color: var(--uva);
+  font-weight: 700;
+}
+
+.musica-reader-grid {
+  display: grid;
+  grid-template-columns: minmax(240px, 320px) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.musica-reader-panel {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.62);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+}
+
+.musica-reader-panel--summary {
+  padding: 1rem;
+  position: sticky;
+  top: 6.5rem;
+}
+
+.musica-reader-panel--lyrics {
+  padding: 1rem;
+}
+
+.musica-summary-text {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.musica-meta-list {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.musica-meta-list div {
+  display: grid;
+  gap: 0.12rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: 1rem;
+  background: rgba(138, 0, 90, 0.04);
+}
+
+.musica-meta-list span {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.musica-meta-list strong {
+  font-size: 0.95rem;
+}
+
+.musica-partes-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.musica-parte {
+  padding: 1rem;
+  border-radius: 1.25rem;
+  border: 1px solid rgba(138, 0, 90, 0.08);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(248, 242, 252, 0.92));
+}
+
+.musica-parte.is-highlighted {
+  border-color: rgba(138, 0, 90, 0.16);
+  box-shadow: 0 16px 40px rgba(138, 0, 90, 0.08);
+}
+
+.musica-parte-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  margin-bottom: 0.85rem;
+}
+
+.musica-parte-badge {
+  display: inline-flex;
+  width: 2.2rem;
+  height: 2.2rem;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: var(--uva);
+  color: #fff;
+  font-weight: 800;
+}
+
+.musica-parte-kicker {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.musica-parte h2 {
+  margin: 0.1rem 0 0;
+  font-family: var(--font-heading);
+  font-size: clamp(1.15rem, 2vw, 1.55rem);
+}
+
+.musica-parte-text,
+.musica-cifra-block pre {
+  margin: 0;
+  white-space: pre-wrap;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--text);
+}
+
+.musica-cifra-block {
+  margin-top: 0.9rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(138, 0, 90, 0.12);
+}
+
+.musica-cifra-label {
+  display: inline-flex;
+  margin-bottom: 0.4rem;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--uva);
+}
+
+.musica-search-bar {
+  display: flex;
+  gap: 0.65rem;
+  margin-top: 1rem;
+  max-width: 38rem;
+}
+
+.musica-search-bar input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.85rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.78);
+  font: inherit;
+}
+
+.musica-side-logo {
+  width: min(10rem, 34vw);
+  margin-top: 0.6rem;
+}
+
+.musica-catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  width: 100%;
+}
+
+.musica-catalog-card {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.62);
+  box-shadow: var(--shadow-sm);
+}
+
+.musica-catalog-card h2 {
+  margin: 0.25rem 0 0;
+  font-family: var(--font-heading);
+}
+
+.musica-catalog-meta,
+.musica-catalog-summary {
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.musica-catalog-actions {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.musica-display-shell {
+  width: min(1440px, calc(100% - 1rem));
+  margin: 0 auto;
+  min-height: calc(100vh - 1rem);
+  padding: 0.5rem 0 1rem;
+  display: grid;
+  align-items: center;
+}
+
+.musica-display-shell--idle,
+.musica-display-shell--catalogo {
+  display: grid;
+  place-items: center;
+}
+
+.musica-display-stage,
+.musica-display-idle-card {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: var(--shadow-lg);
+  padding: clamp(1rem, 2vw, 1.5rem);
+}
+
+.musica-display-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.musica-display-logo {
+  width: min(11rem, 28vw);
+}
+
+.musica-display-pair h1 {
+  margin: 0.1rem 0 0;
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+}
+
+.musica-display-pair p {
+  margin: 0.45rem 0 0;
+  color: var(--muted);
+}
+
+.musica-display-empty {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 1.2rem;
+  background: rgba(138, 0, 90, 0.04);
+}
+
+.musica-display-idle-card {
+  text-align: center;
+  display: grid;
+  justify-items: center;
+  gap: 0.75rem;
+  max-width: 42rem;
+}
+
+.musica-display-idle-card h1 {
+  margin: 0;
+  font-family: var(--font-heading);
+}
+
+@media (max-width: 900px) {
+  .musica-reader-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .musica-reader-panel--summary {
+    position: static;
+  }
+
+  .musica-partes-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .musica-hero-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .musica-search-bar {
+    max-width: none;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 768px) {
+  .musica-page,
+  .musica-page--display {
+    width: min(100%, calc(100% - 1rem));
+    padding-inline: 0.5rem;
+  }
+
+  .musica-brand-block {
+    align-items: flex-start;
+  }
+
+  .musica-display-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+:root.dark .musica-reader-panel,
+:root.dark .musica-parte,
+:root.dark .musica-catalog-card,
+:root.dark .musica-display-stage,
+:root.dark .musica-display-idle-card {
+  background: rgba(40, 36, 33, 0.96);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+:root.dark .musica-summary-text,
+:root.dark .musica-catalog-meta,
+:root.dark .musica-catalog-summary,
+:root.dark .musica-display-pair p,
+:root.dark .musica-meta-list span,
+:root.dark .musica-parte-kicker {
+  color: rgba(245, 235, 253, 0.72);
+}
+
 * {
   box-sizing: border-box;
 }

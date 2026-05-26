@@ -128,6 +128,7 @@ export function AdminDashboardWorkspace({ summary }: AdminDashboardWorkspaceProp
               { href: "/admin/funcoes", label: "Funções" },
               { href: "/admin/departamentos", label: "Departamentos" },
               { href: "/admin/instituicao/documentos", label: "Documentos" },
+              { href: "/admin/instituicao/musicas", label: "Músicas" },
             ]}
           />
 
