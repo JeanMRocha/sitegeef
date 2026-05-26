@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import type { Musica, MusicaParte, MusicaParteTipo } from "@/lib/musicas";
+import type { Musica, MusicaParte, MusicaParteTipo, MusicaAutor } from "@/lib/musicas";
 
 type MusicaEditorFormProps = {
   musica?: Musica | null;
+  autores?: MusicaAutor[];
   action: (formData: FormData) => void;
   submitLabel?: string;
 };
@@ -28,7 +29,7 @@ function createParte(index: number): MusicaParte {
   };
 }
 
-export function MusicaEditorForm({ musica, action, submitLabel = "Salvar música" }: MusicaEditorFormProps) {
+export function MusicaEditorForm({ musica, autores = [], action, submitLabel = "Salvar música" }: MusicaEditorFormProps) {
   const initialPartes = useMemo(() => {
     if (musica?.partes?.length) {
       return musica.partes;
@@ -73,7 +74,18 @@ export function MusicaEditorForm({ musica, action, submitLabel = "Salvar música
 
         <label className="profile-form-field">
           <span>Autor</span>
-          <input className="profile-form-input" name="autor" defaultValue={musica?.autor ?? ""} placeholder="Nome do autor" />
+          {autores.length > 0 ? (
+            <select className="profile-form-input" name="autor" defaultValue={musica?.autor ?? ""}>
+              <option value="">Selecione um autor...</option>
+              {autores.map((autor) => (
+                <option key={autor.id} value={autor.nome}>
+                  {autor.nome}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <input className="profile-form-input" name="autor" defaultValue={musica?.autor ?? ""} placeholder="Nome do autor" />
+          )}
         </label>
 
         <label className="profile-form-field">

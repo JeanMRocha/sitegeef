@@ -25,6 +25,9 @@ async function MusicasContent({ searchParams }: PageProps) {
           <h1 className="admin-page-title">Músicas</h1>
         </div>
         <div style={{ display: "flex", gap: "0.5rem" }}>
+          <Link href="/admin/reuniao-publica/musicas/autores" className="admin-btn admin-btn-secondary">
+            Autores
+          </Link>
           <Link href="/admin/reuniao-publica/musicas/sessoes" className="admin-btn admin-btn-secondary">
             Sessões
           </Link>

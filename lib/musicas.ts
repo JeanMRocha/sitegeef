@@ -438,3 +438,86 @@ export async function deleteMusicaSessao(codigo_pareamento: string) {
     throw error;
   }
 }
+
+export type MusicaAutor = {
+  id: string;
+  nome: string;
+  criado_em: string;
+  atualizado_em: string;
+};
+
+export async function listMusicaAutores(search = "") {
+  const supabase = createServiceRoleClient();
+
+  let query = supabase
+    .from("musica_autores")
+    .select("id, nome, criado_em, atualizado_em")
+    .order("nome", { ascending: true });
+
+  if (search.trim()) {
+    query = query.ilike("nome", `%${search.trim()}%`);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    return [];
+  }
+
+  return (data ?? []) as MusicaAutor[];
+}
+
+export async function getMusicaAutorById(id: string) {
+  const supabase = createServiceRoleClient();
+
+  const { data, error } = await supabase
+    .from("musica_autores")
+    .select("id, nome, criado_em, atualizado_em")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) {
+    return null;
+  }
+
+  return (data ?? null) as MusicaAutor | null;
+}
+
+export type SaveMusicaAutorInput = {
+  id?: string;
+  nome: string;
+};
+
+export async function saveMusicaAutor(input: SaveMusicaAutorInput) {
+  const supabase = createServiceRoleClient();
+  const autorId = input.id ?? crypto.randomUUID();
+
+  const payload = {
+    id: autorId,
+    nome: input.nome.trim(),
+  };
+
+  const existing = await supabase.from("musica_autores").select("id").eq("id", autorId).maybeSingle();
+
+  if (existing.data) {
+    const { error } = await supabase.from("musica_autores").update(payload).eq("id", autorId);
+    if (error) {
+      throw error;
+    }
+  } else {
+    const { error } = await supabase.from("musica_autores").insert([payload]);
+    if (error) {
+      throw error;
+    }
+  }
+
+  return getMusicaAutorById(autorId);
+}
+
+export async function deleteMusicaAutor(id: string) {
+  const supabase = createServiceRoleClient();
+  const { error } = await supabase.from("musica_autores").delete().eq("id", id);
+  if (error) {
+    throw error;
+  }
+}

@@ -1,12 +1,15 @@
 import Link from "next/link";
 import { MusicaEditorForm } from "@/components/admin/musicas/musica-editor-form";
 import { saveMusicaAction } from "../actions";
+import { listMusicaAutores } from "@/lib/musicas";
 
 export const metadata = {
   title: "Nova música - Admin GEEF",
 };
 
-export default function NovaMusicaPage() {
+export default async function NovaMusicaPage() {
+  const autores = await listMusicaAutores();
+
   return (
     <div className="area-page">
       <div className="admin-page-header">
@@ -26,7 +29,7 @@ export default function NovaMusicaPage() {
             <p>Preencha os campos básicos e organize as partes da letra (estrofes, refrões, pontes).</p>
           </div>
 
-          <MusicaEditorForm action={saveMusicaAction} submitLabel="Criar música" />
+          <MusicaEditorForm action={saveMusicaAction} autores={autores} submitLabel="Criar música" />
         </div>
       </section>
     </div>

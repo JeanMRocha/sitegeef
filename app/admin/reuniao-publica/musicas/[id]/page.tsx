@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DeleteMusicaButton } from "@/components/admin/musicas/delete-musica-button";
 import { MusicaEditorForm } from "@/components/admin/musicas/musica-editor-form";
-import { getMusicaById } from "@/lib/musicas";
+import { getMusicaById, listMusicaAutores } from "@/lib/musicas";
 import { saveMusicaAction } from "../actions";
 
 type PageProps = {
@@ -15,7 +15,7 @@ export const metadata = {
 
 export default async function EditarMusicaPage({ params }: PageProps) {
   const { id } = await params;
-  const musica = await getMusicaById(id);
+  const [musica, autores] = await Promise.all([getMusicaById(id), listMusicaAutores()]);
 
   if (!musica) {
     notFound();
@@ -40,7 +40,7 @@ export default async function EditarMusicaPage({ params }: PageProps) {
             <p>por {musica.autor}</p>
           </div>
 
-          <MusicaEditorForm musica={musica} action={saveMusicaAction} submitLabel="Salvar alterações" />
+          <MusicaEditorForm musica={musica} autores={autores} action={saveMusicaAction} submitLabel="Salvar alterações" />
 
           <DeleteMusicaButton musicaId={musica.id} musicaTitulo={musica.titulo} />
         </div>
