@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { AdminModuleGate } from "@/components/admin/admin-module-gate";
+import { EncerrarMusicasSessoesButton } from "@/components/admin/encerrar-musicas-sessoes-button";
 import {
-  createMusicaSessaoAction,
-  saveMusicaSessaoAction,
+  encerrarTodasMusicaSessoesAction,
+  setMusicaSessaoAtivaAction,
+  deleteMusicaSessaoAction,
 } from "../actions";
 import { getMusicasResumo, listMusicaSessoes } from "@/lib/musicas";
 
@@ -17,12 +19,10 @@ type PageProps = {
 
 async function SessoesContent({ searchParams }: PageProps) {
   const params = (await searchParams) ?? {};
-  const selectedCodigo = typeof params.codigo === "string" ? params.codigo.toUpperCase() : "";
 
   const [sessoes, musicasResumo] = await Promise.all([listMusicaSessoes(), getMusicasResumo()]);
-
-  const currentSession = selectedCodigo ? sessoes.find((sessao) => sessao.codigo_pareamento === selectedCodigo) ?? null : null;
-  const selectedSongId = currentSession?.musica_id ?? "";
+  const sessoesAtivas = sessoes.filter((sessao) => sessao.ativo);
+  const sessoesAtivasLabel = sessoesAtivas.length === 1 ? "1 sessão ativa" : `${sessoesAtivas.length} sessões ativas`;
 
   return (
     <div className="area-page">
@@ -55,84 +55,42 @@ async function SessoesContent({ searchParams }: PageProps) {
             <strong>{sessoes.filter((s) => s.modo === "catalogo").length}</strong>
           </div>
         </div>
+        <div
+          className="admin-card"
+          style={{
+            marginTop: "1rem",
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "1rem",
+          }}
+        >
+          <div>
+            <h2 style={{ margin: 0, fontSize: "1.05rem" }}>Encerramento em lote</h2>
+            <p style={{ margin: "0.35rem 0 0", color: "var(--text-muted)" }}>
+              {sessoesAtivasLabel} serão encerradas de uma vez.
+            </p>
+          </div>
+          <EncerrarMusicasSessoesButton
+            action={encerrarTodasMusicaSessoesAction}
+            disabled={sessoesAtivas.length === 0}
+            count={sessoesAtivas.length}
+          />
+        </div>
       </section>
 
-      <section className="area-section admin-grid-two">
-        <div className="admin-card table-surface">
-          <div className="area-section-title">
-            <h2>Nova sessão</h2>
-            <p>Crie uma tela de exibição pareada ou cole um código existente para editar.</p>
-          </div>
-
-          <form action={saveMusicaSessaoAction} style={{ display: "grid", gap: "1rem" }}>
-            <div style={{ display: "grid", gap: "1rem" }}>
-              <label className="profile-form-field">
-                <span>Código de pareamento</span>
-                <input
-                  className="profile-form-input"
-                  name="codigo_pareamento"
-                  defaultValue={currentSession?.codigo_pareamento ?? selectedCodigo}
-                  placeholder="Ex.: A7K3P9 (ou deixe em branco para gerar)"
-                />
-              </label>
-
-              <label className="profile-form-field">
-                <span>Nome da tela</span>
-                <input
-                  className="profile-form-input"
-                  name="nome_tela"
-                  defaultValue={currentSession?.nome_tela ?? ""}
-                  placeholder="Ex.: Nave principal"
-                />
-              </label>
-
-              <label className="profile-form-field">
-                <span>Música</span>
-                <select className="profile-form-input" name="musica_id" defaultValue={selectedSongId}>
-                  <option value="">Nenhuma selecionada</option>
-                  {musicasResumo.map((musica) => (
-                    <option key={musica.id} value={musica.id}>
-                      {musica.titulo} — {musica.autor}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              <label className="profile-form-field">
-                <span>Modo</span>
-                <select className="profile-form-input" name="modo" defaultValue={currentSession?.modo ?? "exibicao"}>
-                  <option value="exibicao">Exibição (apresentação)</option>
-                  <option value="catalogo">Catálogo (selecionar música)</option>
-                </select>
-              </label>
-
-              <label
-                className="profile-form-field"
-                style={{ display: "grid", gridTemplateColumns: "auto 1fr", alignItems: "center", gap: "0.5rem" }}
-              >
-                <input type="checkbox" name="ativo" defaultChecked={currentSession?.ativo ?? true} />
-                <span>Sessão ativa</span>
-              </label>
-            </div>
-
-            <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem" }}>
-              <button type="submit" className="profile-form-btn profile-form-btn-primary">
-                Salvar sessão
-              </button>
-            </div>
-          </form>
-
-          <form action={createMusicaSessaoAction} style={{ marginTop: "1.5rem", paddingTop: "1.5rem", borderTop: "1px solid var(--border-medium)" }}>
-            <button type="submit" className="profile-form-btn profile-form-btn-secondary">
-              Gerar nova sessão
-            </button>
-          </form>
+      <section className="area-section">
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+          <h2 style={{ margin: 0 }}>Sessões ativas</h2>
+          <Link href="/admin/reuniao-publica/musicas/sessoes/novo" className="admin-btn admin-btn-primary">
+            + Nova sessão
+          </Link>
         </div>
 
         <div className="admin-card table-surface">
           <div className="area-section-title">
-            <h2>Sessões ativas</h2>
-            <p>Clique em um código para editar ou abra a tela pública em outra janela.</p>
+            <p>Clique em um código para editar, abrir a tela pública ou encerrar/reativar a sessão.</p>
           </div>
 
           {sessoes.length === 0 ? (
@@ -188,6 +146,30 @@ async function SessoesContent({ searchParams }: PageProps) {
                           >
                             Abrir
                           </Link>
+                          {sessao.ativo ? (
+                            <form action={setMusicaSessaoAtivaAction} style={{ display: "inline" }}>
+                              <input type="hidden" name="codigo_pareamento" value={sessao.codigo_pareamento} />
+                              <input type="hidden" name="ativo" value="false" />
+                              <button
+                                type="submit"
+                                className="admin-btn admin-btn-small"
+                                style={{ color: "var(--danger)", borderColor: "rgba(239, 68, 68, 0.25)" }}
+                              >
+                                Encerrar
+                              </button>
+                            </form>
+                          ) : (
+                            <form action={deleteMusicaSessaoAction} style={{ display: "inline" }}>
+                              <input type="hidden" name="codigo_pareamento" value={sessao.codigo_pareamento} />
+                              <button
+                                type="submit"
+                                className="admin-btn admin-btn-small"
+                                style={{ color: "var(--danger)", borderColor: "rgba(239, 68, 68, 0.25)" }}
+                              >
+                                Excluir
+                              </button>
+                            </form>
+                          )}
                         </div>
                       </td>
                     </tr>

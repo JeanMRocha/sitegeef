@@ -104,7 +104,9 @@ O que essa pagina faz:
 - permite editar uma musica existente
 - permite criar uma nova musica
 - permite criar e salvar sessao de pareamento
-- lista sessoes ativas com atalho para abrir a tela publica
+- lista sessoes com atalho para abrir a tela publica, encerrar ou reativar
+- permite encerrar todas as sessoes ativas em lote
+- o encerramento em lote pede confirmacao antes de enviar
 
 Formularios e actions:
 
@@ -120,6 +122,8 @@ Mudancas de estado:
 - excluir musica invalida cache
 - salvar pareamento invalida cache
 - criar sessao invalida cache
+- encerrar/reativar sessao invalida cache
+- encerrar todas as sessoes ativas invalida cache
 
 Cache:
 

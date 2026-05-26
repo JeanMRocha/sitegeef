@@ -4,7 +4,10 @@ import { redirect } from "next/navigation";
 import {
   createMusicaSessao,
   deleteMusica,
+  deleteMusicaSessao,
   normalizePartes,
+  patchMusicaSessao,
+  listMusicaSessoes,
   saveMusica,
   saveMusicaSessao,
 } from "@/lib/musicas";
@@ -95,4 +98,71 @@ export async function createMusicaSessaoAction() {
   const sessao = await createMusicaSessao();
   invalidateMusicasCache();
   redirect(`/admin/reuniao-publica/musicas/sessoes?codigo=${encodeURIComponent(sessao.codigo_pareamento)}&nova=1`);
+}
+
+export async function setMusicaSessaoAtivaAction(formData: FormData) {
+  const codigo = readString(formData, "codigo_pareamento").trim();
+  const ativo = readString(formData, "ativo") === "true";
+
+  if (!codigo) {
+    redirect("/admin/reuniao-publica/musicas/sessoes?erro=codigo-pareamento");
+  }
+
+  const sessao = await patchMusicaSessao(codigo, {
+    ativo,
+    ultimo_acesso_em: new Date().toISOString(),
+  });
+
+  if (!sessao) {
+    redirect(`/admin/reuniao-publica/musicas/sessoes?codigo=${encodeURIComponent(codigo.toUpperCase())}&erro=sessao-nao-encontrada`);
+  }
+
+  invalidateMusicasCache();
+
+  const status = ativo ? "reativada" : "encerrada";
+  redirect(`/admin/reuniao-publica/musicas/sessoes?codigo=${encodeURIComponent(codigo.toUpperCase())}&${status}=1`);
+}
+
+export async function encerrarTodasMusicaSessoesAction() {
+  const sessoes = await listMusicaSessoes();
+  const ativas = sessoes.filter((sessao) => sessao.ativo);
+
+  if (ativas.length === 0) {
+    redirect("/admin/reuniao-publica/musicas/sessoes?encerradas=0");
+  }
+
+  await Promise.all(
+    ativas.map((sessao) =>
+      patchMusicaSessao(sessao.codigo_pareamento, {
+        ativo: false,
+        ultimo_acesso_em: new Date().toISOString(),
+      }),
+    ),
+  );
+
+  invalidateMusicasCache();
+  redirect(`/admin/reuniao-publica/musicas/sessoes?encerradas=${ativas.length}`);
+}
+
+export async function deleteMusicaSessaoAction(formData: FormData) {
+  const codigo = readString(formData, "codigo_pareamento").trim();
+
+  if (!codigo) {
+    redirect("/admin/reuniao-publica/musicas/sessoes?erro=codigo-pareamento");
+  }
+
+  const sessoes = await listMusicaSessoes();
+  const sessao = sessoes.find((s) => s.codigo_pareamento === codigo);
+
+  if (!sessao) {
+    redirect(`/admin/reuniao-publica/musicas/sessoes?erro=sessao-nao-encontrada`);
+  }
+
+  if (sessao.ativo) {
+    redirect(`/admin/reuniao-publica/musicas/sessoes?erro=sessao-ativa`);
+  }
+
+  await deleteMusicaSessao(codigo);
+  invalidateMusicasCache();
+  redirect(`/admin/reuniao-publica/musicas/sessoes?excluida=1`);
 }

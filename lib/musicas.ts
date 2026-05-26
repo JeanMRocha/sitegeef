@@ -427,3 +427,14 @@ export async function patchMusicaSessao(
 export async function touchMusicaSessao(codigo_pareamento: string) {
   return patchMusicaSessao(codigo_pareamento, { ultimo_acesso_em: new Date().toISOString() });
 }
+
+export async function deleteMusicaSessao(codigo_pareamento: string) {
+  const supabase = createServiceRoleClient();
+  const codigo = codigo_pareamento.trim().toUpperCase();
+
+  const { error } = await supabase.from("musica_sessoes").delete().eq("codigo_pareamento", codigo);
+
+  if (error) {
+    throw error;
+  }
+}
