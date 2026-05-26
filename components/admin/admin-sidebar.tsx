@@ -32,6 +32,7 @@ export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
   const showDocumentsArea = area === 'documentos';
   const showSystemArea = area === 'sistema';
   const showDashboardArea = area === 'painel';
+  const showReuniaoPublicaArea = area === 'reuniao-publica';
 
   const canAccess = (flag: keyof NonNullable<AdminSidebarProps['usuarioSistema']>) => {
     if (isAdministrador) {
@@ -182,7 +183,7 @@ export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
         )}
 
         {/* Reunião pública */}
-        {canAccessModule('pode_publicar', ['comunicacao', 'secretaria']) && (
+        {showReuniaoPublicaArea && canAccessModule('pode_publicar', ['comunicacao', 'secretaria']) && (
           <NavGroup name="reuniao-publica" title="Reunião pública" collapsible>
             <Link
               href="/admin/reuniao-publica/musicas"
