@@ -33,7 +33,7 @@ async function RelatoriosContent() {
       text: "Empréstimos, reservas, acervo e devoluções",
     },
     {
-      href: "/admin/atendimento",
+      href: "/admin/operacao",
       title: "Atendimento Espiritual",
       text: "Estatísticas, histórico e irradiações ativas",
     },

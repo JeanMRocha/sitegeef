@@ -12,7 +12,7 @@ export default function ErrosLayout({
   return (
     <AdminModuleGate
       adminOnly
-      redirectPath="/admin/observability"
+      redirectPath="/admin/sistema"
       title="Observabilidade"
     >
       {children}

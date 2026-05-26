@@ -13,7 +13,7 @@ export default function RelatoriosLayout({
     <AdminModuleGate
       permission="pode_publicar"
       profiles={['diretoria', 'secretaria']}
-      redirectPath="/admin/relatorios"
+      redirectPath="/admin/operacao"
       title="Relatórios"
     >
       {children}

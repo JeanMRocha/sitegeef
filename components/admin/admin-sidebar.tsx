@@ -120,10 +120,10 @@ export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
         {showDashboardArea && (
           <div className="admin-nav-section">
             <Link
-              href="/admin"
-              className={`admin-nav-item ${isActive('/admin') && currentPath === '/admin' ? 'active' : ''}`}
+              href="/admin/painel"
+              className={`admin-nav-item ${isActive('/admin/painel') ? 'active' : ''}`}
             >
-              📊 Dashboard
+              📊 Painel
             </Link>
           </div>
         )}
@@ -260,10 +260,10 @@ export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
           <div className="admin-nav-section">
             <h3 className="admin-nav-title">Atendimento Espiritual</h3>
             <Link
-              href="/admin/atendimento"
-              className={`admin-nav-item ${isActive('/admin/atendimento') && currentPath === '/admin/atendimento' ? 'active' : ''}`}
+              href="/admin/operacao"
+              className={`admin-nav-item ${isActive('/admin/operacao') ? 'active' : ''}`}
             >
-              🙏 Dashboard
+              🙏 Operação
             </Link>
             <Link
               href="/admin/atendimento/recepcao"
@@ -518,10 +518,10 @@ export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
         {showSystemArea && isAdministrador && (
           <div className="admin-nav-section">
             <Link
-              href="/admin/observability"
-              className={`admin-nav-item ${isActive('/admin/observability') ? 'active' : ''}`}
+              href="/admin/sistema"
+              className={`admin-nav-item ${isActive('/admin/sistema') ? 'active' : ''}`}
             >
-              🧭 Observabilidade
+              🧭 Sistema
             </Link>
             <Link
               href="/admin/migrations"

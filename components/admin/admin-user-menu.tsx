@@ -59,7 +59,7 @@ export function AdminUserMenu({ email, fullName }: AdminUserMenuProps) {
             <Link href="/minha-area" className="admin-user-menu-item" onClick={() => setOpen(false)}>
               🧭 Minha área
             </Link>
-            <Link href="/admin" className="admin-user-menu-item" onClick={() => setOpen(false)}>
+            <Link href="/admin/painel" className="admin-user-menu-item" onClick={() => setOpen(false)}>
               🛠️ Painel
             </Link>
             <a

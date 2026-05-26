@@ -12,7 +12,7 @@ export default function FixUsuariosLayout({
   return (
     <AdminModuleGate
       adminOnly
-      redirectPath="/admin/fix-usuarios"
+      redirectPath="/admin/sistema"
       title="Fix Usuários"
     >
       {children}

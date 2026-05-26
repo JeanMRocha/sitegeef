@@ -68,7 +68,7 @@ function ErrorBody({ error, reset, scope }: Omit<ErrorCaptureProps, "root">) {
           <Link href="/" className="button button-secondary">
             Ir para a home
           </Link>
-          <Link href="/admin/observability" className="button button-secondary">
+          <Link href="/admin/sistema" className="button button-secondary">
             Abrir central
           </Link>
         </div>

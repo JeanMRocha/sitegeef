@@ -1,11 +1,11 @@
 import { AdminAreaPage } from "@/components/admin/admin-area-page";
 
 export const metadata = {
-  title: "Geef - Admin GEEF",
+  title: "Sistema - Admin GEEF",
 };
 
 export const dynamic = "force-dynamic";
 
-export default function GeefPage() {
+export default function SistemaPage() {
   return <AdminAreaPage />;
 }

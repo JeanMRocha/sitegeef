@@ -69,7 +69,7 @@ export function AdminDashboardWorkspace({ summary }: AdminDashboardWorkspaceProp
           </div>
 
           <div className="admin-actions">
-            <Link href="/perfil" className="admin-btn admin-btn-primary">👤 Meu perfil</Link>
+            <Link href="/admin/perfil" className="admin-btn admin-btn-primary">👤 Meu perfil</Link>
             <Link href="/minha-area" className="admin-btn admin-btn-secondary">🧭 Minha área</Link>
           </div>
         </section>
@@ -79,7 +79,7 @@ export function AdminDashboardWorkspace({ summary }: AdminDashboardWorkspaceProp
             title="Sessão"
             description="Use esta visão para revisar seus dados públicos e sair quando terminar."
             actions={[
-              { href: "/perfil", label: "Abrir perfil" },
+              { href: "/admin/perfil", label: "Abrir perfil" },
               { href: "/logout", label: "Encerrar sessão" },
             ]}
           />
@@ -101,6 +101,52 @@ export function AdminDashboardWorkspace({ summary }: AdminDashboardWorkspaceProp
     );
   }
 
+  if (area === "geef") {
+    return (
+      <div className="admin-dashboard-page">
+        <section className="admin-page-header admin-card admin-page-header--hero">
+          <div className="admin-page-header-copy">
+            <span className="admin-dashboard-kicker">Geef</span>
+            <h1 className="admin-page-title">Gestão da instituição</h1>
+            <p className="admin-page-subtitle">
+              Identificação, estrutura, identidade visual, documentos e cadastros-base da casa.
+            </p>
+          </div>
+
+          <div className="admin-actions">
+            <Link href="/admin/instituicao/editar" className="admin-btn admin-btn-primary">🏛️ Editar instituição</Link>
+            <Link href="/admin/funcoes" className="admin-btn admin-btn-secondary">🎯 Funções</Link>
+          </div>
+        </section>
+
+        <div className="admin-dashboard-hero">
+          <SectionCard
+            title="Estrutura institucional"
+            description="Abra os cadastros que mantêm a base organizacional da casa."
+            actions={[
+              { href: "/admin/instituicao", label: "Instituição" },
+              { href: "/admin/funcoes", label: "Funções" },
+              { href: "/admin/departamentos", label: "Departamentos" },
+              { href: "/admin/instituicao/documentos", label: "Documentos" },
+            ]}
+          />
+
+          <div className="admin-card admin-dashboard-panel admin-subtle-card">
+            <span className="admin-inline-pill">Visão rápida</span>
+            <div className="admin-card-grid admin-metric-grid">
+              {summaryCards.map((card) => (
+                <div key={card.label} className="admin-card admin-stat-card">
+                  <p className="admin-stat-value">{card.value}</p>
+                  <p className="admin-stat-label">{card.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (area === "pessoas") {
     return (
       <div className="admin-dashboard-page">
@@ -111,7 +157,7 @@ export function AdminDashboardWorkspace({ summary }: AdminDashboardWorkspaceProp
             <p className="admin-page-subtitle">Tudo que depende de pessoa física, usuário e estrutura interna.</p>
           </div>
           <div className="admin-actions">
-            <Link href="/admin/pessoas/nova" className="admin-btn admin-btn-primary">➕ Nova pessoa</Link>
+            <Link href="/admin/pessoas" className="admin-btn admin-btn-primary">👥 Abrir pessoas</Link>
             <Link href="/admin/usuarios" className="admin-btn admin-btn-secondary">🔑 Usuários</Link>
           </div>
         </section>
@@ -188,7 +234,7 @@ export function AdminDashboardWorkspace({ summary }: AdminDashboardWorkspaceProp
             <p className="admin-page-subtitle">Modelos, pedidos do titular, consentimentos e leitura online da governança.</p>
           </div>
           <div className="admin-actions">
-            <Link href="/admin/documentos" className="admin-btn admin-btn-primary">📄 Documentos</Link>
+            <Link href="/admin/documentos" className="admin-btn admin-btn-primary">📄 Abrir documentos</Link>
             <Link href="/admin/governanca/documentos" className="admin-btn admin-btn-secondary">📚 Governança</Link>
           </div>
         </section>
@@ -225,8 +271,8 @@ export function AdminDashboardWorkspace({ summary }: AdminDashboardWorkspaceProp
             <p className="admin-page-subtitle">Observabilidade, migrações, idiomas e usuários problemáticos.</p>
           </div>
           <div className="admin-actions">
-            <Link href="/admin/observability" className="admin-btn admin-btn-primary">🧭 Observabilidade</Link>
-            <Link href="/admin/migrations" className="admin-btn admin-btn-secondary">🧱 Migrations</Link>
+            <Link href="/admin/sistema" className="admin-btn admin-btn-primary">🧭 Abrir sistema</Link>
+            <Link href="/admin/observability" className="admin-btn admin-btn-secondary">🧱 Observabilidade</Link>
           </div>
         </section>
 
@@ -260,7 +306,7 @@ export function AdminDashboardWorkspace({ summary }: AdminDashboardWorkspaceProp
             <p className="admin-page-subtitle">Escalas, biblioteca, livraria, atendimento e comunicação.</p>
           </div>
           <div className="admin-actions">
-            <Link href="/admin/escalas" className="admin-btn admin-btn-primary">📅 Escalas</Link>
+            <Link href="/admin/operacao" className="admin-btn admin-btn-primary">📅 Abrir operação</Link>
             <Link href="/admin/biblioteca" className="admin-btn admin-btn-secondary">📚 Biblioteca</Link>
           </div>
         </section>

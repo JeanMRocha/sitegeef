@@ -165,7 +165,7 @@ export function UserMenu({
           <nav className="site-header-user-nav">
             {canAccessAdmin && (
               <Link
-                href="/admin"
+                href="/admin/painel"
                 className="site-header-user-item"
                 onClick={() => setMenuOpen(false)}
               >

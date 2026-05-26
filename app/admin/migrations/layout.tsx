@@ -12,7 +12,7 @@ export default function MigrationsLayout({
   return (
     <AdminModuleGate
       adminOnly
-      redirectPath="/admin/migrations"
+      redirectPath="/admin/sistema"
       title="Migrations"
     >
       {children}

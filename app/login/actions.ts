@@ -204,7 +204,7 @@ export async function signOut() {
     }
 
     revalidatePath("/", "layout");
-    revalidatePath("/admin", "layout");
+    revalidatePath("/admin/painel", "layout");
     revalidatePath("/minha-area", "layout");
     revalidatePath("/perfil", "layout");
     redirect("/");

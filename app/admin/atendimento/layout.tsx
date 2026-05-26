@@ -13,7 +13,7 @@ export default function AtendimentoLayout({
     <AdminModuleGate
       permission="pode_atendimento"
       profiles={['coord_atendimento', 'coord_passe']}
-      redirectPath="/admin/atendimento"
+      redirectPath="/admin/operacao"
       title="Atendimento Espiritual"
     >
       {children}
