@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { IconPlus, IconTrash } from "@/components/icons";
+import { IconPlus, IconTrash, IconCheck } from "@/components/icons";
 import type { Musica, MusicaParte, MusicaParteTipo, MusicaAutor } from "@/lib/musicas";
 
 type MusicaEditorFormProps = {
@@ -40,10 +40,23 @@ export function MusicaEditorForm({ musica, autores = [], action, submitLabel = "
   }, [musica]);
 
   const [partes, setPartes] = useState<MusicaParte[]>(initialPartes);
+  const [expandedPartes, setExpandedPartes] = useState<Set<number>>(new Set([0]));
 
   useEffect(() => {
     setPartes(initialPartes);
   }, [initialPartes]);
+
+  const toggleParteExpanded = (index: number) => {
+    setExpandedPartes((prev) => {
+      const next = new Set(prev);
+      if (next.has(index)) {
+        next.delete(index);
+      } else {
+        next.add(index);
+      }
+      return next;
+    });
+  };
 
   const updateParte = (index: number, patch: Partial<MusicaParte>) => {
     setPartes((current) =>
@@ -133,38 +146,85 @@ export function MusicaEditorForm({ musica, autores = [], action, submitLabel = "
         </label>
       </div>
 
-      <div style={{ marginTop: "2rem", display: "grid", gap: "0.5rem" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div>
-            <p style={{ fontWeight: 600, fontSize: "1rem", margin: "0 0 0.25rem" }}>Partes da letra</p>
-            <p style={{ fontSize: "0.875rem", color: "var(--text-muted)", margin: 0 }}>
-              Organize estrofes e refrões em blocos. A tela pública vai respeitar a ordem e o destaque.
-            </p>
-          </div>
-          <button type="button" className="profile-form-btn profile-form-btn-secondary" onClick={addParte} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            <IconPlus size={16} />
-            Adicionar parte
-          </button>
+      <div style={{ marginTop: "2rem" }}>
+        <div>
+          <p style={{ fontWeight: 600, fontSize: "1rem", margin: "0 0 0.25rem" }}>Partes da letra</p>
+          <p style={{ fontSize: "0.875rem", color: "var(--text-muted)", margin: "0 0 1.5rem" }}>
+            Organize estrofes e refrões em blocos. A tela pública vai respeitar a ordem e o destaque.
+          </p>
         </div>
-      </div>
 
-      <div style={{ display: "grid", gap: "1rem", marginTop: "1rem" }}>
-        {partes.map((parte, index) => (
-          <section key={`${index}-${parte.ordem}`} className="admin-card" style={{ padding: "1.3rem" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
-              <strong>Parte {index + 1}: {parte.titulo}</strong>
-              <button
-                type="button"
-                className="profile-form-btn profile-form-btn-secondary"
-                style={{ fontSize: "0.875rem", padding: "0.3rem 0.6rem", color: "#8a005a", display: "flex", alignItems: "center", gap: "0.25rem" }}
-                onClick={() => removeParte(index)}
-              >
-                <IconTrash size={14} />
-                Remover
-              </button>
-            </div>
+        <div style={{ display: "grid", gap: "0.75rem" }}>
+          {partes.map((parte, index) => {
+            const isExpanded = expandedPartes.has(index);
+            return (
+              <section key={`${index}-${parte.ordem}`} className="admin-card" style={{ padding: 0 }}>
+                <button
+                  type="button"
+                  onClick={() => toggleParteExpanded(index)}
+                  style={{
+                    width: "100%",
+                    padding: "1.3rem",
+                    border: "none",
+                    backgroundColor: "transparent",
+                    cursor: "pointer",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: "1rem",
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flex: 1, textAlign: "left" }}>
+                    <div
+                      style={{
+                        width: "1.5rem",
+                        height: "1.5rem",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: "0.8rem",
+                        color: "var(--text-muted)",
+                        transition: "transform 0.2s",
+                        transform: isExpanded ? "rotate(90deg)" : "rotate(0deg)",
+                      }}
+                    >
+                      ▶
+                    </div>
+                    <div>
+                      <strong>Parte {index + 1}: {parte.titulo}</strong>
+                      <div style={{ fontSize: "0.8rem", color: "var(--text-muted)", marginTop: "0.25rem" }}>
+                        {parte.tipo === "estrofe" && "Estrofe"}
+                        {parte.tipo === "refrao" && "Refrão"}
+                        {parte.tipo === "ponte" && "Ponte"}
+                        {parte.tipo === "intro" && "Introdução"}
+                        {parte.tipo === "cifra" && "Cifra"}
+                        {parte.destaque && " • Destaque"}
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    className="profile-form-btn profile-form-btn-secondary"
+                    style={{
+                      fontSize: "0.875rem",
+                      padding: "0.3rem 0.6rem",
+                      color: "#8a005a",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.25rem",
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeParte(index);
+                    }}
+                  >
+                    <IconTrash size={14} />
+                  </button>
+                </button>
 
-            <div className="module-grid">
+                {isExpanded && (
+                  <div style={{ padding: "1.3rem", paddingTop: 0, borderTop: "1px solid var(--border-medium)" }}>
+                    <div className="module-grid">
               <label className="profile-form-field">
                 <span>Tipo</span>
                 <select
@@ -219,10 +279,19 @@ export function MusicaEditorForm({ musica, autores = [], action, submitLabel = "
                   onChange={(event) => updateParte(index, { destaque: event.target.checked })}
                 />
                 <span>Destaque visual</span>
-              </label>
-            </div>
-          </section>
-        ))}
+                    </label>
+                    </div>
+                  </div>
+                )}
+              </section>
+            );
+          })}
+        </div>
+
+        <button type="button" className="profile-form-btn profile-form-btn-secondary" onClick={addParte} style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginTop: "1rem", width: "100%" }}>
+          <IconPlus size={16} />
+          Adicionar parte
+        </button>
       </div>
 
       <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem", marginTop: "2rem" }}>
