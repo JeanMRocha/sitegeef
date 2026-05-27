@@ -1,4 +1,4 @@
-import { createServiceRoleClient } from "@/lib/supabase/server";
+import { saveMusicaVersao } from "@/lib/musicas";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -12,16 +12,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const supabase = await createServiceRoleClient();
-
-    const { data, error } = await supabase
-      .from("musica_versoes")
-      .insert({ nome: nome.trim() })
-      .select()
-      .single();
-
-    if (error) throw error;
-
+    const data = await saveMusicaVersao({ nome: nome.trim() });
     return NextResponse.json(data);
   } catch (error) {
     console.error("Error creating version:", error);

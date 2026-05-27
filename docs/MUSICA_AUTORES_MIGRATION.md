@@ -1,94 +1,65 @@
-# Migração de Autores de Músicas
+# Catálogo Unificado de Créditos de Música
 
-## 📋 Contexto
+## Contexto
 
-A tabela de músicas foi normalizada para usar uma tabela separada de autores (`musica_autores`), evitando duplicação e permitindo reutilização de autores em múltiplas músicas.
+O módulo de músicas passou a usar um catálogo único para guardar créditos reaproveitáveis do cadastro:
 
-## 🚀 Como Aplicar a Migração
+- `autor`
+- `versao`
 
-### Opção 1: Aplicar via SQL Editor do Supabase (Recomendado)
+Isso evita duplicação de lógica e permite que os dois campos usem a mesma origem de dados, sem misturar com a versão do sistema.
 
-1. Acesse [Supabase Dashboard](https://app.supabase.com)
-2. Selecione o projeto GEEF
-3. Vá para **SQL Editor** → **New Query**
-4. Copie o conteúdo de `supabase/migrations/20260527_musica_autores_normalizacao.sql`
-5. Cole no editor e clique **▶ Run**
+## Estrutura
 
-### Opção 2: Via CLI linkada
+A fonte única agora é `public.musica_creditos`, com:
 
-Se o projeto estiver linkado e você tiver `SUPABASE_ACCESS_TOKEN` configurado, use:
+- `id`
+- `tipo` (`autor` ou `versao`)
+- `nome`
+- `criado_em`
+- `atualizado_em`
 
-```bash
-supabase link --project-ref nycgpokqlmrfzegjlrwa
-npx supabase db push
-```
+O cadastro de música continua gravando os campos textuais:
 
-### Opção 3: Via CLI com DATABASE_URL
+- `musicas.autor`
+- `musicas.versao`
 
-```bash
-npm run apply-migration
-```
+Os dropdowns do admin passam a ler do mesmo catálogo, filtrando por `tipo`.
 
-> ⚠️ Requer `DATABASE_URL` ou `SUPABASE_DB_URL` configurado nas variáveis de ambiente
+## Fluxo de uso
 
-Se a conexão direta falhar por IPv6 ou o `.env` não estiver parseando corretamente, use a Opção 1 ou a Management API do Supabase para aplicar a migration com o token do projeto.
+1. Ao criar ou editar uma música, o campo Autor consulta os créditos com `tipo = autor`.
+2. O campo Versão consulta os créditos com `tipo = versao`.
+3. Os botões `+` criam novos registros no mesmo catálogo, só mudando o tipo.
+4. A música salva o texto selecionado, sem depender de um FK obrigatório.
 
-## 📊 O que a Migração Faz
+## Migração aplicada
 
-1. ✅ Cria tabela `musica_autores` com:
-   - `id` (UUID, primary key)
-   - `nome` (text, unique)
-   - `criado_em` / `atualizado_em` (timestamps)
+Arquivo local:
 
-2. ✅ Adiciona coluna `autor_id` na tabela `musicas`
+- `supabase/migrations/20260527030702_musica_creditos_unificados.sql`
 
-3. ✅ Migra autores existentes:
-   - Extrai nomes únicos de autores da tabela `musicas`
-   - Cria registros em `musica_autores`
-   - Popula `autor_id` em cada música
+O que a migration faz:
 
-4. ✅ Configura RLS e índices para performance
+1. Cria `musica_creditos`
+2. Copia os dados legados de `musica_autores` e `musica_versoes`
+3. Retira as tabelas antigas após o backfill
 
-## 🎯 Impacto
-
-| Antes | Depois |
-|-------|--------|
-| `musicas.autor` = texto livre | `musicas.autor_id` = fk para `musica_autores` |
-| Campo `autor` mantido (compat.) | Campo `autor` mantido (compat.) |
-| Duplicatas possíveis | Sem duplicatas (constraint unique) |
-| Sem dropdown | Dropdown + create in-line |
-
-## ✨ Novo Fluxo de UX
-
-Ao criar/editar música:
-1. Ver dropdown com autores existentes
-2. Selecionar um autor OU clicar **+ Novo**
-3. Criar novo autor em aba nova (sem perder form)
-4. Regressar e selecionar na lista
-
-## 🔍 Verificação
-
-Após aplicar a migração, verifique:
+## Verificação
 
 ```sql
--- Verificar autores criados
-SELECT COUNT(*) FROM musica_autores;
-
--- Verificar musicas com autor_id preenchido
-SELECT COUNT(*) FROM musicas WHERE autor_id IS NOT NULL;
-
--- Listar alguns autores
-SELECT id, nome FROM musica_autores LIMIT 5;
+SELECT tipo, nome
+FROM musica_creditos
+ORDER BY tipo, nome;
 ```
 
-## ❓ Dúvidas
+```sql
+SELECT COUNT(*) FROM musica_creditos WHERE tipo = 'autor';
+SELECT COUNT(*) FROM musica_creditos WHERE tipo = 'versao';
+```
 
-- **E se eu não aplicar?** O campo ainda funciona como input de texto (compatibilidade)
-- **Posso reversionar?** Sim, mas perderá a relação `autor_id`
-- **Dados são perdidos?** Não, todos os autores são migrados automaticamente
+## Observações
 
----
-
-**Status**: Aplicada remotamente em 2026-05-26  
-**Migração**: `20260527_musica_autores_normalizacao.sql`  
-**Compatibilidade**: ✅ Backwards-compatible
+- O catálogo unificado não altera a versão do sistema.
+- O módulo interno continua com CRUDs separados na interface, apenas compartilhando a fonte de dados.
+- Se surgirem duplicidades no catálogo legado, limpe antes do backfill ou ajuste a normalização do nome.

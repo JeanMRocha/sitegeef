@@ -19,7 +19,7 @@ Resumo operacional para continuidade sem reexplorar o codigo.
 - A rota `/musicas/exibir` agora e uma pagina neutra de orientacao e nao cria sessao automaticamente.
 - O encerramento por inatividade agora considera 1 hora sem leitura; a sessao e marcada como inativa na proxima consulta.
 - Aplicada a normalizacao de autores com:
-  - `musica_autores`
+  - `musica_creditos`
   - `musicas.autor_id`
   - backfill dos autores existentes
 - Aplicada a migration remota no Supabase com:
@@ -36,7 +36,7 @@ Resumo operacional para continuidade sem reexplorar o codigo.
 - A tela publica busca atualizacoes do codigo via `/api/musicas/sessoes/[codigo]`.
 - O editor permite letra, cifra, partes por ordem e destaque visual.
 - A busca publica encontra por autor, titulo, tom, versao, observacoes e trechos da letra.
-- O cadastro de autores agora referencia `musica_autores`, com compatibilidade mantida no campo texto legado `musicas.autor`.
+- O cadastro de autores e versões agora referencia `musica_creditos`, filtrando por `tipo` para manter a origem única e evitar duplicação de lógica.
 
 ## Arquivos principais
 
@@ -58,7 +58,7 @@ Resumo operacional para continuidade sem reexplorar o codigo.
 - `lib/musicas.ts`
 - `lib/admin/cache.ts`
 - `supabase/migrations/20260526011410_musicas_institucionais.sql`
-- `supabase/migrations/20260527_musica_autores_normalizacao.sql`
+- `supabase/migrations/20260527030702_musica_creditos_unificados.sql`
 
 ## Estado atual
 

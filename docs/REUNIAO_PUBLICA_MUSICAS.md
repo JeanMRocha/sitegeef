@@ -36,6 +36,7 @@ Este documento descreve o modulo de musicas e a navegacao da area de reuniao pub
 Migration:
 
 - `supabase/migrations/20260526011410_musicas_institucionais.sql`
+- `supabase/migrations/20260527030702_musica_creditos_unificados.sql`
 
 Objetos criados:
 
@@ -236,7 +237,7 @@ O modulo de musicas usa o mesmo gate de publicacao do admin e aceita:
 Valido no momento em que este doc foi escrito:
 
 - `npm run build` passou
-- a migration remota foi aplicada no projeto GEEF
+  - a migration remota do catálogo unificado foi aplicada no projeto GEEF
 - `/musicas` responde
 - `/musicas/exibir` responde
 - `/admin/reuniao-publica` responde

@@ -43,6 +43,16 @@ export type MusicaSessao = {
 
 export const MUSICA_SESSAO_INATIVIDADE_MS = 60 * 60 * 1000;
 
+export type MusicaCreditoTipo = "autor" | "versao";
+
+export type MusicaCredito = {
+  id: string;
+  tipo: MusicaCreditoTipo;
+  nome: string;
+  criado_em: string;
+  atualizado_em: string;
+};
+
 export type MusicaResumo = {
   id: string;
   slug: string;
@@ -549,19 +559,25 @@ export async function deleteMusicaSessao(codigo_pareamento: string) {
   }
 }
 
-export type MusicaAutor = {
-  id: string;
-  nome: string;
-  criado_em: string;
-  atualizado_em: string;
-};
+export type MusicaAutor = Omit<MusicaCredito, "tipo">;
+export type MusicaVersao = Omit<MusicaCredito, "tipo">;
 
-export async function listMusicaAutores(search = "") {
+function stripCreditoTipo(credito: MusicaCredito | null): Omit<MusicaCredito, "tipo"> | null {
+  if (!credito) {
+    return null;
+  }
+
+  const { tipo: _tipo, ...rest } = credito;
+  return rest;
+}
+
+async function listMusicaCreditos(tipo: MusicaCreditoTipo, search = "") {
   const supabase = createServiceRoleClient();
 
   let query = supabase
-    .from("musica_autores")
-    .select("id, nome, criado_em, atualizado_em")
+    .from("musica_creditos")
+    .select("id, tipo, nome, criado_em, atualizado_em")
+    .eq("tipo", tipo)
     .order("nome", { ascending: true });
 
   if (search.trim()) {
@@ -574,15 +590,21 @@ export async function listMusicaAutores(search = "") {
     return [];
   }
 
-  return (data ?? []) as MusicaAutor[];
+  return (data ?? []) as MusicaCredito[];
 }
 
-export async function getMusicaAutorById(id: string) {
+export async function listMusicaAutores(search = "") {
+  const creditos = await listMusicaCreditos("autor", search);
+  return creditos.map((credito) => stripCreditoTipo(credito) as MusicaAutor);
+}
+
+async function getMusicaCreditoById(tipo: MusicaCreditoTipo, id: string) {
   const supabase = createServiceRoleClient();
 
   const { data, error } = await supabase
-    .from("musica_autores")
-    .select("id, nome, criado_em, atualizado_em")
+    .from("musica_creditos")
+    .select("id, tipo, nome, criado_em, atualizado_em")
+    .eq("tipo", tipo)
     .eq("id", id)
     .maybeSingle();
 
@@ -590,90 +612,68 @@ export async function getMusicaAutorById(id: string) {
     return null;
   }
 
-  return (data ?? null) as MusicaAutor | null;
+  return (data ?? null) as MusicaCredito | null;
 }
 
-export type SaveMusicaAutorInput = {
+export async function getMusicaAutorById(id: string) {
+  const credito = await getMusicaCreditoById("autor", id);
+  return stripCreditoTipo(credito) as MusicaAutor | null;
+}
+
+export type SaveMusicaCreditoInput = {
   id?: string;
+  tipo: MusicaCreditoTipo;
   nome: string;
 };
 
-export async function saveMusicaAutor(input: SaveMusicaAutorInput) {
+async function saveMusicaCredito(input: SaveMusicaCreditoInput) {
   const supabase = createServiceRoleClient();
-  const autorId = input.id ?? crypto.randomUUID();
+  const creditoId = input.id ?? crypto.randomUUID();
 
   const payload = {
-    id: autorId,
+    id: creditoId,
+    tipo: input.tipo,
     nome: input.nome.trim(),
   };
 
-  const existing = await supabase.from("musica_autores").select("id").eq("id", autorId).maybeSingle();
+  const existing = await supabase.from("musica_creditos").select("id").eq("id", creditoId).maybeSingle();
 
   if (existing.data) {
-    const { error } = await supabase.from("musica_autores").update(payload).eq("id", autorId);
+    const { error } = await supabase.from("musica_creditos").update(payload).eq("id", creditoId);
     if (error) {
       throw error;
     }
   } else {
-    const { error } = await supabase.from("musica_autores").insert([payload]);
+    const { error } = await supabase.from("musica_creditos").insert([payload]);
     if (error) {
       throw error;
     }
   }
 
-  return getMusicaAutorById(autorId);
+  return getMusicaCreditoById(input.tipo, creditoId);
+}
+
+export async function saveMusicaAutor(input: Omit<SaveMusicaCreditoInput, "tipo">) {
+  const credito = await saveMusicaCredito({ ...input, tipo: "autor" });
+  return stripCreditoTipo(credito) as MusicaAutor | null;
 }
 
 export async function deleteMusicaAutor(id: string) {
   const supabase = createServiceRoleClient();
-  const { error } = await supabase.from("musica_autores").delete().eq("id", id);
+  const { error } = await supabase.from("musica_creditos").delete().eq("id", id).eq("tipo", "autor");
   if (error) {
     throw error;
   }
 }
 
-export type MusicaVersao = {
-  id: string;
-  nome: string;
-  criado_em: string;
-  atualizado_em: string;
-};
-
 export async function listMusicaVersoes(search = "") {
-  const supabase = createServiceRoleClient();
-
-  let query = supabase
-    .from("musica_versoes")
-    .select("id, nome, criado_em, atualizado_em")
-    .order("nome", { ascending: true });
-
-  if (search.trim()) {
-    query = query.ilike("nome", `%${search.trim()}%`);
-  }
-
-  const { data, error } = await query;
-
-  if (error) {
-    return [];
-  }
-
-  return (data ?? []) as MusicaVersao[];
+  const creditos = await listMusicaCreditos("versao", search);
+  return creditos.map((credito) => stripCreditoTipo(credito) as MusicaVersao);
 }
 
 export async function getMusicaVersaoById(id: string) {
-  const supabase = createServiceRoleClient();
-
-  const { data, error } = await supabase
-    .from("musica_versoes")
-    .select("id, nome, criado_em, atualizado_em")
-    .eq("id", id)
-    .maybeSingle();
-
-  if (error) {
-    return null;
-  }
-
-  return (data ?? null) as MusicaVersao | null;
+  const credito = await getMusicaCreditoById("versao", id);
+  return stripCreditoTipo(credito) as MusicaVersao | null;
 }
 
 export type SaveMusicaVersaoInput = {
@@ -682,34 +682,13 @@ export type SaveMusicaVersaoInput = {
 };
 
 export async function saveMusicaVersao(input: SaveMusicaVersaoInput) {
-  const supabase = createServiceRoleClient();
-  const versaoId = input.id ?? crypto.randomUUID();
-
-  const payload = {
-    id: versaoId,
-    nome: input.nome.trim(),
-  };
-
-  const existing = await supabase.from("musica_versoes").select("id").eq("id", versaoId).maybeSingle();
-
-  if (existing.data) {
-    const { error } = await supabase.from("musica_versoes").update(payload).eq("id", versaoId);
-    if (error) {
-      throw error;
-    }
-  } else {
-    const { error } = await supabase.from("musica_versoes").insert([payload]);
-    if (error) {
-      throw error;
-    }
-  }
-
-  return getMusicaVersaoById(versaoId);
+  const credito = await saveMusicaCredito({ ...input, tipo: "versao" });
+  return stripCreditoTipo(credito) as MusicaVersao | null;
 }
 
 export async function deleteMusicaVersao(id: string) {
   const supabase = createServiceRoleClient();
-  const { error } = await supabase.from("musica_versoes").delete().eq("id", id);
+  const { error } = await supabase.from("musica_creditos").delete().eq("id", id).eq("tipo", "versao");
   if (error) {
     throw error;
   }
