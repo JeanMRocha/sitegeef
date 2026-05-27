@@ -15,21 +15,7 @@ async function ReuniaoPublicaContent() {
   const sessoesAtivas = sessoes.filter((s) => s.ativo);
   const musicasAtivas = musicasResumo.filter((m) => m.status === "ativa");
 
-  // Associar músicas com autores (pela tabela musica_autores)
-  const autoresComMusicas = autores.map((autor) => {
-    const musicas = musicasResumo.filter((m) => m.autor === autor.nome);
-    const ativas = musicas.filter((m) => m.status === "ativa").length;
-    return {
-      ...autor,
-      totalMusicas: musicas.length,
-      musicasAtivas: ativas,
-    };
-  });
-
-  const autoresUnicos = autoresComMusicas.length;
-  const autoresOrdenados = autoresComMusicas
-    .sort((a, b) => b.totalMusicas - a.totalMusicas)
-    .slice(0, 5);
+  const autoresUnicos = autores.length;
 
   return (
     <div className="area-page">
@@ -80,43 +66,6 @@ async function ReuniaoPublicaContent() {
         </div>
       </section>
 
-      {autoresOrdenados.length > 0 && (
-        <section className="area-section">
-          <div className="admin-card table-surface">
-            <h2 style={{ margin: "0 0 1.5rem 0", fontSize: "1.1rem", fontWeight: 600 }}>
-              Autores
-            </h2>
-            <div style={{ display: "grid", gap: "1rem" }}>
-              {autoresOrdenados.map((autor) => (
-                <div
-                  key={autor.id}
-                  style={{
-                    padding: "1rem",
-                    borderLeft: "3px solid var(--primary)",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <div>
-                    <strong style={{ fontSize: "0.95rem" }}>{autor.nome}</strong>
-                    <div style={{ fontSize: "0.85rem", color: "var(--text-muted)", marginTop: "0.25rem" }}>
-                      {autor.totalMusicas} {autor.totalMusicas === 1 ? "música" : "músicas"}
-                      {autor.musicasAtivas > 0 && ` • ${autor.musicasAtivas} ativa${autor.musicasAtivas > 1 ? "s" : ""}`}
-                    </div>
-                  </div>
-                  <div style={{ textAlign: "right" }}>
-                    <div style={{ fontSize: "1.5rem", fontWeight: 700, lineHeight: 1 }}>
-                      {autor.musicasAtivas}
-                    </div>
-                    <div style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>ativas</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
     </div>
   );
 }
