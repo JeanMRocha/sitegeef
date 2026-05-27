@@ -14,6 +14,11 @@ export type Toast = {
 
 export function ToastContainer() {
   const [toasts, setToasts] = useState<Toast[]>([]);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleAddToast = (event: CustomEvent) => {
@@ -40,7 +45,9 @@ export function ToastContainer() {
     return () => window.removeEventListener("addToast", handleAddToast as EventListener);
   }, []);
 
-  if (toasts.length === 0) return null;
+  if (!mounted || toasts.length === 0) {
+    return <div style={{ display: "none" }} />;
+  }
 
   return (
     <div
