@@ -15,6 +15,17 @@ Se o projeto estiver em desenvolvimento e você quiser validar o app antes de to
 npm run build
 ```
 
+## Caminho validado neste checkout
+
+Quando a conexão direta ou o `pg_dump` local não estiverem disponíveis, o fluxo validado foi:
+
+1. Gerar um login temporário do banco via `POST /v1/projects/{ref}/cli/login-role`.
+2. Montar um `postgresql://...` com o login temporário e usar a Management API do Supabase para aplicar as migrations.
+3. Criar snapshots lógicos dos objetos afetados em `backups/` antes da cleanup.
+4. Validar o schema com `POST /v1/projects/{ref}/database/query`.
+
+Esse caminho foi necessário porque o `supabase db dump` depende de Docker nesta máquina e o acesso direto ao host do banco não estava confiável.
+
 ## Modo produção
 
 Use este fluxo quando a base já tem dados e você precisa preservar tudo.
@@ -34,6 +45,8 @@ New-Item -ItemType Directory -Force backups | Out-Null
 $backupFile = "backups\instituicao_{0}.dump" -f (Get-Date -Format "yyyyMMdd_HHmmss")
 pg_dump $env:GEEF_SUPABASE_DB_URL --format=custom --file $backupFile
 ```
+
+Se `pg_dump` não estiver disponível ou a máquina não tiver Docker, faça um snapshot lógico dos objetos afetados via Management API do Supabase e guarde em `backups\instituicao_*`.
 
 ### 2. Aplicar a migration aditiva
 
@@ -129,6 +142,7 @@ npm run db:status
 - Nunca rode a limpeza destrutiva antes de validar o backfill.
 - Se o banco já tiver dados históricos relevantes, prefira sempre a migration aditiva primeiro.
 - Se houver divergência entre schema e dados, pare antes de qualquer `drop column`.
+- Em caso de dúvida, valide se `instituicao_contatos` já tem `instituicao_id` e `tipo_id` antes de limpar `tipo`.
 - O `porte` deve ser armazenado como código oficial do CNPJ:
   - `00` - Não informado
   - `01` - Microempresa

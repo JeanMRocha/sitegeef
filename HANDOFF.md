@@ -43,6 +43,7 @@
 - `docs/SUPABASE_MIGRATION_MAP.md` = mapa local -> checkpoint remoto das migrations aplicadas.
 - Quando o CLI local precisar aplicar migration, preferir `SUPABASE_ACCESS_TOKEN` + `supabase link` em workdir temporario e, para escrita remota, usar a Management API `POST /v1/projects/{ref}/database/migrations`.
 - Se o host direto do banco falhar por IPv6 ou o `.env` estiver malformado para a CLI, usar o pooler do `supabase-geef` ou a Management API `POST /v1/projects/{ref}/database/query` para leitura/diagnostico pontual.
+- Para a instituição, a sequência real já validada foi: snapshot lógico em `backups/`, `20260523_instituicao_modelagem_total.sql`, validação do backfill, snapshot lógico do estado normalizado e então `20260524_instituicao_cleanup_legado.sql`.
 - Cadastro da instituicao: a modelagem consolidada fica em `supabase/migrations/20260523_instituicao_modelagem_total.sql`.
 - Em base já povoada, trate a migration como aditiva e faça backup antes de qualquer limpeza manual de colunas legadas ou dados históricos.
 - A limpeza destrutiva separada fica em `supabase/migrations/20260524_instituicao_cleanup_legado.sql` e só deve rodar depois do backup e da validação do backfill.
@@ -145,6 +146,7 @@ Quando o Autoreflex local voltar a responder, rodar primeiro:
 - A área de governança recebeu a primeira versão do workspace de documentos institucionais em `/admin/governanca/documentos`, com leitura online para `Estatuto Social`, `CNPJ`, `Registro em Cartório`, `Diretoria constituída` e `Regimento Interno`.
 - O workspace dos documentos institucionais inclui índice lateral, leitor central contínuo, metadados e ações de exportar, imprimir e copiar link.
 - A visão geral de governança agora expõe um card de acesso direto para os documentos institucionais.
+- A modelagem de instituição foi consolidada no remoto e a cleanup destrutiva já foi aplicada com backup lógico prévio; `instituicao_contatos` agora depende de `instituicao_id`/`tipo_id` e não usa mais a coluna legada `tipo`.
 - A validação local do shell passou com `npm run build` e a rota `http://127.0.0.1:3500/admin` respondeu `200` durante a checagem final.
 - Foi criado o agente customizado do GitHub Copilot Cloud Agent em `.github/agents/geef-implementador.agent.md`.
 - As configuracoes de seguranca do repositório foram registradas em `.github/SECURITY.md` e `.github/dependabot.yml`.

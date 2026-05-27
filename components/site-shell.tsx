@@ -65,30 +65,6 @@ export async function SiteShell({ locale, user, children }: Readonly<SiteShellPr
               {copy.shell.footer.credibility}
             </Link>
           </div>
-
-          <div className="site-footer-badges">
-            <a
-              href="/institucional"
-              title="Filiado à Federação Espírita Brasileira"
-              className="footer-badge"
-            >
-              <span className="footer-badge-label">FEB</span>
-            </a>
-            <a
-              href="/institucional"
-              title="Integrado à REUNIR II Serrana"
-              className="footer-badge"
-            >
-              <span className="footer-badge-label">REUNIR</span>
-            </a>
-            <a
-              href="/institucional"
-              title="45º CEU"
-              className="footer-badge"
-            >
-              <span className="footer-badge-label">45 CEU</span>
-            </a>
-          </div>
         </div>
       </footer>
     </div>

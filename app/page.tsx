@@ -69,7 +69,6 @@ export default async function Home({ searchParams }: HomePageProps) {
             <p className="eyebrow">{locale === "en" ? "Quick access" : "Acesso rápido"}</p>
             <h2 id="quick-links-title">{copy.home.quickLinksTitle}</h2>
           </div>
-          <p>{copy.home.quickLinksLead}</p>
         </div>
 
         <div className="feature-grid">
@@ -94,7 +93,6 @@ export default async function Home({ searchParams }: HomePageProps) {
             <p className="eyebrow">{locale === "en" ? "Contact" : "Contato"}</p>
             <h2 id="contact-title">{copy.home.contactTitle}</h2>
           </div>
-          <p>{copy.home.contactLead}</p>
         </div>
 
         <div className="contact-grid">

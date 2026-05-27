@@ -55,6 +55,7 @@ const supabaseImageHost = getSupabaseImageHost();
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   output: "standalone",
+  serverExternalPackages: ["@supabase/supabase-js", "@supabase/ssr"],
   experimental: {
     devtoolSegmentExplorer: false,
   },
