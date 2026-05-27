@@ -1,133 +1,161 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { IconPlus, IconTrash, IconCheck } from "@/components/icons";
-import type { Musica, MusicaParte, MusicaParteTipo, MusicaAutor } from "@/lib/musicas";
+import { useRef, useState } from "react";
+import { parsePartesFromText } from "@/lib/musicas";
+import type { Musica, MusicaAutor, MusicaVersao } from "@/lib/musicas";
 
 type MusicaEditorFormProps = {
   musica?: Musica | null;
   autores?: MusicaAutor[];
+  versoes?: MusicaVersao[];
   action: (formData: FormData) => void;
   submitLabel?: string;
 };
 
-const PARTE_TIPOS: Array<{ value: MusicaParteTipo; label: string }> = [
-  { value: "estrofe", label: "Estrofe" },
-  { value: "refrao", label: "Refrão" },
-  { value: "ponte", label: "Ponte" },
-  { value: "intro", label: "Introdução" },
-  { value: "cifra", label: "Cifra" },
+const TOOLBAR_BUTTONS = [
+  { label: "Estrofe", tipo: "ESTROFE" },
+  { label: "Refrão", tipo: "REFRAO" },
+  { label: "Ponte", tipo: "PONTE" },
+  { label: "Introdução", tipo: "INTRO" },
+  { label: "Cifra", tipo: "CIFRA" },
 ];
 
-function createParte(index: number): MusicaParte {
-  return {
-    ordem: index + 1,
-    tipo: index === 1 ? "refrao" : "estrofe",
-    titulo: index === 1 ? "Refrão" : `Parte ${index + 1}`,
-    conteudo: "",
-    cifra: "",
-    destaque: index === 1,
-  };
-}
+const STANDARD_TONES = [
+  "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
+  "Cm", "C#m", "Dm", "D#m", "Em", "Fm", "F#m", "Gm", "G#m", "Am", "A#m", "Bm",
+];
 
-export function MusicaEditorForm({ musica, autores = [], action, submitLabel = "Salvar música" }: MusicaEditorFormProps) {
-  const initialPartes = useMemo(() => {
-    if (musica?.partes?.length) {
-      return musica.partes;
-    }
+export function MusicaEditorForm({ musica, autores = [], versoes = [], action, submitLabel = "Salvar música" }: MusicaEditorFormProps) {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [letras, setLetras] = useState(musica?.partes.map((p) => `=== ${p.tipo.toUpperCase()} ===\n${p.conteudo}`).join("\n\n") || "");
+  const [youtubeModal, setYoutubeModal] = useState(false);
+  const [mp3Modal, setMp3Modal] = useState(false);
+  const [youtubeUrl, setYoutubeUrl] = useState(musica?.youtube_url ?? "");
+  const [audioUrl, setAudioUrl] = useState(musica?.audio_url ?? "");
 
-    return [createParte(0), createParte(1)];
-  }, [musica]);
+  const insertMarker = (tipo: string) => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
 
-  const [partes, setPartes] = useState<MusicaParte[]>(initialPartes);
-  const [expandedPartes, setExpandedPartes] = useState<Set<number>>(new Set([0]));
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const text = letras;
+    const selectedText = text.substring(start, end);
+    const marker = `=== ${tipo} ===`;
+    const newText = text.substring(0, start) + (selectedText ? `${marker}\n${selectedText}` : `${marker}\n`) + text.substring(end);
 
-  useEffect(() => {
-    setPartes(initialPartes);
-  }, [initialPartes]);
+    setLetras(newText);
 
-  const toggleParteExpanded = (index: number) => {
-    setExpandedPartes((prev) => {
-      const next = new Set(prev);
-      if (next.has(index)) {
-        next.delete(index);
-      } else {
-        next.add(index);
-      }
-      return next;
-    });
+    setTimeout(() => {
+      textarea.focus();
+      const cursorPos = start + marker.length + 1;
+      textarea.setSelectionRange(cursorPos, cursorPos);
+    }, 0);
   };
 
-  const updateParte = (index: number, patch: Partial<MusicaParte>) => {
-    setPartes((current) =>
-      current.map((parte, currentIndex) => (currentIndex === index ? { ...parte, ...patch } : parte)),
-    );
-  };
-
-  const addParte = () => {
-    setPartes((current) => [...current, createParte(current.length)]);
-  };
-
-  const removeParte = (index: number) => {
-    setPartes((current) => current.filter((_, currentIndex) => currentIndex !== index).map((parte, currentIndex) => ({
-      ...parte,
-      ordem: currentIndex + 1,
-    })));
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const formData = new FormData(e.currentTarget);
+    const partes = parsePartesFromText(letras);
+    formData.set("partes_json", JSON.stringify(partes));
+    action(formData);
   };
 
   return (
-    <form action={action} className="musica-editor-form">
+    <>
+    <form onSubmit={handleSubmit} className="musica-editor-form">
       <input type="hidden" name="id" defaultValue={musica?.id ?? ""} />
-      <input type="hidden" name="partes_json" value={JSON.stringify(partes)} readOnly />
 
       <div className="module-grid">
-        <label className="profile-form-field">
-          <span>Título</span>
-          <input className="profile-form-input" name="titulo" defaultValue={musica?.titulo ?? ""} placeholder="Nome da música" />
-        </label>
+        <div style={{ gridColumn: "1/-1", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
+          <label className="profile-form-field" style={{ margin: 0 }}>
+            <span>Título</span>
+            <input className="profile-form-input" name="titulo" defaultValue={musica?.titulo ?? ""} placeholder="Nome da música" />
+          </label>
 
-        <label className="profile-form-field">
-          <span>Autor</span>
-          <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-            <select className="profile-form-input" name="autor" defaultValue={musica?.autor ?? ""} style={{ flex: 1 }}>
-              <option value="">Selecione um autor...</option>
-              {autores.map((autor) => (
-                <option key={autor.id} value={autor.nome}>
-                  {autor.nome}
-                </option>
-              ))}
-            </select>
-            <a
-              href="/admin/reuniao-publica/musicas/autores/novo"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="admin-btn admin-btn-small"
-              style={{ whiteSpace: "nowrap", padding: "0.5rem 1rem" }}
-              title="Criar novo autor"
+          <div style={{ display: "flex", gap: "0.5rem", alignItems: "flex-end" }}>
+            <label className="profile-form-field" style={{ margin: 0, flex: 1 }}>
+              <span>Autor</span>
+              <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+                <select className="profile-form-input" name="autor" defaultValue={musica?.autor ?? ""} style={{ flex: 1 }}>
+                  <option value="">Selecione...</option>
+                  {autores.map((autor) => (
+                    <option key={autor.id} value={autor.nome}>
+                      {autor.nome}
+                    </option>
+                  ))}
+                </select>
+                <a
+                  href="/admin/reuniao-publica/musicas/autores/novo"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="admin-btn admin-btn-small"
+                  style={{ padding: "0.5rem 0.75rem" }}
+                  title="Criar novo autor"
+                >
+                  +
+                </a>
+              </div>
+            </label>
+            <button
+              type="button"
+              className="admin-btn admin-btn-secondary"
+              onClick={() => setYoutubeModal(true)}
+              style={{ padding: "0.5rem 1rem" }}
+              title="Adicionar YouTube"
             >
-              + Novo
-            </a>
+              {youtubeUrl ? "✓ YT" : "YT"}
+            </button>
+            <button
+              type="button"
+              className="admin-btn admin-btn-secondary"
+              onClick={() => setMp3Modal(true)}
+              style={{ padding: "0.5rem 1rem" }}
+              title="Adicionar MP3"
+            >
+              {audioUrl ? "✓ MP3" : "MP3"}
+            </button>
           </div>
-          {autores.length === 0 && (
-            <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", margin: "0.5rem 0 0" }}>
-              Nenhum autor cadastrado. <a href="/admin/reuniao-publica/musicas/autores/novo" target="_blank" rel="noopener noreferrer" style={{ color: "var(--primary)" }}>Criar novo autor</a>
-            </p>
-          )}
-        </label>
+        </div>
 
         <label className="profile-form-field">
           <span>Tom</span>
-          <input className="profile-form-input" name="tom" defaultValue={musica?.tom ?? ""} placeholder="Ex.: G, C, D" />
+          <select className="profile-form-input" name="tom" defaultValue={musica?.tom ?? ""}>
+            <option value="">Selecione...</option>
+            {STANDARD_TONES.map((tone) => (
+              <option key={tone} value={tone}>
+                {tone}
+              </option>
+            ))}
+          </select>
         </label>
 
         <label className="profile-form-field">
           <span>Versão</span>
-          <input className="profile-form-input" name="versao" defaultValue={musica?.versao ?? ""} placeholder="Ex.: versão de Elizabeth Lacerda" />
+          <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+            <select className="profile-form-input" name="versao" defaultValue={musica?.versao ?? ""} style={{ flex: 1 }}>
+              <option value="">Selecione...</option>
+              {versoes.map((versao) => (
+                <option key={versao.id} value={versao.nome}>
+                  {versao.nome}
+                </option>
+              ))}
+            </select>
+            <a
+              href="/admin/reuniao-publica/musicas/versoes/novo"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="admin-btn admin-btn-small"
+              style={{ padding: "0.5rem 0.75rem" }}
+              title="Criar nova versão"
+            >
+              +
+            </a>
+          </div>
         </label>
 
-        <label className="profile-form-field" style={{ gridColumn: "1/-1" }}>
+        <label className="profile-form-field">
           <span>Status</span>
-          <select className="profile-form-input" name="status" defaultValue={musica?.status ?? "ativa"}>
+          <select className="profile-form-input" name="status" defaultValue={musica?.status ?? "ativa"} style={{ fontSize: "0.9rem" }}>
             <option value="ativa">Ativa</option>
             <option value="rascunho">Rascunho</option>
             <option value="inativa">Inativa</option>
@@ -140,172 +168,173 @@ export function MusicaEditorForm({ musica, autores = [], action, submitLabel = "
             className="profile-form-input"
             name="observacoes"
             defaultValue={musica?.observacoes ?? ""}
-            rows={4}
-            placeholder="Contexto, tom de apresentação, observações de uso..."
+            rows={2}
+            placeholder="Contexto, tom de apresentação..."
+          />
+        </label>
+
+        <input type="hidden" name="youtube_url" value={youtubeUrl} />
+        <input type="hidden" name="audio_url" value={audioUrl} />
+      </div>
+
+      <div style={{ marginTop: "2rem" }}>
+        <p style={{ fontWeight: 600, fontSize: "1rem", margin: "0 0 1rem" }}>Letra e Cifra</p>
+
+        <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "1rem" }}>
+          {TOOLBAR_BUTTONS.map((btn) => (
+            <button
+              key={btn.tipo}
+              type="button"
+              className="profile-form-btn profile-form-btn-secondary"
+              onClick={() => insertMarker(btn.tipo)}
+              style={{ fontSize: "0.875rem", padding: "0.5rem 1rem" }}
+              title={`Inserir marcador === ${btn.tipo} ===`}
+            >
+              {btn.label}
+            </button>
+          ))}
+        </div>
+
+        <label className="profile-form-field" style={{ gridColumn: "1/-1" }}>
+          <span>Conteúdo</span>
+          <textarea
+            ref={textareaRef}
+            className="profile-form-input"
+            value={letras}
+            onChange={(e) => setLetras(e.target.value)}
+            rows={16}
+            placeholder="Cole ou digite a letra aqui. Use os botões acima para marcar tipos de seções."
+            style={{ fontFamily: "monospace", fontSize: "0.9rem" }}
           />
         </label>
       </div>
 
-      <div style={{ marginTop: "2rem" }}>
-        <div>
-          <p style={{ fontWeight: 600, fontSize: "1rem", margin: "0 0 0.25rem" }}>Partes da letra</p>
-          <p style={{ fontSize: "0.875rem", color: "var(--text-muted)", margin: "0 0 1.5rem" }}>
-            Organize estrofes e refrões em blocos. A tela pública vai respeitar a ordem e o destaque.
-          </p>
-        </div>
-
-        <div style={{ display: "grid", gap: "0.75rem" }}>
-          {partes.map((parte, index) => {
-            const isExpanded = expandedPartes.has(index);
-            return (
-              <section key={`${index}-${parte.ordem}`} className="admin-card" style={{ padding: 0 }}>
-                <div
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => toggleParteExpanded(index)}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter" || event.key === " ") {
-                      event.preventDefault();
-                      toggleParteExpanded(index);
-                    }
-                  }}
-                  style={{
-                    width: "100%",
-                    padding: "1.3rem",
-                    border: "none",
-                    backgroundColor: "transparent",
-                    cursor: "pointer",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    gap: "1rem",
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flex: 1, textAlign: "left" }}>
-                    <div
-                      style={{
-                        width: "1.5rem",
-                        height: "1.5rem",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontSize: "0.8rem",
-                        color: "var(--text-muted)",
-                        transition: "transform 0.2s",
-                        transform: isExpanded ? "rotate(90deg)" : "rotate(0deg)",
-                      }}
-                    >
-                      ▶
-                    </div>
-                    <div>
-                      <strong>Parte {index + 1}: {parte.titulo}</strong>
-                      <div style={{ fontSize: "0.8rem", color: "var(--text-muted)", marginTop: "0.25rem" }}>
-                        {parte.tipo === "estrofe" && "Estrofe"}
-                        {parte.tipo === "refrao" && "Refrão"}
-                        {parte.tipo === "ponte" && "Ponte"}
-                        {parte.tipo === "intro" && "Introdução"}
-                        {parte.tipo === "cifra" && "Cifra"}
-                        {parte.destaque && " • Destaque"}
-                      </div>
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    className="profile-form-btn profile-form-btn-secondary"
-                    style={{
-                      fontSize: "0.875rem",
-                      padding: "0.3rem 0.6rem",
-                      color: "#8a005a",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.25rem",
-                    }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      removeParte(index);
-                    }}
-                  >
-                    <IconTrash size={14} />
-                  </button>
-                </div>
-
-                {isExpanded && (
-                  <div style={{ padding: "1.3rem", paddingTop: 0, borderTop: "1px solid var(--border-medium)" }}>
-                    <div className="module-grid">
-              <label className="profile-form-field">
-                <span>Tipo</span>
-                <select
-                  className="profile-form-input"
-                  value={parte.tipo}
-                  onChange={(event) => updateParte(index, { tipo: event.target.value as MusicaParteTipo })}
-                >
-                  {PARTE_TIPOS.map((tipo) => (
-                    <option key={tipo.value} value={tipo.value}>
-                      {tipo.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              <label className="profile-form-field">
-                <span>Título</span>
-                <input
-                  className="profile-form-input"
-                  value={parte.titulo}
-                  onChange={(event) => updateParte(index, { titulo: event.target.value })}
-                  placeholder="Ex.: Estrofe 1"
-                />
-              </label>
-
-              <label className="profile-form-field" style={{ gridColumn: "1/-1" }}>
-                <span>Letra</span>
-                <textarea
-                  className="profile-form-input"
-                  value={parte.conteudo}
-                  onChange={(event) => updateParte(index, { conteudo: event.target.value })}
-                  rows={8}
-                  placeholder="Digite a letra desta parte..."
-                />
-              </label>
-
-              <label className="profile-form-field" style={{ gridColumn: "1/-1" }}>
-                <span>Cifra</span>
-                <textarea
-                  className="profile-form-input"
-                  value={parte.cifra ?? ""}
-                  onChange={(event) => updateParte(index, { cifra: event.target.value })}
-                  rows={4}
-                  placeholder="Opcional: cifra ou acordes desta parte..."
-                />
-              </label>
-
-              <label className="profile-form-field" style={{ display: "grid", gridTemplateColumns: "auto 1fr", alignItems: "center", gap: "0.5rem" }}>
-                <input
-                  type="checkbox"
-                  checked={parte.destaque}
-                  onChange={(event) => updateParte(index, { destaque: event.target.checked })}
-                />
-                <span>Destaque visual</span>
-                    </label>
-                    </div>
-                  </div>
-                )}
-              </section>
-            );
-          })}
-        </div>
-
-        <button type="button" className="profile-form-btn profile-form-btn-secondary" onClick={addParte} style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginTop: "1rem", width: "100%" }}>
-          <IconPlus size={16} />
-          Adicionar parte
-        </button>
-      </div>
-
-      <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem", marginTop: "2rem" }}>
-        <button type="submit" className="profile-form-btn profile-form-btn-primary">
-          {submitLabel}
-        </button>
-      </div>
+      <input type="hidden" name="_submitLabel" value={submitLabel} />
     </form>
+
+    {youtubeModal && (
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 1000,
+        }}
+        onClick={() => setYoutubeModal(false)}
+      >
+        <div
+          style={{
+            backgroundColor: "white",
+            borderRadius: "0.75rem",
+            padding: "2rem",
+            maxWidth: "500px",
+            width: "90%",
+            boxShadow: "0 20px 25px rgba(0, 0, 0, 0.15)",
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <h3 style={{ margin: "0 0 1rem", fontSize: "1.25rem" }}>URL do YouTube</h3>
+          <input
+            type="url"
+            value={youtubeUrl}
+            onChange={(e) => setYoutubeUrl(e.target.value)}
+            placeholder="https://www.youtube.com/watch?v=..."
+            style={{
+              width: "100%",
+              padding: "0.75rem",
+              border: "1px solid var(--border-medium)",
+              borderRadius: "0.5rem",
+              fontSize: "1rem",
+              marginBottom: "1.5rem",
+              boxSizing: "border-box",
+            }}
+          />
+          <div style={{ display: "flex", gap: "0.75rem", justifyContent: "flex-end" }}>
+            <button
+              type="button"
+              onClick={() => setYoutubeModal(false)}
+              className="admin-btn admin-btn-secondary"
+            >
+              Fechar
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setYoutubeModal(false);
+              }}
+              className="admin-btn admin-btn-primary"
+            >
+              Salvar
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+
+    {mp3Modal && (
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 1000,
+        }}
+        onClick={() => setMp3Modal(false)}
+      >
+        <div
+          style={{
+            backgroundColor: "white",
+            borderRadius: "0.75rem",
+            padding: "2rem",
+            maxWidth: "500px",
+            width: "90%",
+            boxShadow: "0 20px 25px rgba(0, 0, 0, 0.15)",
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <h3 style={{ margin: "0 0 1rem", fontSize: "1.25rem" }}>URL do MP3</h3>
+          <input
+            type="url"
+            value={audioUrl}
+            onChange={(e) => setAudioUrl(e.target.value)}
+            placeholder="https://... ou caminho do arquivo no Supabase"
+            style={{
+              width: "100%",
+              padding: "0.75rem",
+              border: "1px solid var(--border-medium)",
+              borderRadius: "0.5rem",
+              fontSize: "1rem",
+              marginBottom: "1.5rem",
+              boxSizing: "border-box",
+            }}
+          />
+          <div style={{ display: "flex", gap: "0.75rem", justifyContent: "flex-end" }}>
+            <button
+              type="button"
+              onClick={() => setMp3Modal(false)}
+              className="admin-btn admin-btn-secondary"
+            >
+              Fechar
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setMp3Modal(false);
+              }}
+              className="admin-btn admin-btn-primary"
+            >
+              Salvar
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+  </>
   );
 }

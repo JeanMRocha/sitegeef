@@ -1,13 +1,10 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { AdminModuleGate } from "@/components/admin/admin-module-gate";
-import { IconArrowLeft, IconPlus, IconEdit, IconExternalLink, IconPower, IconTrash } from "@/components/icons";
+import { IconArrowLeft, IconPlus } from "@/components/icons";
 import { EncerrarMusicasSessoesButton } from "@/components/admin/encerrar-musicas-sessoes-button";
-import {
-  encerrarTodasMusicaSessoesAction,
-  setMusicaSessaoAtivaAction,
-  deleteMusicaSessaoAction,
-} from "../actions";
+import { SessoesList } from "@/components/admin/musicas/sessoes-list";
+import { encerrarTodasMusicaSessoesAction } from "../actions";
 import { getMusicasResumo, listMusicaSessoes } from "@/lib/musicas";
 
 export const metadata = {
@@ -99,89 +96,7 @@ async function SessoesContent({ searchParams }: PageProps) {
               <p>Nenhuma sessão criada ainda.</p>
             </div>
           ) : (
-            <table className="admin-table">
-              <thead>
-                <tr>
-                  <th>Código</th>
-                  <th>Nome da tela</th>
-                  <th>Modo</th>
-                  <th>Música</th>
-                  <th>Status</th>
-                  <th style={{ textAlign: "right" }}>Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sessoes.map((sessao) => {
-                  const musica = musicasResumo.find((item) => item.id === sessao.musica_id);
-
-                  return (
-                    <tr key={sessao.id}>
-                      <td style={{ fontWeight: 600, fontFamily: "monospace" }}>{sessao.codigo_pareamento}</td>
-                      <td>{sessao.nome_tela || "—"}</td>
-                      <td>{sessao.modo === "exibicao" ? "Exibição" : "Catálogo"}</td>
-                      <td>{musica ? musica.titulo : "Nenhuma"}</td>
-                      <td>
-                        <span
-                          className="inline-status"
-                          style={{
-                            backgroundColor: sessao.ativo ? "rgba(34, 197, 94, 0.2)" : "rgba(107, 114, 128, 0.2)",
-                            color: sessao.ativo ? "#16a34a" : "#6b7280",
-                          }}
-                        >
-                          {sessao.ativo ? "Ativa" : "Inativa"}
-                        </span>
-                      </td>
-                      <td style={{ textAlign: "right" }}>
-                        <div style={{ display: "flex", gap: "0.5rem", justifyContent: "flex-end" }}>
-                          <Link
-                            href={`/admin/reuniao-publica/musicas/sessoes/novo?codigo=${sessao.codigo_pareamento}`}
-                            className="admin-btn admin-btn-small"
-                            title="Editar"
-                          >
-                            <IconEdit size={16} />
-                          </Link>
-                          <Link
-                            href={`/musicas/exibir/${sessao.codigo_pareamento}`}
-                            className="admin-btn admin-btn-small"
-                            target="_blank"
-                            rel="noreferrer"
-                            title="Abrir em nova aba"
-                          >
-                            <IconExternalLink size={16} />
-                          </Link>
-                          {sessao.ativo ? (
-                            <form action={setMusicaSessaoAtivaAction} style={{ display: "inline" }}>
-                              <input type="hidden" name="codigo_pareamento" value={sessao.codigo_pareamento} />
-                              <input type="hidden" name="ativo" value="false" />
-                              <button
-                                type="submit"
-                                className="admin-btn admin-btn-small"
-                                style={{ color: "var(--danger)", borderColor: "rgba(239, 68, 68, 0.25)" }}
-                                title="Encerrar sessão"
-                              >
-                                <IconPower size={16} />
-                              </button>
-                            </form>
-                          ) : (
-                            <form action={deleteMusicaSessaoAction} style={{ display: "inline" }}>
-                              <input type="hidden" name="codigo_pareamento" value={sessao.codigo_pareamento} />
-                              <button
-                                type="submit"
-                                className="admin-btn admin-btn-small"
-                                style={{ color: "var(--danger)", borderColor: "rgba(239, 68, 68, 0.25)" }}
-                                title="Excluir sessão"
-                              >
-                                <IconTrash size={16} />
-                              </button>
-                            </form>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+            <SessoesList initialSessoes={sessoes} musicas={musicasResumo} />
           )}
         </div>
       </section>

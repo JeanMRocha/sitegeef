@@ -22,6 +22,8 @@ export type Musica = {
   versao: string | null;
   status: "ativa" | "rascunho" | "inativa";
   observacoes: string | null;
+  youtube_url: string | null;
+  audio_url: string | null;
   criado_em: string;
   atualizado_em: string;
   partes: MusicaParte[];
@@ -50,6 +52,8 @@ export type MusicaResumo = {
   versao: string | null;
   status: Musica["status"];
   observacoes: string | null;
+  youtube_url: string | null;
+  audio_url: string | null;
   criado_em: string;
   atualizado_em: string;
 };
@@ -77,6 +81,56 @@ export function generatePairingCode() {
   const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   const bytes = crypto.getRandomValues(new Uint8Array(6));
   return Array.from(bytes, (byte) => alphabet[byte % alphabet.length]).join("");
+}
+
+export function parsePartesFromText(texto: string): MusicaParte[] {
+  if (!texto || typeof texto !== "string") {
+    return [];
+  }
+
+  const regex = /^===\s*([A-Z]+(?:\s+[A-Z]+)*)\s*===/gm;
+  const partes: MusicaParte[] = [];
+  let match;
+  let ultimoIndice = 0;
+
+  const matches: Array<{ tipo: string; indice: number; fim: number }> = [];
+  while ((match = regex.exec(texto)) !== null) {
+    const tipo = match[1].toLowerCase().replace(/\s+/g, "");
+    matches.push({
+      tipo,
+      indice: match.index,
+      fim: match.index + match[0].length,
+    });
+  }
+
+  for (let i = 0; i < matches.length; i++) {
+    const matchAtual = matches[i];
+    const proximoMatch = matches[i + 1];
+
+    const inicioConteudo = matchAtual.fim;
+    const fimConteudo = proximoMatch ? proximoMatch.indice : texto.length;
+    const conteudo = texto.substring(inicioConteudo, fimConteudo).trim();
+
+    if (!conteudo) {
+      continue;
+    }
+
+    const tipo: MusicaParteTipo =
+      matchAtual.tipo === "refrao" || matchAtual.tipo === "ponte" || matchAtual.tipo === "intro" || matchAtual.tipo === "cifra"
+        ? (matchAtual.tipo as MusicaParteTipo)
+        : "estrofe";
+
+    const tipoLabel = matchAtual.tipo.toUpperCase().replace(/([a-z])([A-Z])/g, "$1 $2");
+    partes.push({
+      ordem: partes.length + 1,
+      tipo,
+      titulo: tipoLabel,
+      conteudo,
+      destaque: false,
+    });
+  }
+
+  return partes;
 }
 
 export function normalizePartes(partes: unknown): MusicaParte[] {
@@ -193,7 +247,7 @@ async function fetchMusicasBase() {
   const [musicasResult, partesResult] = await Promise.all([
     supabase
       .from("musicas")
-      .select("id, slug, titulo, autor, tom, versao, status, observacoes, criado_em, atualizado_em")
+      .select("id, slug, titulo, autor, tom, versao, status, observacoes, youtube_url, audio_url, criado_em, atualizado_em")
       .order("titulo", { ascending: true }),
     supabase
       .from("musica_partes")
@@ -327,6 +381,8 @@ export type SaveMusicaInput = {
   versao?: string | null;
   status?: Musica["status"];
   observacoes?: string | null;
+  youtube_url?: string | null;
+  audio_url?: string | null;
   partes: MusicaParte[];
 };
 
@@ -346,6 +402,8 @@ export async function saveMusica(input: SaveMusicaInput) {
     versao: input.versao?.trim() || null,
     status: input.status ?? "ativa",
     observacoes: input.observacoes?.trim() || null,
+    youtube_url: input.youtube_url?.trim() || null,
+    audio_url: input.audio_url?.trim() || null,
   };
 
   if (existing.data) {
@@ -569,6 +627,89 @@ export async function saveMusicaAutor(input: SaveMusicaAutorInput) {
 export async function deleteMusicaAutor(id: string) {
   const supabase = createServiceRoleClient();
   const { error } = await supabase.from("musica_autores").delete().eq("id", id);
+  if (error) {
+    throw error;
+  }
+}
+
+export type MusicaVersao = {
+  id: string;
+  nome: string;
+  criado_em: string;
+  atualizado_em: string;
+};
+
+export async function listMusicaVersoes(search = "") {
+  const supabase = createServiceRoleClient();
+
+  let query = supabase
+    .from("musica_versoes")
+    .select("id, nome, criado_em, atualizado_em")
+    .order("nome", { ascending: true });
+
+  if (search.trim()) {
+    query = query.ilike("nome", `%${search.trim()}%`);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    return [];
+  }
+
+  return (data ?? []) as MusicaVersao[];
+}
+
+export async function getMusicaVersaoById(id: string) {
+  const supabase = createServiceRoleClient();
+
+  const { data, error } = await supabase
+    .from("musica_versoes")
+    .select("id, nome, criado_em, atualizado_em")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) {
+    return null;
+  }
+
+  return (data ?? null) as MusicaVersao | null;
+}
+
+export type SaveMusicaVersaoInput = {
+  id?: string;
+  nome: string;
+};
+
+export async function saveMusicaVersao(input: SaveMusicaVersaoInput) {
+  const supabase = createServiceRoleClient();
+  const versaoId = input.id ?? crypto.randomUUID();
+
+  const payload = {
+    id: versaoId,
+    nome: input.nome.trim(),
+  };
+
+  const existing = await supabase.from("musica_versoes").select("id").eq("id", versaoId).maybeSingle();
+
+  if (existing.data) {
+    const { error } = await supabase.from("musica_versoes").update(payload).eq("id", versaoId);
+    if (error) {
+      throw error;
+    }
+  } else {
+    const { error } = await supabase.from("musica_versoes").insert([payload]);
+    if (error) {
+      throw error;
+    }
+  }
+
+  return getMusicaVersaoById(versaoId);
+}
+
+export async function deleteMusicaVersao(id: string) {
+  const supabase = createServiceRoleClient();
+  const { error } = await supabase.from("musica_versoes").delete().eq("id", id);
   if (error) {
     throw error;
   }

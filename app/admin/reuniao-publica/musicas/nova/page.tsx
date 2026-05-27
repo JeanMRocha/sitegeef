@@ -2,14 +2,14 @@ import Link from "next/link";
 import { IconArrowLeft } from "@/components/icons";
 import { MusicaEditorForm } from "@/components/admin/musicas/musica-editor-form";
 import { saveMusicaAction } from "../actions";
-import { listMusicaAutores } from "@/lib/musicas";
+import { listMusicaAutores, listMusicaVersoes } from "@/lib/musicas";
 
 export const metadata = {
   title: "Nova música - Admin GEEF",
 };
 
 export default async function NovaMusicaPage() {
-  const autores = await listMusicaAutores();
+  const [autores, versoes] = await Promise.all([listMusicaAutores(), listMusicaVersoes()]);
 
   return (
     <div className="area-page">
@@ -25,12 +25,18 @@ export default async function NovaMusicaPage() {
 
       <section className="area-section">
         <div className="admin-card table-surface">
-          <div className="area-section-title">
-            <h2>Detalhes da música</h2>
-            <p>Preencha os campos básicos e organize as partes da letra (estrofes, refrões, pontes).</p>
-          </div>
+          <form action={saveMusicaAction} style={{ display: "contents" }}>
+            <div className="area-section-title" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingBottom: 0 }}>
+              <h2>Detalhes da música</h2>
+              <button type="submit" className="admin-btn admin-btn-primary">
+                Criar música
+              </button>
+            </div>
 
-          <MusicaEditorForm action={saveMusicaAction} autores={autores} submitLabel="Criar música" />
+            <div style={{ padding: "1.5rem 0 0" }}>
+              <MusicaEditorForm action={saveMusicaAction} autores={autores} versoes={versoes} />
+            </div>
+          </form>
         </div>
       </section>
     </div>

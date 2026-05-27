@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { IconArrowLeft } from "@/components/icons";
 import { DeleteMusicaButton } from "@/components/admin/musicas/delete-musica-button";
 import { MusicaEditorForm } from "@/components/admin/musicas/musica-editor-form";
-import { getMusicaById, listMusicaAutores } from "@/lib/musicas";
+import { getMusicaById, listMusicaAutores, listMusicaVersoes } from "@/lib/musicas";
 import { saveMusicaAction } from "../actions";
 
 type PageProps = {
@@ -19,7 +19,7 @@ export default async function EditarMusicaPage({ params, searchParams }: PagePro
   const { id } = await params;
   const params_data = (await searchParams) ?? {};
   const isSaved = params_data.salvo === "1";
-  const [musica, autores] = await Promise.all([getMusicaById(id), listMusicaAutores()]);
+  const [musica, autores, versoes] = await Promise.all([getMusicaById(id), listMusicaAutores(), listMusicaVersoes()]);
 
   if (!musica) {
     notFound();
@@ -45,12 +45,21 @@ export default async function EditarMusicaPage({ params, searchParams }: PagePro
 
       <section className="area-section">
         <div className="admin-card table-surface">
-          <div className="area-section-title">
-            <h2>{musica.titulo}</h2>
-            <p>por {musica.autor}</p>
-          </div>
+          <form action={saveMusicaAction} style={{ display: "contents" }}>
+            <div className="area-section-title" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingBottom: 0 }}>
+              <div>
+                <h2>{musica.titulo}</h2>
+                <p style={{ margin: "0.5rem 0 0", fontSize: "0.9rem", color: "var(--text-muted)" }}>por {musica.autor}</p>
+              </div>
+              <button type="submit" className="admin-btn admin-btn-primary">
+                Salvar alterações
+              </button>
+            </div>
 
-          <MusicaEditorForm musica={musica} autores={autores} action={saveMusicaAction} submitLabel="Salvar alterações" />
+            <div style={{ padding: "1.5rem 0 0" }}>
+              <MusicaEditorForm musica={musica} autores={autores} versoes={versoes} action={saveMusicaAction} />
+            </div>
+          </form>
 
           <DeleteMusicaButton musicaId={musica.id} musicaTitulo={musica.titulo} />
         </div>
