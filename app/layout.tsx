@@ -87,8 +87,8 @@ export default async function RootLayout({
               </SiteShell>
             </UserPersistenceWrapper>
           </NotificationProvider>
-          <ToastContainer />
         </ThemeProvider>
+        <ToastContainer />
       </body>
     </html>
   );

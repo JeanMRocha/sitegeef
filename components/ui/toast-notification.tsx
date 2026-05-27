@@ -48,11 +48,12 @@ export function ToastContainer() {
         position: "fixed",
         top: "1rem",
         right: "1rem",
-        zIndex: 9999,
+        zIndex: 999999,
         display: "flex",
         flexDirection: "column",
         gap: "0.75rem",
         maxWidth: "400px",
+        pointerEvents: "auto",
       }}
     >
       {toasts.map((toast) => (
@@ -61,19 +62,23 @@ export function ToastContainer() {
           style={{
             padding: "1rem",
             borderRadius: "0.5rem",
-            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            boxShadow: "0 10px 25px rgba(0, 0, 0, 0.2)",
             backgroundColor:
               toast.variant === "success"
-                ? "rgba(34, 197, 94, 0.95)"
+                ? "rgba(34, 197, 94, 0.98)"
                 : toast.variant === "error"
-                  ? "rgba(239, 68, 68, 0.95)"
+                  ? "rgba(239, 68, 68, 0.98)"
                   : toast.variant === "warning"
-                    ? "rgba(251, 146, 60, 0.95)"
-                    : "rgba(59, 130, 246, 0.95)",
+                    ? "rgba(251, 146, 60, 0.98)"
+                    : "rgba(59, 130, 246, 0.98)",
             color: "white",
             fontSize: "0.95rem",
             lineHeight: 1.4,
             animation: "slideIn 0.3s ease",
+            position: "relative",
+            zIndex: 1,
+            pointerEvents: "auto",
+            minWidth: "250px",
           }}
         >
           {toast.title && (
