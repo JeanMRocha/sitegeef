@@ -22,3 +22,5 @@ pnpm-debug.log*
 
 Thumbs.db
 .DS_Store
+apply-migration-direct.js
+supabase/.temp/
