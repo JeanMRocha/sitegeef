@@ -77,14 +77,16 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nome: novoAutor.trim() }),
       });
+      const data = await response.json();
       if (response.ok) {
-        const novoAutorData = await response.json();
-        setAutores([...autores, novoAutorData]);
+        setAutores([...autores, data]);
         setNovoAutor("");
         setAutorModal(false);
+      } else {
+        alert(`Erro ao criar autor: ${data.error || "Erro desconhecido"}`);
       }
     } catch (error) {
-      alert("Erro ao criar autor");
+      alert(`Erro ao criar autor: ${error instanceof Error ? error.message : "Erro desconhecido"}`);
     } finally {
       setLoadingAutor(false);
     }
@@ -99,14 +101,16 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nome: novaVersao.trim() }),
       });
+      const data = await response.json();
       if (response.ok) {
-        const novaVersaoData = await response.json();
-        setVersoes([...versoes, novaVersaoData]);
+        setVersoes([...versoes, data]);
         setNovaVersao("");
         setVersaoModal(false);
+      } else {
+        alert(`Erro ao criar versão: ${data.error || "Erro desconhecido"}`);
       }
     } catch (error) {
-      alert("Erro ao criar versão");
+      alert(`Erro ao criar versão: ${error instanceof Error ? error.message : "Erro desconhecido"}`);
     } finally {
       setLoadingVersao(false);
     }
