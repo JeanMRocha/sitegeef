@@ -1,0 +1,74 @@
+[
+  {
+    "id": "1af7feb4-5242-41ac-b2ad-c440a1824d98",
+    "label": "Instagram",
+    "ordem": 40,
+    "ativo": true,
+    "criado_em": "2026-05-18 01:32:14.533667+00",
+    "atualizado_em": "2026-05-18 01:32:14.533667+00",
+    "instituicao_id": "43ec9f1b-e7fe-4b84-8d4a-fc84502ca527"
+  },
+  {
+    "id": "49a3728b-137d-4ea8-b428-70af4a9c9f62",
+    "label": "YouTube",
+    "ordem": 60,
+    "ativo": true,
+    "criado_em": "2026-05-18 01:32:14.533667+00",
+    "atualizado_em": "2026-05-18 01:32:14.533667+00",
+    "instituicao_id": "43ec9f1b-e7fe-4b84-8d4a-fc84502ca527"
+  },
+  {
+    "id": "56076a5a-a004-460f-98d6-3fc36e5edec8",
+    "label": "Site",
+    "ordem": 70,
+    "ativo": true,
+    "criado_em": "2026-05-18 01:32:14.533667+00",
+    "atualizado_em": "2026-05-18 01:32:14.533667+00",
+    "instituicao_id": "43ec9f1b-e7fe-4b84-8d4a-fc84502ca527"
+  },
+  {
+    "id": "6f793be7-fe7f-461e-b5ad-c4d2b51ba7fa",
+    "label": "Telefone",
+    "ordem": 20,
+    "ativo": true,
+    "criado_em": "2026-05-18 01:32:14.533667+00",
+    "atualizado_em": "2026-05-18 01:32:14.533667+00",
+    "instituicao_id": "43ec9f1b-e7fe-4b84-8d4a-fc84502ca527"
+  },
+  {
+    "id": "b81814e1-4993-4b0e-8192-464949918d2a",
+    "label": "Outro",
+    "ordem": 80,
+    "ativo": true,
+    "criado_em": "2026-05-18 01:32:14.533667+00",
+    "atualizado_em": "2026-05-18 01:32:14.533667+00",
+    "instituicao_id": "43ec9f1b-e7fe-4b84-8d4a-fc84502ca527"
+  },
+  {
+    "id": "bc834c9c-f225-4f5b-8a27-b361d4e4d499",
+    "label": "WhatsApp",
+    "ordem": 10,
+    "ativo": true,
+    "criado_em": "2026-05-18 01:32:14.533667+00",
+    "atualizado_em": "2026-05-18 01:32:14.533667+00",
+    "instituicao_id": "43ec9f1b-e7fe-4b84-8d4a-fc84502ca527"
+  },
+  {
+    "id": "c0361428-e37f-404c-af53-9332dc61254e",
+    "label": "Email",
+    "ordem": 30,
+    "ativo": true,
+    "criado_em": "2026-05-18 01:32:14.533667+00",
+    "atualizado_em": "2026-05-18 01:32:14.533667+00",
+    "instituicao_id": "43ec9f1b-e7fe-4b84-8d4a-fc84502ca527"
+  },
+  {
+    "id": "efbc6f62-65c1-4cff-a3f2-9fd63b60d4a4",
+    "label": "Facebook",
+    "ordem": 50,
+    "ativo": true,
+    "criado_em": "2026-05-18 01:32:14.533667+00",
+    "atualizado_em": "2026-05-18 01:32:14.533667+00",
+    "instituicao_id": "43ec9f1b-e7fe-4b84-8d4a-fc84502ca527"
+  }
+]

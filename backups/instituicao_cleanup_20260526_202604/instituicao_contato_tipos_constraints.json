@@ -1,0 +1,10 @@
+[
+  {
+    "conname": "instituicao_contato_tipos_label_key",
+    "definition": "UNIQUE (label)"
+  },
+  {
+    "conname": "instituicao_contato_tipos_pkey",
+    "definition": "PRIMARY KEY (id)"
+  }
+]

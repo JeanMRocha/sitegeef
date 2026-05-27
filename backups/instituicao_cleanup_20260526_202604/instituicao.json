@@ -1,0 +1,20 @@
+{
+  "id": "43ec9f1b-e7fe-4b84-8d4a-fc84502ca527",
+  "nome_oficial": "Grupo Espírita Elias Francis",
+  "nome_curto": "GEEF",
+  "cnpj": "09056884000170",
+  "natureza_juridica": "associacao",
+  "data_fundacao": "1927-12-17",
+  "logo_url": "https://nycgpokqlmrfzegjlrwa.supabase.co/storage/v1/object/public/instituicao-assets/logo/logo.png",
+  "descricao": "O GEEF — Grupo Espírita Elias Francis — é uma casa espírita em Santa Maria Madalena/RJ dedicada ao estudo, prática e divulgação da Doutrina Espírita, promovendo acolhimento, evangelização, palestras, atendimento espiritual, ação social e trabalho voluntário.",
+  "historia": "O GEEF — Grupo Espírita Elias Francis — é uma casa espírita localizada em Santa Maria Madalena/RJ, dedicada ao estudo, à prática e à divulgação da Doutrina Espírita, com base nas obras de Allan Kardec e nos ensinamentos de Jesus.\r\n\r\nNosso trabalho tem como finalidade acolher, esclarecer, consolar e servir, oferecendo atividades voltadas ao desenvolvimento espiritual, moral e fraterno da comunidade. Por meio de palestras públicas, estudos doutrinários, evangelização infantil e juvenil, atendimento espiritual, ações sociais, biblioteca, livraria e atividades voluntárias, o GEEF busca contribuir para a vivência do Evangelho no dia a dia.\r\n\r\nEste site é o canal oficial de comunicação da instituição. Aqui estão reunidas informações sobre nossa história, agenda de atividades, eventos, avisos, conteúdos doutrinários, departamentos, documentos institucionais, contatos e formas de participação.\r\n\r\nO GEEF também valoriza a organização, a transparência e o trabalho coletivo, fortalecendo seus vínculos com o movimento espírita e com a comunidade local. Nosso compromisso é servir com simplicidade, fraternidade, responsabilidade e fidelidade à Doutrina Espírita.",
+  "missao": "Promover o estudo, a prática e a divulgação da Doutrina Espírita, com base em Jesus e Allan Kardec, oferecendo acolhimento, esclarecimento, evangelização, atendimento espiritual, ação social e oportunidades de trabalho no bem à comunidade.",
+  "visao": "Ser uma casa espírita organizada, fraterna e atuante, reconhecida como referência local no acolhimento, no estudo doutrinário, na evangelização, na assistência espiritual e social, fortalecendo a união com o movimento espírita e a comunidade.",
+  "valores": "Fidelidade à Doutrina Espírita; vivência do Evangelho de Jesus; fraternidade; caridade; humildade; simplicidade; acolhimento respeitoso; estudo contínuo; trabalho voluntário responsável; transparência administrativa; união entre trabalhadores e frequentadores; respeito à família; valorização da infância e juventude; compromisso com a verdade, a paz, a disciplina, a organização e o serviço ao próximo.",
+  "estatuto_url": null,
+  "status": "ativa",
+  "criado_em": "2026-05-18 00:27:26.688891+00",
+  "atualizado_em": "2026-05-23 01:53:19.557+00",
+  "singleton_guard": true,
+  "porte": null
+}

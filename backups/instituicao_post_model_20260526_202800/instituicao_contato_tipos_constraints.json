@@ -1,0 +1,10 @@
+[
+  {
+    "conname": "instituicao_contato_tipos_instituicao_id_fkey",
+    "definition": "FOREIGN KEY (instituicao_id) REFERENCES instituicao(id) ON DELETE CASCADE"
+  },
+  {
+    "conname": "instituicao_contato_tipos_pkey",
+    "definition": "PRIMARY KEY (id)"
+  }
+]
