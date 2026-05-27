@@ -159,9 +159,16 @@ export function MusicaEditorForm({ musica, autores = [], action, submitLabel = "
             const isExpanded = expandedPartes.has(index);
             return (
               <section key={`${index}-${parte.ordem}`} className="admin-card" style={{ padding: 0 }}>
-                <button
-                  type="button"
+                <div
+                  role="button"
+                  tabIndex={0}
                   onClick={() => toggleParteExpanded(index)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      toggleParteExpanded(index);
+                    }
+                  }}
                   style={{
                     width: "100%",
                     padding: "1.3rem",
@@ -220,7 +227,7 @@ export function MusicaEditorForm({ musica, autores = [], action, submitLabel = "
                   >
                     <IconTrash size={14} />
                   </button>
-                </button>
+                </div>
 
                 {isExpanded && (
                   <div style={{ padding: "1.3rem", paddingTop: 0, borderTop: "1px solid var(--border-medium)" }}>

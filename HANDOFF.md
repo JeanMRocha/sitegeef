@@ -125,7 +125,8 @@ Quando o Autoreflex local voltar a responder, rodar primeiro:
 - Foi criado o modulo de `Reuniao publica` para musicas, com menu proprio no topo do admin e submenu lateral dedicado.
 - O caminho oficial de administracao de musicas agora e `/admin/reuniao-publica/musicas`; o caminho legado `/admin/instituicao/musicas` apenas redireciona.
 - O catalogo publico de musicas ficou em `/musicas` e a leitura individual em `/musicas/[slug]`.
-- A tela de exibicao pareada ficou em `/musicas/exibir/[codigo]`, e `/musicas/exibir` cria uma sessao nova e redireciona para o codigo gerado.
+- A tela de exibicao pareada ficou em `/musicas/exibir/[codigo]`, e `/musicas/exibir` virou uma pagina neutra de orientacao sem criar sessao automaticamente.
+- A sessao de exibicao agora expira por inatividade: se ficar mais de 1 hora sem leitura, a proxima consulta a marca como inativa.
 - A sincronizacao ao vivo usa `GET /api/musicas/sessoes/[codigo]` para devolver sessao + musica e atualizar `ultimo_acesso_em`.
 - A migration de normalizacao de autores `supabase/migrations/20260527_musica_autores_normalizacao.sql` foi aplicada remotamente em `2026-05-26`, criando `musica_autores` e a coluna `musicas.autor_id` com backfill.
 - A migration `supabase/migrations/20260526011410_musicas_institucionais.sql` foi aplicada remotamente com sucesso, criando `musicas`, `musica_partes` e `musica_sessoes` com RLS e policies de `service_role`.

@@ -16,6 +16,8 @@ Resumo operacional para continuidade sem reexplorar o codigo.
 - Criado o fluxo de exibicao pareada:
   - `/musicas/exibir`
   - `/musicas/exibir/[codigo]`
+- A rota `/musicas/exibir` agora e uma pagina neutra de orientacao e nao cria sessao automaticamente.
+- O encerramento por inatividade agora considera 1 hora sem leitura; a sessao e marcada como inativa na proxima consulta.
 - Aplicada a normalizacao de autores com:
   - `musica_autores`
   - `musicas.autor_id`
@@ -30,7 +32,7 @@ Resumo operacional para continuidade sem reexplorar o codigo.
 
 - A area interna cadastra a musica.
 - A area interna cria ou atualiza uma sessao com codigo de pareamento.
-- A tela publica abre a sessao pelo codigo.
+- A tela publica abre apenas uma sessao ja criada pelo codigo.
 - A tela publica busca atualizacoes do codigo via `/api/musicas/sessoes/[codigo]`.
 - O editor permite letra, cifra, partes por ordem e destaque visual.
 - A busca publica encontra por autor, titulo, tom, versao, observacoes e trechos da letra.
@@ -109,4 +111,5 @@ Resumo operacional para continuidade sem reexplorar o codigo.
 1. Criar uma musica real de exemplo.
 2. Testar pareamento em `/admin/reuniao-publica/musicas`.
 3. Abrir `/musicas/exibir/[codigo]` e confirmar troca em tempo real.
-4. Decidir se o bloco `catalogo` continua necessario no fluxo operacional.
+4. Confirmar que `/musicas/exibir` nao cria sessao por conta propria.
+5. Decidir se o bloco `catalogo` continua necessario no fluxo operacional.

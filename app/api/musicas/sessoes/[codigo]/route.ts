@@ -13,10 +13,12 @@ export async function GET(_request: Request, { params }: RouteContext) {
     return NextResponse.json({ error: "Sessão não encontrada." }, { status: 404 });
   }
 
-  try {
-    await touchMusicaSessao(codigo);
-  } catch {
-    // leitura continua mesmo se o touch falhar
+  if (data.sessao.ativo) {
+    try {
+      await touchMusicaSessao(codigo);
+    } catch {
+      // leitura continua mesmo se o touch falhar
+    }
   }
 
   return NextResponse.json(data);

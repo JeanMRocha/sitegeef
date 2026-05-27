@@ -39,6 +39,8 @@ export type MusicaSessao = {
   atualizado_em: string;
 };
 
+export const MUSICA_SESSAO_INATIVIDADE_MS = 60 * 60 * 1000;
+
 export type MusicaResumo = {
   id: string;
   slug: string;
@@ -149,6 +151,33 @@ function buildSearchBlob(musica: Pick<Musica, "titulo" | "autor" | "tom" | "vers
   );
 }
 
+function getMusicaSessaoMomentoReferencia(sessao: Pick<MusicaSessao, "criado_em" | "ultimo_acesso_em">) {
+  const momento = sessao.ultimo_acesso_em ?? sessao.criado_em;
+  const parsed = Date.parse(momento);
+  return Number.isFinite(parsed) ? parsed : Date.parse(sessao.criado_em);
+}
+
+export function musicaSessaoExpirouPorInatividade(
+  sessao: Pick<MusicaSessao, "ativo" | "criado_em" | "ultimo_acesso_em">,
+  referencia = new Date(),
+) {
+  if (!sessao.ativo) {
+    return false;
+  }
+
+  const momentoReferencia = getMusicaSessaoMomentoReferencia(sessao);
+  return referencia.getTime() - momentoReferencia >= MUSICA_SESSAO_INATIVIDADE_MS;
+}
+
+async function encerrarMusicaSessaoSeExpirada(sessao: MusicaSessao) {
+  if (!musicaSessaoExpirouPorInatividade(sessao)) {
+    return sessao;
+  }
+
+  const encerrada = await patchMusicaSessao(sessao.codigo_pareamento, { ativo: false });
+  return encerrada ?? { ...sessao, ativo: false };
+}
+
 export function musicaMatchesSearch(musica: Pick<Musica, "titulo" | "autor" | "tom" | "versao" | "observacoes" | "partes">, search: string) {
   const normalizedSearch = normalizeText(search);
   if (!normalizedSearch) {
@@ -239,7 +268,7 @@ export async function getMusicaSessaoByCodigo(codigo: string) {
     return null;
   }
 
-  return data as MusicaSessao;
+  return encerrarMusicaSessaoSeExpirada(data as MusicaSessao);
 }
 
 export async function getMusicaSessaoComMusica(codigo: string) {
@@ -264,7 +293,30 @@ export async function listMusicaSessoes() {
     return [];
   }
 
-  return (data ?? []) as MusicaSessao[];
+  const sessoes = (data ?? []) as MusicaSessao[];
+  const expiradas = sessoes.filter((sessao) => musicaSessaoExpirouPorInatividade(sessao));
+
+  if (expiradas.length === 0) {
+    return sessoes;
+  }
+
+  await Promise.all(
+    expiradas.map((sessao) =>
+      patchMusicaSessao(sessao.codigo_pareamento, {
+        ativo: false,
+      }),
+    ),
+  );
+
+  const expiradasPorCodigo = new Set(expiradas.map((sessao) => sessao.codigo_pareamento));
+  return sessoes.map((sessao) =>
+    expiradasPorCodigo.has(sessao.codigo_pareamento)
+      ? {
+          ...sessao,
+          ativo: false,
+        }
+      : sessao,
+  );
 }
 
 export type SaveMusicaInput = {

@@ -22,6 +22,7 @@ export function MusicaDisplayLive({ codigo, logoSrc, initialSessao, initialMusic
 
   useEffect(() => {
     let cancelled = false;
+    let intervalId: number | undefined;
 
     async function refresh() {
       setLoading(true);
@@ -37,6 +38,9 @@ export function MusicaDisplayLive({ codigo, logoSrc, initialSessao, initialMusic
         const nextData = (await response.json()) as SessaoResponse;
         if (!cancelled) {
           setData(nextData);
+          if (!nextData.sessao.ativo && intervalId !== undefined) {
+            window.clearInterval(intervalId);
+          }
         }
       } finally {
         if (!cancelled) {
@@ -46,11 +50,13 @@ export function MusicaDisplayLive({ codigo, logoSrc, initialSessao, initialMusic
     }
 
     refresh();
-    const interval = window.setInterval(refresh, 5000);
+    intervalId = window.setInterval(refresh, 5000);
 
     return () => {
       cancelled = true;
-      window.clearInterval(interval);
+      if (intervalId !== undefined) {
+        window.clearInterval(intervalId);
+      }
     };
   }, [codigo]);
 

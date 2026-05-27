@@ -161,7 +161,7 @@ export function AdminDashboardWorkspace({ summary }: AdminDashboardWorkspaceProp
 
           <div className="admin-actions">
             <Link href="/admin/reuniao-publica/musicas" className="admin-btn admin-btn-primary">🎵 Abrir músicas</Link>
-            <Link href="/musicas/exibir" className="admin-btn admin-btn-secondary" target="_blank" rel="noreferrer">🖥️ Exibição pública</Link>
+            <Link href="/admin/reuniao-publica/musicas/sessoes" className="admin-btn admin-btn-secondary" target="_blank" rel="noreferrer">🖥️ Exibição pública</Link>
           </div>
         </section>
 
@@ -171,7 +171,7 @@ export function AdminDashboardWorkspace({ summary }: AdminDashboardWorkspaceProp
             description="Use este espaço para acessar o catálogo, parear a tela e alterar a música exibida."
             actions={[
               { href: "/admin/reuniao-publica/musicas", label: "Músicas" },
-              { href: "/musicas/exibir", label: "Exibição pública" },
+              { href: "/admin/reuniao-publica/musicas/sessoes", label: "Exibição pública" },
             ]}
           />
 

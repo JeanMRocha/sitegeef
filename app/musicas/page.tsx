@@ -51,7 +51,7 @@ export default async function MusicasPage({ searchParams }: PageProps) {
             </p>
             <div className="hero-actions" style={{ marginTop: "1rem" }}>
               <Link href="/musicas/exibir" className="button button-secondary">
-                Abrir exibição
+                Painel de exibição
               </Link>
             </div>
           </aside>
