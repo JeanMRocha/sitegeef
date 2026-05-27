@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/lib/theme/theme-provider";
 import { createClient } from "@/lib/supabase/server";
 import { UserPersistenceWrapper } from "@/components/user-persistence-wrapper";
 import { NotificationProvider } from "@/components/providers/NotificationProvider";
+import { ToastContainer } from "@/components/ui/toast-notification";
 import { getHtmlLang, getRequestLocale } from "@/lib/multilingual";
 import { withTimeout } from "@/lib/admin/safe-supabase";
 import "@/styles/theme.css";
@@ -86,6 +87,7 @@ export default async function RootLayout({
               </SiteShell>
             </UserPersistenceWrapper>
           </NotificationProvider>
+          <ToastContainer />
         </ThemeProvider>
       </body>
     </html>

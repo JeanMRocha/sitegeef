@@ -5,6 +5,8 @@ import { IconPower, IconTrash, IconExternalLink, IconEdit } from "@/components/i
 import Link from "next/link";
 import type { MusicaSessao } from "@/lib/musicas";
 import { setMusicaSessaoAtivaAction, deleteMusicaSessaoAction } from "@/app/admin/reuniao-publica/musicas/actions";
+import { ConfirmModal } from "@/components/ui/confirm-modal";
+import { showToast } from "@/components/ui/toast-notification";
 
 type SessaoActionsButtonProps = {
   sessao: MusicaSessao;
@@ -15,6 +17,7 @@ type SessaoActionsButtonProps = {
 export function SessaoActionsButton({ sessao: initialSessao, onUpdate, onDelete }: SessaoActionsButtonProps) {
   const [sessao, setSessao] = useState(initialSessao);
   const [loading, setLoading] = useState(false);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
 
   const handleToggleStatus = async () => {
     setLoading(true);
@@ -22,23 +25,35 @@ export function SessaoActionsButton({ sessao: initialSessao, onUpdate, onDelete 
       const result = await setMusicaSessaoAtivaAction(sessao.codigo_pareamento, !sessao.ativo);
       setSessao(result);
       onUpdate?.(result);
+      showToast({
+        variant: "success",
+        message: result.ativo ? "Sessão reativada" : "Sessão encerrada",
+      });
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Erro ao atualizar sessão");
+      showToast({
+        variant: "error",
+        message: err instanceof Error ? err.message : "Erro ao atualizar sessão",
+      });
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async () => {
-    if (!confirm(`Tem certeza que deseja excluir a sessão ${sessao.codigo_pareamento}?`)) {
-      return;
-    }
     setLoading(true);
     try {
       await deleteMusicaSessaoAction(sessao.codigo_pareamento);
       onDelete?.(sessao.codigo_pareamento);
+      setDeleteConfirmOpen(false);
+      showToast({
+        variant: "success",
+        message: "Sessão excluída com sucesso",
+      });
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Erro ao excluir sessão");
+      showToast({
+        variant: "error",
+        message: err instanceof Error ? err.message : "Erro ao excluir sessão",
+      });
       setLoading(false);
     }
   };
@@ -71,7 +86,7 @@ export function SessaoActionsButton({ sessao: initialSessao, onUpdate, onDelete 
         <IconPower size={16} />
       </button>
       <button
-        onClick={handleDelete}
+        onClick={() => setDeleteConfirmOpen(true)}
         disabled={loading}
         className="admin-btn admin-btn-small"
         style={{ color: "var(--danger)", borderColor: "rgba(239, 68, 68, 0.25)" }}
@@ -79,6 +94,17 @@ export function SessaoActionsButton({ sessao: initialSessao, onUpdate, onDelete 
       >
         <IconTrash size={16} />
       </button>
+
+      <ConfirmModal
+        title="Excluir sessão"
+        message={`Tem certeza que deseja excluir a sessão ${sessao.codigo_pareamento}?`}
+        confirmLabel="Excluir"
+        cancelLabel="Cancelar"
+        variant="danger"
+        isOpen={deleteConfirmOpen}
+        onConfirm={handleDelete}
+        onCancel={() => setDeleteConfirmOpen(false)}
+      />
     </div>
   );
 }
