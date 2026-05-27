@@ -34,7 +34,7 @@ export default async function NovaMusicaPage() {
             </div>
 
             <div style={{ padding: "1.5rem 0 0" }}>
-              <MusicaEditorForm action={saveMusicaAction} autores={autores} versoes={versoes} />
+              <MusicaEditorForm autores={autores} versoes={versoes} />
             </div>
           </form>
         </div>

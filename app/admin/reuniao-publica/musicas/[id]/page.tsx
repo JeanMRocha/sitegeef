@@ -57,7 +57,7 @@ export default async function EditarMusicaPage({ params, searchParams }: PagePro
             </div>
 
             <div style={{ padding: "1.5rem 0 0" }}>
-              <MusicaEditorForm musica={musica} autores={autores} versoes={versoes} action={saveMusicaAction} />
+              <MusicaEditorForm musica={musica} autores={autores} versoes={versoes} />
             </div>
           </form>
 

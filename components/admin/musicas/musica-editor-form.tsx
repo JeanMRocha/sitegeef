@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { parsePartesFromText } from "@/lib/musicas";
 import type { Musica, MusicaAutor, MusicaVersao } from "@/lib/musicas";
 
@@ -8,7 +8,6 @@ type MusicaEditorFormProps = {
   musica?: Musica | null;
   autores?: MusicaAutor[];
   versoes?: MusicaVersao[];
-  action: (formData: FormData) => void;
   submitLabel?: string;
 };
 
@@ -25,8 +24,9 @@ const STANDARD_TONES = [
   "Cm", "C#m", "Dm", "D#m", "Em", "Fm", "F#m", "Gm", "G#m", "Am", "A#m", "Bm",
 ];
 
-export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes: initialVersoes = [], action, submitLabel = "Salvar música" }: MusicaEditorFormProps) {
+export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes: initialVersoes = [], submitLabel = "Salvar música" }: MusicaEditorFormProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const partesInputRef = useRef<HTMLInputElement>(null);
   const [letras, setLetras] = useState(musica?.partes.map((p) => `=== ${p.tipo.toUpperCase()} ===\n${p.conteudo}`).join("\n\n") || "");
   const [youtubeModal, setYoutubeModal] = useState(false);
   const [mp3Modal, setMp3Modal] = useState(false);
@@ -40,6 +40,13 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
   const [versoes, setVersoes] = useState(initialVersoes);
   const [loadingAutor, setLoadingAutor] = useState(false);
   const [loadingVersao, setLoadingVersao] = useState(false);
+
+  useEffect(() => {
+    const partes = parsePartesFromText(letras);
+    if (partesInputRef.current) {
+      partesInputRef.current.value = JSON.stringify(partes);
+    }
+  }, [letras]);
 
   const insertMarker = (tipo: string) => {
     const textarea = textareaRef.current;
@@ -105,16 +112,10 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
     }
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    const formData = new FormData(e.currentTarget);
-    const partes = parsePartesFromText(letras);
-    formData.set("partes_json", JSON.stringify(partes));
-    action(formData);
-  };
 
   return (
     <>
-    <form onSubmit={handleSubmit} className="musica-editor-form">
+    <div className="musica-editor-form">
       <input type="hidden" name="id" defaultValue={musica?.id ?? ""} />
 
       <div className="module-grid">
@@ -260,7 +261,8 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
       </div>
 
       <input type="hidden" name="_submitLabel" value={submitLabel} />
-    </form>
+      <input type="hidden" name="partes_json" ref={partesInputRef} defaultValue="" />
+    </div>
 
     {youtubeModal && (
       <div
