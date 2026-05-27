@@ -25,13 +25,21 @@ const STANDARD_TONES = [
   "Cm", "C#m", "Dm", "D#m", "Em", "Fm", "F#m", "Gm", "G#m", "Am", "A#m", "Bm",
 ];
 
-export function MusicaEditorForm({ musica, autores = [], versoes = [], action, submitLabel = "Salvar música" }: MusicaEditorFormProps) {
+export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes: initialVersoes = [], action, submitLabel = "Salvar música" }: MusicaEditorFormProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [letras, setLetras] = useState(musica?.partes.map((p) => `=== ${p.tipo.toUpperCase()} ===\n${p.conteudo}`).join("\n\n") || "");
   const [youtubeModal, setYoutubeModal] = useState(false);
   const [mp3Modal, setMp3Modal] = useState(false);
+  const [autorModal, setAutorModal] = useState(false);
+  const [versaoModal, setVersaoModal] = useState(false);
   const [youtubeUrl, setYoutubeUrl] = useState(musica?.youtube_url ?? "");
   const [audioUrl, setAudioUrl] = useState(musica?.audio_url ?? "");
+  const [novoAutor, setNovoAutor] = useState("");
+  const [novaVersao, setNovaVersao] = useState("");
+  const [autores, setAutores] = useState(initialAutores);
+  const [versoes, setVersoes] = useState(initialVersoes);
+  const [loadingAutor, setLoadingAutor] = useState(false);
+  const [loadingVersao, setLoadingVersao] = useState(false);
 
   const insertMarker = (tipo: string) => {
     const textarea = textareaRef.current;
@@ -51,6 +59,50 @@ export function MusicaEditorForm({ musica, autores = [], versoes = [], action, s
       const cursorPos = start + marker.length + 1;
       textarea.setSelectionRange(cursorPos, cursorPos);
     }, 0);
+  };
+
+  const handleSaveAutor = async () => {
+    if (!novoAutor.trim()) return;
+    setLoadingAutor(true);
+    try {
+      const response = await fetch("/api/musicas/autores", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nome: novoAutor.trim() }),
+      });
+      if (response.ok) {
+        const novoAutorData = await response.json();
+        setAutores([...autores, novoAutorData]);
+        setNovoAutor("");
+        setAutorModal(false);
+      }
+    } catch (error) {
+      alert("Erro ao criar autor");
+    } finally {
+      setLoadingAutor(false);
+    }
+  };
+
+  const handleSaveVersao = async () => {
+    if (!novaVersao.trim()) return;
+    setLoadingVersao(true);
+    try {
+      const response = await fetch("/api/musicas/versoes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nome: novaVersao.trim() }),
+      });
+      if (response.ok) {
+        const novaVersaoData = await response.json();
+        setVersoes([...versoes, novaVersaoData]);
+        setNovaVersao("");
+        setVersaoModal(false);
+      }
+    } catch (error) {
+      alert("Erro ao criar versão");
+    } finally {
+      setLoadingVersao(false);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -84,16 +136,15 @@ export function MusicaEditorForm({ musica, autores = [], versoes = [], action, s
                     </option>
                   ))}
                 </select>
-                <a
-                  href="/admin/reuniao-publica/musicas/autores/novo"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  type="button"
+                  onClick={() => setAutorModal(true)}
                   className="admin-btn admin-btn-small"
                   style={{ padding: "0.5rem 0.75rem" }}
                   title="Criar novo autor"
                 >
                   +
-                </a>
+                </button>
               </div>
             </label>
             <button
@@ -140,16 +191,15 @@ export function MusicaEditorForm({ musica, autores = [], versoes = [], action, s
                 </option>
               ))}
             </select>
-            <a
-              href="/admin/reuniao-publica/musicas/versoes/novo"
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              type="button"
+              onClick={() => setVersaoModal(true)}
               className="admin-btn admin-btn-small"
               style={{ padding: "0.5rem 0.75rem" }}
               title="Criar nova versão"
             >
               +
-            </a>
+            </button>
           </div>
         </label>
 
@@ -330,6 +380,140 @@ export function MusicaEditorForm({ musica, autores = [], versoes = [], action, s
               className="admin-btn admin-btn-primary"
             >
               Salvar
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+
+    {autorModal && (
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 1000,
+        }}
+        onClick={() => setAutorModal(false)}
+      >
+        <div
+          style={{
+            backgroundColor: "white",
+            borderRadius: "0.75rem",
+            padding: "2rem",
+            maxWidth: "500px",
+            width: "90%",
+            boxShadow: "0 20px 25px rgba(0, 0, 0, 0.15)",
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <h3 style={{ margin: "0 0 1rem", fontSize: "1.25rem" }}>Novo autor</h3>
+          <input
+            type="text"
+            value={novoAutor}
+            onChange={(e) => setNovoAutor(e.target.value)}
+            placeholder="Nome do autor"
+            style={{
+              width: "100%",
+              padding: "0.75rem",
+              border: "1px solid var(--border-medium)",
+              borderRadius: "0.5rem",
+              fontSize: "1rem",
+              marginBottom: "1.5rem",
+              boxSizing: "border-box",
+            }}
+            onKeyPress={(e) => {
+              if (e.key === "Enter") {
+                handleSaveAutor();
+              }
+            }}
+          />
+          <div style={{ display: "flex", gap: "0.75rem", justifyContent: "flex-end" }}>
+            <button
+              type="button"
+              onClick={() => setAutorModal(false)}
+              className="admin-btn admin-btn-secondary"
+              disabled={loadingAutor}
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              onClick={handleSaveAutor}
+              className="admin-btn admin-btn-primary"
+              disabled={loadingAutor}
+            >
+              {loadingAutor ? "Salvando..." : "Salvar"}
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+
+    {versaoModal && (
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 1000,
+        }}
+        onClick={() => setVersaoModal(false)}
+      >
+        <div
+          style={{
+            backgroundColor: "white",
+            borderRadius: "0.75rem",
+            padding: "2rem",
+            maxWidth: "500px",
+            width: "90%",
+            boxShadow: "0 20px 25px rgba(0, 0, 0, 0.15)",
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <h3 style={{ margin: "0 0 1rem", fontSize: "1.25rem" }}>Nova versão</h3>
+          <input
+            type="text"
+            value={novaVersao}
+            onChange={(e) => setNovaVersao(e.target.value)}
+            placeholder="Nome da versão"
+            style={{
+              width: "100%",
+              padding: "0.75rem",
+              border: "1px solid var(--border-medium)",
+              borderRadius: "0.5rem",
+              fontSize: "1rem",
+              marginBottom: "1.5rem",
+              boxSizing: "border-box",
+            }}
+            onKeyPress={(e) => {
+              if (e.key === "Enter") {
+                handleSaveVersao();
+              }
+            }}
+          />
+          <div style={{ display: "flex", gap: "0.75rem", justifyContent: "flex-end" }}>
+            <button
+              type="button"
+              onClick={() => setVersaoModal(false)}
+              className="admin-btn admin-btn-secondary"
+              disabled={loadingVersao}
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              onClick={handleSaveVersao}
+              className="admin-btn admin-btn-primary"
+              disabled={loadingVersao}
+            >
+              {loadingVersao ? "Salvando..." : "Salvar"}
             </button>
           </div>
         </div>
