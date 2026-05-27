@@ -1,35 +1,34 @@
 import { Suspense } from "react";
-import { getMusicasResumo, listMusicaSessoes } from "@/lib/musicas";
+import { getMusicasResumo, listMusicaSessoes, listMusicaAutores } from "@/lib/musicas";
 
 export const metadata = {
   title: "Reunião pública - Admin GEEF",
 };
 
 async function ReuniaoPublicaContent() {
-  const [musicasResumo, sessoes] = await Promise.all([
+  const [musicasResumo, sessoes, autores] = await Promise.all([
     getMusicasResumo(),
     listMusicaSessoes(),
+    listMusicaAutores(),
   ]);
 
   const sessoesAtivas = sessoes.filter((s) => s.ativo);
   const musicasAtivas = musicasResumo.filter((m) => m.status === "ativa");
 
-  // Agrupar músicas por autor
-  const musicasPorAutor = musicasResumo.reduce(
-    (acc, musica) => {
-      const autor = musica.autor || "Sem autor";
-      if (!acc[autor]) {
-        acc[autor] = [];
-      }
-      acc[autor].push(musica);
-      return acc;
-    },
-    {} as Record<string, typeof musicasResumo>
-  );
+  // Associar músicas com autores (pela tabela musica_autores)
+  const autoresComMusicas = autores.map((autor) => {
+    const musicas = musicasResumo.filter((m) => m.autor === autor.nome);
+    const ativas = musicas.filter((m) => m.status === "ativa").length;
+    return {
+      ...autor,
+      totalMusicas: musicas.length,
+      musicasAtivas: ativas,
+    };
+  });
 
-  const autoresUnicos = Object.keys(musicasPorAutor).length;
-  const autoresOrdenados = Object.entries(musicasPorAutor)
-    .sort((a, b) => b[1].length - a[1].length)
+  const autoresUnicos = autoresComMusicas.length;
+  const autoresOrdenados = autoresComMusicas
+    .sort((a, b) => b.totalMusicas - a.totalMusicas)
     .slice(0, 5);
 
   return (
@@ -85,38 +84,35 @@ async function ReuniaoPublicaContent() {
         <section className="area-section">
           <div className="admin-card table-surface">
             <h2 style={{ margin: "0 0 1.5rem 0", fontSize: "1.1rem", fontWeight: 600 }}>
-              Top autores
+              Autores
             </h2>
             <div style={{ display: "grid", gap: "1rem" }}>
-              {autoresOrdenados.map(([autor, musicas]) => {
-                const ativas = musicas.filter((m) => m.status === "ativa").length;
-                return (
-                  <div
-                    key={autor}
-                    style={{
-                      padding: "1rem",
-                      borderLeft: "3px solid var(--primary)",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <div>
-                      <strong style={{ fontSize: "0.95rem" }}>{autor}</strong>
-                      <div style={{ fontSize: "0.85rem", color: "var(--text-muted)", marginTop: "0.25rem" }}>
-                        {musicas.length} {musicas.length === 1 ? "música" : "músicas"}
-                        {ativas > 0 && ` • ${ativas} ativa${ativas > 1 ? "s" : ""}`}
-                      </div>
-                    </div>
-                    <div style={{ textAlign: "right" }}>
-                      <div style={{ fontSize: "1.5rem", fontWeight: 700, lineHeight: 1 }}>
-                        {ativas}
-                      </div>
-                      <div style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>ativas</div>
+              {autoresOrdenados.map((autor) => (
+                <div
+                  key={autor.id}
+                  style={{
+                    padding: "1rem",
+                    borderLeft: "3px solid var(--primary)",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <div>
+                    <strong style={{ fontSize: "0.95rem" }}>{autor.nome}</strong>
+                    <div style={{ fontSize: "0.85rem", color: "var(--text-muted)", marginTop: "0.25rem" }}>
+                      {autor.totalMusicas} {autor.totalMusicas === 1 ? "música" : "músicas"}
+                      {autor.musicasAtivas > 0 && ` • ${autor.musicasAtivas} ativa${autor.musicasAtivas > 1 ? "s" : ""}`}
                     </div>
                   </div>
-                );
-              })}
+                  <div style={{ textAlign: "right" }}>
+                    <div style={{ fontSize: "1.5rem", fontWeight: 700, lineHeight: 1 }}>
+                      {autor.musicasAtivas}
+                    </div>
+                    <div style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>ativas</div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
