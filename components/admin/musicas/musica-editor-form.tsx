@@ -38,6 +38,8 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
   const [novaVersao, setNovaVersao] = useState("");
   const [autores, setAutores] = useState(initialAutores);
   const [versoes, setVersoes] = useState(initialVersoes);
+  const [autorSelecionado, setAutorSelecionado] = useState(musica?.autor ?? "");
+  const [versaoSelecionada, setVersaoSelecionada] = useState(musica?.versao ?? "");
   const [loadingAutor, setLoadingAutor] = useState(false);
   const [loadingVersao, setLoadingVersao] = useState(false);
 
@@ -80,6 +82,7 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
       const data = await response.json();
       if (response.ok) {
         setAutores([...autores, data]);
+        setAutorSelecionado(data.nome);
         setNovoAutor("");
         setAutorModal(false);
       } else {
@@ -104,6 +107,7 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
       const data = await response.json();
       if (response.ok) {
         setVersoes([...versoes, data]);
+        setVersaoSelecionada(data.nome);
         setNovaVersao("");
         setVersaoModal(false);
       } else {
@@ -133,7 +137,13 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
             <label className="profile-form-field" style={{ margin: 0, flex: 1 }}>
               <span>Autor</span>
               <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-                <select className="profile-form-input" name="autor" defaultValue={musica?.autor ?? ""} style={{ flex: 1 }}>
+                <select
+                  className="profile-form-input"
+                  name="autor"
+                  value={autorSelecionado}
+                  onChange={(e) => setAutorSelecionado(e.target.value)}
+                  style={{ flex: 1 }}
+                >
                   <option value="">Selecione...</option>
                   {autores.map((autor) => (
                     <option key={autor.id} value={autor.nome}>
@@ -188,7 +198,13 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
         <label className="profile-form-field">
           <span>Versão</span>
           <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-            <select className="profile-form-input" name="versao" defaultValue={musica?.versao ?? ""} style={{ flex: 1 }}>
+            <select
+              className="profile-form-input"
+              name="versao"
+              value={versaoSelecionada}
+              onChange={(e) => setVersaoSelecionada(e.target.value)}
+              style={{ flex: 1 }}
+            >
               <option value="">Selecione...</option>
               {versoes.map((versao) => (
                 <option key={versao.id} value={versao.nome}>

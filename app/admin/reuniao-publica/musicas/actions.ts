@@ -60,8 +60,7 @@ export async function saveMusicaAction(formData: FormData) {
   });
 
   invalidateMusicasCache();
-  const musicaId = musica?.id ?? id ?? "";
-  redirect(`/admin/reuniao-publica/musicas/${musicaId}${musicaId ? "?salvo=1" : "/nova"}`);
+  redirect("/admin/reuniao-publica/musicas?salvo=1");
 }
 
 export async function deleteMusicaAction(formData: FormData) {

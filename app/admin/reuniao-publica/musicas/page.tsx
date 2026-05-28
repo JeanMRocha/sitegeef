@@ -9,12 +9,13 @@ export const metadata = {
 };
 
 type PageProps = {
-  searchParams?: Promise<{ q?: string }>;
+  searchParams?: Promise<{ q?: string; salvo?: string }>;
 };
 
 async function MusicasContent({ searchParams }: PageProps) {
   const params = (await searchParams) ?? {};
   const q = typeof params.q === "string" ? params.q : "";
+  const isSaved = params.salvo === "1";
 
   const [musicas, musicasResumo] = await Promise.all([listMusicas(q), getMusicasResumo()]);
 
@@ -59,6 +60,14 @@ async function MusicasContent({ searchParams }: PageProps) {
           </div>
         </div>
       </section>
+
+      {isSaved && (
+        <section className="area-section">
+          <div style={{ padding: "1rem", backgroundColor: "rgba(34, 197, 94, 0.1)", borderRadius: "0.5rem" }}>
+            <p style={{ margin: 0, color: "#16a34a", fontSize: "0.95rem" }}>✓ Música salva com sucesso!</p>
+          </div>
+        </section>
+      )}
 
       <section className="area-section">
         <div className="admin-card">
