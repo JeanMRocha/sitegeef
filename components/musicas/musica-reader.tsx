@@ -185,7 +185,8 @@ export function MusicaReader({
               <h1>{musica.titulo}</h1>
               <p className="musica-hero-subtitle">
                 {musica.autor}
-                {musica.tom ? ` • Tom ${musica.tom}` : ""}
+                {musica.tom || musica.versao ? " •" : ""}
+                {musica.tom ? ` Tom ${musica.tom}` : ""}
                 {musica.versao ? ` • ${musica.versao}` : ""}
               </p>
             </div>
@@ -224,42 +225,29 @@ export function MusicaReader({
 
       {!isDisplay && (
         <>
-          <section className="musica-reader-top-grid">
-            <article className="musica-reader-panel musica-reader-panel--summary">
-              <div className="musica-meta-list">
-                <div>
-                  <span>Autor</span>
-                  <strong>{musica.autor}</strong>
+          {podeAlternarCifra && (
+            <section className="musica-reader-top-grid">
+              <article className="musica-reader-panel musica-reader-panel--summary">
+                <p className="content-panel-label" style={{ marginBottom: "0.75rem" }}>Visualização</p>
+                <div style={{ display: "flex", gap: "0.5rem" }}>
+                  <button
+                    onClick={() => setViewMode("letra")}
+                    className={`button ${viewMode === "letra" ? "button-primary" : "button-secondary"}`}
+                    style={{ flex: 1, fontSize: "0.875rem", minWidth: 0 }}
+                  >
+                    Letra
+                  </button>
+                  <button
+                    onClick={() => setViewMode("cifra")}
+                    className={`button ${viewMode === "cifra" ? "button-primary" : "button-secondary"}`}
+                    style={{ flex: 1, fontSize: "0.875rem", minWidth: 0 }}
+                  >
+                    Cifra
+                  </button>
                 </div>
-                <div>
-                  <span>Tom</span>
-                  <strong>{musica.tom || "—"}</strong>
-                </div>
-              </div>
-
-              {podeAlternarCifra && (
-                <div style={{ marginTop: "1.5rem", paddingTop: "1.5rem", borderTop: "1px solid var(--border-medium)" }}>
-                  <p className="content-panel-label" style={{ marginBottom: "0.75rem" }}>Visualização</p>
-                  <div style={{ display: "flex", gap: "0.5rem" }}>
-                    <button
-                      onClick={() => setViewMode("letra")}
-                      className={`button ${viewMode === "letra" ? "button-primary" : "button-secondary"}`}
-                      style={{ flex: 1, fontSize: "0.875rem", minWidth: 0 }}
-                    >
-                      Letra
-                    </button>
-                    <button
-                      onClick={() => setViewMode("cifra")}
-                      className={`button ${viewMode === "cifra" ? "button-primary" : "button-secondary"}`}
-                      style={{ flex: 1, fontSize: "0.875rem", minWidth: 0 }}
-                    >
-                      Cifra
-                    </button>
-                  </div>
-                </div>
-              )}
-            </article>
-          </section>
+              </article>
+            </section>
+          )}
 
           <section className="musica-reader-lyrics">
             <article className="musica-reader-panel musica-reader-panel--lyrics musica-reader-panel--lyrics-full">
