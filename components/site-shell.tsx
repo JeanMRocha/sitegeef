@@ -38,7 +38,7 @@ export async function SiteShell({ locale, user, children }: Readonly<SiteShellPr
       />
 
       <LgpdCookieBanner locale={locale} />
-      {children}
+      <div className="site-shell-main">{children}</div>
 
       <footer className="site-footer">
         <div className="site-footer-content">

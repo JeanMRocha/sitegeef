@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getInstitutionBrand } from "@/lib/institution-brand";
 import { getMusicaBySlug } from "@/lib/musicas";
 import { MusicaReader } from "@/components/musicas/musica-reader";
+import { getInstitutionBrand } from "@/lib/institution-brand";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -32,5 +32,5 @@ export default async function MusicaPage({ params }: PageProps) {
     notFound();
   }
 
-  return <MusicaReader musica={musica} logoSrc={brand.logoSemFundoUrl} />;
+  return <MusicaReader musica={musica} logoSrc={brand.logoSemFundoUrl} showBranding={false} />;
 }

@@ -10,16 +10,17 @@ export const metadata = {
 };
 
 type PageProps = {
-  searchParams?: Promise<{ codigo?: string; nova?: string; salvo?: string }>;
+  searchParams?: Promise<{ codigo?: string; nova?: string; salvo?: string; musica_id?: string }>;
 };
 
 async function NovoSessaoContent({ searchParams }: PageProps) {
   const params = (await searchParams) ?? {};
   const selectedCodigo = typeof params.codigo === "string" ? params.codigo.toUpperCase() : "";
+  const selectedMusicId = typeof params.musica_id === "string" ? params.musica_id : "";
 
   const [sessoes, musicasResumo] = await Promise.all([listMusicaSessoes(), getMusicasResumo()]);
   const currentSession = selectedCodigo ? sessoes.find((sessao) => sessao.codigo_pareamento === selectedCodigo) ?? null : null;
-  const selectedSongId = currentSession?.musica_id ?? "";
+  const selectedSongId = currentSession?.musica_id ?? selectedMusicId;
 
   const isEditing = !!selectedCodigo && !!currentSession;
   const isNew = params.nova === "1" || (params.salvo === "1" && selectedCodigo);

@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Musica } from "@/lib/musicas";
 import { formatParteTipoLabel } from "@/lib/musicas";
+import { IconArrowLeft, IconExternalLink, IconPrinter } from "@/components/icons";
 
 type MusicaReaderProps = {
   musica: Musica;
@@ -12,18 +13,34 @@ type MusicaReaderProps = {
   displayCode?: string | null;
   mode?: "publico" | "exibicao";
   showBackLink?: boolean;
+  showBranding?: boolean;
 };
 
-export function MusicaReader({ musica, logoSrc, displayCode, mode = "publico", showBackLink = true }: MusicaReaderProps) {
+export function MusicaReader({
+  musica,
+  logoSrc,
+  displayCode,
+  mode = "publico",
+  showBackLink = true,
+  showBranding = true,
+}: MusicaReaderProps) {
   const isDisplay = mode === "exibicao";
   const [viewMode, setViewMode] = useState<"letra" | "cifra">("letra");
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [pipExpanded, setPipExpanded] = useState(false);
+  const [pipHidden, setPipHidden] = useState(false);
 
   const partesComCifra = musica.partes.filter((p) => p.cifra);
   const mostrarCifra = viewMode === "cifra";
   const podeAlternarCifra = partesComCifra.length > 0;
 
   const hasMedia = musica.youtube_url || musica.audio_url;
+  const partesVisiveis = musica.partes.filter((parte) => !mostrarCifra || parte.cifra);
+  const meio = Math.ceil(partesVisiveis.length / 2);
+  const blocosLetra = [
+    partesVisiveis.slice(0, meio),
+    partesVisiveis.slice(meio),
+  ].filter((bloco) => bloco.length > 0);
 
   useEffect(() => {
     if (isDisplay) {
@@ -142,16 +159,29 @@ export function MusicaReader({ musica, logoSrc, displayCode, mode = "publico", s
     );
   }
 
+  const openExibicaoHref = `/admin/reuniao-publica/musicas/sessoes/novo?musica_id=${encodeURIComponent(musica.id)}`;
+
   return (
     <main className={`musica-page ${isDisplay ? "musica-page--display" : ""}`}>
       <section className="musica-hero public-hero-shell">
-        <div className="musica-hero-bar">
-          <div className="musica-brand-block">
-            <div className="musica-brand-logo">
-              <Image src={logoSrc} alt="Logo GEEF" width={190} height={76} priority />
+        <div className={`musica-reader-header ${showBranding ? "" : "musica-reader-header--compact"}`}>
+          {showBranding ? (
+            <div className="musica-brand-block">
+              <div className="musica-brand-logo">
+                <Image src={logoSrc} alt="Logo GEEF" width={190} height={76} priority />
+              </div>
+              <div>
+                <p className="eyebrow">Institucional</p>
+                <h1>{musica.titulo}</h1>
+                <p className="musica-hero-subtitle">
+                  {musica.autor}
+                  {musica.tom ? ` • Tom ${musica.tom}` : ""}
+                  {musica.versao ? ` • ${musica.versao}` : ""}
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="eyebrow">Institucional</p>
+          ) : (
+            <div className="musica-reader-title-only">
               <h1>{musica.titulo}</h1>
               <p className="musica-hero-subtitle">
                 {musica.autor}
@@ -159,152 +189,194 @@ export function MusicaReader({ musica, logoSrc, displayCode, mode = "publico", s
                 {musica.versao ? ` • ${musica.versao}` : ""}
               </p>
             </div>
-          </div>
+          )}
 
-          <div className="musica-hero-actions">
+          <div className="musica-reader-actions">
             {displayCode && !isDisplay ? <span className="musica-code-pill">Pareamento {displayCode}</span> : null}
             {showBackLink ? (
-              <Link href="/musicas" className="button button-secondary">
-                Voltar ao catálogo
+              <Link href="/musicas" className="button button-secondary musica-icon-button" aria-label="Voltar ao catálogo" title="Voltar ao catálogo">
+                <IconArrowLeft size={18} />
               </Link>
             ) : null}
-            {!isDisplay && (
+            {!isDisplay ? (
               <button
                 onClick={() => window.print()}
-                className="button button-secondary"
-                title="Imprimir"
+                className="button button-secondary musica-icon-button"
+                aria-label="Imprimir música"
+                title="Imprimir música"
               >
-                Imprimir
+                <IconPrinter size={18} />
               </button>
-            )}
+            ) : null}
+            {!isDisplay ? (
+              <Link
+                href={openExibicaoHref}
+                className="button button-primary musica-icon-button"
+                aria-label="Levar a música para exibição"
+                title="Levar a música para exibição"
+              >
+                <IconExternalLink size={18} />
+              </Link>
+            ) : null}
           </div>
         </div>
       </section>
 
-      {hasMedia && !isDisplay && (
-        <section className="musica-media-section" style={{ padding: "1.5rem 0", borderBottom: "1px solid var(--border-medium)" }}>
-          <div className="area-container">
-            {musica.youtube_url && (
-              <div style={{ marginBottom: musica.audio_url ? "1.5rem" : 0 }}>
-                <p style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--text-muted)", marginBottom: "0.75rem" }}>Vídeo</p>
-                <iframe
-                  width="100%"
-                  height="400"
-                  src={musica.youtube_url.replace("watch?v=", "embed/")}
-                  title="YouTube video player"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                  style={{ borderRadius: "0.5rem" }}
-                />
-              </div>
-            )}
-            {musica.audio_url && (
-              <div>
-                <p style={{ fontSize: "0.875rem", fontWeight: 600, color: "var(--text-muted)", marginBottom: "0.75rem" }}>Áudio</p>
-                <audio controls style={{ width: "100%", marginBottom: "0.5rem" }}>
-                  <source src={musica.audio_url} type="audio/mpeg" />
-                  Seu navegador não suporta reprodução de áudio.
-                </audio>
+      {!isDisplay && (
+        <>
+          <section className="musica-reader-top-grid">
+            <article className="musica-reader-panel musica-reader-panel--summary">
+              <div className="musica-meta-list">
                 <div>
-                  <a
-                    href={musica.audio_url}
-                    download
-                    className="button button-secondary"
-                    style={{ fontSize: "0.875rem", padding: "0.5rem 1rem" }}
-                  >
-                    Baixar MP3
-                  </a>
+                  <span>Autor</span>
+                  <strong>{musica.autor}</strong>
+                </div>
+                <div>
+                  <span>Tom</span>
+                  <strong>{musica.tom || "—"}</strong>
                 </div>
               </div>
-            )}
-          </div>
-        </section>
-      )}
 
-      <section className="musica-reader-grid">
-        <article className="musica-reader-panel musica-reader-panel--summary">
-          <p className="content-panel-label">Resumo</p>
-          <p className="musica-summary-text">
-            {musica.observacoes ||
-              "Leia, procure e apresente a música com o mesmo padrão visual em qualquer tela."}
-          </p>
+              {podeAlternarCifra && (
+                <div style={{ marginTop: "1.5rem", paddingTop: "1.5rem", borderTop: "1px solid var(--border-medium)" }}>
+                  <p className="content-panel-label" style={{ marginBottom: "0.75rem" }}>Visualização</p>
+                  <div style={{ display: "flex", gap: "0.5rem" }}>
+                    <button
+                      onClick={() => setViewMode("letra")}
+                      className={`button ${viewMode === "letra" ? "button-primary" : "button-secondary"}`}
+                      style={{ flex: 1, fontSize: "0.875rem", minWidth: 0 }}
+                    >
+                      Letra
+                    </button>
+                    <button
+                      onClick={() => setViewMode("cifra")}
+                      className={`button ${viewMode === "cifra" ? "button-primary" : "button-secondary"}`}
+                      style={{ flex: 1, fontSize: "0.875rem", minWidth: 0 }}
+                    >
+                      Cifra
+                    </button>
+                  </div>
+                </div>
+              )}
+            </article>
+          </section>
 
-          <div className="musica-meta-list">
-            <div>
-              <span>Autor</span>
-              <strong>{musica.autor}</strong>
-            </div>
-            <div>
-              <span>Status</span>
-              <strong>{musica.status === "ativa" ? "Ativa" : musica.status === "rascunho" ? "Rascunho" : "Inativa"}</strong>
-            </div>
-            <div>
-              <span>Partes</span>
-              <strong>{musica.partes.length}</strong>
-            </div>
-            <div>
-              <span>Tom</span>
-              <strong>{musica.tom || "—"}</strong>
-            </div>
-          </div>
-
-          {podeAlternarCifra && !isDisplay && (
-            <div style={{ marginTop: "1.5rem", paddingTop: "1.5rem", borderTop: "1px solid var(--border-medium)" }}>
-              <p className="content-panel-label" style={{ marginBottom: "0.75rem" }}>Visualização</p>
-              <div style={{ display: "flex", gap: "0.5rem" }}>
-                <button
-                  onClick={() => setViewMode("letra")}
-                  className={`button ${viewMode === "letra" ? "button-primary" : "button-secondary"}`}
-                  style={{ flex: 1, fontSize: "0.875rem" }}
-                >
-                  Letra
-                </button>
-                <button
-                  onClick={() => setViewMode("cifra")}
-                  className={`button ${viewMode === "cifra" ? "button-primary" : "button-secondary"}`}
-                  style={{ flex: 1, fontSize: "0.875rem" }}
-                >
-                  Cifra
-                </button>
+          <section className="musica-reader-lyrics">
+            <article className="musica-reader-panel musica-reader-panel--lyrics musica-reader-panel--lyrics-full">
+              <div className="musica-letra-blocos">
+                {partesVisiveis.map((parte, index) => (
+                  <section
+                    key={parte.id ?? `${musica.id}-${index}`}
+                    className={`musica-parte-musical ${parte.destaque ? "is-highlighted" : ""}`}
+                  >
+                    <div className="musica-parte-type-badge">
+                      {formatParteTipoLabel(parte.tipo)}
+                    </div>
+                    {parte.titulo && parte.titulo !== formatParteTipoLabel(parte.tipo) && (
+                      <h3 className="musica-parte-title">{parte.titulo}</h3>
+                    )}
+                    <pre className="musica-parte-text musica-parte-text--compact">
+                      {mostrarCifra ? parte.cifra : parte.conteudo}
+                    </pre>
+                  </section>
+                ))}
               </div>
-            </div>
-          )}
-        </article>
+            </article>
+          </section>
+          {hasMedia && (
+            <>
+              {/* PiP Widget */}
+              <div
+                className={`musica-pip-widget ${pipHidden ? "is-hidden" : ""} ${pipExpanded ? "is-expanded" : ""}`}
+              >
+                <div className="musica-pip-content">
+                  {musica.youtube_url && (
+                    <iframe
+                      width="100%"
+                      height="100%"
+                      src={musica.youtube_url.replace("watch?v=", "embed/")}
+                      title="YouTube video player"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                      style={{ borderRadius: "0.5rem" }}
+                    />
+                  )}
+                  {!musica.youtube_url && musica.audio_url && (
+                    <audio controls style={{ width: "100%", borderRadius: "0.5rem" }}>
+                      <source src={musica.audio_url} type="audio/mpeg" />
+                      Seu navegador não suporta reprodução de áudio.
+                    </audio>
+                  )}
+                </div>
+                <div className="musica-pip-controls">
+                  <button
+                    onClick={() => setPipExpanded(true)}
+                    className="musica-pip-btn"
+                    aria-label="Expandir vídeo"
+                    title="Expandir"
+                  >
+                    ⛶
+                  </button>
+                  <button
+                    onClick={() => setPipHidden(true)}
+                    className="musica-pip-btn"
+                    aria-label="Minimizar vídeo"
+                    title="Minimizar"
+                  >
+                    −
+                  </button>
+                </div>
+              </div>
 
-        <article className="musica-reader-panel musica-reader-panel--lyrics">
-          <div className="musica-partes-grid">
-            {musica.partes
-              .filter((parte) => !mostrarCifra || parte.cifra)
-              .map((parte, index) => (
-                <section
-                  key={parte.id ?? `${musica.id}-${index}`}
-                  className={`musica-parte ${parte.destaque ? "is-highlighted" : ""} musica-parte--${parte.tipo}`}
+              {/* Modal expandida */}
+              {pipExpanded && (
+                <dialog
+                  className="musica-pip-modal"
+                  open
+                  onClick={() => setPipExpanded(false)}
                 >
-                  <div className="musica-parte-heading">
-                    <span className="musica-parte-badge">{index + 1}</span>
-                    <div>
-                      <p className="musica-parte-kicker">{formatParteTipoLabel(parte.tipo)}</p>
-                      <h2>{parte.titulo || formatParteTipoLabel(parte.tipo)}</h2>
+                  <div className="musica-pip-modal-content" onClick={(e) => e.stopPropagation()}>
+                    <button
+                      onClick={() => setPipExpanded(false)}
+                      className="musica-pip-modal-close"
+                      aria-label="Fechar"
+                    >
+                      ✕
+                    </button>
+                    <div className="musica-pip-modal-frame">
+                      {musica.youtube_url && (
+                        <iframe
+                          width="100%"
+                          height="100%"
+                          src={musica.youtube_url.replace("watch?v=", "embed/")}
+                          title="YouTube video player"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                          allowFullScreen
+                        />
+                      )}
+                      {!musica.youtube_url && musica.audio_url && (
+                        <audio controls style={{ width: "100%" }}>
+                          <source src={musica.audio_url} type="audio/mpeg" />
+                          Seu navegador não suporta reprodução de áudio.
+                        </audio>
+                      )}
                     </div>
                   </div>
-
-                  <pre className="musica-parte-text">
-                    {mostrarCifra ? parte.cifra : parte.conteudo}
-                  </pre>
-                </section>
-              ))}
-          </div>
-        </article>
-      </section>
+                </dialog>
+              )}
+            </>
+          )}
+        </>
+      )}
 
       <style jsx>{`
         @media print {
           .musica-hero-actions,
           .musica-reader-panel--summary,
-          .musica-media-section {
+          .musica-reader-panel--media {
             display: none;
           }
-          .musica-reader-grid {
+          .musica-reader-top-grid {
             display: block;
           }
           .musica-reader-panel {
