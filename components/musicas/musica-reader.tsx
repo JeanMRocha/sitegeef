@@ -7,6 +7,42 @@ import type { Musica } from "@/lib/musicas";
 import { formatParteTipoLabel, isTituloSameasTipo } from "@/lib/musicas";
 import { IconArrowLeft, IconExternalLink, IconPrinter } from "@/components/icons";
 
+function isChordLine(line: string): boolean {
+  if (!line || !line.trim()) return false;
+  const tokens = line.split(/\s+/).filter(Boolean);
+  if (tokens.length === 0) return false;
+  const chordPattern = /^[A-G][#b]?(m|M|maj|min|dim|aug|sus[24]?|add[0-9]?|[0-9]+|°|ø)*$/;
+  return tokens.every((token) => chordPattern.test(token));
+}
+
+function CifraLineRenderer({ text, hideChords }: { text: string; hideChords: boolean }) {
+  const lines = text.split("\n");
+  return (
+    <div className="musica-cifra-inline">
+      {lines.map((line, idx) => {
+        if (isChordLine(line)) {
+          if (hideChords) return null;
+          return (
+            <pre key={idx} className="musica-chord-row">
+              {line}
+            </pre>
+          );
+        }
+        if (!line.trim()) {
+          return (
+            <div key={idx} className="musica-lyric-spacer" />
+          );
+        }
+        return (
+          <pre key={idx} className="musica-lyric-row">
+            {line}
+          </pre>
+        );
+      })}
+    </div>
+  );
+}
+
 type MusicaReaderProps = {
   musica: Musica;
   logoSrc: string;
@@ -31,8 +67,11 @@ export function MusicaReader({
   const [pipHidden, setPipHidden] = useState(false);
 
   const partesComCifra = musica.partes.filter((p) => p.cifra);
+  const hasInlineChords = musica.partes.some((p) =>
+    p.conteudo.split("\n").some(isChordLine)
+  );
   const mostrarCifra = viewMode === "cifra";
-  const podeAlternarCifra = partesComCifra.length > 0;
+  const podeAlternarCifra = partesComCifra.length > 0 || hasInlineChords;
 
   const hasMedia = musica.youtube_url || musica.audio_url;
   const partesVisiveis = musica.partes.filter((parte) => !mostrarCifra || parte.cifra);
@@ -281,9 +320,13 @@ export function MusicaReader({
                     {parte.titulo && !isTituloSameasTipo(parte.titulo, formatParteTipoLabel(parte.tipo)) && (
                       <h3 className="musica-parte-title">{parte.titulo}</h3>
                     )}
-                    <pre className="musica-parte-text musica-parte-text--compact">
-                      {mostrarCifra ? parte.cifra : parte.conteudo}
-                    </pre>
+                    {mostrarCifra && parte.cifra ? (
+                      <pre className="musica-parte-text musica-parte-text--compact">
+                        {parte.cifra}
+                      </pre>
+                    ) : (
+                      <CifraLineRenderer text={parte.conteudo} hideChords={mostrarCifra} />
+                    )}
                     </section>
                   );
                 })}

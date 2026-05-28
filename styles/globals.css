@@ -319,6 +319,39 @@
   margin: 0;
 }
 
+.musica-cifra-inline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+}
+
+.musica-chord-row {
+  font-family: "Courier New", monospace;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: var(--uva);
+  font-weight: 600;
+  white-space: pre;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.musica-lyric-row {
+  font-size: 0.96rem;
+  line-height: 1.62;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin: 0;
+  padding: 0;
+}
+
+.musica-lyric-spacer {
+  display: block;
+  height: 0.5rem;
+}
+
 .musica-summary-text {
   margin: 0;
   color: var(--muted);
