@@ -262,22 +262,31 @@ export function MusicaReader({
           <section className="musica-reader-lyrics">
             <article className="musica-reader-panel musica-reader-panel--lyrics musica-reader-panel--lyrics-full">
               <div className="musica-letra-blocos">
-                {partesVisiveis.map((parte, index) => (
-                  <section
-                    key={parte.id ?? `${musica.id}-${index}`}
-                    className={`musica-parte-musical ${parte.destaque ? "is-highlighted" : ""}`}
-                  >
-                    <div className="musica-parte-type-badge">
-                      {formatParteTipoLabel(parte.tipo)}
-                    </div>
+                {partesVisiveis.map((parte, index) => {
+                  const estrofeCount = partesVisiveis
+                    .slice(0, index + 1)
+                    .filter((p) => p.tipo === "estrofe").length;
+                  const tipoLabel = formatParteTipoLabel(parte.tipo);
+                  const displayLabel =
+                    parte.tipo === "estrofe" ? `${tipoLabel} ${String(estrofeCount).padStart(2, "0")}` : tipoLabel;
+
+                  return (
+                    <section
+                      key={parte.id ?? `${musica.id}-${index}`}
+                      className={`musica-parte-musical ${parte.destaque ? "is-highlighted" : ""}`}
+                    >
+                      <div className="musica-parte-type-badge">
+                        {displayLabel}
+                      </div>
                     {parte.titulo && !isTituloSameasTipo(parte.titulo, formatParteTipoLabel(parte.tipo)) && (
                       <h3 className="musica-parte-title">{parte.titulo}</h3>
                     )}
                     <pre className="musica-parte-text musica-parte-text--compact">
                       {mostrarCifra ? parte.cifra : parte.conteudo}
                     </pre>
-                  </section>
-                ))}
+                    </section>
+                  );
+                })}
               </div>
             </article>
           </section>
