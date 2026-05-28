@@ -78,6 +78,10 @@ function normalizeText(value: string) {
     .trim();
 }
 
+export function isTituloSameasTipo(titulo: string, tipoLabel: string): boolean {
+  return normalizeText(titulo) === normalizeText(tipoLabel);
+}
+
 export function slugifyMusica(title: string, suffix?: string) {
   const base = normalizeText(title)
     .replace(/[^a-z0-9]+/g, "-")

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Musica } from "@/lib/musicas";
-import { formatParteTipoLabel } from "@/lib/musicas";
+import { formatParteTipoLabel, isTituloSameasTipo } from "@/lib/musicas";
 import { IconArrowLeft, IconExternalLink, IconPrinter } from "@/components/icons";
 
 type MusicaReaderProps = {
@@ -209,6 +209,16 @@ export function MusicaReader({
                 <IconPrinter size={18} />
               </button>
             ) : null}
+            {!isDisplay && podeAlternarCifra ? (
+              <button
+                onClick={() => setViewMode(viewMode === "letra" ? "cifra" : "letra")}
+                className="button button-secondary musica-icon-button"
+                aria-label={`Exibir ${viewMode === "letra" ? "cifra" : "letra"}`}
+                title={`Exibir ${viewMode === "letra" ? "cifra" : "letra"}`}
+              >
+                🎼
+              </button>
+            ) : null}
             {!isDisplay ? (
               <Link
                 href={openExibicaoHref}
@@ -260,7 +270,7 @@ export function MusicaReader({
                     <div className="musica-parte-type-badge">
                       {formatParteTipoLabel(parte.tipo)}
                     </div>
-                    {parte.titulo && parte.titulo !== formatParteTipoLabel(parte.tipo) && (
+                    {parte.titulo && !isTituloSameasTipo(parte.titulo, formatParteTipoLabel(parte.tipo)) && (
                       <h3 className="musica-parte-title">{parte.titulo}</h3>
                     )}
                     <pre className="musica-parte-text musica-parte-text--compact">
