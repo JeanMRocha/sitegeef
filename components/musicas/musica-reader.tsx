@@ -274,30 +274,6 @@ export function MusicaReader({
 
       {!isDisplay && (
         <>
-          {podeAlternarCifra && (
-            <section className="musica-reader-top-grid">
-              <article className="musica-reader-panel musica-reader-panel--summary">
-                <p className="content-panel-label" style={{ marginBottom: "0.75rem" }}>Visualização</p>
-                <div style={{ display: "flex", gap: "0.5rem" }}>
-                  <button
-                    onClick={() => setViewMode("letra")}
-                    className={`button ${viewMode === "letra" ? "button-primary" : "button-secondary"}`}
-                    style={{ flex: 1, fontSize: "0.875rem", minWidth: 0 }}
-                  >
-                    Letra
-                  </button>
-                  <button
-                    onClick={() => setViewMode("cifra")}
-                    className={`button ${viewMode === "cifra" ? "button-primary" : "button-secondary"}`}
-                    style={{ flex: 1, fontSize: "0.875rem", minWidth: 0 }}
-                  >
-                    Cifra
-                  </button>
-                </div>
-              </article>
-            </section>
-          )}
-
           <section className="musica-reader-lyrics">
             <article className="musica-reader-panel musica-reader-panel--lyrics musica-reader-panel--lyrics-full">
               <div className="musica-letra-blocos">
