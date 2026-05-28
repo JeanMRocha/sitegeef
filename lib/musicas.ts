@@ -102,7 +102,7 @@ export function parsePartesFromText(texto: string): MusicaParte[] {
     return [];
   }
 
-  const regex = /^===\s*([A-Z]+(?:\s+[A-Z]+)*)\s*===/gm;
+  const regex = /^\s*===\s*([A-Z]+(?:\s+[A-Z]+)*)\s*===/gm;
   const partes: MusicaParte[] = [];
   let match;
   let ultimoIndice = 0;
