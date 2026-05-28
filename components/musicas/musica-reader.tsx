@@ -17,11 +17,31 @@ function isChordLine(line: string): boolean {
 
 function CifraLineRenderer({ text, hideChords }: { text: string; hideChords: boolean }) {
   const lines = text.split("\n");
+
+  if (hideChords) {
+    // Renderizar só as linhas de letra (sem acordes)
+    return (
+      <div className="musica-cifra-inline">
+        {lines.map((line, idx) => {
+          if (isChordLine(line)) return null;
+          if (!line.trim()) {
+            return <div key={idx} className="musica-lyric-spacer" />;
+          }
+          return (
+            <pre key={idx} className="musica-lyric-row">
+              {line}
+            </pre>
+          );
+        })}
+      </div>
+    );
+  }
+
+  // Renderizar com acordes acima das letras
   return (
     <div className="musica-cifra-inline">
       {lines.map((line, idx) => {
         if (isChordLine(line)) {
-          if (hideChords) return null;
           return (
             <pre key={idx} className="musica-chord-row">
               {line}
@@ -29,9 +49,7 @@ function CifraLineRenderer({ text, hideChords }: { text: string; hideChords: boo
           );
         }
         if (!line.trim()) {
-          return (
-            <div key={idx} className="musica-lyric-spacer" />
-          );
+          return <div key={idx} className="musica-lyric-spacer" />;
         }
         return (
           <pre key={idx} className="musica-lyric-row">
