@@ -1,14 +1,16 @@
 "use client";
 
 import { useRef } from "react";
+import { IconTrash } from "@/components/icons";
 import { deleteMusicaAction } from "@/app/admin/reuniao-publica/musicas/actions";
 
 type DeleteMusicaButtonProps = {
   musicaId: string;
   musicaTitulo: string;
+  iconOnly?: boolean;
 };
 
-export function DeleteMusicaButton({ musicaId, musicaTitulo }: DeleteMusicaButtonProps) {
+export function DeleteMusicaButton({ musicaId, musicaTitulo, iconOnly }: DeleteMusicaButtonProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   const handleOpenDialog = () => {
@@ -29,11 +31,13 @@ export function DeleteMusicaButton({ musicaId, musicaTitulo }: DeleteMusicaButto
     <>
       <button
         type="button"
-        className="profile-form-btn profile-form-btn-secondary"
-        style={{ color: "#8a005a", marginTop: "1rem" }}
+        className={iconOnly ? "admin-btn admin-btn-secondary" : "profile-form-btn profile-form-btn-secondary"}
+        style={iconOnly ? {} : { color: "#8a005a", marginTop: "1rem" }}
         onClick={handleOpenDialog}
+        title={iconOnly ? "Excluir música" : undefined}
+        aria-label={iconOnly ? "Excluir música" : undefined}
       >
-        Excluir música
+        {iconOnly ? <IconTrash size={18} /> : "Excluir música"}
       </button>
 
       <dialog
