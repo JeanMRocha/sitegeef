@@ -1,7 +1,7 @@
 import { AdminModuleGate } from '@/components/admin/admin-module-gate';
 
 export const metadata = {
-  title: 'Pessoas - Admin GEEF',
+  title: 'Tarefeiros - Admin GEEF',
 };
 
 export default function PessoasLayout({
@@ -14,7 +14,7 @@ export default function PessoasLayout({
       permission="pode_pessoas"
       profiles={['diretoria', 'secretaria']}
       redirectPath="/admin/pessoas"
-      title="Pessoas"
+      title="Tarefeiros"
     >
       {children}
     </AdminModuleGate>

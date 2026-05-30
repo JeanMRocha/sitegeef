@@ -118,9 +118,10 @@
   height: 3rem;
   padding: 0;
   border-radius: 18px;
-  border: 1px solid rgba(138, 0, 90, 0.12);
-  background: linear-gradient(135deg, rgba(138, 0, 90, 0.12), rgba(99, 213, 31, 0.12));
+  border: 1px solid rgba(138, 0, 90, 0.22);
+  background: linear-gradient(135deg, rgba(138, 0, 90, 0.2), rgba(99, 213, 31, 0.16));
   cursor: pointer;
+  box-shadow: 0 12px 24px rgba(124, 63, 163, 0.12);
 }
 
 .admin-user-menu-avatar {
@@ -129,9 +130,11 @@
   width: 100%;
   height: 100%;
   border-radius: inherit;
-  color: var(--uva-700);
-  font-size: 0.84rem;
-  font-weight: 800;
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.28);
 }
 
 .admin-user-menu-popover {
@@ -249,6 +252,8 @@
   cursor: pointer;
   transition: all 160ms ease;
   min-width: 0;
+  position: relative;
+  overflow: hidden;
 }
 
 .admin-shell-tab span {
@@ -276,7 +281,21 @@
   background: var(--nav-tab-active-bg);
   border-color: var(--nav-tab-active-border);
   color: var(--nav-tab-active-text);
-  box-shadow: var(--nav-tab-active-shadow);
+  box-shadow: var(--nav-tab-active-shadow), 0 0 0 1px rgba(138, 0, 90, 0.08);
+  transform: translateY(-2px);
+  font-weight: 900;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.18);
+}
+
+.admin-shell-tab.active::before {
+  content: "";
+  position: absolute;
+  inset: 0.14rem 0.35rem auto;
+  height: 0.34rem;
+  border-radius: 999px;
+  background: var(--nav-tab-active-accent);
+  opacity: 1;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12);
 }
 
 .admin-shell-tab.active span,
@@ -1171,6 +1190,21 @@
 :root.dark .admin-user-card {
   background: rgba(40, 36, 33, 0.92);
   border-color: rgba(255, 255, 255, 0.08);
+}
+
+:root.dark .admin-shell-tab.active {
+  box-shadow: var(--nav-tab-active-shadow), 0 0 0 1px rgba(255, 255, 255, 0.03), 0 0 0 1px rgba(233, 160, 201, 0.08);
+}
+
+:root.dark .admin-user-menu-trigger {
+  border-color: rgba(233, 160, 201, 0.34);
+  background: linear-gradient(135deg, rgba(138, 0, 90, 0.34), rgba(233, 160, 201, 0.2));
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25);
+}
+
+:root.dark .admin-user-menu-avatar {
+  color: #fffaf5;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.42);
 }
 
 :root.dark .admin-user-avatar {

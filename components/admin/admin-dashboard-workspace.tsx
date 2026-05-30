@@ -50,7 +50,7 @@ export function AdminDashboardWorkspace({ summary }: AdminDashboardWorkspaceProp
 
   const proximaQuinta = getProximaQuinta();
   const summaryCards = [
-    { label: "Pessoas ativas", value: totalPessoas },
+    { label: "Tarefeiros ativos", value: totalPessoas },
     { label: "Funções", value: totalFuncoes },
     { label: "Temas doutrinários", value: totalTemas },
     { label: "Escalas publicadas", value: totalEscalasPublicadas },
@@ -198,12 +198,12 @@ export function AdminDashboardWorkspace({ summary }: AdminDashboardWorkspaceProp
       <div className="admin-dashboard-page">
         <section className="admin-page-header admin-card admin-page-header--hero">
           <div className="admin-page-header-copy">
-            <span className="admin-dashboard-kicker">Pessoas</span>
+            <span className="admin-dashboard-kicker">Tarefeiros</span>
             <h1 className="admin-page-title">Cadastro e vínculo</h1>
-            <p className="admin-page-subtitle">Tudo que depende de pessoa física, usuário e estrutura interna.</p>
+            <p className="admin-page-subtitle">Tudo que depende de cadastro de tarefeiro, usuário e estrutura interna.</p>
           </div>
           <div className="admin-actions">
-            <Link href="/admin/pessoas" className="admin-btn admin-btn-primary">👥 Abrir pessoas</Link>
+            <Link href="/admin/pessoas" className="admin-btn admin-btn-primary">👥 Abrir tarefeiros</Link>
             <Link href="/admin/usuarios" className="admin-btn admin-btn-secondary">🔑 Usuários</Link>
           </div>
         </section>
@@ -211,9 +211,9 @@ export function AdminDashboardWorkspace({ summary }: AdminDashboardWorkspaceProp
         <div className="admin-dashboard-hero">
           <SectionCard
             title="Cadastro central"
-            description="Abra a base de pessoas, vínculos e departamentos."
+            description="Abra a base de tarefeiros, vínculos e departamentos."
             actions={[
-              { href: "/admin/pessoas", label: "Pessoas" },
+              { href: "/admin/pessoas", label: "Tarefeiros" },
               { href: "/admin/usuarios", label: "Usuários e permissões" },
               { href: "/admin/departamentos", label: "Departamentos" },
               { href: "/admin/instituicao/editar", label: "Instituição" },
@@ -391,9 +391,6 @@ export function AdminDashboardWorkspace({ summary }: AdminDashboardWorkspaceProp
       <section className="admin-page-header admin-card admin-page-header--hero">
         <div className="admin-page-header-copy">
           <h1 className="admin-page-title">Dashboard</h1>
-          <p className="admin-page-subtitle">
-            Um painel curto para ver o essencial sem blocos de cadastro ou formulários.
-          </p>
         </div>
       </section>
 

@@ -579,3 +579,9 @@
 :root.dark .site-header-brand-logo img {
   z-index: 1;
 }
+
+:root.dark .site-header-user-initial,
+:root.dark .site-header-user-initial-lg {
+  background: linear-gradient(135deg, #b0427d, #c6547a);
+  color: #ffffff;
+}

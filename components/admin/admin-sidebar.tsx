@@ -254,9 +254,9 @@ export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
           </NavGroup>
         )}
 
-        {/* Pessoas */}
+        {/* Tarefeiros */}
         {showUserArea && canAccess('pode_pessoas') && (
-          <NavGroup name="pessoas" title="Pessoas" collapsible>
+          <NavGroup name="pessoas" title="Tarefeiros" collapsible>
             <Link
               href="/admin/pessoas"
               className={`admin-nav-item ${isActive('/admin/pessoas') ? 'active' : ''}`}

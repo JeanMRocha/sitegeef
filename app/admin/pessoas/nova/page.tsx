@@ -6,7 +6,7 @@ import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 
 export const metadata = {
-  title: 'Nova Pessoa - Admin GEEF',
+  title: 'Novo Tarefeiro - Admin GEEF',
 };
 
 const TIPOS_VINCULO = [
@@ -132,7 +132,7 @@ async function savePessoaStep(formData: FormData) {
       redirect(
         buildFlashNoticeUrl(buildHref(null, 'identificacao'), {
           variant: 'error',
-          message: 'Crie a pessoa pela etapa de identificação.',
+        message: 'Crie o tarefeiro pela etapa de identificação.',
         }),
       );
     }
@@ -211,7 +211,7 @@ async function savePessoaStep(formData: FormData) {
       redirect(
         buildFlashNoticeUrl('/admin/pessoas', {
           variant: 'success',
-          message: 'Pessoa salva.',
+          message: 'Tarefeiro salvo.',
         }),
       );
     }
@@ -224,7 +224,7 @@ async function savePessoaStep(formData: FormData) {
     redirect(
       buildFlashNoticeUrl(fallbackHref, {
         variant: 'error',
-        message: 'Não foi possível salvar a pessoa.',
+        message: 'Não foi possível salvar o tarefeiro.',
       }),
     );
   }
@@ -243,7 +243,7 @@ async function NovaPessoaContent({ searchParams }: { searchParams: { id?: string
       <div className="area-page">
         <div className="admin-page-header">
           <div>
-            <h1 className="admin-page-title">Nova Pessoa</h1>
+            <h1 className="admin-page-title">Novo Tarefeiro</h1>
           </div>
           <div className="admin-actions">
             <Link href="/admin/pessoas" className="admin-btn admin-btn-secondary">Cancelar</Link>
@@ -253,7 +253,7 @@ async function NovaPessoaContent({ searchParams }: { searchParams: { id?: string
         <section className="area-section">
           <div className="admin-card">
             <p style={{ margin: 0, color: 'var(--muted)' }}>
-              Não foi possível carregar a pessoa selecionada.
+              Não foi possível carregar o tarefeiro selecionado.
             </p>
           </div>
         </section>
@@ -287,7 +287,7 @@ async function NovaPessoaContent({ searchParams }: { searchParams: { id?: string
     <div className="area-page">
       <div className="admin-page-header">
         <div>
-          <h1 className="admin-page-title">Nova Pessoa</h1>
+          <h1 className="admin-page-title">Novo Tarefeiro</h1>
         </div>
         <div className="admin-actions">
           <button type="submit" form="pessoa-step-form" className="admin-btn admin-btn-primary">
