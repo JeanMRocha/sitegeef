@@ -79,10 +79,12 @@ Use esta ordem quando a tarefa envolver estrutura/admin, actions, banco ou segur
 
 Atalhos locais:
 
+- `npm run autoreflex:up` para checar o Ollama local e subir o Autoreflex em uma etapa
 - `npm run autoreflex:serve` para subir o servidor local de skills em `8090`
 - `npm run autoreflex:health` para checar a saúde do Autoreflex local
 - `npm run autoreflex:index` para reindexar skills, docs e notas locais
 - `npm run autoreflex:note -- "titulo" "texto"` para registrar um erro/aprendizado
+- O `autoreflex:serve` não inicia o Ollama sozinho por padrão; para permitir isso de forma explícita, exportar `AUTOREFLEX_START_OLLAMA=1` antes do comando
 - `npm run skills:health`
 - `npm run skills:list`
 - `npm run skills:search "termo"`
@@ -94,6 +96,13 @@ Quando o Autoreflex local voltar a responder, rodar primeiro:
 
 - `npm run skills:index`
 - `npm run skills:list`
+
+Fluxo recomendado quando a sessão precisar do Autoreflex:
+
+1. Confirmar que o Ollama já está ativo em `127.0.0.1:11434`.
+2. Subir o Autoreflex com `npm run autoreflex:serve`.
+3. Validar `http://127.0.0.1:8090/health`.
+4. Só então usar `npm run skills:search`, `npm run skills:list` ou `npm run skills:index`.
 
 ## Quando mexer em cache
 
@@ -232,7 +241,7 @@ Quando o Autoreflex local voltar a responder, rodar primeiro:
   - Os detalhes editaveis mais sensiveis tambem receberam o aviso curto: pessoa, usuario, crianca, emprestimo, reserva, familia, fraterno, irradiacao, recepcao, evangelizacao e juventude.
   - O servidor local voltou a responder em `http://127.0.0.1:3500` depois do ajuste de porta ocupada, e a rota raiz respondeu `200` durante a validacao final.
   - O gate local `npm run gate:server` confirma `200` antes de devolver a aplicacao e o `npm run test:admin-smoke` passou nas 24 rotas admin principais depois da reorganizacao.
-  - O Autoreflex local foi implementado em `scripts/autoreflex-local.mjs`, sobe em `http://127.0.0.1:8090`, usa Ollama com fallback lexical e aceita notas de aprendizado em `.autoreflex/notes/`.
+  - O Autoreflex local foi implementado em `scripts/autoreflex-local.mjs`, sobe em `http://127.0.0.1:8090`, usa Ollama local quando disponivel, nao inicia o daemon sozinho por padrao e aceita notas de aprendizado em `.autoreflex/notes/`.
   - O fluxo local agora usa `npm run dev` direto como caminho principal para desenvolvimento.
   - O header publico foi separado em uma casca server-rendered (`components/site-header.tsx`) e uma camada client para menus/usuario (`components/site-header-actions.tsx`) para o menu principal nao sumir quando a hidratacao falhar depois do logout.
   - Se o Fast Refresh reclamar de arquivo ausente nesse fluxo, reiniciar o `next dev` limpo antes de investigar a UI.

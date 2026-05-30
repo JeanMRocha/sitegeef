@@ -12,6 +12,7 @@ const HOST = process.env.AUTOREFLEX_HOST || "127.0.0.1";
 const AUTOREFLEX_URL = `http://${HOST}:${PORT}`;
 const OLLAMA_URL = process.env.AUTOREFLEX_OLLAMA_URL || "http://127.0.0.1:11434";
 const EMBED_MODEL = process.env.AUTOREFLEX_EMBED_MODEL || "nomic-embed-text";
+const AUTO_START_OLLAMA = /^(1|true|yes)$/i.test(String(process.env.AUTOREFLEX_START_OLLAMA || ""));
 const STORAGE_DIR = path.join(ROOT, ".autoreflex");
 const NOTES_DIR = path.join(STORAGE_DIR, "notes");
 const INDEX_FILE = path.join(STORAGE_DIR, "index.json");
@@ -323,6 +324,10 @@ async function ensureOllamaReady() {
   const ok = await probeHttp(`${OLLAMA_URL}/api/tags`, 2000);
   if (ok) {
     return true;
+  }
+
+  if (!AUTO_START_OLLAMA) {
+    throw new Error("Ollama não está respondendo e AUTOREFLEX_START_OLLAMA está desativado");
   }
 
   console.log("[autoreflex] iniciando Ollama local...");

@@ -243,9 +243,9 @@
   gap: 0.1rem;
   padding: 0.55rem 0.8rem;
   border-radius: 16px;
-  border: 1px solid rgba(138, 0, 90, 0.08);
-  background: rgba(255, 255, 255, 0.58);
-  color: var(--text);
+  border: 1px solid var(--nav-tab-border);
+  background: var(--nav-tab-bg);
+  color: var(--nav-tab-text);
   cursor: pointer;
   transition: all 160ms ease;
   min-width: 0;
@@ -266,18 +266,26 @@
 .admin-shell-tab:hover,
 .admin-shell-tab:focus-visible {
   transform: translateY(-1px);
-  border-color: rgba(138, 0, 90, 0.18);
-  box-shadow: 0 10px 20px rgba(124, 63, 163, 0.08);
+  border-color: var(--nav-tab-active-border);
+  background: var(--nav-tab-hover-bg);
+  color: var(--nav-tab-hover-text);
+  box-shadow: var(--nav-tab-active-shadow);
 }
 
 .admin-shell-tab.active {
-  background: linear-gradient(135deg, rgba(138, 0, 90, 0.14), rgba(99, 213, 31, 0.08));
-  border-color: rgba(138, 0, 90, 0.18);
-  color: var(--uva-700);
+  background: var(--nav-tab-active-bg);
+  border-color: var(--nav-tab-active-border);
+  color: var(--nav-tab-active-text);
+  box-shadow: var(--nav-tab-active-shadow);
+}
+
+.admin-shell-tab.active span,
+.admin-shell-tab.active small {
+  color: inherit;
 }
 
 .admin-shell-tab.active small {
-  color: var(--uva-700);
+  opacity: 0.92;
 }
 
 .admin-user-card {
@@ -1174,6 +1182,24 @@
   border-color: #5a5349;
 }
 
+:root.dark .admin-btn-primary {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.35);
+}
+
+:root.dark .admin-btn-secondary {
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  border-color: var(--btn-secondary-border);
+}
+
+:root.dark .admin-btn-secondary:hover {
+  background: var(--btn-secondary-hover-bg);
+  color: var(--btn-secondary-hover-text);
+  border-color: var(--border-light);
+}
+
 :root.dark .admin-nav-title {
   color: var(--text-muted);
 }
@@ -1188,14 +1214,16 @@
 }
 
 :root.dark .admin-nav-item.active {
-  background: rgba(138, 0, 90, 0.2);
-  border-color: rgba(138, 0, 90, 0.25);
-  color: #f0b5de;
+  background: linear-gradient(180deg, rgba(60, 52, 45, 0.98), rgba(45, 41, 38, 0.98));
+  border-color: rgba(224, 138, 196, 0.22);
+  color: #f4efe7;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03), 0 12px 24px rgba(0, 0, 0, 0.22);
 }
 
 :root.dark .admin-status-panel {
-  background: rgba(138, 0, 90, 0.12);
-  border-color: rgba(138, 0, 90, 0.2);
+  background: rgba(60, 52, 45, 0.8);
+  border-color: #5a5349;
+  color: var(--text-primary);
 }
 
 :root.dark .admin-empty-state {

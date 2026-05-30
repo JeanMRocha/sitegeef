@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import type { Musica, MusicaSessao } from "@/lib/musicas";
-import { MusicaReader } from "@/components/musicas/musica-reader";
 
 type MusicaDisplayLiveProps = {
   codigo: string;
@@ -18,14 +17,12 @@ type SessaoResponse = {
 
 export function MusicaDisplayLive({ codigo, logoSrc, initialSessao, initialMusica }: MusicaDisplayLiveProps) {
   const [data, setData] = useState<SessaoResponse>({ sessao: initialSessao, musica: initialMusica });
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
     let intervalId: number | undefined;
 
     async function refresh() {
-      setLoading(true);
       try {
         const response = await fetch(`/api/musicas/sessoes/${encodeURIComponent(codigo)}`, {
           cache: "no-store",
@@ -42,10 +39,8 @@ export function MusicaDisplayLive({ codigo, logoSrc, initialSessao, initialMusic
             window.clearInterval(intervalId);
           }
         }
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
+      } catch (error) {
+        console.error("Erro ao atualizar sessão:", error);
       }
     }
 
@@ -62,6 +57,7 @@ export function MusicaDisplayLive({ codigo, logoSrc, initialSessao, initialMusic
 
   const { sessao, musica } = data;
 
+  // Estado: Sessão inativa
   if (!sessao.ativo) {
     return (
       <main className="musica-display-shell musica-display-shell--idle">
@@ -75,42 +71,78 @@ export function MusicaDisplayLive({ codigo, logoSrc, initialSessao, initialMusic
     );
   }
 
-  if (!musica || sessao.modo === "catalogo") {
+  // Estado: Pareamento (ativo, sem música)
+  if (!musica) {
+    const controlUrl = `${typeof window !== "undefined" ? window.location.origin : ""}/musicas/controle/${codigo}`;
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(controlUrl)}`;
+
     return (
-      <main className="musica-display-shell musica-display-shell--catalogo">
-        <section className="musica-display-stage">
-          <div className="musica-display-top">
-            <img src={logoSrc} alt="Logo GEEF" className="musica-display-logo" />
-            <div className="musica-display-pair">
-              <p className="eyebrow">Exibição</p>
-              <h1>Catálogo em tela</h1>
-              <p>
-                {musica ? "A tela está em modo catálogo." : "Aguardando uma música ser vinculada a esta sessão."}
-              </p>
-            </div>
-            <span className="musica-code-pill">Código {codigo}</span>
+      <main className="musica-display-pairing">
+        <img src={logoSrc} alt="Logo GEEF" className="musica-display-pairing-logo" />
+
+        <div className="musica-display-pairing-content">
+          <p className="musica-display-pairing-label">Código de acesso</p>
+          <div className="musica-display-pairing-code">{codigo}</div>
+
+          <div className="musica-display-pairing-qr">
+            <img src={qrUrl} alt={`QR Code: ${controlUrl}`} />
+            <p className="musica-display-pairing-url">{controlUrl}</p>
           </div>
 
-          <div className="musica-display-empty">
-            <p className="content-panel-label">Controle</p>
-            <p>
-              {loading
-                ? "Atualizando estado da sessão..."
-                : "Use a área interna para escolher a música e alternar o modo para exibição."}
-            </p>
-          </div>
-        </section>
+          <p className="musica-display-pairing-instruction">
+            Escaneie o QR code ou acesse a URL no seu dispositivo para controlar a apresentação
+          </p>
+        </div>
       </main>
     );
   }
 
+  // Estado: Exibindo música em 16:9
+  const estrofes = musica.partes.filter((p) => p.tipo === "estrofe" || p.tipo === "ponte" || p.tipo === "intro");
+  const refraoDestacado = musica.partes.find((p) => p.tipo === "refrao");
+
+  let estrofeCount = 0;
+
   return (
-    <MusicaReader
-      musica={musica}
-      logoSrc={logoSrc}
-      displayCode={codigo}
-      mode="exibicao"
-      showBackLink={false}
-    />
+    <main className="musica-display-screen">
+      {/* Header */}
+      <div className="musica-display-header-16x9">
+        <div className="musica-display-header-title">
+          <h1>{musica.titulo}</h1>
+          <p className="musica-display-header-subtitle">
+            {musica.autor}
+            {musica.tom ? ` • Tom ${musica.tom}` : ""}
+            {musica.versao ? ` • ${musica.versao}` : ""}
+          </p>
+        </div>
+
+        <img src={logoSrc} alt="Logo GEEF" className="musica-display-header-logo" />
+
+        {refraoDestacado && (
+          <div className="musica-display-chorus-pill">
+            <p className="musica-display-chorus-pill-label">Refrão</p>
+            <p className="musica-display-chorus-text">♪ {refraoDestacado.conteudo.split("\n")[0]}</p>
+          </div>
+        )}
+      </div>
+
+      {/* Body com estrofes em 2 colunas */}
+      <div className="musica-display-body-16x9">
+        {estrofes.map((parte) => {
+          if (parte.tipo === "estrofe") {
+            estrofeCount++;
+          }
+
+          return (
+            <div key={parte.id ?? `${musica.id}-${parte.ordem}`} className="musica-display-verse-16x9">
+              <div className="musica-display-verse-num">{estrofeCount}</div>
+              <div className="musica-display-verse-content">
+                <pre>{parte.conteudo}</pre>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </main>
   );
 }

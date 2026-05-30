@@ -85,7 +85,7 @@
   --btn-secondary-text: #e8dfd4;
   --btn-secondary-border: #5a5349;
   --btn-secondary-hover-bg: rgba(80, 70, 62, 0.96);
-  --btn-secondary-hover-text: #f0b5de;
+  --btn-secondary-hover-text: #f4efe7;
 }
 
 /* Tertiary/Ghost Button */
@@ -98,8 +98,8 @@
 
 :root.dark {
   --btn-tertiary-bg: transparent;
-  --btn-tertiary-text: #f0b5de;
-  --btn-tertiary-border: 1px solid rgba(138, 0, 90, 0.25);
+  --btn-tertiary-text: #f4efe7;
+  --btn-tertiary-border: 1px solid rgba(224, 138, 196, 0.35);
   --btn-tertiary-hover-bg: rgba(138, 0, 90, 0.15);
 }
 
@@ -129,7 +129,7 @@
   --input-border: #5a5349;
   --input-border-focus: #e08ac4;
   --input-text: #f4efe7;
-  --input-placeholder: #a89892;
+  --input-placeholder: #d4ccc1;
   --input-focus-ring: rgba(224, 138, 196, 0.12);
 }
 
@@ -169,12 +169,33 @@
   --border-light: #e1d4ee;
   --border-medium: #d1c4db;
   --border-dark: #c9b8d4;
+
+  /* Navegação em superfícies */
+  --nav-tab-bg: var(--surface-primary);
+  --nav-tab-text: var(--text-primary);
+  --nav-tab-border: var(--border-medium);
+  --nav-tab-hover-bg: var(--surface-primary-hover);
+  --nav-tab-hover-text: var(--text-primary);
+  --nav-tab-active-bg: linear-gradient(135deg, rgba(138, 0, 90, 0.12), rgba(99, 213, 31, 0.08));
+  --nav-tab-active-text: #6a0045;
+  --nav-tab-active-border: rgba(138, 0, 90, 0.18);
+  --nav-tab-active-shadow: 0 12px 24px rgba(124, 63, 163, 0.08);
 }
 
 :root.dark {
   --border-light: #5a5349;
   --border-medium: #4a413a;
   --border-dark: #3a312a;
+
+  --nav-tab-bg: rgba(45, 41, 38, 0.96);
+  --nav-tab-text: var(--text-primary);
+  --nav-tab-border: #5a5349;
+  --nav-tab-hover-bg: rgba(60, 52, 45, 0.96);
+  --nav-tab-hover-text: var(--text-primary);
+  --nav-tab-active-bg: linear-gradient(180deg, rgba(60, 52, 45, 0.98), rgba(45, 41, 38, 0.98));
+  --nav-tab-active-text: #f4efe7;
+  --nav-tab-active-border: rgba(224, 138, 196, 0.22);
+  --nav-tab-active-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03), 0 12px 24px rgba(0, 0, 0, 0.22);
 }
 
 /* ===== CAMADA 7: MODALS & OVERLAYS ===== */
@@ -235,7 +256,7 @@
 
 :root.dark {
   --link-color: #e08ac4;
-  --link-hover: #f0b5de;
+  --link-hover: #f4efe7;
   --link-visited: #d06aa8;
 
   --focus-ring: rgba(224, 138, 196, 0.2);

@@ -211,11 +211,17 @@
 }
 
 .admin-nav-item.active {
-  background: linear-gradient(135deg, rgba(138, 0, 90, 0.12), rgba(99, 213, 31, 0.08));
-  border-color: rgba(138, 0, 90, 0.12);
+  background: var(--nav-tab-active-bg);
+  border-color: var(--nav-tab-active-border);
   border-left-color: transparent;
-  color: var(--uva-700);
+  color: var(--nav-tab-active-text);
   font-weight: 600;
+  box-shadow: var(--nav-tab-active-shadow);
+}
+
+.admin-nav-item.active span,
+.admin-nav-item.active small {
+  color: inherit;
 }
 
 /* Dark Mode Adjustments */
@@ -254,7 +260,7 @@
 
 :root.dark .admin-sidebar-quick-link:hover {
   background: rgba(138, 0, 90, 0.16);
-  color: #f0b5de;
+  color: #f4efe7;
 }
 
 :root.dark .admin-nav-title,
@@ -267,8 +273,8 @@
 }
 
 :root.dark .admin-nav-title-button:hover {
-  background: rgba(138, 0, 90, 0.15);
-  color: #f0b5de;
+  background: rgba(60, 52, 45, 0.96);
+  color: #f4efe7;
 }
 
 /* Responsive */

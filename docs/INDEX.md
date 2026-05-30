@@ -9,6 +9,7 @@
 - [Documento base do ERP](./baseerp.md)
 - [MCP Supabase GEEF](./MCP_SUPABASE_GEEF.md)
 - [Sistema de tema](../THEME_SYSTEM.md)
+- [Padrão de tema, contraste e identidade](./PADRAO_TEMA_CONTRASTE_IDENTIDADE.md)
 
 ## Por assunto
 
@@ -16,6 +17,7 @@
 
 - [Agent Playbook](./AGENT_PLAYBOOK.md)
 - [Sistema de tema](../THEME_SYSTEM.md)
+- [Padrão de tema, contraste e identidade](./PADRAO_TEMA_CONTRASTE_IDENTIDADE.md)
 - [CSS correction summary](../CSS_CORRECTION_SUMMARY.md)
 
 ### Cache e Supabase

@@ -37,6 +37,12 @@ codex mcp login supabase-geef
 - Nunca misturar este projeto com outras contas ou outros projetos Supabase
 - Antes de qualquer leitura/escrita remota, confirmar que o MCP correto está `enabled` e autenticado por OAuth
 
+**Autoreflex local:**
+- O servidor local de skills não sobe sozinho quando o projeto é aberto.
+- Para usar o Autoreflex, iniciar manualmente com `npm run autoreflex:serve`.
+- O Ollama não é iniciado automaticamente por padrão; para permitir isso de forma explícita, usar `AUTOREFLEX_START_OLLAMA=1`.
+- Se o `curl` para `http://127.0.0.1:8090` falhar, parar e informar o usuário em vez de assumir que o índice existe.
+
 ---
 
 ## Ordem de decisão — Como trabalhar

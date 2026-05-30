@@ -39,13 +39,18 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
 function applyTheme(theme: Theme) {
   const root = document.documentElement;
+  const body = document.body;
 
   if (theme === "dark") {
     root.classList.add("dark");
+    body.classList.add("dark");
     root.style.colorScheme = "dark";
+    body.style.colorScheme = "dark";
   } else {
     root.classList.remove("dark");
+    body.classList.remove("dark");
     root.style.colorScheme = "light";
+    body.style.colorScheme = "light";
   }
 }
 

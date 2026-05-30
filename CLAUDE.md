@@ -46,6 +46,8 @@ Se tiver dúvida se uma refatoração é permitida: **pergunte antes de fazer.**
 
 O projeto usa **Autoreflex local** como servidor de skills (memória persistente). Consulte `agents.md` e `docs/AUTOREFLEX_LOCAL.md` para a ordem de decisão, endpoints e fluxo com Ollama.
 
+Por padrão, o Autoreflex assume que o Ollama já está disponível localmente e **não inicia** o daemon sozinho. Se for necessário permitir esse auto-start, usar `AUTOREFLEX_START_OLLAMA=1` de forma explícita antes de `npm run autoreflex:serve`.
+
 **Quick start:**
 ```bash
 npm run autoreflex:serve

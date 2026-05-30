@@ -205,6 +205,14 @@ components/
 - [ ] Animações por tema
 - [ ] Exportar palette para Figma/design tools
 
+## Padrão De Construção
+
+Para criar ou alterar páginas, siga o documento canônico:
+
+- [Padrão de tema, contraste e identidade](./docs/PADRAO_TEMA_CONTRASTE_IDENTIDADE.md)
+
+Use esse documento como referência para botões, headers, estados ativos, superfícies e regras de contraste.
+
 ---
 
 **Desenvolvido para:** GEEF — Grupo Espírita Elias Francis  

@@ -95,8 +95,8 @@ async function PlanoContasPage() {
                           </Link>
                           <form action={() => handleToggle(conta.id, conta.status === 'ativo')}>
                             <button type="submit" className="admin-btn admin-btn-small" style={{
-                              backgroundColor: conta.status === 'ativo' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(34, 197, 94, 0.1)',
-                              color: conta.status === 'ativo' ? '#ef4444' : '#22c55e',
+                              backgroundColor: conta.status === 'ativo' ? 'rgba(239, 68, 68, 0.15)' : 'rgba(34, 197, 94, 0.15)',
+                              color: conta.status === 'ativo' ? '#dc2626' : '#16a34a',
                             }}>
                               {conta.status === 'ativo' ? '🗑️ Inativar' : '✓ Ativar'}
                             </button>

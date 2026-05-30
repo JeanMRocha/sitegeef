@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev -p 3500",
     "autoreflex:serve": "node scripts/autoreflex-local.mjs",
+    "autoreflex:up": "node scripts/autoreflex-up.mjs",
     "autoreflex:index": "node scripts/autoreflex-local.mjs index",
     "autoreflex:health": "node scripts/autoreflex-local.mjs health",
     "autoreflex:note": "node scripts/autoreflex-local.mjs note",
