@@ -57,10 +57,9 @@ export function SessoesList({ initialSessoes, musicas }: SessoesListProps) {
                   <span
                     className="inline-status"
                     style={{
-                      backgroundColor: sessao.ativo
-                        ? "rgba(34, 197, 94, 0.2)"
-                        : "rgba(107, 114, 128, 0.2)",
-                      color: sessao.ativo ? "#16a34a" : "#6b7280",
+                      backgroundColor: sessao.ativo ? "var(--status-success-bg)" : "var(--surface-secondary-hover)",
+                      color: sessao.ativo ? "var(--status-success-text)" : "var(--text-primary)",
+                      border: "1px solid var(--border-medium)",
                     }}
                   >
                     {sessao.ativo ? "Ativa" : "Inativa"}

@@ -349,6 +349,21 @@ export async function getMusicaSessaoComMusica(codigo: string) {
   return { sessao, musica };
 }
 
+export async function getMusicaExibicaoAtual() {
+  const sessoes = await listMusicaSessoes();
+  const sessaoAtiva = sessoes.find((sessao) => sessao.ativo) ?? null;
+
+  if (!sessaoAtiva) {
+    return null;
+  }
+
+  const musica = sessaoAtiva.musica_id ? await getMusicaById(sessaoAtiva.musica_id) : null;
+  return {
+    sessao: sessaoAtiva,
+    musica,
+  };
+}
+
 export async function listMusicaSessoes() {
   const supabase = createServiceRoleClient();
 

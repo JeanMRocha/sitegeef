@@ -36,35 +36,31 @@ export default async function MusicasPage({ searchParams }: PageProps) {
             </article>
           ) : (
             musicas.map((musica) => (
-              <details key={musica.id} className="musica-catalog-card musica-catalog-compact">
-                <summary className="musica-catalog-summary-row">
-                  <div className="musica-catalog-summary-main">
-                    <span className="musica-catalog-author">{musica.autor}</span>
-                    <strong className="musica-catalog-title">{musica.titulo}</strong>
-                    <span className="musica-catalog-meta">
-                      {musica.tom ? `Tom ${musica.tom}` : "Tom não definido"}
-                      {musica.versao ? ` • ${musica.versao}` : ""}
-                      <span className="musica-catalog-partes">{` • ${musica.partes.length} partes`}</span>
-                    </span>
-                  </div>
-                  <span className="musica-catalog-summary-cta">Ler</span>
-                </summary>
-
-                <div className="musica-catalog-expanded">
-                  <p className="musica-catalog-summary">
-                    {musica.partes
-                      .map((parte) => parte.conteudo)
-                      .join(" ")
-                      .slice(0, 160) || "Música disponível para leitura e exibição."}
-                  </p>
-
-                  <div className="musica-catalog-actions">
-                    <Link href={`/musicas/${musica.slug}`} className="button button-secondary">
-                      Ler completo
-                    </Link>
-                  </div>
+              <article key={musica.id} className="musica-catalog-card musica-catalog-card--presentation">
+                <div className="musica-catalog-summary-main">
+                  <span className="musica-catalog-author">{musica.autor}</span>
+                  <strong className="musica-catalog-title">{musica.titulo}</strong>
+                  <span className="musica-catalog-meta">
+                    {musica.tom ? `Tom ${musica.tom}` : "Tom não definido"}
+                    {musica.versao ? ` • ${musica.versao}` : ""}
+                    <span className="musica-catalog-partes">{` • ${musica.partes.length} partes`}</span>
+                  </span>
                 </div>
-              </details>
+
+                <p className="musica-catalog-summary musica-catalog-summary--single">
+                  {musica.partes
+                    .map((parte) => parte.conteudo)
+                    .join(" ")
+                    .replace(/\s+/g, " ")
+                    .trim() || "Música disponível para leitura e exibição."}
+                </p>
+
+                <div className="musica-catalog-actions">
+                  <Link href="/musicas/exibir" className="button button-secondary">
+                    Ver
+                  </Link>
+                </div>
+              </article>
             ))
           )}
         </div>

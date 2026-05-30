@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { getMusicasResumo, listMusicaSessoes, listMusicaAutores } from "@/lib/musicas";
 
 export const metadata = {
-  title: "Reunião pública - Admin GEEF",
+  title: "Avisos e reunião - Admin GEEF",
 };
 
 async function ReuniaoPublicaContent() {
@@ -23,7 +23,7 @@ async function ReuniaoPublicaContent() {
         <div className="area-hero-top">
           <div>
             <h1 className="area-hero-title" style={{ fontSize: "2rem" }}>
-              Reunião pública
+              Avisos e reunião
             </h1>
           </div>
         </div>

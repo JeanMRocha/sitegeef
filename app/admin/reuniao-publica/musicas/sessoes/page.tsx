@@ -8,16 +8,10 @@ import { encerrarTodasMusicaSessoesAction } from "../actions";
 import { getMusicasResumo, listMusicaSessoes } from "@/lib/musicas";
 
 export const metadata = {
-  title: "Sessões de pareamento - Admin GEEF",
+  title: "Sessões e controle - Admin GEEF",
 };
 
-type PageProps = {
-  searchParams?: Promise<{ codigo?: string }>;
-};
-
-async function SessoesContent({ searchParams }: PageProps) {
-  const params = (await searchParams) ?? {};
-
+async function SessoesContent() {
   const [sessoes, musicasResumo] = await Promise.all([listMusicaSessoes(), getMusicasResumo()]);
   const sessoesAtivas = sessoes.filter((sessao) => sessao.ativo);
   const sessoesAtivasLabel = sessoesAtivas.length === 1 ? "1 sessão ativa" : `${sessoesAtivas.length} sessões ativas`;
@@ -27,7 +21,7 @@ async function SessoesContent({ searchParams }: PageProps) {
       <div className="admin-page-header">
         <div>
           <span className="admin-dashboard-kicker">Músicas</span>
-          <h1 className="admin-page-title">Sessões de pareamento</h1>
+          <h1 className="admin-page-title">Sessões e controle</h1>
         </div>
         <Link href="/admin/reuniao-publica/musicas" className="admin-btn admin-btn-secondary" title="Voltar">
           <IconArrowLeft size={18} />
@@ -88,7 +82,7 @@ async function SessoesContent({ searchParams }: PageProps) {
 
         <div className="admin-card table-surface">
           <div className="area-section-title">
-            <p>Clique em um código para editar, abrir a tela pública ou encerrar/reativar a sessão.</p>
+            <p>Clique em uma sessão para editar, abrir o controle ou a exibição pública.</p>
           </div>
 
           {sessoes.length === 0 ? (
@@ -104,7 +98,7 @@ async function SessoesContent({ searchParams }: PageProps) {
   );
 }
 
-export default function SessoesPage(props: PageProps) {
+export default function SessoesPage() {
   return (
     <AdminModuleGate
       permission="pode_publicar"
@@ -113,7 +107,7 @@ export default function SessoesPage(props: PageProps) {
       title="Sessões"
     >
       <Suspense fallback={<div style={{ padding: "2rem", textAlign: "center" }}>Carregando...</div>}>
-        <SessoesContent {...props} />
+        <SessoesContent />
       </Suspense>
     </AdminModuleGate>
   );

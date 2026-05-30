@@ -6,7 +6,7 @@ import { saveMusicaSessaoAction, createMusicaSessaoAction } from "../../actions"
 import { getMusicasResumo, listMusicaSessoes } from "@/lib/musicas";
 
 export const metadata = {
-  title: "Nova sessão de pareamento - Admin GEEF",
+  title: "Nova sessão - Admin GEEF",
 };
 
 type PageProps = {
@@ -30,7 +30,7 @@ async function NovoSessaoContent({ searchParams }: PageProps) {
       <div className="admin-page-header">
         <div>
           <span className="admin-dashboard-kicker">Músicas</span>
-          <h1 className="admin-page-title">{isEditing ? "Editar sessão" : "Nova sessão de pareamento"}</h1>
+          <h1 className="admin-page-title">{isEditing ? "Editar sessão" : "Nova sessão"}</h1>
         </div>
         <Link href="/admin/reuniao-publica/musicas/sessoes" className="admin-btn admin-btn-secondary" title="Voltar">
           <IconArrowLeft size={18} />
@@ -45,12 +45,12 @@ async function NovoSessaoContent({ searchParams }: PageProps) {
         <div className="admin-card" style={{ maxWidth: "500px" }}>
           <div className="area-section-title">
             <h2>{isEditing ? "Editar sessão" : "Criar nova sessão"}</h2>
-            <p>{isEditing ? "Modifique os dados da sessão." : "Crie uma tela de exibição pareada ou cole um código existente para editar."}</p>
+            <p>{isEditing ? "Modifique os dados da sessão." : "Crie uma tela de exibição ou cole um código existente para editar."}</p>
           </div>
 
           <form action={saveMusicaSessaoAction} style={{ display: "grid", gap: "1rem" }}>
             <label className="profile-form-field">
-              <span>Código de pareamento</span>
+              <span>Código da tela</span>
               <input
                 className="profile-form-input"
                 name="codigo_pareamento"

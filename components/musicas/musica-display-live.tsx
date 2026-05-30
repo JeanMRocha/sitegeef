@@ -4,38 +4,54 @@ import { useEffect, useState } from "react";
 import type { Musica, MusicaSessao } from "@/lib/musicas";
 
 type MusicaDisplayLiveProps = {
-  codigo: string;
+  codigo?: string;
+  pollUrl?: string;
   logoSrc: string;
-  initialSessao: MusicaSessao;
+  initialSessao: MusicaSessao | null;
   initialMusica: Musica | null;
+  showPairingInfo?: boolean;
 };
 
 type SessaoResponse = {
-  sessao: MusicaSessao;
+  sessao: MusicaSessao | null;
   musica: Musica | null;
 };
 
-export function MusicaDisplayLive({ codigo, logoSrc, initialSessao, initialMusica }: MusicaDisplayLiveProps) {
-  const [data, setData] = useState<SessaoResponse>({ sessao: initialSessao, musica: initialMusica });
+export function MusicaDisplayLive({
+  codigo,
+  pollUrl,
+  logoSrc,
+  initialSessao,
+  initialMusica,
+  showPairingInfo = true,
+}: MusicaDisplayLiveProps) {
+  const [data, setData] = useState<SessaoResponse | null>(
+    initialSessao ? { sessao: initialSessao, musica: initialMusica } : null,
+  );
 
   useEffect(() => {
     let cancelled = false;
     let intervalId: number | undefined;
+    const endpoint =
+      pollUrl ?? (codigo ? `/api/musicas/sessoes/${encodeURIComponent(codigo)}` : "/api/musicas/exibicao");
 
     async function refresh() {
       try {
-        const response = await fetch(`/api/musicas/sessoes/${encodeURIComponent(codigo)}`, {
+        const response = await fetch(endpoint, {
           cache: "no-store",
         });
 
         if (!response.ok) {
+          if (!cancelled && response.status === 404) {
+            setData(null);
+          }
           return;
         }
 
         const nextData = (await response.json()) as SessaoResponse;
         if (!cancelled) {
           setData(nextData);
-          if (!nextData.sessao.ativo && intervalId !== undefined) {
+          if (!nextData.sessao?.ativo && intervalId !== undefined) {
             window.clearInterval(intervalId);
           }
         }
@@ -53,18 +69,32 @@ export function MusicaDisplayLive({ codigo, logoSrc, initialSessao, initialMusic
         window.clearInterval(intervalId);
       }
     };
-  }, [codigo]);
+  }, [codigo, pollUrl]);
 
-  const { sessao, musica } = data;
+  const sessao = data?.sessao ?? null;
+  const musica = data?.musica ?? null;
 
   // Estado: Sessão inativa
-  if (!sessao.ativo) {
+  if (!sessao || !sessao.ativo) {
+    if (!showPairingInfo) {
+      return (
+        <main className="musica-display-shell musica-display-shell--idle">
+          <div className="musica-display-idle-card">
+            <img src={logoSrc} alt="Logo GEEF" className="musica-display-logo" />
+            <p className="eyebrow">Exibição pública</p>
+            <h1>Nenhuma música ativa</h1>
+            <p>A seleção feita no controle aparece aqui sem precisar recarregar a página.</p>
+          </div>
+        </main>
+      );
+    }
+
     return (
       <main className="musica-display-shell musica-display-shell--idle">
         <div className="musica-display-idle-card">
           <img src={logoSrc} alt="Logo GEEF" className="musica-display-logo" />
           <p className="eyebrow">Exibição desativada</p>
-          <h1>Sessão {codigo}</h1>
+          <h1>Sessão {codigo ?? "sem código"}</h1>
           <p>Ative a tela novamente na área interna para continuar a apresentação.</p>
         </div>
       </main>
@@ -73,6 +103,19 @@ export function MusicaDisplayLive({ codigo, logoSrc, initialSessao, initialMusic
 
   // Estado: Pareamento (ativo, sem música)
   if (!musica) {
+    if (!showPairingInfo) {
+      return (
+        <main className="musica-display-shell musica-display-shell--idle">
+          <div className="musica-display-idle-card">
+            <img src={logoSrc} alt="Logo GEEF" className="musica-display-logo" />
+            <p className="eyebrow">Exibição pública</p>
+            <h1>Aguardando seleção</h1>
+            <p>Abra o controle interno e escolha uma música para atualizar esta tela.</p>
+          </div>
+        </main>
+      );
+    }
+
     const controlUrl = `${typeof window !== "undefined" ? window.location.origin : ""}/musicas/controle/${codigo}`;
     const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(controlUrl)}`;
 

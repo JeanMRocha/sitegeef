@@ -49,7 +49,7 @@
   padding: 1.05rem 1.15rem;
   border: 1px solid var(--line);
   border-radius: var(--radius-xl);
-  background: rgba(255, 255, 255, 0.68);
+  background: linear-gradient(180deg, rgba(249, 244, 239, 0.98), rgba(240, 233, 226, 0.94));
   box-shadow: var(--shadow);
   backdrop-filter: blur(10px);
 }
@@ -68,6 +68,7 @@
   font-size: clamp(1.9rem, 4vw, 3rem);
   line-height: 0.94;
   letter-spacing: -0.05em;
+  color: #2d1f1a;
 }
 
 .musica-reader-actions {
@@ -107,11 +108,13 @@
   font-family: var(--font-heading);
   font-size: clamp(2.1rem, 4vw, 3.35rem);
   line-height: 0.95;
+  color: #2d1f1a;
 }
 
 .musica-hero-subtitle {
   margin: 0.45rem 0 0;
-  color: var(--muted);
+  color: #5e4f45;
+  font-weight: 600;
 }
 
 .musica-hero-actions {
@@ -624,39 +627,21 @@
 
 .musica-catalog-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.8rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1rem;
   width: 100%;
 }
 
 .musica-catalog-card {
   display: grid;
-  gap: 0.9rem;
-  padding: 0.95rem 1rem;
+  gap: 0.85rem;
+  min-height: 0;
+  aspect-ratio: 16 / 9;
+  padding: 1rem;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
-  background: rgba(255, 255, 255, 0.62);
+  background: rgba(255, 255, 255, 0.68);
   box-shadow: var(--shadow-sm);
-}
-
-.musica-catalog-compact {
-  overflow: hidden;
-}
-
-.musica-catalog-compact > summary {
-  list-style: none;
-}
-
-.musica-catalog-compact > summary::-webkit-details-marker {
-  display: none;
-}
-
-.musica-catalog-summary-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.85rem;
-  cursor: pointer;
 }
 
 .musica-catalog-summary-main {
@@ -692,6 +677,16 @@
   line-height: 1.6;
 }
 
+.musica-catalog-summary--single {
+  margin-top: 0;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+}
+
 .musica-catalog-meta {
   display: flex;
   align-items: center;
@@ -718,15 +713,14 @@
 }
 
 .musica-catalog-expanded {
-  display: grid;
-  gap: 0.9rem;
-  padding-top: 0.25rem;
-  border-top: 1px solid rgba(138, 0, 90, 0.08);
+  display: none;
 }
 
 .musica-catalog-actions {
   display: flex;
+  align-items: flex-end;
   justify-content: flex-start;
+  margin-top: auto;
 }
 
 .musica-display-shell {
@@ -1085,12 +1079,74 @@
 :root.dark .musica-reader-panel,
 :root.dark .musica-letra-bloco,
 :root.dark .musica-parte,
+:root.dark .musica-parte-musical,
 :root.dark .musica-catalog-card,
 :root.dark .musica-toolbar,
 :root.dark .musica-display-stage,
 :root.dark .musica-display-idle-card {
   background: rgba(40, 36, 33, 0.96);
   border-color: rgba(255, 255, 255, 0.08);
+  color: #f4efe7;
+}
+
+:root.dark .musica-parte-text,
+:root.dark .musica-cifra-block pre,
+:root.dark .musica-lyric-row {
+  color: #f4efe7 !important;
+}
+
+:root.dark .musica-parte-musical {
+  background: linear-gradient(180deg, rgba(40, 36, 33, 0.98), rgba(32, 29, 27, 0.98));
+  border-color: rgba(233, 160, 201, 0.16);
+}
+
+:root.dark .musica-parte-type-badge {
+  background: rgba(233, 160, 201, 0.14);
+  color: #f4efe7;
+}
+
+:root.dark .musica-parte-title {
+  color: #fffaf5;
+}
+
+:root.dark .musica-parte-text--compact {
+  color: #f4efe7;
+}
+
+:root.dark .musica-chord-row {
+  color: #e9a0c9;
+}
+
+:root.dark .musica-parte-text *,
+:root.dark .musica-cifra-block pre *,
+:root.dark .musica-lyric-row * {
+  color: #f4efe7 !important;
+}
+
+/* FORÇA MÁXIMA - Dark mode letra */
+html.dark .musica-lyric-row,
+html.dark pre.musica-lyric-row {
+  color: #f4efe7 !important;
+}
+
+html.dark .musica-lyric-row *,
+html.dark .musica-lyric-row *::before,
+html.dark .musica-lyric-row *::after {
+  color: #f4efe7 !important;
+}
+
+/* Dark mode - Display Live (16x9) */
+:root.dark .musica-display-verse-content pre {
+  color: #f4efe7 !important;
+}
+
+:root.dark .musica-display-header-16x9 h1,
+:root.dark .musica-display-header-16x9 .musica-display-header-subtitle {
+  color: #f4efe7 !important;
+}
+
+:root.dark .musica-display-chorus-text {
+  color: #f4efe7 !important;
 }
 
 :root.dark .musica-summary-text,
@@ -1117,10 +1173,6 @@
 :root.dark .musica-catalog-summary-cta {
   background: rgba(138, 0, 90, 0.16);
   color: #f4efe7;
-}
-
-:root.dark .musica-catalog-expanded {
-  border-top-color: rgba(255, 255, 255, 0.08);
 }
 
 * {

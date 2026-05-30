@@ -30,7 +30,7 @@ async function MusicasContent({ searchParams }: PageProps) {
           <Link href="/admin/reuniao-publica/musicas/autores" className="admin-btn admin-btn-secondary" title="Gerenciar autores">
             Autores
           </Link>
-          <Link href="/admin/reuniao-publica/musicas/sessoes" className="admin-btn admin-btn-secondary" title="Sessões de pareamento">
+          <Link href="/admin/reuniao-publica/musicas/sessoes" className="admin-btn admin-btn-secondary" title="Sessões e controle">
             Sessões
           </Link>
           <Link href="/admin/reuniao-publica/musicas/nova" className="admin-btn admin-btn-primary" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
@@ -131,16 +131,17 @@ async function MusicasContent({ searchParams }: PageProps) {
                         style={{
                           backgroundColor:
                             musica.status === "ativa"
-                              ? "rgba(34, 197, 94, 0.2)"
+                              ? "var(--status-success-bg)"
                               : musica.status === "rascunho"
-                                ? "rgba(168, 85, 247, 0.2)"
-                                : "rgba(107, 114, 128, 0.2)",
+                                ? "var(--status-info-bg)"
+                                : "var(--surface-secondary-hover)",
                           color:
                             musica.status === "ativa"
-                              ? "#16a34a"
+                              ? "var(--status-success-text)"
                               : musica.status === "rascunho"
-                                ? "#a855f7"
-                                : "#6b7280",
+                                ? "var(--status-info-text)"
+                                : "var(--text-primary)",
+                          border: "1px solid var(--border-medium)",
                         }}
                       >
                         {musica.status === "ativa"

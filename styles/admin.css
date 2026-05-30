@@ -284,18 +284,18 @@
   box-shadow: var(--nav-tab-active-shadow), 0 0 0 1px rgba(138, 0, 90, 0.08);
   transform: translateY(-2px);
   font-weight: 900;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.18);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.22);
 }
 
 .admin-shell-tab.active::before {
   content: "";
   position: absolute;
-  inset: 0.14rem 0.35rem auto;
-  height: 0.34rem;
+  inset: 0.12rem 0.28rem auto;
+  height: 0.42rem;
   border-radius: 999px;
   background: var(--nav-tab-active-accent);
   opacity: 1;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.16);
 }
 
 .admin-shell-tab.active span,
@@ -1193,7 +1193,7 @@
 }
 
 :root.dark .admin-shell-tab.active {
-  box-shadow: var(--nav-tab-active-shadow), 0 0 0 1px rgba(255, 255, 255, 0.03), 0 0 0 1px rgba(233, 160, 201, 0.08);
+  box-shadow: var(--nav-tab-active-shadow), 0 0 0 1px rgba(255, 255, 255, 0.03), 0 0 0 2px rgba(233, 160, 201, 0.12);
 }
 
 :root.dark .admin-user-menu-trigger {
@@ -1214,6 +1214,54 @@
 :root.dark .admin-page-header {
   background: rgba(40, 36, 33, 0.82);
   border-color: #5a5349;
+}
+
+:root.dark .admin-table {
+  background: rgba(40, 36, 33, 0.96);
+  border-color: #5a5349;
+}
+
+:root.dark .admin-table thead {
+  background: rgba(50, 45, 42, 0.98);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+:root.dark .admin-table th {
+  color: var(--text-secondary);
+}
+
+:root.dark .admin-table td {
+  color: var(--text-primary);
+}
+
+:root.dark .admin-table tbody tr:hover {
+  background: rgba(60, 55, 50, 0.98);
+}
+
+:root.dark .table-surface {
+  background: rgba(40, 36, 33, 0.96);
+  border-color: #5a5349;
+}
+
+:root.dark .inline-status {
+  color: var(--text-primary);
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-medium);
+}
+
+:root.dark .inline-status-success {
+  background: var(--status-success-bg);
+  color: var(--status-success-text);
+}
+
+:root.dark .inline-status-warning {
+  background: var(--status-warning-bg);
+  color: var(--status-warning-text);
+}
+
+:root.dark .inline-status-danger {
+  background: var(--status-error-bg);
+  color: var(--status-error-text);
 }
 
 :root.dark .admin-btn-primary {

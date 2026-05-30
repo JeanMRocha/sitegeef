@@ -184,26 +184,62 @@ export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
 
         {/* Reunião pública */}
         {showReuniaoPublicaArea && canAccessModule('pode_publicar', ['comunicacao', 'secretaria']) && (
-          <NavGroup name="reuniao-publica" title="Reunião pública" collapsible>
-            <Link
-              href="/admin/reuniao-publica/musicas"
-              className={`admin-nav-item ${isActive('/admin/reuniao-publica/musicas') ? 'active' : ''}`}
-            >
-              Músicas
-            </Link>
-            <Link
-              href="/admin/reuniao-publica/musicas/sessoes"
-              className={`admin-nav-item ${isActive('/admin/reuniao-publica/musicas/sessoes') ? 'active' : ''}`}
-            >
-              Sessões
-            </Link>
-            <Link
-              href="/admin/reuniao-publica/musicas/autores"
-              className={`admin-nav-item ${isActive('/admin/reuniao-publica/musicas/autores') ? 'active' : ''}`}
-            >
-              Autores
-            </Link>
-          </NavGroup>
+          <>
+            <div className="admin-nav-section">
+              <h3 className="admin-nav-title">Reunião pública</h3>
+            </div>
+
+            <NavGroup name="reuniao-publica-avisos" title="Avisos e reunião" collapsible>
+              <Link
+                href="/admin/reuniao-publica"
+                className={`admin-nav-item ${isActive('/admin/reuniao-publica') && !isActive('/admin/reuniao-publica/musicas') ? 'active' : ''}`}
+              >
+                Avisos
+              </Link>
+              <Link
+                href="/admin/reuniao-publica/reuniao"
+                className={`admin-nav-item ${isActive('/admin/reuniao-publica/reuniao') ? 'active' : ''}`}
+              >
+                Reuniões
+              </Link>
+            </NavGroup>
+
+            <NavGroup name="reuniao-publica-musicas" title="Músicas" collapsible>
+              <Link
+                href="/admin/reuniao-publica/musicas"
+                className={`admin-nav-item ${isActive('/admin/reuniao-publica/musicas') ? 'active' : ''}`}
+              >
+                Lista de músicas
+              </Link>
+              <Link
+                href="/admin/reuniao-publica/musicas/autores"
+                className={`admin-nav-item ${isActive('/admin/reuniao-publica/musicas/autores') ? 'active' : ''}`}
+              >
+                Autores
+              </Link>
+            </NavGroup>
+
+            <NavGroup name="reuniao-publica-sessoes" title="Sessões" collapsible>
+              <Link
+                href="/admin/reuniao-publica/musicas/sessoes"
+                className={`admin-nav-item ${isActive('/admin/reuniao-publica/musicas/sessoes') ? 'active' : ''}`}
+              >
+                Dashboard
+              </Link>
+              <Link
+                href="/musicas/controle"
+                className={`admin-nav-item ${isActive('/musicas/controle') ? 'active' : ''}`}
+              >
+                Controle
+              </Link>
+              <Link
+                href="/musicas/exibir"
+                className={`admin-nav-item ${isActive('/musicas/exibir') ? 'active' : ''}`}
+              >
+                Exibição pública
+              </Link>
+            </NavGroup>
+          </>
         )}
 
         {/* Governança */}

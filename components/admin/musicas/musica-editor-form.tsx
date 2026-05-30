@@ -289,7 +289,7 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
         style={{
           position: "fixed",
           inset: 0,
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          backgroundColor: "var(--modal-overlay)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -299,16 +299,18 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
       >
         <div
           style={{
-            backgroundColor: "white",
-            borderRadius: "0.75rem",
+            backgroundColor: "var(--modal-bg)",
+            border: "1px solid var(--modal-border)",
+            borderRadius: "0.9rem",
             padding: "2rem",
             maxWidth: "500px",
             width: "90%",
-            boxShadow: "0 20px 25px rgba(0, 0, 0, 0.15)",
+            boxShadow: "var(--modal-shadow)",
+            color: "var(--text-primary)",
           }}
           onClick={(e) => e.stopPropagation()}
         >
-          <h3 style={{ margin: "0 0 1rem", fontSize: "1.25rem" }}>URL do YouTube</h3>
+          <h3 style={{ margin: "0 0 1rem", fontSize: "1.25rem", color: "var(--text-primary)" }}>URL do YouTube</h3>
           <input
             type="url"
             value={youtubeUrl}
@@ -317,11 +319,13 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
             style={{
               width: "100%",
               padding: "0.75rem",
-              border: "1px solid var(--border-medium)",
+              border: "1px solid var(--input-border)",
               borderRadius: "0.5rem",
               fontSize: "1rem",
               marginBottom: "1.5rem",
               boxSizing: "border-box",
+              backgroundColor: "var(--input-bg)",
+              color: "var(--input-text)",
             }}
           />
           <div style={{ display: "flex", gap: "0.75rem", justifyContent: "flex-end" }}>
@@ -351,7 +355,7 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
         style={{
           position: "fixed",
           inset: 0,
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          backgroundColor: "var(--modal-overlay)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -361,16 +365,18 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
       >
         <div
           style={{
-            backgroundColor: "white",
-            borderRadius: "0.75rem",
+            backgroundColor: "var(--modal-bg)",
+            border: "1px solid var(--modal-border)",
+            borderRadius: "0.9rem",
             padding: "2rem",
             maxWidth: "500px",
             width: "90%",
-            boxShadow: "0 20px 25px rgba(0, 0, 0, 0.15)",
+            boxShadow: "var(--modal-shadow)",
+            color: "var(--text-primary)",
           }}
           onClick={(e) => e.stopPropagation()}
         >
-          <h3 style={{ margin: "0 0 1rem", fontSize: "1.25rem" }}>URL do MP3</h3>
+          <h3 style={{ margin: "0 0 1rem", fontSize: "1.25rem", color: "var(--text-primary)" }}>URL do MP3</h3>
           <input
             type="url"
             value={audioUrl}
@@ -379,11 +385,13 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
             style={{
               width: "100%",
               padding: "0.75rem",
-              border: "1px solid var(--border-medium)",
+              border: "1px solid var(--input-border)",
               borderRadius: "0.5rem",
               fontSize: "1rem",
               marginBottom: "1.5rem",
               boxSizing: "border-box",
+              backgroundColor: "var(--input-bg)",
+              color: "var(--input-text)",
             }}
           />
           <div style={{ display: "flex", gap: "0.75rem", justifyContent: "flex-end" }}>
@@ -413,7 +421,7 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
         style={{
           position: "fixed",
           inset: 0,
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          backgroundColor: "var(--modal-overlay)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -423,16 +431,18 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
       >
         <div
           style={{
-            backgroundColor: "white",
-            borderRadius: "0.75rem",
+            backgroundColor: "var(--modal-bg)",
+            border: "1px solid var(--modal-border)",
+            borderRadius: "0.9rem",
             padding: "2rem",
             maxWidth: "500px",
             width: "90%",
-            boxShadow: "0 20px 25px rgba(0, 0, 0, 0.15)",
+            boxShadow: "var(--modal-shadow)",
+            color: "var(--text-primary)",
           }}
           onClick={(e) => e.stopPropagation()}
         >
-          <h3 style={{ margin: "0 0 1rem", fontSize: "1.25rem" }}>Novo autor</h3>
+          <h3 style={{ margin: "0 0 1rem", fontSize: "1.25rem", color: "var(--text-primary)" }}>Novo autor</h3>
           <input
             type="text"
             value={novoAutor}
@@ -441,11 +451,13 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
             style={{
               width: "100%",
               padding: "0.75rem",
-              border: "1px solid var(--border-medium)",
+              border: "1px solid var(--input-border)",
               borderRadius: "0.5rem",
               fontSize: "1rem",
               marginBottom: "1.5rem",
               boxSizing: "border-box",
+              backgroundColor: "var(--input-bg)",
+              color: "var(--input-text)",
             }}
             onKeyPress={(e) => {
               if (e.key === "Enter") {
@@ -480,7 +492,7 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
         style={{
           position: "fixed",
           inset: 0,
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          backgroundColor: "var(--modal-overlay)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -490,16 +502,18 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
       >
         <div
           style={{
-            backgroundColor: "white",
-            borderRadius: "0.75rem",
+            backgroundColor: "var(--modal-bg)",
+            border: "1px solid var(--modal-border)",
+            borderRadius: "0.9rem",
             padding: "2rem",
             maxWidth: "500px",
             width: "90%",
-            boxShadow: "0 20px 25px rgba(0, 0, 0, 0.15)",
+            boxShadow: "var(--modal-shadow)",
+            color: "var(--text-primary)",
           }}
           onClick={(e) => e.stopPropagation()}
         >
-          <h3 style={{ margin: "0 0 1rem", fontSize: "1.25rem" }}>Nova versão</h3>
+          <h3 style={{ margin: "0 0 1rem", fontSize: "1.25rem", color: "var(--text-primary)" }}>Nova versão</h3>
           <input
             type="text"
             value={novaVersao}
@@ -508,11 +522,13 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
             style={{
               width: "100%",
               padding: "0.75rem",
-              border: "1px solid var(--border-medium)",
+              border: "1px solid var(--input-border)",
               borderRadius: "0.5rem",
               fontSize: "1rem",
               marginBottom: "1.5rem",
               boxSizing: "border-box",
+              backgroundColor: "var(--input-bg)",
+              color: "var(--input-text)",
             }}
             onKeyPress={(e) => {
               if (e.key === "Enter") {

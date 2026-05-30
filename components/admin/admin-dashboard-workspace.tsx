@@ -153,25 +153,27 @@ export function AdminDashboardWorkspace({ summary }: AdminDashboardWorkspaceProp
         <section className="admin-page-header admin-card admin-page-header--hero">
           <div className="admin-page-header-copy">
             <span className="admin-dashboard-kicker">Reunião pública</span>
-            <h1 className="admin-page-title">Músicas e exibição</h1>
+            <h1 className="admin-page-title">Avisos, reunião e músicas</h1>
             <p className="admin-page-subtitle">
-              Cadastre, revise e controle a exibição pública das músicas com pareamento por código.
+              Organize avisos, reuniões e a exibição pública das músicas com controle ao vivo.
             </p>
           </div>
 
           <div className="admin-actions">
-            <Link href="/admin/reuniao-publica/musicas" className="admin-btn admin-btn-primary">🎵 Abrir músicas</Link>
-            <Link href="/admin/reuniao-publica/musicas/sessoes" className="admin-btn admin-btn-secondary" target="_blank" rel="noreferrer">🖥️ Exibição pública</Link>
+            <Link href="/admin/reuniao-publica" className="admin-btn admin-btn-primary">📣 Avisos</Link>
+            <Link href="/admin/reunioes-virtuais" className="admin-btn admin-btn-secondary">📅 Reuniões</Link>
+            <Link href="/admin/reuniao-publica/musicas" className="admin-btn admin-btn-secondary">🎵 Músicas</Link>
           </div>
         </section>
 
         <div className="admin-dashboard-hero">
           <SectionCard
             title="Controle ao vivo"
-            description="Use este espaço para acessar o catálogo, parear a tela e alterar a música exibida."
+            description="Use este espaço para acessar o catálogo, ajustar a tela pública e alterar a música exibida."
             actions={[
               { href: "/admin/reuniao-publica/musicas", label: "Músicas" },
-              { href: "/admin/reuniao-publica/musicas/sessoes", label: "Exibição pública" },
+              { href: "/admin/reuniao-publica/musicas/sessoes", label: "Sessões" },
+              { href: "/musicas/exibir", label: "Exibição pública" },
             ]}
           />
 

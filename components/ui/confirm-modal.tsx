@@ -47,7 +47,7 @@ export function ConfirmModal({
       style={{
         position: "fixed",
         inset: 0,
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        backgroundColor: "var(--modal-overlay)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -57,19 +57,21 @@ export function ConfirmModal({
     >
       <div
         style={{
-          backgroundColor: "white",
-          borderRadius: "0.75rem",
+          backgroundColor: "var(--modal-bg)",
+          border: "1px solid var(--modal-border)",
+          borderRadius: "0.9rem",
           padding: "2rem",
           maxWidth: "400px",
           width: "90%",
-          boxShadow: "0 20px 25px rgba(0, 0, 0, 0.15)",
+          boxShadow: "var(--modal-shadow)",
+          color: "var(--text-primary)",
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <h3 style={{ margin: "0 0 0.75rem", fontSize: "1.25rem" }}>
+        <h3 style={{ margin: "0 0 0.75rem", fontSize: "1.25rem", color: "var(--text-primary)" }}>
           {title}
         </h3>
-        <p style={{ margin: "0 0 1.5rem", color: "var(--text-muted)" }}>
+        <p style={{ margin: "0 0 1.5rem", color: "var(--text-secondary)" }}>
           {message}
         </p>
         <div style={{ display: "flex", gap: "0.75rem", justifyContent: "flex-end" }}>

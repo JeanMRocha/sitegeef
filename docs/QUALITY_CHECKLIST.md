@@ -30,26 +30,47 @@
 
 ---
 
-## 🔍 Fase 2: Verificação de Servidor
+## 🔍 Fase 2: Verificação de Servidor (CRÍTICA!)
 
-- [ ] **Servidor está respondendo?**
+⚠️ **FALHA AQUI = NÃO PASSE PARA FASE 3**
+
+- [ ] **Porta 3500 ESTÁ LIVRE?** (TESTE REAL)
   ```bash
-  curl -s http://localhost:3500 | grep "colorScheme"
+  netstat -ano | grep 3500  # Deve estar VAZIO
+  # Se retornar algo, MATE o processo!
   ```
 
-- [ ] **Build foi compilado?**
-  - Verificar último log do servidor
-  - Confirmar "Ready in XXXms"
-
-- [ ] **Sem erros de compilação?**
+- [ ] **Servidor está REALMENTE respondendo?** (HTTP TEST)
   ```bash
-  tail -30 dev-server.log | grep -i "error\|fail"
+  curl -I http://localhost:3500
+  # Deve retornar: HTTP/1.1 200 OK
+  # Não confie em "parecia estar rodando"
   ```
 
-- [ ] **Cache foi limpo?**
+- [ ] **Build compilou SEM ERROS?**
   ```bash
-  ls -la .next/  # Verificar se .next foi removido
+  tail -50 dev-server.log | grep -E "error|Error|ERROR|fail|FAIL"
+  # Se houver qualquer erro: ABORTA. Não passe adiante.
   ```
+
+- [ ] **"Ready in XXXms" apareceu nos logs?** (REQUISITO)
+  ```bash
+  tail -30 dev-server.log | grep "Ready in"
+  # Deve aparecer. Se não, servidor não compilou.
+  ```
+
+- [ ] **Cache .next foi removido ANTES?**
+  ```bash
+  ls -la .next 2>/dev/null || echo "✓ Não existe (bom!)"
+  ```
+
+### ❌ ABORTAR SE
+
+- ❌ `HTTP 500 Internal Server Error`
+- ❌ `EADDRINUSE: address already in use`
+- ❌ Qualquer `error` nos logs
+- ❌ "Ready in XXXms" não apareceu em 20 segundos
+- ❌ Porta 3500 está ocupada por outro processo
 
 ---
 
@@ -76,6 +97,12 @@
 - [ ] `/admin/financeiro/plano-contas`
   - Botões "Ativar/Inativar"
   - Cores: #dc2626 (vermelho) e #16a34a (verde)
+
+- [ ] **`/musicas/*` (CRÍTICO - Dark Mode)**
+  - ⚠️ Letra DEVE estar visível em creme claro
+  - ⚠️ Acordes (cifras) DEVEM estar legíveis
+  - ⚠️ Fundo escuro SEM cor branca/clara sobrepondo
+  - **Se a letra estiver branca ou invisível: ABORTE**
 
 ---
 

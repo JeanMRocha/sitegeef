@@ -68,11 +68,20 @@ export function SessaoActionsButton({ sessao: initialSessao, onUpdate, onDelete 
         <IconEdit size={16} />
       </Link>
       <Link
-        href={`/musicas/exibir/${sessao.codigo_pareamento}`}
+        href="/musicas/controle"
         className="admin-btn admin-btn-small"
         target="_blank"
         rel="noreferrer"
-        title="Abrir em nova aba"
+        title="Controle ao vivo"
+      >
+        <IconExternalLink size={16} />
+      </Link>
+      <Link
+        href="/musicas/exibir"
+        className="admin-btn admin-btn-small"
+        target="_blank"
+        rel="noreferrer"
+        title="Abrir exibição pública"
       >
         <IconExternalLink size={16} />
       </Link>
