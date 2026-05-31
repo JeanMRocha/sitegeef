@@ -8,6 +8,10 @@ export const metadata = {
   title: 'Editar Modelo de Documento - Admin GEEF',
 };
 
+type ModeloPageParams = {
+  id: string;
+};
+
 async function handleUpdate(id: string, formData: FormData) {
   'use server';
 
@@ -60,16 +64,11 @@ async function EditModeloContent({ id }: { id: string }) {
           <h1 className="admin-page-title">Editar Modelo</h1>
           <p className="admin-page-subtitle">{modelo.titulo}</p>
         </div>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <div className="table-actions-inline">
           <form action={() => handleToggleStatus(id, !modelo.ativo)}>
             <button
               type="submit"
-              className="admin-btn"
-              style={{
-                backgroundColor: modelo.ativo ? 'rgba(34, 197, 94, 0.1)' : 'rgba(107, 114, 128, 0.1)',
-                color: modelo.ativo ? '#22c55e' : '#6b7280',
-                border: `1px solid ${modelo.ativo ? 'rgba(34, 197, 94, 0.3)' : 'rgba(107, 114, 128, 0.3)'}`,
-              }}
+              className={`admin-btn status-toggle-btn ${modelo.ativo ? 'status-toggle-btn--active' : 'status-toggle-btn--inactive'}`}
             >
               {modelo.ativo ? '✓ Ativo' : '○ Inativo'}
             </button>
@@ -78,18 +77,11 @@ async function EditModeloContent({ id }: { id: string }) {
       </div>
 
       {/* Form */}
-      <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto' }}>
+      <div className="admin-card form-panel-centered">
         <form action={(formData) => handleUpdate(id, formData)}>
           <div className="admin-form-group">
             <label>Tipo de Documento *</label>
-            <select name="tipo" defaultValue={modelo.tipo} required style={{
-              padding: '0.65rem 0.85rem',
-              border: '1px solid var(--admin-border)',
-              borderRadius: '0.6rem',
-              fontFamily: 'var(--font-body)',
-              fontSize: '0.95rem',
-              color: 'var(--text)',
-            }}>
+            <select name="tipo" defaultValue={modelo.tipo} required>
               <option value="">— Selecione —</option>
               {tipos.map((tipo) => (
                 <option key={tipo} value={tipo}>
@@ -124,19 +116,10 @@ async function EditModeloContent({ id }: { id: string }) {
               name="conteudo"
               rows={12}
               defaultValue={modelo.conteudo || ''}
-              style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-                resize: 'vertical',
-              }}
             />
           </div>
 
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+          <div className="form-actions-row">
             <button type="submit" className="admin-btn admin-btn-primary">
               ✅ Salvar
             </button>
@@ -147,8 +130,8 @@ async function EditModeloContent({ id }: { id: string }) {
         </form>
 
         {/* Info */}
-        <div style={{ marginTop: '2rem', paddingTop: '2rem', borderTop: '1px solid var(--admin-border)', fontSize: '0.85rem', color: 'var(--muted)' }}>
-          <p style={{ margin: '0.5rem 0' }}>
+        <div className="content-surface-note content-surface-note-bordered">
+          <p className="mt-1 text-xs-muted">
             <strong>Criado em:</strong> {new Date(modelo.criado_em).toLocaleDateString('pt-BR')}
           </p>
         </div>
@@ -157,10 +140,10 @@ async function EditModeloContent({ id }: { id: string }) {
   );
 }
 
-export default async function EditModeloPage({ params }: { params: Promise<any> }) {
+export default async function EditModeloPage({ params }: { params: Promise<ModeloPageParams> }) {
   const resolvedParams = await params;
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <EditModeloContent id={resolvedParams.id} />
     </Suspense>
   );

@@ -8,6 +8,19 @@ export const metadata = {
   title: 'Curso - Admin GEEF',
 };
 
+type CursoPageParams = {
+  id: string;
+};
+
+type TurmaCursoItem = {
+  id: string;
+  facilitador?: { nome?: string | null } | null;
+  horario?: string | null;
+  data_inicio: string;
+  data_fim: string;
+  status?: string | null;
+};
+
 async function handleSubmit(id: string, formData: FormData) {
   'use server';
 
@@ -28,7 +41,7 @@ async function handleSubmit(id: string, formData: FormData) {
 
 async function CursoContent({ id }: { id: string }) {
   const curso = await getCursoById(id);
-  const turmas = await getTurmas(id);
+  const turmas = (await getTurmas(id)) as TurmaCursoItem[];
 
   return (
     <div>
@@ -37,12 +50,12 @@ async function CursoContent({ id }: { id: string }) {
           <h1 className="admin-page-title">{curso.nome}</h1>
           <p className="admin-page-subtitle">{turmas.length} turma(s)</p>
         </div>
-        <Link href="/admin/estudos/turmas/nova" className="admin-btn admin-btn-primary" style={{ width: 'auto' }}>
+        <Link href="/admin/estudos/turmas/nova" className="admin-btn admin-btn-primary">
           ➕ Nova Turma
         </Link>
       </div>
 
-      <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto', marginBottom: '2rem' }}>
+      <div className="admin-card form-panel-centered mb-2">
         <form action={(formData) => handleSubmit(id, formData)}>
           <div className="admin-form-group">
             <label>Nome do Curso *</label>
@@ -60,34 +73,17 @@ async function CursoContent({ id }: { id: string }) {
               name="descricao"
               defaultValue={curso.descricao || ''}
               rows={3}
-              style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-                resize: 'vertical',
-              }}
             />
           </div>
 
-          <div style={{
-            padding: '1rem',
-            backgroundColor: 'rgba(34, 197, 94, 0.05)',
-            borderRadius: '0.6rem',
-            marginBottom: '1.5rem',
-            display: 'flex',
-            gap: '0.75rem',
-            alignItems: 'center',
-          }}>
+          <div className="content-surface-note content-surface-note-inline">
             <input
               type="checkbox"
               name="ativo"
               id="ativo"
               defaultChecked={curso.ativo}
             />
-            <label htmlFor="ativo" style={{ fontSize: '0.95rem', color: 'var(--text)', margin: 0 }}>
+            <label htmlFor="ativo" className="mb-0">
               ✓ Curso ativo
             </label>
           </div>
@@ -99,12 +95,10 @@ async function CursoContent({ id }: { id: string }) {
       </div>
 
       <div className="admin-card">
-        <h2 style={{ margin: '0 0 1.5rem', fontSize: '1.1rem', fontWeight: 600 }}>
-          Turmas ({turmas.length})
-        </h2>
+        <h2 className="form-card-title-lg">Turmas ({turmas.length})</h2>
 
         {turmas.length > 0 ? (
-          <div style={{ overflowX: 'auto' }}>
+          <div className="overflow-x-auto">
             <table className="admin-table">
               <thead>
                 <tr>
@@ -116,26 +110,15 @@ async function CursoContent({ id }: { id: string }) {
                 </tr>
               </thead>
               <tbody>
-                {turmas.map((turma: any) => (
+                {turmas.map((turma) => (
                   <tr key={turma.id}>
-                    <td style={{ fontWeight: 500 }}>
-                      {turma.facilitador?.nome}
-                    </td>
-                    <td style={{ fontSize: '0.9rem' }}>
-                      {turma.horario}
-                    </td>
-                    <td style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>
+                    <td className="text-sm-500">{turma.facilitador?.nome}</td>
+                    <td className="text-sm-muted">{turma.horario}</td>
+                    <td className="text-xs-muted">
                       {new Date(turma.data_inicio).toLocaleDateString('pt-BR')} a {new Date(turma.data_fim).toLocaleDateString('pt-BR')}
                     </td>
                     <td>
-                      <span style={{
-                        display: 'inline-block',
-                        padding: '0.25rem 0.6rem',
-                        backgroundColor: turma.status === 'em_andamento' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(107, 114, 128, 0.1)',
-                        color: turma.status === 'em_andamento' ? '#22c55e' : '#6b7280',
-                        borderRadius: '0.3rem',
-                        fontSize: '0.85rem',
-                      }}>
+                      <span className={turma.status === 'em_andamento' ? 'inline-status inline-status-success' : 'inline-status inline-status-neutral'}>
                         {turma.status === 'em_andamento' ? '▶ Em andamento' : '✓ Finalizada'}
                       </span>
                     </td>
@@ -150,17 +133,17 @@ async function CursoContent({ id }: { id: string }) {
             </table>
           </div>
         ) : (
-          <p style={{ color: 'var(--muted)', textAlign: 'center' }}>Nenhuma turma neste curso.</p>
+          <p className="text-center-muted">Nenhuma turma neste curso.</p>
         )}
       </div>
     </div>
   );
 }
 
-export default async function CursoPage({ params }: { params: Promise<any> }) {
+export default async function CursoPage({ params }: { params: Promise<CursoPageParams> }) {
   const resolvedParams = await params;
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <CursoContent id={resolvedParams.id} />
     </Suspense>
   );
