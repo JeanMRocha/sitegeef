@@ -8,6 +8,16 @@ export const metadata = {
   title: 'Novo Serviço Voluntário - Admin GEEF',
 };
 
+type PessoaDisponivel = {
+  id: string;
+  nome: string | null;
+};
+
+type DepartamentoDisponivel = {
+  id: string;
+  nome: string | null;
+};
+
 async function handleSubmit(formData: FormData) {
   'use server';
 
@@ -31,8 +41,8 @@ async function handleSubmit(formData: FormData) {
 }
 
 export default async function NovoServicoPage() {
-  const pessoas = await getPessoasDisponiveis();
-  const departamentos = await getDepartamentosDisponiveis();
+  const pessoas = (await getPessoasDisponiveis()) as PessoaDisponivel[];
+  const departamentos = (await getDepartamentosDisponiveis()) as DepartamentoDisponivel[];
 
   return (
     <div>
@@ -44,14 +54,14 @@ export default async function NovoServicoPage() {
         </div>
       </div>
 
-      <div className="admin-card" style={{ marginBottom: '1rem', padding: '0.95rem 1rem', borderLeft: '3px solid var(--primary)' }}>
-        <p style={{ margin: 0, color: 'var(--muted)', lineHeight: 1.6 }}>
+      <div className="admin-card panel-accent-card">
+        <p className="mb-0 text-sm-muted">
           Se houver termo, anexe o link. Se não houver, deixe o registro enxuto e consistente.
         </p>
       </div>
 
       {/* Form */}
-      <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto' }}>
+      <div className="admin-card form-panel-centered">
         <LgpdFormNotice
           title="Serviço voluntário"
           text="Use só o vínculo e o período necessários para gestão interna e comprovação."
@@ -59,20 +69,9 @@ export default async function NovoServicoPage() {
         <form action={handleSubmit}>
           <div className="admin-form-group">
             <label>Voluntário *</label>
-            <select
-              name="pessoa_id"
-              required
-              style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-              }}
-            >
+            <select name="pessoa_id" required>
               <option value="">— Selecione —</option>
-              {pessoas.map((p: any) => (
+              {pessoas.map((p) => (
                 <option key={p.id} value={p.id}>
                   {p.nome}
                 </option>
@@ -82,20 +81,9 @@ export default async function NovoServicoPage() {
 
           <div className="admin-form-group">
             <label>Departamento *</label>
-            <select
-              name="departamento_id"
-              required
-              style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-              }}
-            >
+            <select name="departamento_id" required>
               <option value="">— Selecione —</option>
-              {departamentos.map((d: any) => (
+              {departamentos.map((d) => (
                 <option key={d.id} value={d.id}>
                   {d.nome}
                 </option>
@@ -122,7 +110,7 @@ export default async function NovoServicoPage() {
             />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+          <div className="form-grid-2">
             <div className="admin-form-group">
               <label>Data de Início</label>
               <input
@@ -149,7 +137,7 @@ export default async function NovoServicoPage() {
             />
           </div>
 
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+          <div className="form-actions-row">
             <button type="submit" className="admin-btn admin-btn-primary">
               ✅ Registrar Serviço
             </button>

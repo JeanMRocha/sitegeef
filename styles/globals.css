@@ -3266,6 +3266,37 @@ a.button.musica-icon-button {
   gap: 1rem;
 }
 
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.admin-search-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: end;
+}
+
+.form-actions-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+.form-panel-centered {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.panel-accent-card {
+  margin-bottom: 1rem;
+  padding: 0.95rem 1rem;
+  border-left: 3px solid var(--primary);
+}
+
 .module-card {
   padding: 1.1rem;
   border: 1px solid rgba(14, 36, 8, 0.08);
@@ -6581,6 +6612,19 @@ a.button.musica-icon-button {
   }
 
   .lgpd-request-actions .profile-form-btn {
+    width: 100%;
+  }
+
+  .admin-search-form,
+  .form-grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions-row {
+    flex-direction: column;
+  }
+
+  .form-actions-row > * {
     width: 100%;
   }
 }
