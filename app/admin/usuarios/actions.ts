@@ -2,6 +2,7 @@
 
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 import { invalidateUserAreaCache } from '@/lib/areas/invalidate-user-area';
+import { calculateOffset } from '@/lib/admin/query-helpers';
 
 const TEST_EMAIL_PATTERNS = [/^codex-profile-/i, /^codex-test-/i];
 
@@ -82,7 +83,7 @@ export async function getUsuarios(page = 1) {
     }
 
     const adminMap = new Map(adminRows.map((row: any) => [row.id, row]));
-    const startIndex = (page - 1) * pageSize;
+    const startIndex = calculateOffset(page, pageSize);
     const endIndex = startIndex + pageSize;
     const pageUsers = authRows.slice(startIndex, endIndex);
 
