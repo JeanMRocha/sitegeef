@@ -6,8 +6,16 @@ export const metadata = {
   title: 'Cursos - Admin GEEF',
 };
 
+type CursoItem = {
+  id: string;
+  nome: string;
+  descricao?: string | null;
+  ativo?: boolean | null;
+};
+
 async function CursosContent() {
   const cursos = await getCursos();
+  const cursoList = cursos as CursoItem[];
 
   return (
     <div>
@@ -22,8 +30,8 @@ async function CursosContent() {
       </div>
 
       <div className="admin-card">
-        {cursos.length > 0 ? (
-          <div style={{ overflowX: 'auto' }}>
+        {cursoList.length > 0 ? (
+          <div className="overflow-x-auto">
             <table className="admin-table">
               <thead>
                 <tr>
@@ -34,23 +42,18 @@ async function CursosContent() {
                 </tr>
               </thead>
               <tbody>
-                {cursos.map((curso: any) => (
+                {cursoList.map((curso) => (
                   <tr key={curso.id}>
-                    <td style={{ fontWeight: 500 }}>
+                    <td>
+                      <strong>
                       {curso.nome}
+                      </strong>
                     </td>
-                    <td style={{ fontSize: '0.9rem', color: 'var(--muted)' }}>
+                    <td className="text-sm-muted">
                       {curso.descricao || '—'}
                     </td>
                     <td>
-                      <span style={{
-                        display: 'inline-block',
-                        padding: '0.25rem 0.6rem',
-                        backgroundColor: curso.ativo ? 'rgba(34, 197, 94, 0.1)' : 'rgba(107, 114, 128, 0.1)',
-                        color: curso.ativo ? '#22c55e' : '#6b7280',
-                        borderRadius: '0.3rem',
-                        fontSize: '0.85rem',
-                      }}>
+                      <span className={curso.ativo ? 'inline-status inline-status-success' : 'inline-status inline-status-neutral'}>
                         {curso.ativo ? '✓ Ativo' : '✕ Inativo'}
                       </span>
                     </td>
@@ -65,13 +68,7 @@ async function CursosContent() {
             </table>
           </div>
         ) : (
-          <div style={{
-            padding: '2rem',
-            textAlign: 'center',
-            backgroundColor: 'var(--admin-bg)',
-            borderRadius: '0.6rem',
-            color: 'var(--muted)',
-          }}>
+          <div className="area-empty">
             <p>Nenhum curso cadastrado.</p>
           </div>
         )}
@@ -82,7 +79,7 @@ async function CursosContent() {
 
 export default function CursosPage() {
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <CursosContent />
     </Suspense>
   );
