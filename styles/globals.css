@@ -159,25 +159,102 @@ body.musica-display-route .site-shell {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: 0.65rem;
   padding: 0.95rem 1.1rem;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-xl);
-  background: rgba(255, 255, 255, 0.68);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(10px);
+  border: none;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  margin-bottom: 0.85rem;
 }
 
 .musica-toolbar-title {
   min-width: 0;
+  flex: 0 0 auto;
 }
 
 .musica-toolbar-title h1 {
   margin: 0;
   font-family: var(--font-heading);
-  font-size: clamp(1.8rem, 3.7vw, 2.8rem);
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
   line-height: 0.94;
   letter-spacing: -0.05em;
+}
+
+.musica-toolbar-filters {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.musica-toolbar-select {
+  height: 2.3rem;
+  padding: 0 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  font-size: 0.88rem;
+  background: white;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.musica-toolbar-select:focus {
+  outline: none;
+  border-color: var(--uva);
+}
+
+.musica-toolbar-search-wrap {
+  display: inline-flex;
+  align-items: center;
+  height: 2.3rem;
+  padding: 0 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: white;
+  gap: 0.4rem;
+  flex: 1;
+  min-width: 10rem;
+  max-width: 20rem;
+}
+
+.musica-toolbar-search-input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 0.88rem;
+  width: 100%;
+}
+
+.musica-toolbar-search-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--muted);
+  flex: 0 0 auto;
+}
+
+.musica-toolbar-search-clear:hover {
+  color: var(--text);
+}
+
+.musica-toolbar-count {
+  font-size: 0.8rem;
+  color: var(--muted);
+  flex: 0 0 auto;
+  white-space: nowrap;
+  margin-left: auto;
 }
 
 .musica-toolbar-actions {
@@ -657,8 +734,8 @@ body.musica-display-route .site-shell {
 
 .musica-catalog-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 540px), 1fr));
+  gap: 0.3rem;
   width: 100%;
   align-items: start;
 }
@@ -667,7 +744,7 @@ body.musica-display-route .site-shell {
   display: grid;
   gap: 0.5rem;
   min-height: 0;
-  padding: 0.8rem 0.95rem;
+  padding: 0.5rem 0.85rem;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   background: rgba(255, 255, 255, 0.68);
