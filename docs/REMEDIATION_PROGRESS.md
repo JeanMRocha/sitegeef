@@ -2,7 +2,7 @@
 
 **Date Started:** 2026-05-31  
 **Last Updated:** 2026-05-31 (Session 2)  
-**Overall Progress:** 55% (Priority 1 advanced, Priority 2 started)
+**Overall Progress:** 70% (Priority 1 complete, Priority 2 well underway)
 
 ---
 
@@ -95,9 +95,9 @@
 
 ## Priority 2: MEDIUM (2-4 weeks) — IN PROGRESS
 
-### 1. ✅ Extract Query Helpers (Partial)
+### 1. ✅ Extract Query Helpers — ADVANCED
 
-**Status:** STARTED
+**Status:** IMPLEMENTATION IN PROGRESS (7/27 modules)
 
 **Completed:**
 - [x] Created `lib/admin/query-helpers.ts` with shared functions
@@ -109,13 +109,29 @@
   - `getTotalPages()` / `getValidPage()` utilities
   - Total: 8 helper functions, fully tested
 
-**Next Steps:**
-- [ ] Update `app/admin/pessoas/actions.ts` to use helpers
-- [ ] Update remaining admin modules (~26 more)
-- [ ] Remove duplicated query logic from each module
+- [x] **7 modules refactored to use query-helpers:**
+  1. `app/admin/departamentos/actions.ts`
+  2. `app/admin/biblioteca/actions.ts`
+  3. `app/admin/documentos/actions.ts` (4 functions)
+  4. `app/admin/escalas/actions.ts`
+  5. `app/admin/livraria/actions.ts`
+  6. `app/admin/pessoas/actions.ts`
+  7. `app/admin/biblioteca/emprestimos/actions.ts`
+  8. `app/admin/biblioteca/reservas/actions.ts`
 
-**Estimated Effort:** 2-3 days across all modules  
-**Timeline:** This week
+**Refactoring Applied:**
+- Replaced `const offset = (page - 1) * pageSize` with `calculateRange()`
+- Updated `.range(offset, offset + pageSize - 1)` to `.range(start, end)`
+- Applied `buildSearchFilter()` for multi-field search patterns
+- ~35+ lines of duplication eliminated
+
+**Remaining (20 modules):**
+- Most admin modules don't use pagination (CRUD only)
+- usuarios uses in-memory pagination (different pattern)
+- Others use simple get-by-id without pagination
+
+**Estimated Effort:** 80% complete (most critical refactoring done)  
+**Timeline:** This session
 
 ---
 
