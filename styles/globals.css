@@ -3304,10 +3304,28 @@ a.button.musica-icon-button {
   margin: 0 auto;
 }
 
+.form-panel-centered-lg {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
 .panel-accent-card {
   margin-bottom: 1rem;
   padding: 0.95rem 1rem;
   border-left: 3px solid var(--primary);
+}
+
+.form-card-title {
+  margin: 0 0 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.content-surface-note {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: rgba(138, 0, 90, 0.06);
 }
 
 .module-card {

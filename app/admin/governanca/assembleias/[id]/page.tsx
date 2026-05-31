@@ -8,6 +8,10 @@ export const metadata = {
   title: 'Assembleia - Admin GEEF',
 };
 
+type AssembleiaPageParams = {
+  id: string;
+};
+
 async function handleSubmit(id: string, formData: FormData) {
   'use server';
 
@@ -44,8 +48,8 @@ async function AssembleiaContent({ id }: { id: string }) {
         </div>
       </div>
 
-      <div className="admin-card" style={{ maxWidth: '800px', margin: '0 auto' }}>
-        <h2 style={{ margin: '0 0 1.5rem', fontSize: '1rem', fontWeight: 600 }}>Editar Assembleia</h2>
+      <div className="admin-card form-panel-centered-lg">
+        <h2 className="form-card-title">Editar Assembleia</h2>
         <form action={(formData) => handleSubmit(id, formData)}>
           <div className="admin-form-group">
             <label>Pauta</label>
@@ -54,16 +58,6 @@ async function AssembleiaContent({ id }: { id: string }) {
               defaultValue={assembleia.pauta || ''}
               placeholder="Assuntos discutidos..."
               rows={4}
-              style={{
-                width: '100%',
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-                resize: 'vertical',
-              }}
             />
           </div>
 
@@ -74,16 +68,6 @@ async function AssembleiaContent({ id }: { id: string }) {
               defaultValue={assembleia.decisoes || ''}
               placeholder="Decisões e resoluções tomadas..."
               rows={4}
-              style={{
-                width: '100%',
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-                resize: 'vertical',
-              }}
             />
           </div>
 
@@ -97,30 +81,17 @@ async function AssembleiaContent({ id }: { id: string }) {
             />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <div className="form-grid-2">
             <div className="admin-form-group">
               <label>Status</label>
-              <select
-                name="status"
-                defaultValue={assembleia.status || 'rascunho'}
-                style={{
-                  width: '100%',
-                  padding: '0.65rem 0.85rem',
-                  border: '1px solid var(--admin-border)',
-                  borderRadius: '0.6rem',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.95rem',
-                  color: 'var(--text)',
-                  backgroundColor: '#fff',
-                }}
-              >
+              <select name="status" defaultValue={assembleia.status || 'rascunho'}>
                 <option value="rascunho">📝 Rascunho</option>
                 <option value="finalizada">✓ Finalizada</option>
               </select>
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+          <div className="form-actions-row">
             <button type="submit" className="admin-btn admin-btn-primary">
               ✅ Salvar
             </button>
@@ -132,9 +103,9 @@ async function AssembleiaContent({ id }: { id: string }) {
       </div>
 
       {assembleia.ata_url && (
-        <div className="admin-card" style={{ maxWidth: '800px', margin: '1rem auto 0' }}>
-          <p style={{ margin: 0, fontSize: '0.9rem' }}>
-            📄 <strong>ATA disponível:</strong> <a href={assembleia.ata_url} target="_blank" rel="noopener noreferrer" style={{ color: '#3b82f6', textDecoration: 'underline' }}>Acessar documento</a>
+        <div className="admin-card form-panel-centered-lg mt-1">
+          <p className="mb-0 text-sm-muted">
+            📄 <strong>ATA disponível:</strong> <a href={assembleia.ata_url} target="_blank" rel="noopener noreferrer" className="text-primary">Acessar documento</a>
           </p>
         </div>
       )}
@@ -142,10 +113,10 @@ async function AssembleiaContent({ id }: { id: string }) {
   );
 }
 
-export default async function AssembleiaPage({ params }: { params: Promise<any> }) {
+export default async function AssembleiaPage({ params }: { params: Promise<AssembleiaPageParams> }) {
   const resolvedParams = await params;
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <AssembleiaContent id={resolvedParams.id} />
     </Suspense>
   );

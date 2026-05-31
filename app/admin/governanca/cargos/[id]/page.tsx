@@ -8,6 +8,10 @@ export const metadata = {
   title: 'Cargo - Admin GEEF',
 };
 
+type CargoPageParams = {
+  id: string;
+};
+
 async function handleSubmit(id: string, formData: FormData) {
   'use server';
 
@@ -40,8 +44,8 @@ async function CargoContent({ id }: { id: string }) {
         </div>
       </div>
 
-      <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto' }}>
-        <h2 style={{ margin: '0 0 1.5rem', fontSize: '1rem', fontWeight: 600 }}>Editar Cargo</h2>
+      <div className="admin-card form-panel-centered">
+        <h2 className="form-card-title">Editar Cargo</h2>
         <form action={(formData) => handleSubmit(id, formData)}>
           <div className="admin-form-group">
             <label>Nome *</label>
@@ -60,16 +64,6 @@ async function CargoContent({ id }: { id: string }) {
               defaultValue={cargo.descricao || ''}
               placeholder="Responsabilidades..."
               rows={3}
-              style={{
-                width: '100%',
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-                resize: 'vertical',
-              }}
             />
           </div>
 
@@ -78,16 +72,6 @@ async function CargoContent({ id }: { id: string }) {
             <select
               name="nivel"
               defaultValue={cargo.nivel || ''}
-              style={{
-                width: '100%',
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-                backgroundColor: '#fff',
-              }}
             >
               <option value="">Selecione um nível</option>
               <option value="estrategico">🎯 Estratégico</option>
@@ -105,10 +89,10 @@ async function CargoContent({ id }: { id: string }) {
   );
 }
 
-export default async function CargoPage({ params }: { params: Promise<any> }) {
+export default async function CargoPage({ params }: { params: Promise<CargoPageParams> }) {
   const resolvedParams = await params;
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <CargoContent id={resolvedParams.id} />
     </Suspense>
   );
