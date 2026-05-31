@@ -6,9 +6,20 @@ export const metadata = {
   title: 'Patrimônio - Admin GEEF',
 };
 
+type BemItem = {
+  id: string;
+  nome: string;
+  categoria?: string | null;
+  localizacao?: string | null;
+  status?: string | null;
+  conservacao?: string | null;
+  responsavel?: { nome?: string | null } | null;
+};
+
 async function PatrimonioContent() {
   const bens = await getBens();
-  const ativos = bens.filter((b: any) => b.status === 'ativo');
+  const bemList = bens as BemItem[];
+  const ativos = bemList.filter((b) => b.status === 'ativo');
 
   return (
     <div className="area-page">
@@ -42,8 +53,8 @@ async function PatrimonioContent() {
           <p>Lista consolidada com localização e estado de conservação.</p>
         </div>
         <div className="table-surface">
-          {bens.length > 0 ? (
-            <div style={{ overflowX: 'auto' }}>
+          {bemList.length > 0 ? (
+            <div className="overflow-x-auto">
               <table className="admin-table">
                 <thead>
                   <tr>
@@ -54,14 +65,14 @@ async function PatrimonioContent() {
                     <th>Conservação</th>
                     <th>Status</th>
                     <th>Ação</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {bens.map((bem: any) => (
+                </tr>
+              </thead>
+              <tbody>
+                  {bemList.map((bem) => (
                     <tr key={bem.id}>
-                      <td style={{ fontWeight: 500 }}>{bem.nome}</td>
+                      <td><strong>{bem.nome}</strong></td>
                       <td>{bem.categoria || '—'}</td>
-                      <td style={{ color: 'var(--muted)' }}>{bem.localizacao || '—'}</td>
+                      <td className="text-sm-muted">{bem.localizacao || '—'}</td>
                       <td>{bem.responsavel?.nome || '—'}</td>
                       <td>
                         <span className={
@@ -105,7 +116,7 @@ async function PatrimonioContent() {
 
 export default function PatrimonioPage() {
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <PatrimonioContent />
     </Suspense>
   );

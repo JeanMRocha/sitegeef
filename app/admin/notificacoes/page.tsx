@@ -6,16 +6,34 @@ export const metadata = {
   title: "Notificações - Admin GEEF",
 };
 
+type NotificacaoItem = {
+  id: string;
+  criado_em: string;
+  tipo?: string | null;
+  titulo: string;
+  mensagem: string;
+  canal?: string | null;
+  status?: string | null;
+};
+
 async function NotificacoesContent() {
   const notificacoes = await getNotificacoes();
-  const pendentes = notificacoes.filter((n: any) => n.status === "pendente");
-  const lidas = notificacoes.filter((n: any) => n.status === "lida");
+  const notificacaoList = notificacoes as NotificacaoItem[];
+  const pendentes = notificacaoList.filter((n) => n.status === "pendente");
+  const lidas = notificacaoList.filter((n) => n.status === "lida");
 
   const cards = [
     { label: "Pendentes", value: pendentes.length },
     { label: "Lidas", value: lidas.length },
-    { label: "Total", value: notificacoes.length },
+    { label: "Total", value: notificacaoList.length },
   ];
+
+  const getStatusClass = (status?: string | null) => {
+    if (status === "pendente") return "inline-status inline-status-warning";
+    if (status === "enviado") return "inline-status inline-status-success";
+    if (status === "falhou") return "inline-status inline-status-danger";
+    return "inline-status inline-status-neutral";
+  };
 
   return (
     <div className="area-page">
@@ -46,7 +64,7 @@ async function NotificacoesContent() {
           <p>Visão geral do histórico e do estado de envio.</p>
         </div>
         <div className="table-surface">
-          {notificacoes.length > 0 ? (
+          {notificacaoList.length > 0 ? (
             <table className="admin-table">
               <thead>
                 <tr>
@@ -60,32 +78,15 @@ async function NotificacoesContent() {
                 </tr>
               </thead>
               <tbody>
-                {notificacoes.map((notif: any) => (
-                  <tr key={notif.id} style={{ backgroundColor: notif.status === "pendente" ? "rgba(59, 130, 246, 0.02)" : "transparent" }}>
-                    <td style={{ color: "var(--muted)" }}>{new Date(notif.criado_em).toLocaleDateString("pt-BR")}</td>
+                {notificacaoList.map((notif) => (
+                  <tr key={notif.id} className={notif.status === "pendente" ? "table-row-info" : undefined}>
+                    <td className="text-sm-muted">{new Date(notif.criado_em).toLocaleDateString("pt-BR")}</td>
                     <td>{notif.tipo}</td>
-                    <td style={{ fontWeight: 500, maxWidth: "150px" }}>{notif.titulo}</td>
-                    <td style={{ color: "var(--muted)", maxWidth: "200px" }}>{notif.mensagem.substring(0, 50)}...</td>
+                    <td className="table-cell-truncate"><strong>{notif.titulo}</strong></td>
+                    <td className="text-sm-muted table-cell-truncate">{notif.mensagem.substring(0, 50)}...</td>
                     <td>{notif.canal}</td>
                     <td>
-                      <span className="inline-status" style={{
-                        backgroundColor:
-                          notif.status === "pendente"
-                            ? "rgba(249, 115, 22, 0.1)"
-                            : notif.status === "enviado"
-                              ? "rgba(34, 197, 94, 0.1)"
-                              : notif.status === "falhou"
-                                ? "rgba(239, 68, 68, 0.1)"
-                                : "rgba(107, 114, 128, 0.1)",
-                        color:
-                          notif.status === "pendente"
-                            ? "#f97316"
-                            : notif.status === "enviado"
-                              ? "#22c55e"
-                              : notif.status === "falhou"
-                                ? "#ef4444"
-                                : "#6b7280",
-                      }}>
+                      <span className={getStatusClass(notif.status)}>
                         {notif.status}
                       </span>
                     </td>
@@ -107,7 +108,7 @@ async function NotificacoesContent() {
 
 export default function NotificacoesPage() {
   return (
-    <Suspense fallback={<div style={{ padding: "2rem", textAlign: "center" }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <NotificacoesContent />
     </Suspense>
   );

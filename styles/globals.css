@@ -107,6 +107,17 @@
   color: #3b82f6;
 }
 
+.table-row-info {
+  background: rgba(59, 130, 246, 0.02);
+}
+
+.table-cell-truncate {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .page-pagination {
   display: flex;
   gap: 0.5rem;
@@ -6248,6 +6259,10 @@ a.button.musica-icon-button {
 
 :root.dark .text-primary {
   color: #93c5fd;
+}
+
+:root.dark .table-row-info {
+  background: rgba(59, 130, 246, 0.06);
 }
 
 :root.dark .site-nav a {
