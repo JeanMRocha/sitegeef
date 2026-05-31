@@ -6,8 +6,19 @@ export const metadata = {
   title: 'Turmas - Admin GEEF',
 };
 
+type TurmaListItem = {
+  id: string;
+  curso?: { nome?: string | null } | null;
+  facilitador?: { nome?: string | null } | null;
+  horario?: string | null;
+  data_inicio: string;
+  data_fim: string;
+  status?: string | null;
+};
+
 async function TurmasContent() {
   const turmas = await getTurmas();
+  const turmaList = turmas as TurmaListItem[];
 
   return (
     <div>
@@ -16,14 +27,14 @@ async function TurmasContent() {
           <h1 className="admin-page-title">Turmas de Estudo</h1>
           <p className="admin-page-subtitle">Gerenciar turmas dos cursos</p>
         </div>
-        <Link href="/admin/estudos/turmas/nova" className="admin-btn admin-btn-primary" style={{ width: 'auto' }}>
+        <Link href="/admin/estudos/turmas/nova" className="admin-btn admin-btn-primary">
           ➕ Nova Turma
         </Link>
       </div>
 
       <div className="admin-card">
-        {turmas.length > 0 ? (
-          <div style={{ overflowX: 'auto' }}>
+        {turmaList.length > 0 ? (
+          <div className="overflow-x-auto">
             <table className="admin-table">
               <thead>
                 <tr>
@@ -36,29 +47,24 @@ async function TurmasContent() {
                 </tr>
               </thead>
               <tbody>
-                {turmas.map((turma: any) => (
+                {turmaList.map((turma) => (
                   <tr key={turma.id}>
-                    <td style={{ fontWeight: 500 }}>
+                    <td>
+                      <strong>
                       {turma.curso?.nome}
+                      </strong>
                     </td>
-                    <td style={{ fontSize: '0.9rem' }}>
+                    <td className="text-sm-muted">
                       {turma.facilitador?.nome}
                     </td>
-                    <td style={{ fontSize: '0.9rem' }}>
+                    <td className="text-sm-muted">
                       {turma.horario}
                     </td>
-                    <td style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>
+                    <td className="text-sm-muted">
                       {new Date(turma.data_inicio).toLocaleDateString('pt-BR')} a {new Date(turma.data_fim).toLocaleDateString('pt-BR')}
                     </td>
                     <td>
-                      <span style={{
-                        display: 'inline-block',
-                        padding: '0.25rem 0.6rem',
-                        backgroundColor: turma.status === 'em_andamento' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(107, 114, 128, 0.1)',
-                        color: turma.status === 'em_andamento' ? '#22c55e' : '#6b7280',
-                        borderRadius: '0.3rem',
-                        fontSize: '0.85rem',
-                      }}>
+                      <span className={turma.status === 'em_andamento' ? 'inline-status inline-status-success' : 'inline-status inline-status-neutral'}>
                         {turma.status === 'em_andamento' ? '▶ Em andamento' : '✓ Finalizada'}
                       </span>
                     </td>
@@ -73,7 +79,7 @@ async function TurmasContent() {
             </table>
           </div>
         ) : (
-          <p style={{ color: 'var(--muted)', textAlign: 'center' }}>Nenhuma turma cadastrada.</p>
+          <p className="text-center-muted">Nenhuma turma cadastrada.</p>
         )}
       </div>
     </div>
@@ -82,7 +88,7 @@ async function TurmasContent() {
 
 export default function TurmasPage() {
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <TurmasContent />
     </Suspense>
   );

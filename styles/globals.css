@@ -3070,6 +3070,11 @@ a.button.musica-icon-button {
   color: #b45309;
 }
 
+.inline-status-neutral {
+  background: rgba(107, 114, 128, 0.14);
+  color: #4b5563;
+}
+
 .inline-status-danger {
   background: rgba(239, 68, 68, 0.12);
   color: #b91c1c;
@@ -6145,6 +6150,11 @@ a.button.musica-icon-button {
 :root.dark .inline-status-warning {
   color: #f5b869;
   background: rgba(245, 158, 11, 0.15);
+}
+
+:root.dark .inline-status-neutral {
+  color: #d1d5db;
+  background: rgba(107, 114, 128, 0.2);
 }
 
 :root.dark .inline-status-danger {
