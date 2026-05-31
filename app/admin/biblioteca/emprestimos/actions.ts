@@ -219,7 +219,7 @@ export async function getExemplaresdisponveisParaEmprestimo() {
 async function loadHistoricoEmprestimos(page = 1) {
   const supabase = createServiceRoleClient();
   const pageSize = 20;
-  const offset = (page - 1) * pageSize;
+  const { start, end } = calculateRange(page, pageSize);
 
   const { data, count, error } = await supabase
     .from('emprestimos')
@@ -233,7 +233,7 @@ async function loadHistoricoEmprestimos(page = 1) {
     )
     .eq('status', 'devolvido')
     .order('data_devolucao', { ascending: false })
-    .range(offset, offset + pageSize - 1);
+    .range(start, end);
 
   if (error) return {
     historico: [],
