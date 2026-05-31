@@ -153,6 +153,25 @@
   font-weight: 600;
 }
 
+.table-actions-inline {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.status-toggle-btn {
+  border: none;
+}
+
+.status-toggle-btn--active {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.status-toggle-btn--inactive {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+
 .page-pagination {
   display: flex;
   gap: 0.5rem;

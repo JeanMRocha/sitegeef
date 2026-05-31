@@ -8,6 +8,15 @@ export const metadata = {
   title: 'Irradiação - Admin GEEF',
 };
 
+type IrradiacaoItem = {
+  id: string;
+  nome_irradiacao: string;
+  status?: string | null;
+  periodo?: string | null;
+  confidencial?: boolean | null;
+  pessoas?: { nome?: string | null } | null;
+};
+
 async function handleToggle(id: string, ativa: boolean) {
   'use server';
   const { toggleIrradiacaoStatus: toggle } = await import('../actions');
@@ -17,6 +26,7 @@ async function handleToggle(id: string, ativa: boolean) {
 
 async function IrradiacaoContent() {
   const irradiacoes = await getIrradiacoes();
+  const irradiacaoList = irradiacoes as IrradiacaoItem[];
 
   return (
     <div>
@@ -31,8 +41,8 @@ async function IrradiacaoContent() {
       </div>
 
       <div className="admin-card">
-        {irradiacoes.length > 0 ? (
-          <div style={{ overflowX: 'auto' }}>
+        {irradiacaoList.length > 0 ? (
+          <div className="overflow-x-auto">
             <table className="admin-table">
               <thead>
                 <tr>
@@ -45,48 +55,45 @@ async function IrradiacaoContent() {
                 </tr>
               </thead>
               <tbody>
-                {irradiacoes.map((irr: any) => (
+                {irradiacaoList.map((irr) => (
                   <tr key={irr.id}>
-                    <td style={{ fontWeight: 500 }}>
+                    <td>
+                      <strong>
                       {irr.nome_irradiacao}
+                      </strong>
                     </td>
-                    <td style={{ fontSize: '0.9rem' }}>
+                    <td className="text-sm-muted">
                       {irr.pessoas?.nome}
                     </td>
-                    <td style={{ fontSize: '0.9rem', color: 'var(--muted)' }}>
+                    <td className="text-sm-muted">
                       {irr.periodo}
                     </td>
                     <td>
-                      <span style={{
-                        display: 'inline-block',
-                        padding: '0.25rem 0.6rem',
-                        backgroundColor: irr.status === 'ativa' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(107, 114, 128, 0.1)',
-                        color: irr.status === 'ativa' ? '#22c55e' : '#6b7280',
-                        borderRadius: '0.3rem',
-                        fontSize: '0.85rem',
-                      }}>
+                      <span className={irr.status === 'ativa' ? 'inline-status inline-status-success' : 'inline-status inline-status-neutral'}>
                         {irr.status === 'ativa' ? '✓ Ativa' : '✕ Encerrada'}
                       </span>
                     </td>
                     <td>
                       {irr.confidencial ? (
-                        <span style={{ fontSize: '0.9rem', color: '#ef4444' }}>🔒 Confidencial</span>
+                        <span className="text-danger">🔒 Confidencial</span>
                       ) : (
-                        <span style={{ fontSize: '0.9rem', color: 'var(--muted)' }}>Público</span>
+                        <span className="text-sm-muted">Público</span>
                       )}
                     </td>
-                    <td style={{ display: 'flex', gap: '0.5rem' }}>
+                    <td>
+                      <div className="table-actions-inline">
                       <Link href={`/admin/atendimento/irradiacao/${irr.id}`} className="admin-btn admin-btn-small">
                         ✏️ Editar
                       </Link>
                       <form action={() => handleToggle(irr.id, irr.status === 'ativa')}>
-                        <button type="submit" className="admin-btn admin-btn-small" style={{
-                          backgroundColor: irr.status === 'ativa' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(34, 197, 94, 0.1)',
-                          color: irr.status === 'ativa' ? '#ef4444' : '#22c55e',
-                        }}>
+                        <button
+                          type="submit"
+                          className={`admin-btn admin-btn-small status-toggle-btn ${irr.status === 'ativa' ? 'status-toggle-btn--active' : 'status-toggle-btn--inactive'}`}
+                        >
                           {irr.status === 'ativa' ? '🔒' : '✓'}
                         </button>
                       </form>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -94,13 +101,7 @@ async function IrradiacaoContent() {
             </table>
           </div>
         ) : (
-          <div style={{
-            padding: '2rem',
-            textAlign: 'center',
-            backgroundColor: 'var(--admin-bg)',
-            borderRadius: '0.6rem',
-            color: 'var(--muted)',
-          }}>
+          <div className="area-empty">
             <p>Nenhuma irradiação registrada.</p>
           </div>
         )}
@@ -111,7 +112,7 @@ async function IrradiacaoContent() {
 
 export default function IrradiacaoPage() {
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <IrradiacaoContent />
     </Suspense>
   );

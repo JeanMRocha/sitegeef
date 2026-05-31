@@ -6,8 +6,19 @@ export const metadata = {
   title: 'Turmas - Admin GEEF',
 };
 
+type EvangelizacaoTurmaItem = {
+  id: string;
+  nome: string;
+  faixa_etaria?: string | null;
+  horario?: string | null;
+  sala?: string | null;
+  capacidade?: number | null;
+  status?: string | null;
+};
+
 async function TurmasContent() {
   const turmas = await getTurmas();
+  const turmaList = turmas as EvangelizacaoTurmaItem[];
 
   return (
     <div className="area-page">
@@ -26,7 +37,7 @@ async function TurmasContent() {
 
       <section className="area-section">
         <div className="table-surface">
-          {turmas.length > 0 ? (
+          {turmaList.length > 0 ? (
             <table className="admin-table">
               <thead>
                 <tr>
@@ -40,15 +51,15 @@ async function TurmasContent() {
                 </tr>
               </thead>
               <tbody>
-                {turmas.map((turma: any) => (
+                {turmaList.map((turma) => (
                   <tr key={turma.id}>
-                    <td style={{ fontWeight: 500 }}>{turma.nome}</td>
+                    <td><strong>{turma.nome}</strong></td>
                     <td>{turma.faixa_etaria}</td>
                     <td>{turma.horario}</td>
-                    <td style={{ color: 'var(--muted)' }}>{turma.sala}</td>
-                    <td style={{ textAlign: 'center', fontWeight: 600 }}>{turma.capacidade}</td>
+                    <td className="text-sm-muted">{turma.sala}</td>
+                    <td className="table-cell-center"><strong>{turma.capacidade}</strong></td>
                     <td>
-                      <span className={turma.status === 'ativa' ? 'inline-status inline-status-success' : 'inline-status'}>
+                      <span className={turma.status === 'ativa' ? 'inline-status inline-status-success' : 'inline-status inline-status-neutral'}>
                         {turma.status === 'ativa' ? 'Ativa' : 'Inativa'}
                       </span>
                     </td>
@@ -72,7 +83,7 @@ async function TurmasContent() {
 
 export default function TurmasPage() {
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <TurmasContent />
     </Suspense>
   );
