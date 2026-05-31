@@ -27,7 +27,7 @@ function GovernancaDocumentosPageContent() {
       <section className="area-section">
         <div className="area-panel-item">
           <strong>Direção do produto</strong>
-          <p style={{ marginTop: "0.45rem" }}>
+          <p className="mt-035">
             O documento nasce como tela web navegável. Exportar e imprimir entram como ações auxiliares, sem PDF como formato principal.
           </p>
         </div>
@@ -40,7 +40,7 @@ function GovernancaDocumentosPageContent() {
 
 export default function GovernancaDocumentosPage() {
   return (
-    <Suspense fallback={<div style={{ padding: "2rem", textAlign: "center" }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <GovernancaDocumentosPageContent />
     </Suspense>
   );

@@ -46,18 +46,18 @@ export default function AdminIdiomasPage() {
       <section className="area-section">
         <h2 className="area-section-title">Cobertura atual</h2>
         <div className="admin-card">
-          <div className="module-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))" }}>
+          <div className="module-grid grid-auto-300">
             <div className="area-panel-item">
               <strong>{copy.adminLanguages.publicShell}</strong>
-              <p style={{ marginTop: "0.35rem" }}>{copy.adminLanguages.publicPages}</p>
+              <p className="mt-035">{copy.adminLanguages.publicPages}</p>
             </div>
             <div className="area-panel-item">
               <strong>Persistência</strong>
-              <p style={{ marginTop: "0.35rem" }}>{copy.adminLanguages.persistence}</p>
+              <p className="mt-035">{copy.adminLanguages.persistence}</p>
             </div>
             <div className="area-panel-item">
               <strong>Próximos passos</strong>
-              <p style={{ marginTop: "0.35rem" }}>{copy.adminLanguages.nextSteps}</p>
+              <p className="mt-035">{copy.adminLanguages.nextSteps}</p>
             </div>
           </div>
         </div>

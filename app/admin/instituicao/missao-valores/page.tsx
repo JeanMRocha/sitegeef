@@ -17,7 +17,7 @@ async function MissaoValoresContent() {
             <p className="area-subtitle">Instituição</p>
             <h1 className="area-hero-title">Missão e Valores</h1>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap", justifyContent: "flex-end" }}>
+          <div className="admin-actions">
             <Link href="/admin/instituicao/missao-valores/editar" className="profile-form-btn profile-form-btn-primary">
               Editar
             </Link>
@@ -28,23 +28,23 @@ async function MissaoValoresContent() {
       <section className="area-section">
         <div className="table-surface">
           {instituicao?.missao && (
-            <div className="area-panel-item" style={{ marginBottom: '1.5rem' }}>
+            <div className="area-panel-item mb-1-5">
               <strong>Missão</strong>
-              <p style={{ whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>{instituicao.missao}</p>
+              <p className="text-pre-wrap">{instituicao.missao}</p>
             </div>
           )}
 
           {instituicao?.visao && (
-            <div className="area-panel-item" style={{ marginBottom: '1.5rem' }}>
+            <div className="area-panel-item mb-1-5">
               <strong>Visão</strong>
-              <p style={{ whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>{instituicao.visao}</p>
+              <p className="text-pre-wrap">{instituicao.visao}</p>
             </div>
           )}
 
           {instituicao?.valores && (
             <div className="area-panel-item">
               <strong>Valores</strong>
-              <p style={{ whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>{instituicao.valores}</p>
+              <p className="text-pre-wrap">{instituicao.valores}</p>
             </div>
           )}
 
@@ -59,7 +59,7 @@ async function MissaoValoresContent() {
 
 export default function MissaoValoresPage() {
   return (
-    <Suspense fallback={<div style={{ padding: "2rem", textAlign: "center" }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <MissaoValoresContent />
     </Suspense>
   );
