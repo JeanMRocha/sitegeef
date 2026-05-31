@@ -8,6 +8,10 @@ export const metadata = {
   title: 'Conta - Admin GEEF',
 };
 
+type ContaPageParams = {
+  id: string;
+};
+
 async function handleSubmit(id: string, formData: FormData) {
   'use server';
 
@@ -45,29 +49,22 @@ async function ContaContent({ id }: { id: string }) {
 
   return (
     <div>
-      {/* Header */}
       <div className="admin-page-header">
         <div>
           <h1 className="admin-page-title">{conta.nome}</h1>
           <p className="admin-page-subtitle">Código: {conta.codigo}</p>
         </div>
-        <form action={() => handleToggle(id, conta.status === 'ativo')} style={{ display: 'inline' }}>
+        <form action={() => handleToggle(id, conta.status === 'ativo')}>
           <button
             type="submit"
-            className="admin-btn"
-            style={{
-              backgroundColor: conta.status === 'ativo' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(34, 197, 94, 0.1)',
-              color: conta.status === 'ativo' ? '#ef4444' : '#22c55e',
-              border: conta.status === 'ativo' ? '1px solid rgba(239, 68, 68, 0.3)' : '1px solid rgba(34, 197, 94, 0.3)',
-            }}
+            className={`admin-btn status-toggle-btn ${conta.status === 'ativo' ? 'status-toggle-btn--active' : 'status-toggle-btn--inactive'}`}
           >
             {conta.status === 'ativo' ? '🗑️ Inativar' : '✓ Ativar'}
           </button>
         </form>
       </div>
 
-      {/* Form */}
-      <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto' }}>
+      <div className="admin-card form-panel-centered">
         <form action={(formData) => handleSubmit(id, formData)}>
           <div className="admin-form-group">
             <label>Código *</label>
@@ -91,19 +88,7 @@ async function ContaContent({ id }: { id: string }) {
 
           <div className="admin-form-group">
             <label>Tipo *</label>
-            <select
-              name="tipo"
-              defaultValue={conta.tipo}
-              required
-              style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-              }}
-            >
+            <select name="tipo" defaultValue={conta.tipo} required>
               <option value="">— Selecione —</option>
               {tipos.map((t) => (
                 <option key={t} value={t}>
@@ -113,7 +98,7 @@ async function ContaContent({ id }: { id: string }) {
             </select>
           </div>
 
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+          <div className="form-actions-row">
             <button type="submit" className="admin-btn admin-btn-primary">
               ✅ Salvar Alterações
             </button>
@@ -127,10 +112,10 @@ async function ContaContent({ id }: { id: string }) {
   );
 }
 
-export default async function ContaPage({ params }: { params: Promise<any> }) {
+export default async function ContaPage({ params }: { params: Promise<ContaPageParams> }) {
   const resolvedParams = await params;
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <ContaContent id={resolvedParams.id} />
     </Suspense>
   );

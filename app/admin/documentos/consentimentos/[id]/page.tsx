@@ -8,6 +8,10 @@ export const metadata = {
   title: 'Consentimento LGPD - Admin GEEF',
 };
 
+type ConsentimentoPageParams = {
+  id: string;
+};
+
 async function handleRevoke(id: string) {
   'use server';
 
@@ -35,7 +39,7 @@ async function ConsentimentoContent({ id }: { id: string }) {
         </div>
 
         <div className="admin-card">
-          <p style={{ margin: 0, color: 'var(--muted)' }}>
+          <p className="mb-0 text-sm-muted">
             O registro pode ter sido removido ou você não tem acesso.
           </p>
         </div>
@@ -45,7 +49,6 @@ async function ConsentimentoContent({ id }: { id: string }) {
 
   return (
     <div>
-      {/* Header */}
       <div className="admin-page-header">
         <div>
           <h1 className="admin-page-title">Consentimento LGPD</h1>
@@ -55,12 +58,7 @@ async function ConsentimentoContent({ id }: { id: string }) {
           <form action={() => handleRevoke(id)}>
             <button
               type="submit"
-              className="admin-btn"
-              style={{
-                backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                color: '#ef4444',
-                border: '1px solid rgba(239, 68, 68, 0.3)',
-              }}
+              className="admin-btn status-toggle-btn status-toggle-btn--active"
               onClick={(e) => {
                 if (!confirm('Tem certeza que deseja revogar este consentimento?')) {
                   e.preventDefault();
@@ -73,41 +71,33 @@ async function ConsentimentoContent({ id }: { id: string }) {
         )}
       </div>
 
-      {/* Info Box */}
-      <div className="admin-card" style={{ marginBottom: '2rem' }}>
-        <div style={{ marginBottom: '1rem', padding: '0.9rem 1rem', borderRadius: '0.75rem', background: 'rgba(138, 0, 90, 0.06)', color: 'var(--muted)', lineHeight: 1.6 }}>
+      <div className="admin-card mb-2">
+        <div className="content-surface-note">
           Revogue apenas quando o pedido vier do titular ou quando houver base para encerrar o tratamento.
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '2rem' }}>
+        <div className="module-grid grid-auto-300">
           <div>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.85rem', color: 'var(--muted)', textTransform: 'uppercase' }}>Finalidade</p>
-            <p style={{ margin: '0.5rem 0 1rem', fontSize: '0.95rem', fontWeight: 500 }}>{consentimento.finalidade}</p>
+            <p className="text-xs-muted">Finalidade</p>
+            <p className="mt-035 text-sm-500">{consentimento.finalidade}</p>
           </div>
           <div>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.85rem', color: 'var(--muted)', textTransform: 'uppercase' }}>Base Legal</p>
-            <p style={{ margin: '0.5rem 0 1rem', fontSize: '0.95rem' }}>{consentimento.base_legal || '—'}</p>
+            <p className="text-xs-muted">Base Legal</p>
+            <p className="mt-035 text-sm-muted">{consentimento.base_legal || '—'}</p>
           </div>
           <div>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.85rem', color: 'var(--muted)', textTransform: 'uppercase' }}>Status</p>
-            <p style={{ margin: '0.5rem 0 1rem' }}>
-              <span style={{
-                display: 'inline-block',
-                padding: '0.35rem 0.7rem',
-                backgroundColor: consentimento.status === 'ativo' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-                color: consentimento.status === 'ativo' ? '#22c55e' : '#ef4444',
-                borderRadius: '0.4rem',
-                fontSize: '0.85rem',
-              }}>
+            <p className="text-xs-muted">Status</p>
+            <p className="mt-035">
+              <span className={consentimento.status === 'ativo' ? 'inline-status inline-status-success' : 'inline-status inline-status-danger'}>
                 {consentimento.status}
               </span>
             </p>
           </div>
         </div>
 
-        <div style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid var(--admin-border)', display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
+        <div className="form-grid-2 mt-2 content-surface-note-bordered">
           <div>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.85rem', color: 'var(--muted)', textTransform: 'uppercase' }}>Consentimento em</p>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.95rem' }}>
+            <p className="text-xs-muted">Consentimento em</p>
+            <p className="mt-035">
               {new Date(consentimento.data_consentimento).toLocaleDateString('pt-BR', {
                 weekday: 'long',
                 year: 'numeric',
@@ -118,8 +108,8 @@ async function ConsentimentoContent({ id }: { id: string }) {
           </div>
           {consentimento.data_revogacao && (
             <div>
-              <p style={{ margin: '0.5rem 0', fontSize: '0.85rem', color: 'var(--muted)', textTransform: 'uppercase' }}>Revogado em</p>
-              <p style={{ margin: '0.5rem 0', fontSize: '0.95rem', color: '#ef4444' }}>
+              <p className="text-xs-muted">Revogado em</p>
+              <p className="mt-035 text-danger">
                 {new Date(consentimento.data_revogacao).toLocaleDateString('pt-BR', {
                   weekday: 'long',
                   year: 'numeric',
@@ -132,15 +122,14 @@ async function ConsentimentoContent({ id }: { id: string }) {
         </div>
 
         {consentimento.canal_autorizado && (
-          <div style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid var(--admin-border)' }}>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.85rem', color: 'var(--muted)', textTransform: 'uppercase' }}>Canais Autorizados</p>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.95rem' }}>{consentimento.canal_autorizado}</p>
+          <div className="content-surface-note-bordered mt-2">
+            <p className="text-xs-muted">Canais Autorizados</p>
+            <p className="mt-035 text-sm-muted">{consentimento.canal_autorizado}</p>
           </div>
         )}
       </div>
 
-      {/* Voltar */}
-      <div style={{ display: 'flex', gap: '1rem' }}>
+      <div className="table-actions-inline">
         <Link href="/admin/documentos/consentimentos" className="admin-btn admin-btn-secondary">
           ← Voltar
         </Link>
@@ -149,10 +138,10 @@ async function ConsentimentoContent({ id }: { id: string }) {
   );
 }
 
-export default async function ConsentimentoPage({ params }: { params: Promise<any> }) {
+export default async function ConsentimentoPage({ params }: { params: Promise<ConsentimentoPageParams> }) {
   const resolvedParams = await params;
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <ConsentimentoContent id={resolvedParams.id} />
     </Suspense>
   );
