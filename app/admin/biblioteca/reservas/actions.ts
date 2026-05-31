@@ -5,11 +5,12 @@ import { createClient } from '@/lib/supabase/server';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 import { invalidateAdminBibliotecaCache } from '@/lib/admin/cache';
 import { invalidateUserAreaCache } from '@/lib/areas/invalidate-user-area';
+import { calculateRange } from '@/lib/admin/query-helpers';
 
 async function loadReservas(page = 1) {
   const supabase = createServiceRoleClient();
   const pageSize = 20;
-  const offset = (page - 1) * pageSize;
+  const { start, end } = calculateRange(page, pageSize);
 
   const { data, count, error } = await supabase
     .from('reservas')
@@ -23,7 +24,7 @@ async function loadReservas(page = 1) {
     )
     .eq('status', 'aguardando')
     .order('posicao_fila', { ascending: true })
-    .range(offset, offset + pageSize - 1);
+    .range(start, end);
 
   if (error) return {
     reservas: [],

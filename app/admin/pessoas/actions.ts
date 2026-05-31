@@ -5,6 +5,7 @@ import { createServiceRoleClient } from '@/lib/supabase/service-role';
 import { type tipo_vinculo, type status_pessoa } from '@/lib/supabase/types';
 import { invalidateUserAreaCache } from '@/lib/areas/invalidate-user-area';
 import { invalidateAdminDashboardCache, invalidateAdminBibliotecaCache, invalidateAdminDocumentosCache } from '@/lib/admin/cache';
+import { calculateRange, buildSearchFilter } from '@/lib/admin/query-helpers';
 
 export async function getPessoas(
   page = 1,
@@ -19,7 +20,7 @@ export async function getPessoas(
   const supabaseService = createServiceRoleClient();
 
   const pageSize = 20;
-  const offset = (page - 1) * pageSize;
+  const { start, end } = calculateRange(page, pageSize);
 
   try {
     // Buscar pessoas sem join (relação não está configurada no Supabase)
@@ -29,14 +30,17 @@ export async function getPessoas(
       .select('id,nome,email,telefone,status,criado_em', { count: 'exact' });
 
     if (search) {
-      query = query.or(`nome.ilike.%${search}%,email.ilike.%${search}%,telefone.ilike.%${search}%`);
+      const filter = buildSearchFilter(search, ['nome', 'email', 'telefone']);
+      if (filter) {
+        query = query.or(filter);
+      }
     }
 
     if (statusFilter) {
       query = query.eq('status', statusFilter);
     }
 
-    const { data, count, error } = await query.range(offset, offset + pageSize - 1);
+    const { data, count, error } = await query.range(start, end);
 
     if (error) {
       console.error('[getPessoas] Erro ao buscar pessoas:', error);
