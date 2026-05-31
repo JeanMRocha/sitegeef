@@ -6,8 +6,17 @@ export const metadata = {
   title: "Documentos e LGPD - Admin GEEF",
 };
 
+type ModeloDocumentoItem = {
+  id: string;
+  tipo: string;
+  titulo: string;
+  versao?: string | null;
+  conteudo?: string | null;
+};
+
 async function ModelosList() {
   const modelos = await getModelosDocumentos();
+  const modeloList = modelos as ModeloDocumentoItem[];
 
   const tabs = [
     { href: "/admin/documentos", label: "📄 Modelos" },
@@ -37,14 +46,14 @@ async function ModelosList() {
       <section className="area-section">
         <div className="area-panel-item">
           <strong>Nota rápida</strong>
-          <p style={{ marginTop: '0.45rem' }}>
+          <p className="mt-035">
             Antes de registrar ou revogar consentimento, confirme finalidade, base legal e necessidade real do dado.
           </p>
         </div>
       </section>
 
       <section className="area-section">
-        <div className="module-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
+        <div className="module-grid grid-auto-220">
           {tabs.map((tab) => (
             <Link key={tab.href} href={tab.href} className="module-card">
               <p className="module-title">{tab.label}</p>
@@ -55,10 +64,10 @@ async function ModelosList() {
 
       <section className="area-section">
         <div className="table-surface">
-          {modelos.length === 0 ? (
+          {modeloList.length === 0 ? (
             <div className="area-empty">
               <p>Nenhum modelo de documento cadastrado.</p>
-              <Link href="/admin/documentos/novo" className="profile-form-btn profile-form-btn-primary">Criar primeiro modelo</Link>
+              <Link href="/admin/documentos/novo" className="profile-form-btn profile-form-btn-primary mt-1">Criar primeiro modelo</Link>
             </div>
           ) : (
             <table className="admin-table">
@@ -72,12 +81,12 @@ async function ModelosList() {
                 </tr>
               </thead>
               <tbody>
-                {modelos.map((modelo: any) => (
+                {modeloList.map((modelo) => (
                   <tr key={modelo.id}>
                     <td><span className="tag">{modelo.tipo}</span></td>
-                    <td style={{ fontWeight: 500 }}>{modelo.titulo}</td>
-                    <td style={{ color: 'var(--muted)' }}>{modelo.versao || "—"}</td>
-                    <td style={{ color: 'var(--muted)' }}>{modelo.conteudo ? "Sim" : "—"}</td>
+                    <td><strong>{modelo.titulo}</strong></td>
+                    <td className="text-sm-muted">{modelo.versao || "—"}</td>
+                    <td className="text-sm-muted">{modelo.conteudo ? "Sim" : "—"}</td>
                     <td>
                       <Link href={`/admin/documentos/${modelo.id}`} className="profile-form-btn profile-form-btn-secondary">Editar</Link>
                     </td>
@@ -94,7 +103,7 @@ async function ModelosList() {
 
 export default function DocumentosPage() {
   return (
-    <Suspense fallback={<div style={{ padding: "2rem", textAlign: "center" }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <ModelosList />
     </Suspense>
   );

@@ -95,6 +95,18 @@
   text-align: center;
 }
 
+.text-success {
+  color: #22c55e;
+}
+
+.text-danger {
+  color: #ef4444;
+}
+
+.text-primary {
+  color: #3b82f6;
+}
+
 .page-pagination {
   display: flex;
   gap: 0.5rem;
@@ -6224,6 +6236,18 @@ a.button.musica-icon-button {
 :root.dark .inline-status-danger {
   color: #f87171;
   background: rgba(239, 68, 68, 0.15);
+}
+
+:root.dark .text-success {
+  color: #8fd4a2;
+}
+
+:root.dark .text-danger {
+  color: #f87171;
+}
+
+:root.dark .text-primary {
+  color: #93c5fd;
 }
 
 :root.dark .site-nav a {

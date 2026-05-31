@@ -6,6 +6,15 @@ export const metadata = {
   title: "Financeiro - Admin GEEF",
 };
 
+type MovimentoItem = {
+  id: string;
+  data: string;
+  descricao: string;
+  tipo?: string | null;
+  valor: number;
+  centros_custo?: { nome?: string | null } | null;
+};
+
 async function FinanceiroContent() {
   const hoje = new Date();
   const mesAtual = hoje.getMonth() + 1;
@@ -13,6 +22,7 @@ async function FinanceiroContent() {
 
   const { entradas, saidas, saldo } = await getSaldoMes(mesAtual, anoAtual);
   const movimentos = await getMovimentosFinanceiros(mesAtual, anoAtual);
+  const movimentoList = movimentos as MovimentoItem[];
 
   const quickLinks = [
     { href: "/admin/financeiro/plano-contas", title: "Plano de Contas", text: "Estrutura contábil e categorias" },
@@ -37,15 +47,15 @@ async function FinanceiroContent() {
         <div className="stat-grid">
           <div className="stat-card">
             <span>Entradas</span>
-            <strong style={{ color: "#22c55e" }}>R$ {entradas.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</strong>
+            <strong className="text-success">R$ {entradas.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</strong>
           </div>
           <div className="stat-card">
             <span>Saídas</span>
-            <strong style={{ color: "#ef4444" }}>R$ {saidas.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</strong>
+            <strong className="text-danger">R$ {saidas.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</strong>
           </div>
           <div className="stat-card">
             <span>Saldo</span>
-            <strong style={{ color: saldo >= 0 ? "#3b82f6" : "#ef4444" }}>R$ {saldo.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</strong>
+            <strong className={saldo >= 0 ? "text-primary" : "text-danger"}>R$ {saldo.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</strong>
           </div>
         </div>
       </section>
@@ -63,14 +73,14 @@ async function FinanceiroContent() {
 
       <section className="area-section">
         <div className="admin-card">
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", marginBottom: "1rem", flexWrap: "wrap" }}>
-            <h2 style={{ margin: 0, fontSize: "1.1rem", color: "var(--text)" }}>Últimos lançamentos</h2>
+          <div className="atendimento-section-header">
+            <h2>Últimos lançamentos</h2>
             <Link href="/admin/financeiro/lancamentos" className="admin-btn admin-btn-small">
               Ver Todos →
             </Link>
           </div>
 
-          {movimentos.length > 0 ? (
+          {movimentoList.length > 0 ? (
             <div className="table-surface">
               <table className="admin-table">
                 <thead>
@@ -83,25 +93,23 @@ async function FinanceiroContent() {
                   </tr>
                 </thead>
                 <tbody>
-                  {movimentos.slice(0, 10).map((mov: any) => (
+                  {movimentoList.slice(0, 10).map((mov) => (
                     <tr key={mov.id}>
-                      <td style={{ fontSize: "0.9rem" }}>{new Date(mov.data).toLocaleDateString("pt-BR")}</td>
-                      <td style={{ fontSize: "0.9rem", fontWeight: 500 }}>{mov.descricao}</td>
+                      <td className="text-sm-muted">{new Date(mov.data).toLocaleDateString("pt-BR")}</td>
                       <td>
-                        <span
-                          className="inline-status"
-                          style={{
-                            backgroundColor: mov.tipo === "entrada" ? "rgba(34, 197, 94, 0.1)" : "rgba(239, 68, 68, 0.1)",
-                            color: mov.tipo === "entrada" ? "#22c55e" : "#ef4444",
-                          }}
-                        >
+                        <strong>{mov.descricao}</strong>
+                      </td>
+                      <td>
+                        <span className={mov.tipo === "entrada" ? "inline-status inline-status-success" : "inline-status inline-status-danger"}>
                           {mov.tipo === "entrada" ? "📥 Entrada" : "📤 Saída"}
                         </span>
                       </td>
-                      <td style={{ fontWeight: 600, color: mov.tipo === "entrada" ? "#22c55e" : "#ef4444" }}>
+                      <td className={mov.tipo === "entrada" ? "text-success" : "text-danger"}>
+                        <strong>
                         R$ {mov.valor.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                        </strong>
                       </td>
-                      <td style={{ fontSize: "0.9rem", color: "var(--muted)" }}>{mov.centros_custo?.nome || "—"}</td>
+                      <td className="text-sm-muted">{mov.centros_custo?.nome || "—"}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -109,8 +117,8 @@ async function FinanceiroContent() {
             </div>
           ) : (
             <div className="area-empty">
-              <p style={{ margin: 0 }}>Nenhum lançamento neste mês.</p>
-              <Link href="/admin/financeiro/lancamentos/novo" className="admin-btn admin-btn-primary" style={{ marginTop: "1rem", display: "inline-flex" }}>
+              <p className="mb-0">Nenhum lançamento neste mês.</p>
+              <Link href="/admin/financeiro/lancamentos/novo" className="admin-btn admin-btn-primary mt-1">
                 ➕ Novo Lançamento
               </Link>
             </div>
@@ -123,7 +131,7 @@ async function FinanceiroContent() {
 
 export default function FinanceiroPage() {
   return (
-    <Suspense fallback={<div style={{ padding: "2rem", textAlign: "center" }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <FinanceiroContent />
     </Suspense>
   );
