@@ -132,6 +132,27 @@
   line-height: 1.6;
 }
 
+.document-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--admin-border);
+  padding-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.document-tab {
+  padding-bottom: 0.5rem;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.document-tab-active {
+  border-bottom: 2px solid var(--primary);
+  color: var(--primary);
+  font-weight: 600;
+}
+
 .page-pagination {
   display: flex;
   gap: 0.5rem;

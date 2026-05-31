@@ -6,6 +6,21 @@ export const metadata = {
   title: 'Pedidos do Titular - Admin GEEF',
 };
 
+type PedidoItem = {
+  id: string;
+  titular_nome?: string | null;
+  titular_email?: string | null;
+  request_type: string;
+  status?: string | null;
+  responsavel_id?: string | null;
+  created_at: string;
+};
+
+type PessoaItem = {
+  id: string;
+  nome: string;
+};
+
 function resolveStatus(status?: string) {
   if (
     status === 'aberta' ||
@@ -19,27 +34,20 @@ function resolveStatus(status?: string) {
   return 'all';
 }
 
-function resolveLabel(tipo: string) {
+function resolveLabel(tipo?: string | null) {
   if (tipo === 'acesso') return 'Acesso';
   if (tipo === 'correcao') return 'Correção';
   if (tipo === 'revogacao') return 'Revogação';
   if (tipo === 'eliminacao') return 'Eliminação';
-  return tipo;
+  return tipo || '—';
 }
 
-function resolveStatusLabel(status: string) {
+function resolveStatusLabel(status?: string | null) {
   if (status === 'aberta') return 'Aberta';
   if (status === 'em_andamento') return 'Em andamento';
   if (status === 'respondida') return 'Respondida';
   if (status === 'encerrada') return 'Encerrada';
-  return status;
-}
-
-function statusColor(status: string) {
-  if (status === 'aberta') return { bg: 'rgba(59, 130, 246, 0.1)', fg: 'var(--primary)' };
-  if (status === 'em_andamento') return { bg: 'rgba(245, 158, 11, 0.1)', fg: '#d97706' };
-  if (status === 'respondida') return { bg: 'rgba(34, 197, 94, 0.1)', fg: '#22c55e' };
-  return { bg: 'rgba(107, 114, 128, 0.1)', fg: '#6b7280' };
+  return status || '—';
 }
 
 async function PedidosContent({ searchParams }: { searchParams: { page?: string; status?: string } }) {
@@ -57,7 +65,8 @@ async function PedidosContent({ searchParams }: { searchParams: { page?: string;
 
   const { solicitacoes, total, pageSize } = pedidosResult;
   const totalPages = Math.ceil(total / pageSize);
-  const responsavelMap = new Map(pessoas.map((p: any) => [p.id, p.nome]));
+  const pedidoList = solicitacoes as PedidoItem[];
+  const responsavelMap = new Map((pessoas as PessoaItem[]).map((p) => [p.id, p.nome]));
 
   return (
     <div className="area-page">
@@ -77,48 +86,30 @@ async function PedidosContent({ searchParams }: { searchParams: { page?: string;
       <section className="area-section">
         <div className="area-panel-item">
           <strong>Nota rápida</strong>
-          <p style={{ marginTop: '0.45rem' }}>
+          <p className="mt-035">
             Use o pedido como ponto de partida. Responda, atribua responsável e mantenha a trilha em auditoria.
           </p>
         </div>
       </section>
 
       <section className="area-section">
-        <div
-          style={{
-            display: 'flex',
-            gap: '1rem',
-            marginBottom: '2rem',
-            borderBottom: '1px solid var(--admin-border)',
-            paddingBottom: '1rem',
-            flexWrap: 'wrap',
-          }}
-        >
-          <Link href="/admin/documentos" style={{ paddingBottom: '0.5rem', color: 'var(--muted)', textDecoration: 'none' }}>
+        <div className="document-tabs">
+          <Link href="/admin/documentos" className="document-tab">
             📄 Modelos
           </Link>
-          <Link
-            href="/admin/documentos/pedidos"
-            style={{
-              paddingBottom: '0.5rem',
-              borderBottom: '2px solid var(--primary)',
-              color: 'var(--primary)',
-              fontWeight: 600,
-              textDecoration: 'none',
-            }}
-          >
+          <Link href="/admin/documentos/pedidos" className="document-tab document-tab-active">
             📮 Pedidos do Titular
           </Link>
-          <Link href="/admin/documentos/termos" style={{ paddingBottom: '0.5rem', color: 'var(--muted)', textDecoration: 'none' }}>
+          <Link href="/admin/documentos/termos" className="document-tab">
             ✍️ Termos Assinados
           </Link>
-          <Link href="/admin/documentos/consentimentos" style={{ paddingBottom: '0.5rem', color: 'var(--muted)', textDecoration: 'none' }}>
+          <Link href="/admin/documentos/consentimentos" className="document-tab">
             🔒 Consentimentos LGPD
           </Link>
-          <Link href="/admin/documentos/voluntariado" style={{ paddingBottom: '0.5rem', color: 'var(--muted)', textDecoration: 'none' }}>
+          <Link href="/admin/documentos/voluntariado" className="document-tab">
             🤝 Serviços Voluntários
           </Link>
-          <Link href="/admin/documentos/auditoria" style={{ paddingBottom: '0.5rem', color: 'var(--muted)', textDecoration: 'none' }}>
+          <Link href="/admin/documentos/auditoria" className="document-tab">
             🧭 Auditoria LGPD
           </Link>
         </div>
@@ -179,7 +170,7 @@ async function PedidosContent({ searchParams }: { searchParams: { page?: string;
 
       <section className="area-section">
         <div className="table-surface">
-          {solicitacoes.length === 0 ? (
+          {pedidoList.length === 0 ? (
             <div className="area-empty">Nenhum pedido encontrado com os filtros atuais.</div>
           ) : (
             <table className="admin-table">
@@ -194,14 +185,14 @@ async function PedidosContent({ searchParams }: { searchParams: { page?: string;
                 </tr>
               </thead>
               <tbody>
-                {solicitacoes.map((pedido: any) => {
-                  const colors = statusColor(pedido.status);
-
+                {pedidoList.map((pedido) => {
                   return (
                     <tr key={pedido.id}>
-                      <td style={{ fontWeight: 500 }}>
+                      <td>
+                        <strong>
                         {pedido.titular_nome || pedido.titular_email || '—'}
-                        <div style={{ color: 'var(--muted)', fontSize: '0.82rem', marginTop: '0.25rem' }}>
+                        </strong>
+                        <div className="text-xs-muted mt-035">
                           {pedido.titular_email || '—'}
                         </div>
                       </td>
@@ -209,23 +200,14 @@ async function PedidosContent({ searchParams }: { searchParams: { page?: string;
                         <span className="tag">{resolveLabel(pedido.request_type)}</span>
                       </td>
                       <td>
-                        <span
-                          style={{
-                            display: 'inline-block',
-                            padding: '0.35rem 0.7rem',
-                            backgroundColor: colors.bg,
-                            color: colors.fg,
-                            borderRadius: '0.4rem',
-                            fontSize: '0.85rem',
-                          }}
-                        >
+                        <span className={pedido.status === 'aberta' ? 'inline-status inline-status-info' : pedido.status === 'em_andamento' ? 'inline-status inline-status-warning' : pedido.status === 'respondida' ? 'inline-status inline-status-success' : 'inline-status inline-status-neutral'}>
                           {resolveStatusLabel(pedido.status)}
                         </span>
                       </td>
-                      <td style={{ color: 'var(--muted)' }}>
+                      <td className="text-sm-muted">
                         {pedido.responsavel_id ? responsavelMap.get(pedido.responsavel_id) || '—' : '—'}
                       </td>
-                      <td style={{ color: 'var(--muted)' }}>
+                      <td className="text-sm-muted">
                         {new Date(pedido.created_at).toLocaleDateString('pt-BR')}
                       </td>
                       <td>
@@ -243,13 +225,13 @@ async function PedidosContent({ searchParams }: { searchParams: { page?: string;
       </section>
 
       {totalPages > 1 && (
-        <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', marginTop: '2rem' }}>
+        <div className="page-pagination">
           {page > 1 && (
             <Link href={`/admin/documentos/pedidos?page=${page - 1}&status=${filterStatus}`} className="admin-btn admin-btn-secondary">
               ← Anterior
             </Link>
           )}
-          <span style={{ padding: '0.6rem 1.2rem', alignSelf: 'center', fontWeight: 600 }}>
+          <span className="page-pagination-label">
             Página {page} de {totalPages}
           </span>
           {page < totalPages && (
@@ -267,7 +249,7 @@ export default async function PedidosPage({ searchParams }: { searchParams: Prom
   const resolvedSearchParams = await searchParams;
 
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <PedidosContent searchParams={resolvedSearchParams} />
     </Suspense>
   );
