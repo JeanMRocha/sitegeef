@@ -1145,7 +1145,7 @@ body.musica-display-route .site-shell {
   padding: 0.5rem 0.85rem;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
-  background: rgba(255, 255, 255, 0.68);
+  background: var(--surface-tertiary);
   box-shadow: var(--shadow-sm);
 }
 
