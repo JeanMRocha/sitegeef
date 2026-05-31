@@ -663,6 +663,26 @@
 }
 
 /* Status Badge — Music module status indicators */
+/* Table utilities */
+.table-cell-text-muted {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.table-cell-text-small {
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  color: var(--text-muted);
+}
+
+.table-align-right {
+  text-align: right;
+}
+
+.table-cell-bold {
+  font-weight: 600;
+}
+
 .inline-status {
   display: inline-flex;
   align-items: center;

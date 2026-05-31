@@ -142,7 +142,7 @@ export function MusicasCatalogTable({ musicas, initialQuery = "", isSaved = fals
         <div className="admin-card table-surface">
           <div className="area-section-title flex-space-between">
             <h2>Catálogo</h2>
-            <span style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>
+            <span className="table-cell-text-muted">
               {filteredMusicas.length} {filteredMusicas.length === 1 ? "resultado" : "resultados"}
             </span>
           </div>
@@ -151,7 +151,7 @@ export function MusicasCatalogTable({ musicas, initialQuery = "", isSaved = fals
             <div className="area-empty">
               <p>Nenhuma música encontrada.</p>
               {searchText.trim() && (
-                <p style={{ fontSize: "0.875rem", marginTop: "0.5rem", color: "var(--text-muted)" }}>
+                <p className="table-cell-text-small">
                   Tente outro termo de busca.
                 </p>
               )}
@@ -165,13 +165,13 @@ export function MusicasCatalogTable({ musicas, initialQuery = "", isSaved = fals
                   <th>Tom</th>
                   <th>Partes</th>
                   <th>Status</th>
-                  <th style={{ textAlign: "right" }}>Ações</th>
+                  <th className="table-align-right">Ações</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredMusicas.map((musica) => (
                   <tr key={musica.id}>
-                    <td style={{ fontWeight: 600 }}>{musica.titulo}</td>
+                    <td className="table-cell-bold">{musica.titulo}</td>
                     <td>{musica.autor}</td>
                     <td>{musica.tom || "—"}</td>
                     <td>{musica.partes.length}</td>
@@ -180,7 +180,7 @@ export function MusicasCatalogTable({ musicas, initialQuery = "", isSaved = fals
                         {getStatusLabel(musica.status)}
                       </span>
                     </td>
-                    <td style={{ textAlign: "right" }}>
+                    <td className="table-align-right">
                       <div className="flex-end-gap">
                         <Link href={`/admin/reuniao-publica/musicas/${musica.id}`} className="admin-btn admin-btn-small">
                           Editar
