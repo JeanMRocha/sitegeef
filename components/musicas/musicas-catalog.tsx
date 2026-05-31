@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import type { Musica } from "@/lib/musicas";
 import { musicaMatchesSearch } from "@/lib/musicas";
-import { IconExternalLink, IconSearch, IconX } from "@/components/icons";
+import { IconSearch, IconX } from "@/components/icons";
 
 type MusicasCatalogProps = {
   musicas: Musica[];
@@ -78,16 +78,6 @@ export function MusicasCatalog({ musicas }: MusicasCatalogProps) {
               </button>
             )}
           </div>
-
-          {/* Display link */}
-          <Link
-            href="/musicas/exibir"
-            className="button button-secondary musica-icon-button"
-            aria-label="Abrir painel de exibição"
-            title="Abrir painel de exibição"
-          >
-            <IconExternalLink size={18} />
-          </Link>
 
           {/* Result counter */}
           <div className="musica-toolbar-count">
