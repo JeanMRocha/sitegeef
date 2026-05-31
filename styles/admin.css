@@ -145,9 +145,9 @@
   width: 18rem;
   padding: 0.85rem;
   border-radius: 22px;
-  border: 1px solid rgba(14, 36, 8, 0.08);
-  background: linear-gradient(180deg, rgba(250, 244, 255, 0.99), rgba(241, 231, 248, 0.96));
-  box-shadow: 0 20px 48px rgba(124, 63, 163, 0.14);
+  border: 1px solid var(--border-light);
+  background: var(--modal-bg);
+  box-shadow: var(--modal-shadow);
   z-index: 120;
 }
 
@@ -155,7 +155,7 @@
   display: grid;
   gap: 0.15rem;
   padding: 0.2rem 0.2rem 0.75rem;
-  border-bottom: 1px solid rgba(138, 0, 90, 0.08);
+  border-bottom: 1px solid rgba(138, 0, 90, 0.12);
 }
 
 .admin-user-menu-info strong {
@@ -180,8 +180,8 @@
   margin: 0.35rem 0 0.1rem;
   padding: 0.75rem 0.8rem;
   border-radius: 18px;
-  background: rgba(138, 0, 90, 0.04);
-  border: 1px solid rgba(138, 0, 90, 0.06);
+  background: rgba(138, 0, 90, 0.05);
+  border: 1px solid rgba(138, 0, 90, 0.08);
 }
 
 .admin-user-menu-controls-label {
@@ -225,9 +225,9 @@
 
 .admin-user-menu-item:hover,
 .admin-user-menu-item:focus-visible {
-  background: rgba(138, 0, 90, 0.06);
-  border-color: rgba(138, 0, 90, 0.08);
-  color: var(--uva-700);
+  background: rgba(138, 0, 90, 0.08);
+  border-color: rgba(138, 0, 90, 0.12);
+  color: var(--label-color);
 }
 
 .admin-user-menu-item-logout {
@@ -1922,6 +1922,45 @@
 :root.dark .admin-user-menu-avatar {
   color: #fffaf5;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.42);
+}
+
+:root.dark .admin-user-menu-popover {
+  background: var(--modal-bg);
+  border-color: var(--border-medium);
+  box-shadow: var(--modal-shadow);
+}
+
+:root.dark .admin-user-menu-info {
+  border-color: rgba(233, 160, 201, 0.15);
+}
+
+:root.dark .admin-user-menu-info strong {
+  color: var(--text-primary);
+}
+
+:root.dark .admin-user-menu-info span {
+  color: var(--text-hint);
+}
+
+:root.dark .admin-user-menu-controls {
+  background: rgba(233, 160, 201, 0.08);
+  border-color: rgba(233, 160, 201, 0.12);
+}
+
+:root.dark .admin-user-menu-controls-label {
+  color: var(--text-hint);
+}
+
+:root.dark .admin-user-menu-item {
+  color: var(--text-primary);
+  border-color: transparent;
+}
+
+:root.dark .admin-user-menu-item:hover,
+:root.dark .admin-user-menu-item:focus-visible {
+  background: rgba(233, 160, 201, 0.12);
+  border-color: rgba(233, 160, 201, 0.15);
+  color: #f4afe7;
 }
 
 :root.dark .admin-user-avatar {
