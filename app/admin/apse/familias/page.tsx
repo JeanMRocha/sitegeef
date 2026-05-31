@@ -8,8 +8,17 @@ export const metadata = {
 
 export const dynamic = 'force-dynamic';
 
+type FamiliaItem = {
+  id: string;
+  responsavel?: { nome?: string | null } | null;
+  endereco?: string | null;
+  membros?: number | null;
+  situacao?: string | null;
+  status?: string | null;
+};
+
 async function FamiliasContent() {
-  const familias = await getFamilias();
+  const familias = (await getFamilias()) as FamiliaItem[];
 
   return (
     <div>
@@ -18,14 +27,14 @@ async function FamiliasContent() {
           <h1 className="admin-page-title">Famílias Assistidas</h1>
           <p className="admin-page-subtitle">Registro e acompanhamento de famílias</p>
         </div>
-        <Link href="/admin/apse/familias/nova" className="admin-btn admin-btn-primary" style={{ width: 'auto' }}>
+        <Link href="/admin/apse/familias/nova" className="admin-btn admin-btn-primary">
           ➕ Nova Família
         </Link>
       </div>
 
       <div className="admin-card">
         {familias.length > 0 ? (
-          <div style={{ overflowX: 'auto' }}>
+          <div className="overflow-x-auto">
             <table className="admin-table">
               <thead>
                 <tr>
@@ -38,29 +47,14 @@ async function FamiliasContent() {
                 </tr>
               </thead>
               <tbody>
-                {familias.map((familia: any) => (
+                {familias.map((familia) => (
                   <tr key={familia.id}>
-                    <td style={{ fontWeight: 500 }}>
-                      {familia.responsavel?.nome}
-                    </td>
-                    <td style={{ fontSize: '0.9rem', color: 'var(--muted)' }}>
-                      {familia.endereco || '—'}
-                    </td>
-                    <td style={{ textAlign: 'center', fontWeight: 500 }}>
-                      {familia.membros}
-                    </td>
-                    <td style={{ fontSize: '0.9rem' }}>
-                      {familia.situacao || '—'}
-                    </td>
+                    <td className="text-sm-500">{familia.responsavel?.nome}</td>
+                    <td className="text-sm-muted">{familia.endereco || '—'}</td>
+                    <td className="text-center-muted">{familia.membros}</td>
+                    <td className="text-sm-muted">{familia.situacao || '—'}</td>
                     <td>
-                      <span style={{
-                        display: 'inline-block',
-                        padding: '0.25rem 0.6rem',
-                        backgroundColor: familia.status === 'ativa' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(107, 114, 128, 0.1)',
-                        color: familia.status === 'ativa' ? '#22c55e' : '#6b7280',
-                        borderRadius: '0.3rem',
-                        fontSize: '0.85rem',
-                      }}>
+                      <span className={familia.status === 'ativa' ? 'inline-status inline-status-success' : 'inline-status inline-status-neutral'}>
                         {familia.status === 'ativa' ? '✓ Ativa' : '✕ Inativa'}
                       </span>
                     </td>
@@ -75,7 +69,7 @@ async function FamiliasContent() {
             </table>
           </div>
         ) : (
-          <p style={{ color: 'var(--muted)', textAlign: 'center' }}>Nenhuma família cadastrada.</p>
+          <p className="text-center-muted">Nenhuma família cadastrada.</p>
         )}
       </div>
     </div>
@@ -84,7 +78,7 @@ async function FamiliasContent() {
 
 export default function FamiliasPage() {
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <FamiliasContent />
     </Suspense>
   );
