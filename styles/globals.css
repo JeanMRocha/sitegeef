@@ -1458,21 +1458,17 @@ body.musica-display-route .musica-display-screen--reader {
   margin: 0;
   font-family: var(--font-heading);
   font-size: var(--display-title-size, 2rem);
-  color: #fff8f4;
+  color: #2d1f1a;
   line-height: 1.1;
   -webkit-text-stroke: 1px rgba(74, 0, 48, 0.32);
-  text-shadow:
-    0 1px 0 rgba(0, 0, 0, 0.18),
-    0 0 12px rgba(0, 0, 0, 0.08);
+  text-shadow: none;
 }
 
 .musica-display-header-subtitle {
   margin: 0.5rem 0 0;
   font-size: var(--display-subtitle-size, 0.95rem);
-  color: rgba(255, 252, 248, 0.94);
-  text-shadow:
-    0 1px 0 rgba(0, 0, 0, 0.2),
-    0 0 10px rgba(0, 0, 0, 0.1);
+  color: #5e4f45;
+  text-shadow: none;
 }
 
 .musica-display-header-logo {
@@ -1559,14 +1555,14 @@ body.musica-display-route .musica-display-screen--reader {
   font-size: 0.68rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: rgba(245, 235, 253, 0.68);
+  color: #8a005a;
 }
 
 .musica-display-verse-title {
   margin: 0;
   font-family: var(--font-heading);
   font-size: clamp(0.92rem, var(--display-verse-title, 1rem), 1.24rem);
-  color: #fffaf5;
+  color: #2d1f1a;
   line-height: 1.18;
 }
 
@@ -1577,7 +1573,7 @@ body.musica-display-route .musica-display-screen--reader {
   line-height: 1.46;
   white-space: pre-wrap;
   word-wrap: break-word;
-  color: #f4efe7;
+  color: #1c201f;
 }
 
 .musica-display-verse-text {
@@ -1587,7 +1583,7 @@ body.musica-display-route .musica-display-screen--reader {
   font-family: inherit;
   font-size: var(--display-verse-text, 1rem);
   line-height: 1.46;
-  color: #f4efe7;
+  color: #1c201f;
 }
 
 @media (max-width: 1100px) {
@@ -1793,9 +1789,36 @@ html.dark .musica-lyric-row *::after {
   border-bottom-color: rgba(233, 160, 201, 0.15);
 }
 
+:root.dark .musica-display-header-title h1 {
+  color: #fff8f4;
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.18),
+    0 0 12px rgba(0, 0, 0, 0.08);
+}
+
+:root.dark .musica-display-header-subtitle {
+  color: rgba(255, 252, 248, 0.94);
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.2),
+    0 0 10px rgba(0, 0, 0, 0.1);
+}
+
 :root.dark .musica-display-header-16x9 h1,
 :root.dark .musica-display-header-16x9 .musica-display-header-subtitle {
   color: #f4efe7 !important;
+}
+
+:root.dark .musica-display-verse-label {
+  color: rgba(245, 235, 253, 0.68);
+}
+
+:root.dark .musica-display-verse-title {
+  color: #fffaf5;
+}
+
+:root.dark .musica-display-verse-content pre,
+:root.dark .musica-display-verse-text {
+  color: #f4efe7;
 }
 
 :root.dark .musica-summary-text,
