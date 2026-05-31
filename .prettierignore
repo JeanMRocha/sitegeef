@@ -1,0 +1,38 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Production builds
+.next
+out
+build
+dist
+
+# Testing
+coverage
+.nyc_output
+
+# Misc
+.env
+.env.local
+.env.*.local
+.DS_Store
+*.pem
+
+# Git
+.git
+
+# SQLite
+*.sqlite
+*.sqlite3
+
+# Supabase
+supabase/migrations
+.supabase
+
+# Temporary files
+*.tmp
+*.swp
+*.swo
+*~
