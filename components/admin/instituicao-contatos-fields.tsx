@@ -79,7 +79,7 @@ function looksLikeUrl(value: string) {
 
 function FieldNote({ warning, helper }: { warning?: string; helper: string }) {
   return (
-    <span style={{ display: 'block', marginTop: '0.35rem', fontSize: '0.8rem', lineHeight: 1.45, color: warning ? '#a54b2a' : 'var(--muted)' }}>
+    <span className={`field-note ${warning ? 'field-note-warning' : ''}`}>
       {warning || helper}
     </span>
   );
@@ -128,30 +128,25 @@ export function InstituicaoContatoTipoManager({ tipos }: { tipos: TipoOption[] }
   const [editando, setEditando] = useState(false);
 
   return (
-    <div className="area-panel-item" style={{ gridColumn: '1 / -1', padding: '1rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
+    <div className="area-panel-item area-panel-item-full">
+      <div className="flex-space-between-wrap">
         <strong>Gerenciar tipos</strong>
         <button type="button" className="profile-form-btn profile-form-btn-secondary" onClick={() => setEditando((current) => !current)}>
           {editando ? 'Ocultar' : 'Editar opções'}
         </button>
       </div>
-      <p style={{ marginTop: 0, marginBottom: '1rem', fontSize: '0.82rem', color: 'var(--muted)' }}>
+      <p className="form-hint">
         Esses tipos são compartilhados entre usuários. Altere aqui e o dropdown da instituição reflete a mudança no próximo carregamento.
       </p>
 
       {editando ? (
-        <div style={{ display: 'grid', gap: '0.75rem' }}>
+        <div className="tipo-manager-grid">
           {tipos.map((tipo) => (
             <div
               key={tipo.id}
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr auto auto',
-                gap: '0.6rem',
-                alignItems: 'center',
-              }}
+              className="tipo-manager-row"
             >
-              <form action={updateContatoTipo} style={{ display: 'contents' }}>
+              <form action={updateContatoTipo} className="form-display-contents">
                 <input type="hidden" name="id" value={tipo.id} />
                 <input type="hidden" name="ordem" value={tipo.ordem ?? 999} />
                 <input type="text" name="label" defaultValue={tipo.label} className="profile-form-input" />
@@ -170,7 +165,7 @@ export function InstituicaoContatoTipoManager({ tipos }: { tipos: TipoOption[] }
 
           <form
             action={addContatoTipo}
-            style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '0.6rem', alignItems: 'center', marginTop: '0.5rem' }}
+            className="tipo-manager-form-add"
           >
             <input
               type="text"
@@ -369,7 +364,7 @@ export function InstituicaoContatoFields({ pessoas, tipos }: { pessoas: PessoaOp
         warning={youtubeWarning}
       />
 
-      <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
+      <label className="profile-form-field form-field-full">
         <span>Site</span>
         <input
           name="site"
@@ -381,7 +376,7 @@ export function InstituicaoContatoFields({ pessoas, tipos }: { pessoas: PessoaOp
         <FieldNote warning={siteWarning} helper="Prefira a URL completa do site institucional." />
       </label>
 
-      <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
+      <label className="profile-form-field form-field-full">
         <span>Responsável (pessoa cadastrada)</span>
         <select
           name="responsavel_id"

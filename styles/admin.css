@@ -1403,6 +1403,67 @@
   margin-bottom: 2rem;
 }
 
+/* Field note styling for contact fields */
+.field-note {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.field-note-warning {
+  color: #a54b2a;
+}
+
+/* Area panel full-width item */
+.area-panel-item-full {
+  grid-column: 1 / -1;
+  padding: 1rem;
+}
+
+/* Flex space-between with wrap */
+.flex-space-between-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* Tipo manager grid */
+.tipo-manager-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.tipo-manager-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+/* Form display contents */
+.form-display-contents {
+  display: contents;
+}
+
+/* Tipo manager form add */
+.tipo-manager-form-add {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.6rem;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+/* Form field full width */
+.form-field-full {
+  grid-column: 1 / -1;
+}
+
 .admin-dashboard-mini-card {
   display: grid;
   gap: 0.35rem;
