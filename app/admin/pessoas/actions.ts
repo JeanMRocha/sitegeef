@@ -5,7 +5,7 @@ import { createServiceRoleClient } from '@/lib/supabase/service-role';
 import { type tipo_vinculo, type status_pessoa } from '@/lib/supabase/types';
 import { invalidateUserAreaCache } from '@/lib/areas/invalidate-user-area';
 import { invalidateAdminDashboardCache, invalidateAdminBibliotecaCache, invalidateAdminDocumentosCache } from '@/lib/admin/cache';
-import { calculateRange, buildSearchFilter } from '@/lib/admin/query-helpers';
+import { applySearchFilter, calculateRange } from '@/lib/admin/query-helpers';
 
 export async function getPessoas(
   page = 1,
@@ -29,12 +29,7 @@ export async function getPessoas(
       .from('pessoas')
       .select('id,nome,email,telefone,status,criado_em', { count: 'exact' });
 
-    if (search) {
-      const filter = buildSearchFilter(search, ['nome', 'email', 'telefone']);
-      if (filter) {
-        query = query.or(filter);
-      }
-    }
+    query = applySearchFilter(query, search, ['nome', 'email', 'telefone']);
 
     if (statusFilter) {
       query = query.eq('status', statusFilter);

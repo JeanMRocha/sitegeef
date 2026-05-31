@@ -48,6 +48,19 @@ export function buildSearchFilter(search: string, fields: string[]): string | nu
 }
 
 /**
+ * Apply a search filter directly to a Supabase query builder.
+ * Keeps the filter building logic centralized while avoiding repeated branching.
+ */
+export function applySearchFilter<T extends { or: (filter: string) => T }>(
+  query: T,
+  search: string | undefined,
+  fields: string[]
+): T {
+  const filter = buildSearchFilter(search || '', fields);
+  return filter ? query.or(filter) : query;
+}
+
+/**
  * Apply status filter to items
  * Used for filtering records by status field
  * @example

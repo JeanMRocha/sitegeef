@@ -4,7 +4,7 @@ import { unstable_cache } from "next/cache";
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 import { invalidateAdminBibliotecaCache } from "@/lib/admin/cache";
 import { invalidateUserAreaCache } from '@/lib/areas/invalidate-user-area';
-import { calculateRange, buildSearchFilter } from '@/lib/admin/query-helpers';
+import { applySearchFilter, calculateRange } from '@/lib/admin/query-helpers';
 
 async function loadObras(page = 1, search?: string) {
   const supabase = createServiceRoleClient();
@@ -16,12 +16,7 @@ async function loadObras(page = 1, search?: string) {
     .select('*', { count: 'exact' })
     .eq('ativo', true);
 
-  if (search) {
-    const filter = buildSearchFilter(search, ['titulo', 'autor']);
-    if (filter) {
-      query = query.or(filter);
-    }
-  }
+  query = applySearchFilter(query, search, ['titulo', 'autor']);
 
   const { data, count, error } = await query
     .order('titulo')

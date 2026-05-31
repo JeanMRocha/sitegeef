@@ -2,7 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { invalidateUserAreaCache } from '@/lib/areas/invalidate-user-area';
-import { calculateRange, buildSearchFilter } from '@/lib/admin/query-helpers';
+import { applySearchFilter, calculateRange } from '@/lib/admin/query-helpers';
 
 export async function getProdutos(page = 1, search?: string) {
   const supabase = await createClient();
@@ -14,12 +14,7 @@ export async function getProdutos(page = 1, search?: string) {
     .select('*', { count: 'exact' })
     .eq('ativo', true);
 
-  if (search) {
-    const filter = buildSearchFilter(search, ['titulo', 'autor']);
-    if (filter) {
-      query = query.or(filter);
-    }
-  }
+  query = applySearchFilter(query, search, ['titulo', 'autor']);
 
   const { data, count, error } = await query
     .order('titulo')
