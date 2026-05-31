@@ -1464,6 +1464,106 @@
   grid-column: 1 / -1;
 }
 
+/* Musica editor specific styles */
+.musica-editor-header-grid {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.profile-form-field-no-margin {
+  margin: 0;
+}
+
+.flex-end-align {
+  align-items: flex-end;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.admin-btn-compact {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.form-text-small {
+  font-size: 0.9rem;
+}
+
+.musica-editor-section {
+  margin-top: 2rem;
+}
+
+.musica-editor-section-title {
+  font-weight: 600;
+  font-size: 1rem;
+  margin: 0 0 1rem;
+}
+
+.musica-editor-toolbar {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.musica-editor-textarea {
+  font-family: monospace;
+  font-size: 0.9rem;
+  min-height: 16rem;
+  resize: none;
+  overflow: hidden;
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: var(--modal-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: var(--modal-bg);
+  border: 1px solid var(--modal-border);
+  border-radius: 0.9rem;
+  padding: 2rem;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: var(--modal-shadow);
+  color: var(--text-primary);
+}
+
+.modal-title {
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
+  color: var(--text-primary);
+}
+
+.modal-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--input-border);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  box-sizing: border-box;
+  background-color: var(--input-bg);
+  color: var(--input-text);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
 .admin-dashboard-mini-card {
   display: grid;
   gap: 0.35rem;

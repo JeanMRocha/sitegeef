@@ -138,22 +138,21 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
       <input type="hidden" name="id" defaultValue={musica?.id ?? ""} />
 
       <div className="module-grid">
-        <div style={{ gridColumn: "1/-1", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
-          <label className="profile-form-field" style={{ margin: 0 }}>
+        <div className="musica-editor-header-grid">
+          <label className="profile-form-field profile-form-field-no-margin">
             <span>Título</span>
             <input className="profile-form-input" name="titulo" defaultValue={musica?.titulo ?? ""} placeholder="Nome da música" />
           </label>
 
-          <div style={{ display: "flex", gap: "0.5rem", alignItems: "flex-end" }}>
-            <label className="profile-form-field" style={{ margin: 0, flex: 1 }}>
+          <div className="flex-center-gap flex-end-align">
+            <label className="profile-form-field profile-form-field-no-margin flex-1"">
               <span>Autor (opcional)</span>
-              <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+              <div className="flex-center-gap">
                 <select
-                  className="profile-form-input"
+                  className="profile-form-input flex-1"
                   name="autor"
                   value={autorSelecionado}
                   onChange={(e) => setAutorSelecionado(e.target.value)}
-                  style={{ flex: 1 }}
                 >
                   <option value="">Selecione...</option>
                   {autores.map((autor) => (
@@ -165,8 +164,7 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
                 <button
                   type="button"
                   onClick={() => setAutorModal(true)}
-                  className="admin-btn admin-btn-small"
-                  style={{ padding: "0.5rem 0.75rem" }}
+                  className="admin-btn admin-btn-small admin-btn-compact"
                   title="Criar novo autor"
                 >
                   +
@@ -175,18 +173,16 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
             </label>
             <button
               type="button"
-              className="admin-btn admin-btn-secondary"
+              className="admin-btn admin-btn-secondary admin-btn-compact"
               onClick={() => setYoutubeModal(true)}
-              style={{ padding: "0.5rem 1rem" }}
               title="Adicionar YouTube"
             >
               {youtubeUrl ? "✓ YT" : "YT"}
             </button>
             <button
               type="button"
-              className="admin-btn admin-btn-secondary"
+              className="admin-btn admin-btn-secondary admin-btn-compact"
               onClick={() => setMp3Modal(true)}
-              style={{ padding: "0.5rem 1rem" }}
               title="Adicionar MP3"
             >
               {audioUrl ? "✓ MP3" : "MP3"}
@@ -237,14 +233,14 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
 
         <label className="profile-form-field">
           <span>Status</span>
-          <select className="profile-form-input" name="status" defaultValue={musica?.status ?? "ativa"} style={{ fontSize: "0.9rem" }}>
+          <select className="profile-form-input form-text-small" name="status" defaultValue={musica?.status ?? "ativa"}>
             <option value="ativa">Ativa</option>
             <option value="rascunho">Rascunho</option>
             <option value="inativa">Inativa</option>
           </select>
         </label>
 
-        <label className="profile-form-field" style={{ gridColumn: "1/-1" }}>
+        <label className="profile-form-field form-field-full">
           <span>Observações</span>
           <textarea
             className="profile-form-input"
@@ -259,17 +255,16 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
         <input type="hidden" name="audio_url" value={audioUrl} />
       </div>
 
-      <div style={{ marginTop: "2rem" }}>
-        <p style={{ fontWeight: 600, fontSize: "1rem", margin: "0 0 1rem" }}>Letra e Cifra</p>
+      <div className="musica-editor-section">
+        <p className="musica-editor-section-title">Letra e Cifra</p>
 
-        <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "1rem" }}>
+        <div className="musica-editor-toolbar">
           {TOOLBAR_BUTTONS.map((btn) => (
             <button
               key={btn.tipo}
               type="button"
-              className="profile-form-btn profile-form-btn-secondary"
+              className="profile-form-btn profile-form-btn-secondary admin-btn-compact form-text-small"
               onClick={() => insertMarker(btn.tipo)}
-              style={{ fontSize: "0.875rem", padding: "0.5rem 1rem" }}
               title={`Inserir marcador === ${btn.tipo} ===`}
             >
               {btn.label}
@@ -277,15 +272,14 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
           ))}
         </div>
 
-        <label className="profile-form-field" style={{ gridColumn: "1/-1" }}>
+        <label className="profile-form-field form-field-full">
           <span>Conteúdo</span>
           <textarea
             ref={textareaRef}
-            className="profile-form-input"
+            className="profile-form-input musica-editor-textarea"
             value={letras}
             onChange={(e) => setLetras(e.target.value)}
             placeholder="Cole ou digite a letra aqui. Use os botões acima para marcar tipos de seções."
-            style={{ fontFamily: "monospace", fontSize: "0.9rem", minHeight: "16rem", resize: "none", overflow: "hidden" }}
           />
         </label>
       </div>
@@ -296,49 +290,22 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
 
     {youtubeModal && (
       <div
-        style={{
-          position: "fixed",
-          inset: 0,
-          backgroundColor: "var(--modal-overlay)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          zIndex: 1000,
-        }}
+        className="modal-overlay"
         onClick={() => setYoutubeModal(false)}
       >
         <div
-          style={{
-            backgroundColor: "var(--modal-bg)",
-            border: "1px solid var(--modal-border)",
-            borderRadius: "0.9rem",
-            padding: "2rem",
-            maxWidth: "500px",
-            width: "90%",
-            boxShadow: "var(--modal-shadow)",
-            color: "var(--text-primary)",
-          }}
+          className="modal-content"
           onClick={(e) => e.stopPropagation()}
         >
-          <h3 style={{ margin: "0 0 1rem", fontSize: "1.25rem", color: "var(--text-primary)" }}>URL do YouTube</h3>
+          <h3 className="modal-title">URL do YouTube</h3>
           <input
             type="url"
             value={youtubeUrl}
             onChange={(e) => setYoutubeUrl(e.target.value)}
             placeholder="https://www.youtube.com/watch?v=..."
-            style={{
-              width: "100%",
-              padding: "0.75rem",
-              border: "1px solid var(--input-border)",
-              borderRadius: "0.5rem",
-              fontSize: "1rem",
-              marginBottom: "1.5rem",
-              boxSizing: "border-box",
-              backgroundColor: "var(--input-bg)",
-              color: "var(--input-text)",
-            }}
+            className="modal-input"
           />
-          <div style={{ display: "flex", gap: "0.75rem", justifyContent: "flex-end" }}>
+          <div className="modal-actions">
             <button
               type="button"
               onClick={() => setYoutubeModal(false)}
@@ -362,49 +329,22 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
 
     {mp3Modal && (
       <div
-        style={{
-          position: "fixed",
-          inset: 0,
-          backgroundColor: "var(--modal-overlay)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          zIndex: 1000,
-        }}
+        className="modal-overlay"
         onClick={() => setMp3Modal(false)}
       >
         <div
-          style={{
-            backgroundColor: "var(--modal-bg)",
-            border: "1px solid var(--modal-border)",
-            borderRadius: "0.9rem",
-            padding: "2rem",
-            maxWidth: "500px",
-            width: "90%",
-            boxShadow: "var(--modal-shadow)",
-            color: "var(--text-primary)",
-          }}
+          className="modal-content"
           onClick={(e) => e.stopPropagation()}
         >
-          <h3 style={{ margin: "0 0 1rem", fontSize: "1.25rem", color: "var(--text-primary)" }}>URL do MP3</h3>
+          <h3 className="modal-title">URL do MP3</h3>
           <input
             type="url"
             value={audioUrl}
             onChange={(e) => setAudioUrl(e.target.value)}
             placeholder="https://... ou caminho do arquivo no Supabase"
-            style={{
-              width: "100%",
-              padding: "0.75rem",
-              border: "1px solid var(--input-border)",
-              borderRadius: "0.5rem",
-              fontSize: "1rem",
-              marginBottom: "1.5rem",
-              boxSizing: "border-box",
-              backgroundColor: "var(--input-bg)",
-              color: "var(--input-text)",
-            }}
+            className="modal-input"
           />
-          <div style={{ display: "flex", gap: "0.75rem", justifyContent: "flex-end" }}>
+          <div className="modal-actions">
             <button
               type="button"
               onClick={() => setMp3Modal(false)}
@@ -428,31 +368,14 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
 
     {autorModal && (
       <div
-        style={{
-          position: "fixed",
-          inset: 0,
-          backgroundColor: "var(--modal-overlay)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          zIndex: 1000,
-        }}
+        className="modal-overlay"
         onClick={() => setAutorModal(false)}
       >
         <div
-          style={{
-            backgroundColor: "var(--modal-bg)",
-            border: "1px solid var(--modal-border)",
-            borderRadius: "0.9rem",
-            padding: "2rem",
-            maxWidth: "500px",
-            width: "90%",
-            boxShadow: "var(--modal-shadow)",
-            color: "var(--text-primary)",
-          }}
+          className="modal-content"
           onClick={(e) => e.stopPropagation()}
         >
-          <h3 style={{ margin: "0 0 1rem", fontSize: "1.25rem", color: "var(--text-primary)" }}>Novo autor</h3>
+          <h3 className="modal-title">Novo autor</h3>
           <input
             type="text"
             value={novoAutor}
@@ -499,54 +422,27 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
 
     {versaoModal && (
       <div
-        style={{
-          position: "fixed",
-          inset: 0,
-          backgroundColor: "var(--modal-overlay)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          zIndex: 1000,
-        }}
+        className="modal-overlay"
         onClick={() => setVersaoModal(false)}
       >
         <div
-          style={{
-            backgroundColor: "var(--modal-bg)",
-            border: "1px solid var(--modal-border)",
-            borderRadius: "0.9rem",
-            padding: "2rem",
-            maxWidth: "500px",
-            width: "90%",
-            boxShadow: "var(--modal-shadow)",
-            color: "var(--text-primary)",
-          }}
+          className="modal-content"
           onClick={(e) => e.stopPropagation()}
         >
-          <h3 style={{ margin: "0 0 1rem", fontSize: "1.25rem", color: "var(--text-primary)" }}>Nova versão</h3>
+          <h3 className="modal-title">Nova versão</h3>
           <input
             type="text"
             value={novaVersao}
             onChange={(e) => setNovaVersao(e.target.value)}
             placeholder="Nome da versão"
-            style={{
-              width: "100%",
-              padding: "0.75rem",
-              border: "1px solid var(--input-border)",
-              borderRadius: "0.5rem",
-              fontSize: "1rem",
-              marginBottom: "1.5rem",
-              boxSizing: "border-box",
-              backgroundColor: "var(--input-bg)",
-              color: "var(--input-text)",
-            }}
+            className="modal-input"
             onKeyPress={(e) => {
               if (e.key === "Enter") {
                 handleSaveVersao();
               }
             }}
           />
-          <div style={{ display: "flex", gap: "0.75rem", justifyContent: "flex-end" }}>
+          <div className="modal-actions">
             <button
               type="button"
               onClick={() => setVersaoModal(false)}
