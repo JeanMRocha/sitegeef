@@ -83,7 +83,6 @@ export function MusicaReader({
   const router = useRouter();
   const displayScreenRef = useRef<HTMLElement | null>(null);
   const [viewMode, setViewMode] = useState<"letra" | "cifra">("letra");
-  const [isTransitioning, setIsTransitioning] = useState(false);
   const [pipExpanded, setPipExpanded] = useState(false);
   const [pipHidden, setPipHidden] = useState(false);
   const [viewport, setViewport] = useState(() => ({
@@ -109,7 +108,6 @@ export function MusicaReader({
     const densityFactor = density > 1200 ? 0.78 : density > 900 ? 0.86 : density > 650 ? 0.92 : 1;
     const scale = Math.max(0.78, Math.min(1, heightFactor * widthFactor * densityFactor + 0.08));
     const maxColumnsByWidth = Math.min(4, Math.max(2, Math.floor((viewport.width - 80) / 280)));
-    const versesPerColumn = viewport.height < 760 ? 5 : viewport.height < 880 ? 6 : 7;
 
     // Para músicas curtas: force mais colunas para melhor legibilidade
     let columns;
@@ -204,12 +202,7 @@ export function MusicaReader({
   useEffect(() => {
     if (isDisplay) {
       document.body.classList.add("musica-display-route");
-      setIsTransitioning(true);
-      const timer = setTimeout(() => {
-        setIsTransitioning(false);
-      }, 500);
       return () => {
-        clearTimeout(timer);
         document.body.classList.remove("musica-display-route");
       };
     }
