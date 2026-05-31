@@ -34,7 +34,7 @@ export default function NovoCursoPage() {
         </div>
       </div>
 
-      <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto' }}>
+      <div className="admin-card form-panel-centered">
         <form action={handleSubmit}>
           <div className="admin-form-group">
             <label>Nome do Curso *</label>
@@ -52,19 +52,10 @@ export default function NovoCursoPage() {
               name="descricao"
               placeholder="Objetivo, conteúdo programático..."
               rows={3}
-              style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-                resize: 'vertical',
-              }}
             />
           </div>
 
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+          <div className="form-actions-row">
             <button type="submit" className="admin-btn admin-btn-primary">
               ✅ Criar Curso
             </button>

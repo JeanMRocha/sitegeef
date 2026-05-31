@@ -7,6 +7,11 @@ export const metadata = {
   title: 'Novo Departamento - Admin GEEF',
 };
 
+type PessoaDisponivel = {
+  id: string;
+  nome: string | null;
+};
+
 async function handleSubmit(formData: FormData) {
   'use server';
 
@@ -31,7 +36,7 @@ async function handleSubmit(formData: FormData) {
 }
 
 export default async function NovoDepartamentoPage() {
-  const pessoas = await getPessoasDisponiveis();
+  const pessoas = (await getPessoasDisponiveis()) as PessoaDisponivel[];
 
   return (
     <div>
@@ -44,7 +49,7 @@ export default async function NovoDepartamentoPage() {
       </div>
 
       {/* Form */}
-      <div className="admin-card" style={{ maxWidth: '600px', margin: '0 auto' }}>
+      <div className="admin-card form-panel-centered">
         <form action={handleSubmit}>
           <div className="admin-form-group">
             <label>Nome *</label>
@@ -53,37 +58,15 @@ export default async function NovoDepartamentoPage() {
 
           <div className="admin-form-group">
             <label>Descrição</label>
-            <textarea
-              name="descricao"
-              rows={4}
-              style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-                resize: 'vertical',
-              }}
-            />
+            <textarea name="descricao" rows={4} />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+          <div className="form-grid-2">
             <div className="admin-form-group">
               <label>Coordenador</label>
-              <select
-                name="coordenador_id"
-                style={{
-                  padding: '0.65rem 0.85rem',
-                  border: '1px solid var(--admin-border)',
-                  borderRadius: '0.6rem',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.95rem',
-                  color: 'var(--text)',
-                }}
-              >
+              <select name="coordenador_id">
                 <option value="">— Selecione —</option>
-                {pessoas.map((p: any) => (
+                {pessoas.map((p) => (
                   <option key={p.id} value={p.id}>
                     {p.nome}
                   </option>
@@ -93,19 +76,9 @@ export default async function NovoDepartamentoPage() {
 
             <div className="admin-form-group">
               <label>Vice-Coordenador</label>
-              <select
-                name="vice_id"
-                style={{
-                  padding: '0.65rem 0.85rem',
-                  border: '1px solid var(--admin-border)',
-                  borderRadius: '0.6rem',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.95rem',
-                  color: 'var(--text)',
-                }}
-              >
+              <select name="vice_id">
                 <option value="">— Selecione —</option>
-                {pessoas.map((p: any) => (
+                {pessoas.map((p) => (
                   <option key={p.id} value={p.id}>
                     {p.nome}
                   </option>
@@ -115,7 +88,7 @@ export default async function NovoDepartamentoPage() {
           </div>
 
           {/* Botões */}
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+          <div className="form-actions-row">
             <button type="submit" className="admin-btn admin-btn-primary">
               ✅ Criar Departamento
             </button>
