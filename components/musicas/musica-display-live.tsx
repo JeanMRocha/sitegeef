@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createClient as createSupabaseClient } from "@/lib/supabase/client";
 import type { Musica, MusicaSessao } from "@/lib/musicas";
 
 type MusicaDisplayLiveProps = {
@@ -31,8 +32,12 @@ export function MusicaDisplayLive({
 
   useEffect(() => {
     let cancelled = false;
+    const intervalId = window.setInterval(() => {
+      void refresh();
+    }, 15000);
     const endpoint =
       pollUrl ?? (codigo ? `/api/musicas/sessoes/${encodeURIComponent(codigo)}` : "/api/musicas/exibicao");
+    const supabase = createSupabaseClient();
 
     async function refresh() {
       try {
@@ -59,14 +64,34 @@ export function MusicaDisplayLive({
       }
     }
 
-    const intervalId = window.setInterval(refresh, 5000);
-    refresh();
+    const channel = supabase
+      .channel("musica-exibicao-publica")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "musica_sessoes",
+          filter: "codigo_pareamento=eq.EXIBICAO_PUBLICA",
+        },
+        () => {
+          void refresh();
+        },
+      )
+      .subscribe((status) => {
+        if (status === "SUBSCRIBED") {
+          void refresh();
+        }
+      });
+
+    void refresh();
 
     return () => {
       cancelled = true;
       if (intervalId !== undefined) {
         window.clearInterval(intervalId);
       }
+      void supabase.removeChannel(channel);
     };
   }, [codigo, pollUrl]);
 

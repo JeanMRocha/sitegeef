@@ -91,6 +91,7 @@ Regras de exibicao:
 
 - a rota `/musicas/exibir` le a musica marcada como exibição pública no admin;
 - a musica marcada como exibição pública usa uma sessao unica reservada;
+- a tela publica escuta a troca da sessão publicizada e atualiza sem refresh manual;
 - a tela publica pareada `/musicas/exibir/[codigo]` acompanha apenas uma sessao ja criada na area interna;
 - se uma sessao ficar sem acesso por mais de 1 hora, ela e encerrada como inativa na proxima leitura do estado;
 - enquanto a apresentacao estiver aberta, o polling da tela publica renova `ultimo_acesso_em`;
