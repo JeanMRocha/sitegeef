@@ -59,7 +59,7 @@ export function SessaoActionsButton({ sessao: initialSessao, onUpdate, onDelete 
   };
 
   return (
-    <div style={{ display: "flex", gap: "0.5rem", justifyContent: "flex-end" }}>
+    <div className="flex-end-gap">
       <Link
         href={`/admin/reuniao-publica/musicas/sessoes/novo?codigo=${sessao.codigo_pareamento}`}
         className="admin-btn admin-btn-small"
@@ -88,8 +88,7 @@ export function SessaoActionsButton({ sessao: initialSessao, onUpdate, onDelete 
       <button
         onClick={handleToggleStatus}
         disabled={loading}
-        className="admin-btn admin-btn-small"
-        style={{ color: "var(--danger)", borderColor: "rgba(239, 68, 68, 0.25)" }}
+        className="admin-btn admin-btn-small admin-btn-danger"
         title={sessao.ativo ? "Encerrar sessão" : "Reativar sessão"}
       >
         <IconPower size={16} />
@@ -97,8 +96,7 @@ export function SessaoActionsButton({ sessao: initialSessao, onUpdate, onDelete 
       <button
         onClick={() => setDeleteConfirmOpen(true)}
         disabled={loading}
-        className="admin-btn admin-btn-small"
-        style={{ color: "var(--danger)", borderColor: "rgba(239, 68, 68, 0.25)" }}
+        className="admin-btn admin-btn-small admin-btn-danger"
         title="Excluir sessão"
       >
         <IconTrash size={16} />

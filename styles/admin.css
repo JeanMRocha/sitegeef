@@ -857,6 +857,78 @@
   font-size: 0.8rem;
 }
 
+.admin-btn-danger {
+  color: var(--danger);
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+.profile-form-btn-danger {
+  color: var(--uva-700);
+  margin-top: 1rem;
+}
+
+.delete-dialog {
+  border-radius: 24px;
+  padding: 2rem;
+  border: none;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+}
+
+.delete-dialog-content {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.delete-dialog-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+}
+
+.delete-dialog-message {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.delete-dialog-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.delete-btn {
+  padding: 0.25rem 0.5rem;
+  background-color: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-size: 0.75rem;
+  transition: opacity 160ms ease;
+}
+
+.delete-btn.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.delete-btn-confirm {
+  padding: 0.25rem 0.5rem;
+  background-color: #dc2626;
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: opacity 160ms ease;
+}
+
+.delete-btn-confirm.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .admin-form-group {
   display: grid;
   gap: 0.4rem;

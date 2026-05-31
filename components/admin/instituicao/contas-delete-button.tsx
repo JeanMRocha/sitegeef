@@ -33,16 +33,7 @@ export default function ContasDeleteButton({ contaId }: ContasDeleteButtonProps)
       <button
         onClick={handleDelete}
         disabled={isDeleting}
-        style={{
-          padding: '0.25rem 0.5rem',
-          backgroundColor: '#dc2626',
-          color: 'white',
-          border: 'none',
-          borderRadius: '0.25rem',
-          fontSize: '0.75rem',
-          cursor: isDeleting ? 'not-allowed' : 'pointer',
-          opacity: isDeleting ? 0.6 : 1,
-        }}
+        className={`delete-btn-confirm ${isDeleting ? 'disabled' : ''}`}
       >
         {isDeleting ? 'Removendo...' : 'Confirmar'}
       </button>
@@ -55,16 +46,7 @@ export default function ContasDeleteButton({ contaId }: ContasDeleteButtonProps)
       onClick={() => setShowConfirm(true)}
       disabled={isDeleting}
       title="Remover conta"
-      style={{
-        backgroundColor: '#fee2e2',
-        color: '#dc2626',
-        border: '1px solid #fca5a5',
-        borderRadius: '0.25rem',
-        cursor: 'pointer',
-        fontSize: '0.75rem',
-        padding: '0.25rem 0.5rem',
-        opacity: isDeleting ? 0.6 : 1,
-      }}
+      className={`delete-btn ${isDeleting ? 'disabled' : ''}`}
     >
       Remover
     </button>

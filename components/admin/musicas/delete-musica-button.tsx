@@ -31,8 +31,7 @@ export function DeleteMusicaButton({ musicaId, musicaTitulo, iconOnly }: DeleteM
     <>
       <button
         type="button"
-        className={iconOnly ? "admin-btn admin-btn-secondary" : "profile-form-btn profile-form-btn-secondary"}
-        style={iconOnly ? {} : { color: "#8a005a", marginTop: "1rem" }}
+        className={iconOnly ? "admin-btn admin-btn-secondary" : "profile-form-btn profile-form-btn-secondary profile-form-btn-danger"}
         onClick={handleOpenDialog}
         title={iconOnly ? "Excluir música" : undefined}
         aria-label={iconOnly ? "Excluir música" : undefined}
@@ -40,25 +39,16 @@ export function DeleteMusicaButton({ musicaId, musicaTitulo, iconOnly }: DeleteM
         {iconOnly ? <IconTrash size={18} /> : "Excluir música"}
       </button>
 
-      <dialog
-        ref={dialogRef}
-        style={{
-          borderRadius: "24px",
-          padding: "2rem",
-          border: "none",
-          boxShadow: "0 10px 40px rgba(0,0,0,0.2)",
-          maxWidth: "400px",
-        }}
-      >
-        <div style={{ display: "grid", gap: "1.5rem" }}>
+      <dialog ref={dialogRef} className="delete-dialog">
+        <div className="delete-dialog-content">
           <div>
-            <h2 style={{ margin: "0 0 0.5rem", fontSize: "1.25rem" }}>Excluir música?</h2>
-            <p style={{ margin: 0, color: "var(--text-muted)", fontSize: "0.95rem" }}>
+            <h2 className="delete-dialog-title">Excluir música?</h2>
+            <p className="delete-dialog-message">
               Tem certeza que deseja remover <strong>{musicaTitulo}</strong>? Esta ação não pode ser desfeita.
             </p>
           </div>
 
-          <div style={{ display: "flex", gap: "0.75rem", justifyContent: "flex-end" }}>
+          <div className="delete-dialog-actions">
             <button
               type="button"
               className="profile-form-btn profile-form-btn-secondary"
@@ -68,8 +58,7 @@ export function DeleteMusicaButton({ musicaId, musicaTitulo, iconOnly }: DeleteM
             </button>
             <button
               type="button"
-              className="profile-form-btn profile-form-btn-secondary"
-              style={{ color: "#8a005a" }}
+              className="profile-form-btn profile-form-btn-secondary profile-form-btn-danger"
               onClick={handleConfirmDelete}
             >
               Excluir definitivamente
