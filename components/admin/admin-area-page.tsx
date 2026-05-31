@@ -10,7 +10,7 @@ async function AdminAreaContent() {
 
 export function AdminAreaPage() {
   return (
-    <Suspense fallback={<div style={{ padding: "2rem", textAlign: "center" }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-loading">Carregando...</div>}>
       <AdminAreaContent />
     </Suspense>
   );

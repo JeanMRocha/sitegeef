@@ -1564,6 +1564,12 @@
   justify-content: flex-end;
 }
 
+/* Suspense fallback loading state */
+.suspense-loading {
+  padding: 2rem;
+  text-align: center;
+}
+
 .admin-dashboard-mini-card {
   display: grid;
   gap: 0.35rem;
