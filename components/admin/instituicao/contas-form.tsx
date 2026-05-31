@@ -90,35 +90,21 @@ export default function ContasForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ maxWidth: '600px' }}>
+    <form onSubmit={handleSubmit} className="form-max-width">
       {error && (
-        <div style={{
-          padding: '1rem',
-          marginBottom: '1rem',
-          backgroundColor: '#fee2e2',
-          color: '#dc2626',
-          borderRadius: '0.5rem',
-          border: '1px solid #fca5a5',
-        }}>
+        <div className="alert alert-error">
           {error}
         </div>
       )}
 
       {success && (
-        <div style={{
-          padding: '1rem',
-          marginBottom: '1rem',
-          backgroundColor: '#dcfce7',
-          color: '#16a34a',
-          borderRadius: '0.5rem',
-          border: '1px solid #86efac',
-        }}>
+        <div className="alert alert-success">
           Conta adicionada com sucesso!
         </div>
       )}
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label htmlFor="nome" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+      <div className="form-group">
+        <label htmlFor="nome" className="form-label">
           Nome da Conta *
         </label>
         <input
@@ -129,18 +115,12 @@ export default function ContasForm() {
           onChange={handleChange}
           placeholder="Ex: Conta de Doações"
           required
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            fontSize: '1rem',
-          }}
+          className="form-input"
         />
       </div>
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label htmlFor="banco" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+      <div className="form-group">
+        <label htmlFor="banco" className="form-label">
           Banco
         </label>
         <input
@@ -150,19 +130,13 @@ export default function ContasForm() {
           value={formData.banco}
           onChange={handleChange}
           placeholder="Nome do banco"
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            fontSize: '1rem',
-          }}
+          className="form-input"
         />
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
+      <div className="form-group form-grid-2">
         <div>
-          <label htmlFor="agencia" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+          <label htmlFor="agencia" className="form-label">
             Agência
           </label>
           <input
@@ -172,17 +146,11 @@ export default function ContasForm() {
             value={formData.agencia}
             onChange={handleChange}
             placeholder="XXXXX"
-            style={{
-              width: '100%',
-              padding: '0.75rem',
-              border: '1px solid var(--border)',
-              borderRadius: '0.5rem',
-              fontSize: '1rem',
-            }}
+            className="form-input"
           />
         </div>
         <div>
-          <label htmlFor="conta" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+          <label htmlFor="conta" className="form-label">
             Conta
           </label>
           <input
@@ -192,19 +160,13 @@ export default function ContasForm() {
             value={formData.conta}
             onChange={handleChange}
             placeholder="XXXXXXXX-X"
-            style={{
-              width: '100%',
-              padding: '0.75rem',
-              border: '1px solid var(--border)',
-              borderRadius: '0.5rem',
-              fontSize: '1rem',
-            }}
+            className="form-input"
           />
         </div>
       </div>
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label htmlFor="tipo_conta" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+      <div className="form-group">
+        <label htmlFor="tipo_conta" className="form-label">
           Tipo de Conta
         </label>
         <select
@@ -212,13 +174,7 @@ export default function ContasForm() {
           name="tipo_conta"
           value={formData.tipo_conta}
           onChange={handleChange}
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            fontSize: '1rem',
-          }}
+          className="form-input"
         >
           <option value="">Selecione</option>
           <option value="corrente">Corrente</option>
@@ -227,9 +183,9 @@ export default function ContasForm() {
         </select>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
+      <div className="form-group form-grid-2">
         <div>
-          <label htmlFor="titular" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+          <label htmlFor="titular" className="form-label">
             Titular da Conta
           </label>
           <input
@@ -238,17 +194,11 @@ export default function ContasForm() {
             name="titular"
             value={formData.titular}
             onChange={handleChange}
-            style={{
-              width: '100%',
-              padding: '0.75rem',
-              border: '1px solid var(--border)',
-              borderRadius: '0.5rem',
-              fontSize: '1rem',
-            }}
+            className="form-input"
           />
         </div>
         <div>
-          <label htmlFor="cpf_cnpj_titular" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+          <label htmlFor="cpf_cnpj_titular" className="form-label">
             CPF/CNPJ
           </label>
           <input
@@ -258,19 +208,13 @@ export default function ContasForm() {
             value={formData.cpf_cnpj_titular}
             onChange={handleChange}
             placeholder="XXX.XXX.XXX-XX ou XX.XXX.XXX/XXXX-XX"
-            style={{
-              width: '100%',
-              padding: '0.75rem',
-              border: '1px solid var(--border)',
-              borderRadius: '0.5rem',
-              fontSize: '1rem',
-            }}
+            className="form-input"
           />
         </div>
       </div>
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label htmlFor="finalidade" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+      <div className="form-group">
+        <label htmlFor="finalidade" className="form-label">
           Finalidade
         </label>
         <input
@@ -280,19 +224,13 @@ export default function ContasForm() {
           value={formData.finalidade}
           onChange={handleChange}
           placeholder="Ex: Doações, Repasses, etc"
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            fontSize: '1rem',
-          }}
+          className="form-input"
         />
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
+      <div className="form-group form-grid-2">
         <div>
-          <label htmlFor="chave_pix" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+          <label htmlFor="chave_pix" className="form-label">
             Chave PIX
           </label>
           <input
@@ -302,17 +240,11 @@ export default function ContasForm() {
             value={formData.chave_pix}
             onChange={handleChange}
             placeholder="Email, CNPJ, CPF ou chave aleatória"
-            style={{
-              width: '100%',
-              padding: '0.75rem',
-              border: '1px solid var(--border)',
-              borderRadius: '0.5rem',
-              fontSize: '1rem',
-            }}
+            className="form-input"
           />
         </div>
         <div>
-          <label htmlFor="tipo_chave_pix" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+          <label htmlFor="tipo_chave_pix" className="form-label">
             Tipo de Chave
           </label>
           <select
@@ -320,13 +252,7 @@ export default function ContasForm() {
             name="tipo_chave_pix"
             value={formData.tipo_chave_pix}
             onChange={handleChange}
-            style={{
-              width: '100%',
-              padding: '0.75rem',
-              border: '1px solid var(--border)',
-              borderRadius: '0.5rem',
-              fontSize: '1rem',
-            }}
+            className="form-input"
           >
             <option value="">Selecione</option>
             <option value="email">Email</option>
@@ -338,8 +264,8 @@ export default function ContasForm() {
         </div>
       </div>
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label htmlFor="visibilidade" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+      <div className="form-group">
+        <label htmlFor="visibilidade" className="form-label">
           Visibilidade
         </label>
         <select
@@ -347,47 +273,25 @@ export default function ContasForm() {
           name="visibilidade"
           value={formData.visibilidade}
           onChange={handleChange}
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            fontSize: '1rem',
-          }}
+          className="form-input"
         >
           <option value="privada">🔒 Privada (Apenas admin)</option>
           <option value="publica">🌐 Pública (Visível no site)</option>
         </select>
       </div>
 
-      <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
+      <div className="form-actions">
         <button
           type="button"
           onClick={() => router.back()}
-          style={{
-            padding: '0.75rem 1.5rem',
-            backgroundColor: 'var(--bg-secondary)',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            cursor: 'pointer',
-            fontSize: '1rem',
-          }}
+          className="form-btn form-btn-secondary"
         >
           Cancelar
         </button>
         <button
           type="submit"
           disabled={isLoading}
-          style={{
-            padding: '0.75rem 1.5rem',
-            backgroundColor: 'var(--primary)',
-            color: 'white',
-            border: 'none',
-            borderRadius: '0.5rem',
-            cursor: isLoading ? 'not-allowed' : 'pointer',
-            fontSize: '1rem',
-            opacity: isLoading ? 0.6 : 1,
-          }}
+          className={`form-btn form-btn-primary ${isLoading ? 'disabled' : ''}`}
         >
           {isLoading ? 'Adicionando...' : 'Adicionar Conta'}
         </button>
