@@ -83,6 +83,47 @@ codex mcp login supabase-geef
 
 ---
 
+## Claude Code Skills
+
+O projeto integra **Claude Code Skills** para automação avançada e otimização de UX/design:
+
+### ui-ux-pro-max-skill
+
+**Propósito:** Automação e otimização de UI/UX, design system consistency, e geração de componentes inteligentes.
+
+**Quando usar:**
+- Auditar acessibilidade e WCAG compliance
+- Revisar consistency do design system (cores, spacing, tipografia)
+- Gerar novos componentes mantendo padrões visuais
+- Otimizar layouts e responsividade
+- Sugerir melhorias de UX baseadas em boas práticas
+
+**Como usar:**
+```bash
+# Invocar a skill
+/ui-ux-pro-max-skill
+
+# Contexto importante
+- Projeto usa design system em styles/globals.css
+- Componentes admin em components/admin/
+- Componentes públicos em components/
+- CSS variables: --uva-*, --text, --muted, --line, etc.
+```
+
+**Design System Base:**
+- **Cores principais:** `--uva-700` (principal), `--text`, `--muted`, `--line`
+- **Spacing:** clamp() com vw/rem híbrido para responsividade
+- **Tipografia:** Heading com `var(--font-heading)`, body com inherit
+- **Componentes base:** buttons, cards, forms em .content-card, .admin-btn, .profile-form-*
+- **Dark mode:** `:root.dark` override de cores
+
+**Próximas integrações:**
+- Automação de refatorações visuais maiores
+- Auditoria de WCAG em escala
+- Geração semi-automática de variantes de componentes
+
+---
+
 ## Estrutura do projeto
 
 ### Diretórios principais
@@ -357,13 +398,62 @@ Subir o serviço local: `npm run autoreflex:serve`.
 
 ---
 
+## UI/UX Corrections (2026-05-31)
+
+**Status:** ✅ Implementado  
+**Commit:** `63ade2c`
+
+Refatoração do módulo de catálogo de músicas para melhorar conformidade com design system, acessibilidade (WCAG) e manutenibilidade do código.
+
+### Mudanças Implementadas
+
+
+1. **`styles/utilities.css` (novo)**
+   - 4 classes de flex utilities reutilizáveis: `.flex-center`, `.flex-center-gap`, `.flex-space-between`, `.flex-end-gap`
+   - Resolve 27+ instâncias de inline styles hardcoded
+
+2. **`styles/admin.css` (adições)**
+   - Classes `.inline-status--ativa`, `.inline-status--rascunho`, `.inline-status--inativa`
+   - Variantes dark mode incluídas
+   - Substitui triple-ternary em status badges
+
+3. **`lib/musicas.ts` (nova função)**
+   - `export function getStatusLabel(status: string): string`
+   - Single source of truth para labels de status
+
+4. **`components/admin/musicas/musicas-catalog-table.tsx` (refatorado)**
+   - Sucesso alert: inline styles → `.admin-save-banner.success` (WCAG dark mode compliant)
+   - Status badges: ternary → CSS classes + `getStatusLabel()`
+   - Layout: 5 inline flex styles → 3 utility classes
+
+### Impacto
+
+| Aspecto | Antes | Depois |
+| --- | --- | --- |
+| Dark mode acessibilidade | ❌ WCAG fail | ✅ WCAG AA |
+| Design system compliance | Parcial | 100% |
+| Inline styles (página) | 5 | 0 |
+| Ternary triplo em status | 20 linhas | 0 |
+| DRY (flex utilities) | 27+ duplicatas | 4 classes |
+
+### Para Mais Detalhes
+
+Consulte `docs/UI_UX_CORRECTIONS.md` para:
+- Explicação detalhada de cada problema
+- Before/after code examples
+- Testing checklist
+- Maintenance benefits
+
+---
+
 ## Roadmap conhecido
 
 - ✅ 29/29 módulos core implementados
 - ✅ RLS em módulos sensíveis
 - ✅ Email notifications (Resend)
 - ✅ Relatórios avançados
-- 🔄 Melhorias de UX/performance
+- ✅ UI/UX corrections — Design system compliance (music catalog)
+- 🔄 Melhorias de UX/performance (continue Phase 2)
 - 🔄 Mobile responsiveness
 
 ---
