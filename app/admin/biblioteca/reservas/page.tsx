@@ -6,10 +6,19 @@ export const metadata = {
   title: 'Reservas - Admin GEEF',
 };
 
+type ReservaItem = {
+  id: string;
+  posicao_fila: number;
+  criado_em: string;
+  pessoas?: { nome?: string | null } | null;
+  obras?: { titulo?: string | null; autor?: string | null } | null;
+};
+
 async function ReservasList({ searchParams }: { searchParams: { page?: string } }) {
-  const page = parseInt(searchParams.page || '1');
+  const page = parseInt(searchParams.page || '1', 10);
 
   const { reservas, total, pageSize } = await getReservas(page);
+  const reservaList = reservas as ReservaItem[];
   const totalPages = Math.ceil(total / pageSize);
 
   return (
@@ -26,8 +35,9 @@ async function ReservasList({ searchParams }: { searchParams: { page?: string } 
       </div>
 
       {/* Table */}
-      <div className="admin-card" style={{ overflowX: 'auto' }}>
-        {reservas.length > 0 ? (
+      <div className="admin-card">
+        {reservaList.length > 0 ? (
+          <div className="overflow-x-auto">
           <table className="admin-table">
             <thead>
               <tr>
@@ -40,19 +50,21 @@ async function ReservasList({ searchParams }: { searchParams: { page?: string } 
               </tr>
             </thead>
             <tbody>
-              {reservas.map((reserva: any) => (
+              {reservaList.map((reserva) => (
                 <tr key={reserva.id}>
-                  <td style={{ fontWeight: 600, fontSize: '1.1rem' }}>
+                  <td className="table-cell-center">
+                    <strong>
                     #{reserva.posicao_fila}
+                    </strong>
                   </td>
-                  <td style={{ fontWeight: 500 }}>{reserva.pessoas?.nome}</td>
-                  <td style={{ fontSize: '0.9rem' }}>
+                  <td><strong>{reserva.pessoas?.nome}</strong></td>
+                  <td className="text-sm-muted">
                     {reserva.obras?.titulo}
                   </td>
-                  <td style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>
+                  <td className="text-xs-muted">
                     {reserva.obras?.autor || '—'}
                   </td>
-                  <td style={{ fontSize: '0.9rem' }}>
+                  <td className="text-sm-muted">
                     {new Date(reserva.criado_em).toLocaleDateString('pt-BR')}
                   </td>
                   <td>
@@ -67,16 +79,16 @@ async function ReservasList({ searchParams }: { searchParams: { page?: string } 
               ))}
             </tbody>
           </table>
+          </div>
         ) : (
-          <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--muted)' }}>
+          <div className="text-center-muted" style={{ padding: '2rem' }}>
             <p>Nenhuma reserva aguardando.</p>
           </div>
         )}
       </div>
 
-      {/* Pagination */}
       {totalPages > 1 && (
-        <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', marginTop: '2rem' }}>
+        <div className="page-pagination">
           {page > 1 && (
             <Link
               href={`/admin/biblioteca/reservas?page=${page - 1}`}
@@ -85,7 +97,7 @@ async function ReservasList({ searchParams }: { searchParams: { page?: string } 
               ← Anterior
             </Link>
           )}
-          <span style={{ padding: '0.6rem 1.2rem', alignSelf: 'center', fontWeight: 600 }}>
+          <span className="page-pagination-label">
             Página {page} de {totalPages}
           </span>
           {page < totalPages && (
@@ -105,7 +117,7 @@ async function ReservasList({ searchParams }: { searchParams: { page?: string } 
 export default async function ReservasPage({ searchParams }: { searchParams: Promise<any> }) {
   const resolvedSearchParams = await searchParams;
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <ReservasList searchParams={resolvedSearchParams} />
     </Suspense>
   );

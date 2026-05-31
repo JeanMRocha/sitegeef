@@ -6,8 +6,15 @@ export const metadata = {
   title: 'Funções e Temas - Admin GEEF',
 };
 
+type FuncaoItem = {
+  id: string;
+  nome: string;
+  descricao?: string | null;
+};
+
 async function FuncoesList() {
   const funcoes = await getFuncoes();
+  const funcaoList = funcoes as FuncaoItem[];
 
   return (
     <div className="area-page">
@@ -26,7 +33,7 @@ async function FuncoesList() {
 
       <section className="area-section">
         <div className="area-panel-grid">
-          <Link href="/admin/funcoes" className="module-card" style={{ borderColor: 'var(--accent)' }}>
+          <Link href="/admin/funcoes" className="module-card module-card-accent">
             <h3 className="module-title">Funções</h3>
             <p>Cadastros de funções usadas nas escalas.</p>
           </Link>
@@ -39,7 +46,7 @@ async function FuncoesList() {
 
       <section className="area-section">
         <div className="table-surface">
-          {funcoes.length === 0 ? (
+          {funcaoList.length === 0 ? (
             <div className="area-empty">
               <p>Nenhuma função cadastrada.</p>
               <Link href="/admin/funcoes/nova" className="profile-form-btn profile-form-btn-primary">Criar primeira função</Link>
@@ -54,10 +61,10 @@ async function FuncoesList() {
                 </tr>
               </thead>
               <tbody>
-                {funcoes.map((funcao: any) => (
+                {funcaoList.map((funcao) => (
                   <tr key={funcao.id}>
-                    <td style={{ fontWeight: 600 }}>{funcao.nome}</td>
-                    <td style={{ color: 'var(--muted)' }}>{funcao.descricao || '—'}</td>
+                    <td><strong>{funcao.nome}</strong></td>
+                    <td className="text-sm-muted">{funcao.descricao || '—'}</td>
                     <td>
                       <Link href={`/admin/funcoes/${funcao.id}`} className="profile-form-btn profile-form-btn-secondary">
                         Editar
@@ -76,7 +83,7 @@ async function FuncoesList() {
 
 export default function FuncoesPage() {
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <FuncoesList />
     </Suspense>
   );
