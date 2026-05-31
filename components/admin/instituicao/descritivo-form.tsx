@@ -60,35 +60,21 @@ export default function DescritivoForm({ initialData }: DescritivoFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ maxWidth: '800px' }}>
+    <form onSubmit={handleSubmit} className="form-max-width">
       {error && (
-        <div style={{
-          padding: '1rem',
-          marginBottom: '1rem',
-          backgroundColor: '#fee2e2',
-          color: '#dc2626',
-          borderRadius: '0.5rem',
-          border: '1px solid #fca5a5',
-        }}>
+        <div className="alert alert-error">
           {error}
         </div>
       )}
 
       {success && (
-        <div style={{
-          padding: '1rem',
-          marginBottom: '1rem',
-          backgroundColor: '#dcfce7',
-          color: '#16a34a',
-          borderRadius: '0.5rem',
-          border: '1px solid #86efac',
-        }}>
+        <div className="alert alert-success">
           Dados salvos com sucesso!
         </div>
       )}
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label htmlFor="descricao" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+      <div className="form-group">
+        <label htmlFor="descricao" className="form-label">
           Descrição
         </label>
         <textarea
@@ -98,19 +84,12 @@ export default function DescritivoForm({ initialData }: DescritivoFormProps) {
           onChange={handleChange}
           placeholder="Descrição geral sobre a instituição"
           rows={6}
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            fontSize: '1rem',
-            fontFamily: 'inherit',
-          }}
+          className="form-textarea"
         />
       </div>
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label htmlFor="historia" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+      <div className="form-group">
+        <label htmlFor="historia" className="form-label">
           História
         </label>
         <textarea
@@ -120,45 +99,22 @@ export default function DescritivoForm({ initialData }: DescritivoFormProps) {
           onChange={handleChange}
           placeholder="Histórico da instituição"
           rows={6}
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            fontSize: '1rem',
-            fontFamily: 'inherit',
-          }}
+          className="form-textarea"
         />
       </div>
 
-      <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
+      <div className="form-actions">
         <button
           type="button"
           onClick={() => router.back()}
-          style={{
-            padding: '0.75rem 1.5rem',
-            backgroundColor: 'var(--bg-secondary)',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            cursor: 'pointer',
-            fontSize: '1rem',
-          }}
+          className="form-btn form-btn-secondary"
         >
           Cancelar
         </button>
         <button
           type="submit"
           disabled={isLoading}
-          style={{
-            padding: '0.75rem 1.5rem',
-            backgroundColor: 'var(--primary)',
-            color: 'white',
-            border: 'none',
-            borderRadius: '0.5rem',
-            cursor: isLoading ? 'not-allowed' : 'pointer',
-            fontSize: '1rem',
-            opacity: isLoading ? 0.6 : 1,
-          }}
+          className={`form-btn form-btn-primary ${isLoading ? 'disabled' : ''}`}
         >
           {isLoading ? 'Salvando...' : 'Salvar'}
         </button>
