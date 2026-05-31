@@ -15,7 +15,11 @@ type ServicoVoluntarioItem = {
   departamentos?: { nome?: string | null } | null;
 };
 
-async function ServicosList({ searchParams }: { searchParams: { page?: string } }) {
+type VoluntariadoSearchParams = {
+  page?: string;
+};
+
+async function ServicosList({ searchParams }: { searchParams: VoluntariadoSearchParams }) {
   const page = parseInt(searchParams.page || '1', 10);
 
   const { servicos, total, pageSize } = await getServicosVoluntarios(page);
@@ -43,7 +47,7 @@ async function ServicosList({ searchParams }: { searchParams: { page?: string } 
         </Link>
       </div>
 
-      <div className="admin-card" style={{ marginBottom: '1rem', padding: '0.9rem 1rem' }}>
+      <div className="admin-card panel-accent-card">
         <p className="panel-note">
           Registre só o necessário para comprovar o vínculo e o período de atuação.
         </p>
@@ -63,7 +67,7 @@ async function ServicosList({ searchParams }: { searchParams: { page?: string } 
 
       <div className="admin-card">
         {servicoList.length === 0 ? (
-          <div className="text-center-muted" style={{ padding: '2rem' }}>
+          <div className="text-center-muted page-empty-state">
             <p>Nenhum serviço voluntário registrado.</p>
             <Link href="/admin/documentos/voluntariado/novo" className="admin-btn admin-btn-primary mt-1">
               ➕ Registrar primeiro serviço
@@ -130,7 +134,7 @@ async function ServicosList({ searchParams }: { searchParams: { page?: string } 
   );
 }
 
-export default async function VoluntariadoPage({ searchParams }: { searchParams: Promise<any> }) {
+export default async function VoluntariadoPage({ searchParams }: { searchParams: Promise<VoluntariadoSearchParams> }) {
   const resolvedSearchParams = await searchParams;
   return (
     <Suspense fallback={<div className="suspense-center">Carregando...</div>}>

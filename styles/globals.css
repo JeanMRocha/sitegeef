@@ -132,6 +132,10 @@
   line-height: 1.6;
 }
 
+.page-empty-state {
+  padding: 2rem;
+}
+
 .document-tabs {
   display: flex;
   gap: 1rem;

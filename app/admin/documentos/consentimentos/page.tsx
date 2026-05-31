@@ -15,7 +15,11 @@ type ConsentimentoItem = {
   pessoas?: { nome?: string | null } | null;
 };
 
-async function ConsentimentosList({ searchParams }: { searchParams: { page?: string } }) {
+type ConsentimentosSearchParams = {
+  page?: string;
+};
+
+async function ConsentimentosList({ searchParams }: { searchParams: ConsentimentosSearchParams }) {
   const page = parseInt(searchParams.page || '1', 10);
 
   const { consentimentos, total, pageSize } = await getConsentimentosLGPD(page);
@@ -43,19 +47,18 @@ async function ConsentimentosList({ searchParams }: { searchParams: { page?: str
         </Link>
       </div>
 
-      <div className="admin-card" style={{ marginBottom: '1rem', padding: '0.9rem 1rem' }}>
+      <div className="admin-card panel-accent-card">
         <p className="panel-note">
           Registre só o necessário para justificar o tratamento e facilitar revogação, se houver pedido do titular.
         </p>
       </div>
 
-      <div className="module-grid grid-auto-220" style={{ marginBottom: '2rem' }}>
+      <div className="module-grid grid-auto-220">
         {tabs.map((tab) => (
           <Link
             key={tab.href}
             href={tab.href}
-            className="module-card"
-            style={tab.active ? { borderColor: 'var(--primary)' } : undefined}
+            className={`module-card${tab.active ? ' module-card-accent' : ''}`}
           >
             <p className="module-title">{tab.label}</p>
           </Link>
@@ -64,7 +67,7 @@ async function ConsentimentosList({ searchParams }: { searchParams: { page?: str
 
       <div className="admin-card">
         {consentimentoList.length === 0 ? (
-          <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--muted)' }}>
+          <div className="page-empty-state text-center-muted">
             <p>Nenhum consentimento registrado.</p>
             <Link href="/admin/documentos/consentimentos/novo" className="admin-btn admin-btn-primary mt-1">
               ➕ Registrar primeiro consentimento
@@ -131,7 +134,7 @@ async function ConsentimentosList({ searchParams }: { searchParams: { page?: str
   );
 }
 
-export default async function ConsentimentosPage({ searchParams }: { searchParams: Promise<any> }) {
+export default async function ConsentimentosPage({ searchParams }: { searchParams: Promise<ConsentimentosSearchParams> }) {
   const resolvedSearchParams = await searchParams;
   return (
     <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
