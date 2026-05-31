@@ -469,7 +469,7 @@ async function ObservabilityContent({ searchParams }: { searchParams: SearchPara
                   {lgpdData.notificacoes.length === 0 ? (
                     <div className="area-empty">Sem notificações recentes.</div>
                   ) : (
-                    lgpdData.notificacoes.map((item: any) => (
+                    lgpdData.notificacoes.map((item) => (
                       <div key={item.id} className="area-panel-item">
                         <strong>{item.titulo}</strong>
                         <p>{item.status} · {formatDate(item.criado_em)}</p>
@@ -485,7 +485,7 @@ async function ObservabilityContent({ searchParams }: { searchParams: SearchPara
                   {lgpdData.eventos.length === 0 ? (
                     <div className="area-empty">Sem eventos LGPD.</div>
                   ) : (
-                    lgpdData.eventos.map((item: any) => (
+                    lgpdData.eventos.map((item) => (
                       <div key={item.id} className="area-panel-item">
                         <strong>{item.source}</strong>
                         <p>{item.level} · {item.message}</p>

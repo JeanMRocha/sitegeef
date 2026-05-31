@@ -202,7 +202,7 @@ export default async function AdminLgpdPage() {
                   <td colSpan={5}>Nenhum consentimento encontrado.</td>
                 </tr>
               ) : (
-                consentimentos.map((item: any) => (
+                consentimentos.map((item) => (
                   <tr key={item.id}>
                     <td>{item.finalidade}</td>
                     <td>{item.pessoas?.nome || "—"}</td>
@@ -226,7 +226,7 @@ export default async function AdminLgpdPage() {
               {notificacoes.length === 0 ? (
                 <div className="area-empty">Sem notificações recentes.</div>
               ) : (
-                notificacoes.map((item: any) => (
+                notificacoes.map((item) => (
                   <div key={item.id} className="area-panel-item">
                     <strong>{item.titulo}</strong>
                     <p>{item.status} · {formatDate(item.criado_em)}</p>
@@ -242,7 +242,7 @@ export default async function AdminLgpdPage() {
               {eventos.length === 0 ? (
                 <div className="area-empty">Sem eventos LGPD.</div>
               ) : (
-                eventos.map((item: any) => (
+                eventos.map((item) => (
                   <div key={item.id} className="area-panel-item">
                     <strong>{item.source}</strong>
                     <p>{item.level} · {item.message}</p>
