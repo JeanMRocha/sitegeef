@@ -6,6 +6,14 @@ export const metadata = {
   title: 'Escalas Mensais - Admin GEEF',
 };
 
+type EscalaItem = {
+  id: string;
+  mes: number;
+  ano: number;
+  status?: string | null;
+  criado_em: string;
+};
+
 function getMonthName(mes: number): string {
   const months = [
     'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
@@ -28,9 +36,10 @@ function getStatusColor(status: string) {
 }
 
 async function EscalasList({ searchParams }: { searchParams: { page?: string } }) {
-  const page = parseInt(searchParams.page || '1');
+  const page = parseInt(searchParams.page || '1', 10);
 
   const { escalas, total, pageSize } = await getEscalas(page);
+  const escalaList = escalas as EscalaItem[];
   const totalPages = Math.ceil(total / pageSize);
 
   return (
@@ -50,7 +59,7 @@ async function EscalasList({ searchParams }: { searchParams: { page?: string } }
 
       <section className="area-section">
         <div className="table-surface">
-          {escalas.length === 0 ? (
+          {escalaList.length === 0 ? (
             <div className="area-empty">
               <p>Nenhuma escala cadastrada.</p>
               <Link href="/admin/escalas/nova" className="profile-form-btn profile-form-btn-primary">
@@ -69,18 +78,18 @@ async function EscalasList({ searchParams }: { searchParams: { page?: string } }
                 </tr>
               </thead>
               <tbody>
-                {escalas.map((escala: any) => {
-                  const statusColor = getStatusColor(escala.status);
+                {escalaList.map((escala) => {
+                  const statusColor = getStatusColor(escala.status || 'default');
                   return (
                     <tr key={escala.id}>
-                      <td style={{ fontWeight: 600 }}>{getMonthName(escala.mes)}</td>
+                      <td><strong>{getMonthName(escala.mes)}</strong></td>
                       <td>{escala.ano}</td>
                       <td>
                         <span className="inline-status" style={{ backgroundColor: statusColor.bg, color: statusColor.color }}>
                           {escala.status}
                         </span>
                       </td>
-                      <td style={{ color: 'var(--muted)' }}>
+                      <td className="text-sm-muted">
                         {new Date(escala.criado_em).toLocaleDateString('pt-BR')}
                       </td>
                       <td>
@@ -99,13 +108,13 @@ async function EscalasList({ searchParams }: { searchParams: { page?: string } }
 
       {totalPages > 1 && (
         <section className="area-section">
-          <div className="area-panel-grid" style={{ justifyContent: 'center' }}>
+          <div className="page-pagination">
             {page > 1 && (
               <Link href={`/admin/escalas?page=${page - 1}`} className="profile-form-btn profile-form-btn-secondary">
                 Anterior
               </Link>
             )}
-            <span className="area-panel-item" style={{ alignSelf: 'center', fontWeight: 600 }}>
+            <span className="page-pagination-label">
               Página {page} de {totalPages}
             </span>
             {page < totalPages && (
@@ -123,7 +132,7 @@ async function EscalasList({ searchParams }: { searchParams: { page?: string } }
 export default async function EscalasPage({ searchParams }: { searchParams: Promise<any> }) {
   const resolvedSearchParams = await searchParams;
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <EscalasList searchParams={resolvedSearchParams} />
     </Suspense>
   );

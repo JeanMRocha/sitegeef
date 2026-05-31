@@ -118,6 +118,10 @@
   white-space: nowrap;
 }
 
+.table-cell-center {
+  text-align: center;
+}
+
 .page-pagination {
   display: flex;
   gap: 0.5rem;

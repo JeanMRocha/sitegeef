@@ -6,11 +6,21 @@ export const metadata = {
   title: "Biblioteca - Admin GEEF",
 };
 
+type ObraItem = {
+  id: string;
+  titulo: string;
+  autor?: string | null;
+  categoria?: string | null;
+  publico?: string | null;
+  exemplares?: Array<unknown> | null;
+};
+
 async function BibliotecaList({ searchParams }: { searchParams: { page?: string; search?: string } }) {
-  const page = parseInt(searchParams.page || "1");
+  const page = parseInt(searchParams.page || "1", 10);
   const search = searchParams.search || "";
 
   const { obras, total, pageSize } = await getObras(page, search);
+  const obraList = obras as ObraItem[];
   const totalPages = Math.ceil(total / pageSize);
 
   return (
@@ -30,13 +40,12 @@ async function BibliotecaList({ searchParams }: { searchParams: { page?: string;
 
       <section className="area-section">
         <div className="table-surface">
-          <form method="get" className="module-grid" style={{ alignItems: "end" }}>
+          <form method="get" className="module-grid align-start">
             <label className="profile-form-field" style={{ gridColumn: "1 / -2" }}>
               <span>Buscar por título ou autor</span>
               <input type="text" name="search" placeholder="Buscar por título ou autor..." defaultValue={search} className="profile-form-input" />
             </label>
             <div className="area-panel-item">
-              <button type="submit" className="profile-form-btn profile-form-btn-primary">Buscar</button>
               {search ? <Link href="/admin/biblioteca" className="profile-form-btn profile-form-btn-secondary">Limpar</Link> : null}
             </div>
           </form>
@@ -45,7 +54,7 @@ async function BibliotecaList({ searchParams }: { searchParams: { page?: string;
 
       <section className="area-section">
         <div className="table-surface">
-          {obras.length === 0 ? (
+          {obraList.length === 0 ? (
             <div className="area-empty">
               <p>{search ? "Nenhuma obra encontrada." : "Nenhuma obra cadastrada."}</p>
               <Link href="/admin/biblioteca/nova-obra" className="profile-form-btn profile-form-btn-primary">
@@ -65,10 +74,10 @@ async function BibliotecaList({ searchParams }: { searchParams: { page?: string;
                 </tr>
               </thead>
               <tbody>
-                {obras.map((obra: any) => (
+                {obraList.map((obra) => (
                   <tr key={obra.id}>
-                    <td style={{ fontWeight: 500 }}>{obra.titulo}</td>
-                    <td style={{ fontSize: "0.9rem", color: "var(--muted)" }}>{obra.autor || "—"}</td>
+                    <td><strong>{obra.titulo}</strong></td>
+                    <td className="text-sm-muted">{obra.autor || "—"}</td>
                     <td>
                       {obra.categoria ? <span className="tag">{obra.categoria}</span> : "—"}
                     </td>
@@ -77,7 +86,7 @@ async function BibliotecaList({ searchParams }: { searchParams: { page?: string;
                         {obra.publico}
                       </span>
                     </td>
-                    <td style={{ fontWeight: 600, textAlign: "center" }}>{obra.exemplares?.length || 0}</td>
+                    <td className="table-cell-center"><strong>{obra.exemplares?.length || 0}</strong></td>
                     <td>
                       <Link href={`/admin/biblioteca/${obra.id}`} className="profile-form-btn profile-form-btn-secondary">
                         Editar
@@ -92,13 +101,13 @@ async function BibliotecaList({ searchParams }: { searchParams: { page?: string;
       </section>
 
       {totalPages > 1 && (
-        <div className="area-panel-grid" style={{ justifyContent: "center", marginTop: "2rem" }}>
+        <div className="page-pagination">
           {page > 1 && (
             <Link href={`/admin/biblioteca?page=${page - 1}${search ? `&search=${search}` : ""}`} className="profile-form-btn profile-form-btn-secondary">
               Anterior
             </Link>
           )}
-          <span className="area-panel-item" style={{ alignSelf: "center", fontWeight: 600 }}>
+          <span className="page-pagination-label">
             Página {page} de {totalPages}
           </span>
           {page < totalPages && (
@@ -115,7 +124,7 @@ async function BibliotecaList({ searchParams }: { searchParams: { page?: string;
 export default async function BibliotecaPage({ searchParams }: { searchParams: Promise<any> }) {
   const resolvedSearchParams = await searchParams;
   return (
-    <Suspense fallback={<div style={{ padding: "2rem", textAlign: "center" }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <BibliotecaList searchParams={resolvedSearchParams} />
     </Suspense>
   );
