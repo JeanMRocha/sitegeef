@@ -1082,6 +1082,22 @@
   gap: 1rem;
 }
 
+/* Form section styling for grouped content */
+.form-section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: var(--bg-secondary);
+  border-radius: 0.5rem;
+}
+
+.form-section-title {
+  margin-bottom: 1.5rem;
+}
+
+.form-section-item {
+  margin-top: 1.5rem;
+}
+
 .admin-form-group {
   display: grid;
   gap: 0.4rem;

@@ -79,42 +79,28 @@ export default function IdentidadeVisualForm({ initialData }: IdentidadeVisualFo
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ maxWidth: '800px' }}>
+    <form onSubmit={handleSubmit} className="form-max-width">
       {error && (
-        <div style={{
-          padding: '1rem',
-          marginBottom: '1rem',
-          backgroundColor: '#fee2e2',
-          color: '#dc2626',
-          borderRadius: '0.5rem',
-          border: '1px solid #fca5a5',
-        }}>
+        <div className="alert alert-error">
           {error}
         </div>
       )}
 
       {success && (
-        <div style={{
-          padding: '1rem',
-          marginBottom: '1rem',
-          backgroundColor: '#dcfce7',
-          color: '#16a34a',
-          borderRadius: '0.5rem',
-          border: '1px solid #86efac',
-        }}>
+        <div className="alert alert-success">
           Dados salvos com sucesso!
         </div>
       )}
 
-      <div style={{ marginBottom: '2rem', padding: '1.5rem', backgroundColor: 'var(--bg-secondary)', borderRadius: '0.5rem' }}>
-        <h3 style={{ marginBottom: '1.5rem' }}>Logotipos</h3>
+      <div className="form-section">
+        <h3 className="form-section-title">Logotipos</h3>
         <BrandAssetUpload
           title="Logo"
           description="Logo sem fundo (transparente) para uso em fundos claros e materiais digitais"
           fieldName="logo_url"
           currentAsset={logoUrl}
         />
-        <div style={{ marginTop: '1.5rem' }}>
+        <div className="form-section-item">
           <BrandAssetUpload
             title="Logo com Fundo"
             description="Logo com fundo para contraste imediato e apoio visual mais marcante"
@@ -124,8 +110,8 @@ export default function IdentidadeVisualForm({ initialData }: IdentidadeVisualFo
         </div>
       </div>
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label htmlFor="identidade_visual_descricao" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+      <div className="form-group">
+        <label htmlFor="identidade_visual_descricao" className="form-label">
           Descrição Geral
         </label>
         <textarea
@@ -135,19 +121,12 @@ export default function IdentidadeVisualForm({ initialData }: IdentidadeVisualFo
           onChange={handleChange}
           placeholder="Descrição geral da identidade visual"
           rows={3}
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            fontSize: '1rem',
-            fontFamily: 'inherit',
-          }}
+          className="form-textarea"
         />
       </div>
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label htmlFor="identidade_visual_letras_descricao" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+      <div className="form-group">
+        <label htmlFor="identidade_visual_letras_descricao" className="form-label">
           Descrição das Letras
         </label>
         <textarea
@@ -157,19 +136,12 @@ export default function IdentidadeVisualForm({ initialData }: IdentidadeVisualFo
           onChange={handleChange}
           placeholder="Detalhes sobre tipografia e letras"
           rows={3}
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            fontSize: '1rem',
-            fontFamily: 'inherit',
-          }}
+          className="form-textarea"
         />
       </div>
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label htmlFor="identidade_visual_visual_descricao" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+      <div className="form-group">
+        <label htmlFor="identidade_visual_visual_descricao" className="form-label">
           Descrição Visual
         </label>
         <textarea
@@ -179,19 +151,12 @@ export default function IdentidadeVisualForm({ initialData }: IdentidadeVisualFo
           onChange={handleChange}
           placeholder="Detalhes visuais (cores, símbolos, etc)"
           rows={3}
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            fontSize: '1rem',
-            fontFamily: 'inherit',
-          }}
+          className="form-textarea"
         />
       </div>
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label htmlFor="identidade_visual_composicao" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+      <div className="form-group">
+        <label htmlFor="identidade_visual_composicao" className="form-label">
           Composição
         </label>
         <textarea
@@ -201,19 +166,12 @@ export default function IdentidadeVisualForm({ initialData }: IdentidadeVisualFo
           onChange={handleChange}
           placeholder="Composição da identidade visual"
           rows={3}
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            fontSize: '1rem',
-            fontFamily: 'inherit',
-          }}
+          className="form-textarea"
         />
       </div>
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label htmlFor="identidade_visual_uso" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+      <div className="form-group">
+        <label htmlFor="identidade_visual_uso" className="form-label">
           Diretrizes de Uso
         </label>
         <textarea
@@ -223,19 +181,12 @@ export default function IdentidadeVisualForm({ initialData }: IdentidadeVisualFo
           onChange={handleChange}
           placeholder="Como usar corretamente a identidade visual"
           rows={3}
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            fontSize: '1rem',
-            fontFamily: 'inherit',
-          }}
+          className="form-textarea"
         />
       </div>
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label htmlFor="identidade_visual_exemplos" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+      <div className="form-group">
+        <label htmlFor="identidade_visual_exemplos" className="form-label">
           Exemplos
         </label>
         <textarea
@@ -245,45 +196,22 @@ export default function IdentidadeVisualForm({ initialData }: IdentidadeVisualFo
           onChange={handleChange}
           placeholder="Exemplos de aplicação"
           rows={3}
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            fontSize: '1rem',
-            fontFamily: 'inherit',
-          }}
+          className="form-textarea"
         />
       </div>
 
-      <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
+      <div className="form-actions">
         <button
           type="button"
           onClick={() => router.back()}
-          style={{
-            padding: '0.75rem 1.5rem',
-            backgroundColor: 'var(--bg-secondary)',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            cursor: 'pointer',
-            fontSize: '1rem',
-          }}
+          className="form-btn form-btn-secondary"
         >
           Cancelar
         </button>
         <button
           type="submit"
           disabled={isLoading}
-          style={{
-            padding: '0.75rem 1.5rem',
-            backgroundColor: 'var(--primary)',
-            color: 'white',
-            border: 'none',
-            borderRadius: '0.5rem',
-            cursor: isLoading ? 'not-allowed' : 'pointer',
-            fontSize: '1rem',
-            opacity: isLoading ? 0.6 : 1,
-          }}
+          className={`form-btn form-btn-primary ${isLoading ? 'disabled' : ''}`}
         >
           {isLoading ? 'Salvando...' : 'Salvar'}
         </button>
