@@ -13,34 +13,34 @@ async function RelatoriosContent() {
   const anos = await getAnosDisponiveis();
   const moduleLinks = [
     {
-      href: "/admin/financeiro/dre",
-      title: "DRE Financeiro",
-      text: "Receitas, despesas e resultado por centro de custo",
+      href: '/admin/financeiro/dre',
+      title: 'DRE Financeiro',
+      text: 'Receitas, despesas e resultado por centro de custo',
     },
     {
-      href: "/admin/estudos",
-      title: "Estudos Doutrinários",
-      text: "Cursos, turmas, frequências, facilitadores",
+      href: '/admin/estudos',
+      title: 'Estudos Doutrinários',
+      text: 'Cursos, turmas, frequências, facilitadores',
     },
     {
-      href: "/admin/livraria",
-      title: "Livraria",
-      text: "Vendas, estoque, movimentos e relatórios",
+      href: '/admin/livraria',
+      title: 'Livraria',
+      text: 'Vendas, estoque, movimentos e relatórios',
     },
     {
-      href: "/admin/biblioteca",
-      title: "Biblioteca",
-      text: "Empréstimos, reservas, acervo e devoluções",
+      href: '/admin/biblioteca',
+      title: 'Biblioteca',
+      text: 'Empréstimos, reservas, acervo e devoluções',
     },
     {
-      href: "/admin/operacao",
-      title: "Atendimento Espiritual",
-      text: "Estatísticas, histórico e irradiações ativas",
+      href: '/admin/operacao',
+      title: 'Atendimento Espiritual',
+      text: 'Estatísticas, histórico e irradiações ativas',
     },
     {
-      href: "/admin/apse",
-      title: "APSE",
-      text: "Famílias assistidas, campanhas e atendimentos",
+      href: '/admin/apse',
+      title: 'APSE',
+      text: 'Famílias assistidas, campanhas e atendimentos',
     },
   ];
 
@@ -79,33 +79,34 @@ async function RelatoriosContent() {
 
       <section className="area-section">
         <div className="area-section-title">
-          <h2>Resumo financeiro - {meses[relatorio.mes - 1]?.nome} de {relatorio.ano}</h2>
+          <h2>
+            Resumo financeiro - {meses[relatorio.mes - 1]?.nome} de {relatorio.ano}
+          </h2>
           <p>Consolidação do período selecionado.</p>
         </div>
         <div className="table-surface">
-
-          <div className="stat-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
+          <div className="stat-grid stat-grid-220">
             <div className="stat-card">
               <span>Receitas</span>
-              <strong style={{ color: '#22c55e' }}>
+              <strong className="text-success">
                 R$ {relatorio.receitas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
               </strong>
             </div>
             <div className="stat-card">
               <span>Despesas</span>
-              <strong style={{ color: '#ef4444' }}>
+              <strong className="text-danger">
                 R$ {relatorio.despesas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
               </strong>
             </div>
             <div className="stat-card">
               <span>Resultado</span>
-              <strong style={{ color: relatorio.resultado >= 0 ? '#22c55e' : '#ef4444' }}>
+              <strong className={relatorio.resultado >= 0 ? 'text-success' : 'text-danger'}>
                 R$ {relatorio.resultado.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
               </strong>
             </div>
           </div>
 
-          <p style={{ margin: '1rem 0 0', fontSize: '0.9rem', color: 'var(--muted)' }}>Relatórios detalhados estão disponíveis nos módulos específicos.</p>
+          <p className="panel-note mt-1">Relatórios detalhados estão disponíveis nos módulos específicos.</p>
         </div>
       </section>
 
@@ -125,7 +126,7 @@ async function RelatoriosContent() {
 
 export default function RelatoriosPage() {
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <RelatoriosContent />
     </Suspense>
   );

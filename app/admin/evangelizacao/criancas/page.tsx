@@ -6,8 +6,17 @@ export const metadata = {
   title: 'Crianças - Admin GEEF',
 };
 
+type CriancaItem = {
+  id: string;
+  status?: string | null;
+  pessoa?: { nome?: string | null } | null;
+  turma?: { nome?: string | null } | null;
+  responsavel?: { nome?: string | null } | null;
+};
+
 async function CriancasContent({ searchParams }: { searchParams: { turma?: string } }) {
   const criancas = await getCriancas(searchParams.turma);
+  const criancaList = criancas as CriancaItem[];
 
   return (
     <div>
@@ -22,8 +31,8 @@ async function CriancasContent({ searchParams }: { searchParams: { turma?: strin
       </div>
 
       <div className="admin-card">
-        {criancas.length > 0 ? (
-          <div style={{ overflowX: 'auto' }}>
+        {criancaList.length > 0 ? (
+          <div className="overflow-x-auto">
             <table className="admin-table">
               <thead>
                 <tr>
@@ -35,26 +44,13 @@ async function CriancasContent({ searchParams }: { searchParams: { turma?: strin
                 </tr>
               </thead>
               <tbody>
-                {criancas.map((crianca: any) => (
+                {criancaList.map((crianca) => (
                   <tr key={crianca.id}>
-                    <td style={{ fontWeight: 500 }}>
-                      {crianca.pessoa?.nome}
-                    </td>
-                    <td style={{ fontSize: '0.9rem', color: 'var(--muted)' }}>
-                      {crianca.turma?.nome}
-                    </td>
-                    <td style={{ fontSize: '0.9rem' }}>
-                      {crianca.responsavel?.nome}
-                    </td>
+                    <td><strong>{crianca.pessoa?.nome}</strong></td>
+                    <td className="text-sm-muted">{crianca.turma?.nome}</td>
+                    <td className="text-sm-muted">{crianca.responsavel?.nome}</td>
                     <td>
-                      <span style={{
-                        display: 'inline-block',
-                        padding: '0.25rem 0.6rem',
-                        backgroundColor: crianca.status === 'ativa' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(107, 114, 128, 0.1)',
-                        color: crianca.status === 'ativa' ? '#22c55e' : '#6b7280',
-                        borderRadius: '0.3rem',
-                        fontSize: '0.85rem',
-                      }}>
+                      <span className={crianca.status === 'ativa' ? 'inline-status inline-status-success' : 'inline-status inline-status-neutral'}>
                         {crianca.status === 'ativa' ? '✓ Ativa' : '✕ Inativa'}
                       </span>
                     </td>
@@ -69,13 +65,7 @@ async function CriancasContent({ searchParams }: { searchParams: { turma?: strin
             </table>
           </div>
         ) : (
-          <div style={{
-            padding: '2rem',
-            textAlign: 'center',
-            backgroundColor: 'var(--admin-bg)',
-            borderRadius: '0.6rem',
-            color: 'var(--muted)',
-          }}>
+          <div className="area-empty">
             <p>Nenhuma criança cadastrada.</p>
           </div>
         )}
@@ -87,9 +77,8 @@ async function CriancasContent({ searchParams }: { searchParams: { turma?: strin
 export default async function CriancasPage({ searchParams }: { searchParams: Promise<any> }) {
   const resolvedSearchParams = await searchParams;
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <CriancasContent searchParams={resolvedSearchParams} />
     </Suspense>
   );
 }
-

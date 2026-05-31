@@ -3280,6 +3280,10 @@ a.button.musica-icon-button {
   border-color: var(--accent);
 }
 
+.stat-grid-220 {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
 .module-card p {
   margin: 0;
 }
