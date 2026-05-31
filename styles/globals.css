@@ -29,6 +29,10 @@
   margin-top: 1rem;
 }
 
+.mb-0 {
+  margin-bottom: 0;
+}
+
 .mt-075 {
   margin-top: 0.75rem;
 }

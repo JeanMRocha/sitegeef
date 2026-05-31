@@ -6,17 +6,36 @@ export const metadata = {
   title: "APSE - Admin GEEF",
 };
 
+type FamiliaItem = {
+  status?: string | null;
+};
+
+type CampanhaItem = {
+  id: string;
+  nome: string;
+  descricao?: string | null;
+  meta?: string | number | null;
+  status?: string | null;
+};
+
 async function ApseContent() {
   const familias = await getFamilias();
   const campanhas = await getCampanhas();
   const atendimentos = await getAtendimentos();
-  const campanhasAtivas = campanhas.filter((c: any) => c.status === "planejada" || c.status === "em_execucao");
+  const familiaList = familias as FamiliaItem[];
+  const campanhaList = campanhas as CampanhaItem[];
+  const campanhasAtivas = campanhaList.filter((c) => c.status === "planejada" || c.status === "em_execucao");
 
   const cards = [
-    { label: "Famílias ativas", value: familias.filter((f: any) => f.status === "ativa").length },
+    { label: "Famílias ativas", value: familiaList.filter((f) => f.status === "ativa").length },
     { label: "Campanhas ativas", value: campanhasAtivas.length },
     { label: "Atendimentos", value: atendimentos.length },
   ];
+
+  const getStatusClass = (status?: string | null) => {
+    if (status === "planejada") return "inline-status inline-status-primary";
+    return "inline-status inline-status-info";
+  };
 
   return (
     <div className="area-page">
@@ -64,10 +83,9 @@ async function ApseContent() {
           <p>Campanhas em planejamento ou andamento.</p>
         </div>
         <div className="table-surface">
-
           {campanhasAtivas.length > 0 ? (
-            <div className="module-grid" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))" }}>
-              {campanhasAtivas.map((campanha: any) => (
+            <div className="module-grid grid-auto-300">
+              {campanhasAtivas.map((campanha) => (
                 <Link
                   key={campanha.id}
                   href={`/admin/apse/campanhas/${campanha.id}`}
@@ -76,18 +94,11 @@ async function ApseContent() {
                   <p className="module-title">{campanha.nome}</p>
                   <p>{campanha.descricao || "Sem descrição"}</p>
                   {campanha.meta && (
-                    <p style={{ marginTop: "0.5rem", color: "var(--muted)", fontSize: "0.85rem" }}>
+                    <p className="text-sm-muted mt-035">
                       Meta: {campanha.meta}
                     </p>
                   )}
-                  <span
-                    className="inline-status"
-                    style={{
-                      marginTop: "0.75rem",
-                      backgroundColor: campanha.status === "planejada" ? "rgba(168, 85, 247, 0.1)" : "rgba(59, 130, 246, 0.1)",
-                      color: campanha.status === "planejada" ? "#a855f7" : "#3b82f6",
-                    }}
-                  >
+                  <span className={`${getStatusClass(campanha.status)} mt-075`}>
                     {campanha.status === "planejada" ? "📋 Planejada" : "▶ Em execução"}
                   </span>
                 </Link>
@@ -104,7 +115,7 @@ async function ApseContent() {
 
 export default function ApsePage() {
   return (
-    <Suspense fallback={<div style={{ padding: "2rem", textAlign: "center" }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <ApseContent />
     </Suspense>
   );

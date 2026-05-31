@@ -6,9 +6,17 @@ export const metadata = {
   title: 'Mediunidade - Admin GEEF',
 };
 
+type GrupoItem = {
+  id: string;
+  nome: string;
+  status?: string | null;
+  coordenador?: { nome?: string | null } | null;
+};
+
 async function MediunidadeContent() {
   const grupos = await getGrupos();
-  const ativos = grupos.filter((g: any) => g.status === 'ativo');
+  const grupoList = grupos as GrupoItem[];
+  const ativos = grupoList.filter((g) => g.status === 'ativo');
 
   return (
     <div className="area-page">
@@ -28,7 +36,7 @@ async function MediunidadeContent() {
       <section className="area-section">
         <div className="area-panel-item">
           <strong>Acesso restrito</strong>
-          <p className="area-subtitle" style={{ marginBottom: 0 }}>
+          <p className="area-subtitle mb-0">
             Apenas usuários com permissão <code>pode_mediunidade</code> podem acessar este módulo.
           </p>
         </div>
@@ -51,8 +59,8 @@ async function MediunidadeContent() {
           <p>Visão resumida dos grupos e seus responsáveis.</p>
         </div>
         <div className="table-surface">
-          {grupos.length > 0 ? (
-            <div style={{ overflowX: 'auto' }}>
+          {grupoList.length > 0 ? (
+            <div className="overflow-x-auto">
               <table className="admin-table">
                 <thead>
                   <tr>
@@ -60,15 +68,17 @@ async function MediunidadeContent() {
                     <th>Coordenador</th>
                     <th>Status</th>
                     <th>Ação</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {grupos.map((grupo: any) => (
+                </tr>
+              </thead>
+              <tbody>
+                  {grupoList.map((grupo) => (
                     <tr key={grupo.id}>
-                      <td style={{ fontWeight: 500 }}>{grupo.nome}</td>
+                      <td>
+                        <strong>{grupo.nome}</strong>
+                      </td>
                       <td>{grupo.coordenador?.nome || '—'}</td>
                       <td>
-                        <span className={grupo.status === 'ativo' ? 'inline-status inline-status-success' : 'inline-status'}>
+                        <span className={grupo.status === 'ativo' ? 'inline-status inline-status-success' : 'inline-status inline-status-neutral'}>
                           {grupo.status === 'ativo' ? 'Ativo' : 'Inativo'}
                         </span>
                       </td>
@@ -93,7 +103,7 @@ async function MediunidadeContent() {
 
 export default function MediunidadePage() {
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <MediunidadeContent />
     </Suspense>
   );
