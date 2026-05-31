@@ -1388,7 +1388,7 @@ body.musica-display-route .site-shell {
 }
 
 .musica-display-screen--reader {
-  background: linear-gradient(180deg, #10100f 0%, #1c1917 50%, #171513 100%);
+  background: linear-gradient(to bottom, #fafaf8, #f5f0fa);
   position: relative;
   padding:
     calc(var(--display-header-pad-y, 1rem) * 3.55)
@@ -1779,6 +1779,18 @@ html.dark .musica-lyric-row *::after {
 /* Dark mode - Display Live (16x9) */
 :root.dark .musica-display-verse-content pre {
   color: #f4efe7 !important;
+}
+
+:root.dark .musica-display-screen {
+  background: linear-gradient(to bottom, #1a1714, #221f1d);
+}
+
+:root.dark .musica-display-screen--reader {
+  background: linear-gradient(180deg, #10100f 0%, #1c1917 50%, #171513 100%);
+}
+
+:root.dark .musica-display-header-16x9 {
+  border-bottom-color: rgba(233, 160, 201, 0.15);
 }
 
 :root.dark .musica-display-header-16x9 h1,
