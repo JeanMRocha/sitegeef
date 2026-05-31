@@ -8,6 +8,7 @@ import { invalidateUserAreaCache } from '@/lib/areas/invalidate-user-area';
 import { sendEmailNotification } from '@/lib/notificacoes/email-service';
 import { recordOpsEvent } from '@/lib/ops-events';
 import { recordActionFailureEvent, recordSupabaseFailureEvent } from '@/lib/observability';
+import { calculateRange } from '@/lib/admin/query-helpers';
 
 async function recordDocumentosAuditEvent(
   source: string,
@@ -308,14 +309,14 @@ function normalizeSolicitacaoStatus(status?: string): TitularSolicitacaoStatus |
 async function loadTitularSolicitacoes(page = 1, status?: string) {
   const supabase = createServiceRoleClient();
   const pageSize = 20;
-  const offset = (page - 1) * pageSize;
+  const { start, end } = calculateRange(page, pageSize);
   const normalizedStatus = normalizeSolicitacaoStatus(status);
 
   let query = supabase
     .from('lgpd_solicitacoes')
     .select('*', { count: 'exact' })
     .order('created_at', { ascending: false })
-    .range(offset, offset + pageSize - 1);
+    .range(start, end);
 
   if (normalizedStatus !== 'all') {
     query = query.eq('status', normalizedStatus);
@@ -509,7 +510,7 @@ export async function updateTitularSolicitacao(
 async function loadTermosAssinados(page = 1) {
   const supabase = createServiceRoleClient();
   const pageSize = 20;
-  const offset = (page - 1) * pageSize;
+  const { start, end } = calculateRange(page, pageSize);
 
   const { data, count, error } = await supabase
     .from('termos_assinados')
@@ -522,7 +523,7 @@ async function loadTermosAssinados(page = 1) {
       { count: 'exact' }
     )
     .order('data_assinatura', { ascending: false })
-    .range(offset, offset + pageSize - 1);
+    .range(start, end);
 
   if (error) {
     await recordSupabaseFailureEvent({
@@ -661,7 +662,7 @@ export async function revogaTermo(id: string) {
 async function loadConsentimentosLGPD(page = 1) {
   const supabase = createServiceRoleClient();
   const pageSize = 20;
-  const offset = (page - 1) * pageSize;
+  const { start, end } = calculateRange(page, pageSize);
 
   const { data, count, error } = await supabase
     .from('consentimentos_lgpd')
@@ -673,7 +674,7 @@ async function loadConsentimentosLGPD(page = 1) {
       { count: 'exact' }
     )
     .order('data_consentimento', { ascending: false })
-    .range(offset, offset + pageSize - 1);
+    .range(start, end);
 
   if (error) {
     await recordSupabaseFailureEvent({
@@ -778,7 +779,7 @@ export async function revogaConsentimento(id: string) {
 async function loadServicosVoluntarios(page = 1) {
   const supabase = createServiceRoleClient();
   const pageSize = 20;
-  const offset = (page - 1) * pageSize;
+  const { start, end } = calculateRange(page, pageSize);
 
   const { data, count, error } = await supabase
     .from('servicos_voluntarios')
@@ -792,7 +793,7 @@ async function loadServicosVoluntarios(page = 1) {
     )
     .eq('status', 'ativo')
     .order('data_inicio', { ascending: false })
-    .range(offset, offset + pageSize - 1);
+    .range(start, end);
 
   if (error) {
     await recordSupabaseFailureEvent({

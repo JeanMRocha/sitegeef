@@ -4,11 +4,12 @@ import { unstable_cache } from "next/cache";
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 import { invalidateAdminBibliotecaCache } from "@/lib/admin/cache";
 import { invalidateUserAreaCache } from '@/lib/areas/invalidate-user-area';
+import { calculateRange, buildSearchFilter } from '@/lib/admin/query-helpers';
 
 async function loadObras(page = 1, search?: string) {
   const supabase = createServiceRoleClient();
   const pageSize = 20;
-  const offset = (page - 1) * pageSize;
+  const { start, end } = calculateRange(page, pageSize);
 
   let query = supabase
     .from('obras')
@@ -16,12 +17,15 @@ async function loadObras(page = 1, search?: string) {
     .eq('ativo', true);
 
   if (search) {
-    query = query.or(`titulo.ilike.%${search}%,autor.ilike.%${search}%`);
+    const filter = buildSearchFilter(search, ['titulo', 'autor']);
+    if (filter) {
+      query = query.or(filter);
+    }
   }
 
   const { data, count, error } = await query
     .order('titulo')
-    .range(offset, offset + pageSize - 1);
+    .range(start, end);
 
   if (error) {
     return { obras: [], total: 0, page, pageSize };

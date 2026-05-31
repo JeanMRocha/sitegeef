@@ -1,11 +1,12 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
+import { calculateRange } from '@/lib/admin/query-helpers';
 
 export async function getDepartamentos(page = 1) {
   const supabase = await createClient();
   const pageSize = 20;
-  const offset = (page - 1) * pageSize;
+  const { start, end } = calculateRange(page, pageSize);
 
   try {
     const { data, count, error } = await supabase
@@ -18,7 +19,7 @@ export async function getDepartamentos(page = 1) {
         { count: 'exact' }
       )
       .eq('ativo', true)
-      .range(offset, offset + pageSize - 1);
+      .range(start, end);
 
     if (error) {
       return {

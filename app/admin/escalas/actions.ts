@@ -4,6 +4,7 @@ import { revalidatePath, revalidateTag } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { invalidateUserAreaCache } from '@/lib/areas/invalidate-user-area';
 import { invalidateAdminDashboardCache } from '@/lib/admin/cache';
+import { calculateRange } from '@/lib/admin/query-helpers';
 
 function invalidateEscalasCache() {
   revalidateTag('public-escalas');
@@ -15,14 +16,14 @@ function invalidateEscalasCache() {
 export async function getEscalas(page = 1) {
   const supabase = await createClient();
   const pageSize = 20;
-  const offset = (page - 1) * pageSize;
+  const { start, end } = calculateRange(page, pageSize);
 
   const { data, count, error } = await supabase
     .from('escalas_mensais')
     .select('*', { count: 'exact' })
     .order('ano', { ascending: false })
     .order('mes', { ascending: false })
-    .range(offset, offset + pageSize - 1);
+    .range(start, end);
 
   if (error) return {
     escalas: [],
