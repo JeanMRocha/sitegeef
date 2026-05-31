@@ -146,7 +146,7 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
 
           <div style={{ display: "flex", gap: "0.5rem", alignItems: "flex-end" }}>
             <label className="profile-form-field" style={{ margin: 0, flex: 1 }}>
-              <span>Autor</span>
+              <span>Autor (opcional)</span>
               <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
                 <select
                   className="profile-form-input"

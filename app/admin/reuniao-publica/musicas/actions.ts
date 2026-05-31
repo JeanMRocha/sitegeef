@@ -26,7 +26,7 @@ function readOptionalString(formData: FormData, key: string) {
 export async function saveMusicaAction(formData: FormData) {
   const id = readOptionalString(formData, "id") ?? undefined;
   const titulo = readString(formData, "titulo").trim();
-  const autor = readString(formData, "autor").trim();
+  const autor = readOptionalString(formData, "autor") ?? "";
   const tom = readOptionalString(formData, "tom");
   const versao = readOptionalString(formData, "versao");
   const status = readString(formData, "status").trim() as "ativa" | "rascunho" | "inativa";
@@ -35,8 +35,8 @@ export async function saveMusicaAction(formData: FormData) {
   const audio_url = readOptionalString(formData, "audio_url");
   const partesRaw = readString(formData, "partes_json");
 
-  if (!titulo || !autor) {
-    redirect("/admin/reuniao-publica/musicas/nova?erro=preencha-titulo-autor");
+  if (!titulo) {
+    redirect("/admin/reuniao-publica/musicas/nova?erro=preencha-titulo");
   }
 
   let partes = normalizePartes([]);
