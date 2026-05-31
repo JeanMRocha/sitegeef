@@ -1552,10 +1552,11 @@ body.musica-display-route .musica-display-screen--reader {
 
 .musica-display-verse-label {
   margin: 0;
-  font-size: 0.68rem;
+  font-size: 0.78rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: #8a005a;
+  font-weight: 700;
 }
 
 .musica-display-verse-title {
@@ -1563,17 +1564,19 @@ body.musica-display-route .musica-display-screen--reader {
   font-family: var(--font-heading);
   font-size: clamp(0.92rem, var(--display-verse-title, 1rem), 1.24rem);
   color: #2d1f1a;
-  line-height: 1.18;
+  line-height: 1.28;
+  font-weight: 600;
 }
 
 .musica-display-verse-content pre {
   margin: 0;
   font-family: inherit;
-  font-size: var(--display-verse-text, 1rem);
-  line-height: 1.46;
+  font-size: calc(var(--display-verse-text, 1rem) * 1.08);
+  line-height: 1.68;
   white-space: pre-wrap;
   word-wrap: break-word;
   color: #1c201f;
+  font-weight: 500;
 }
 
 .musica-display-verse-text {
@@ -1581,9 +1584,10 @@ body.musica-display-route .musica-display-screen--reader {
   white-space: pre-wrap;
   word-wrap: break-word;
   font-family: inherit;
-  font-size: var(--display-verse-text, 1rem);
-  line-height: 1.46;
+  font-size: calc(var(--display-verse-text, 1rem) * 1.08);
+  line-height: 1.68;
   color: #1c201f;
+  font-weight: 500;
 }
 
 @media (max-width: 1100px) {
