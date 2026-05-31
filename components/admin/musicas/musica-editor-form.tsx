@@ -50,6 +50,17 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
     }
   }, [letras]);
 
+  // Auto-expand textarea based on content
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    // Reset height to auto to measure scroll height
+    textarea.style.height = "auto";
+    // Set height to scroll height (content height)
+    textarea.style.height = Math.max(textarea.scrollHeight, 16 * 16) + "px"; // min 16 rows
+  }, [letras]);
+
   const insertMarker = (tipo: string) => {
     const textarea = textareaRef.current;
     if (!textarea) return;
@@ -273,9 +284,8 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
             className="profile-form-input"
             value={letras}
             onChange={(e) => setLetras(e.target.value)}
-            rows={16}
             placeholder="Cole ou digite a letra aqui. Use os botões acima para marcar tipos de seções."
-            style={{ fontFamily: "monospace", fontSize: "0.9rem" }}
+            style={{ fontFamily: "monospace", fontSize: "0.9rem", minHeight: "16rem", resize: "none", overflow: "hidden" }}
           />
         </label>
       </div>
