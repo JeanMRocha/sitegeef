@@ -41,27 +41,14 @@ export default async function NovaTurmaPage() {
         </div>
       </div>
 
-      <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto' }}>
+      <div className="admin-card form-panel-centered">
         <form action={handleSubmit}>
           <LgpdFormNotice text="Usamos os dados para organizar a turma e o acompanhamento dos participantes." />
           <div className="admin-form-group">
             <label>Curso *</label>
-            <select
-              name="curso_id"
-              required
-              style={{
-                width: '100%',
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-                backgroundColor: '#fff',
-              }}
-            >
+            <select name="curso_id" required>
               <option value="">Selecione um curso</option>
-              {cursos.map((curso: any) => (
+              {cursos.map((curso: { id: string; nome: string }) => (
                 <option key={curso.id} value={curso.id}>
                   {curso.nome}
                 </option>
@@ -71,22 +58,9 @@ export default async function NovaTurmaPage() {
 
           <div className="admin-form-group">
             <label>Facilitador *</label>
-            <select
-              name="facilitador_id"
-              required
-              style={{
-                width: '100%',
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-                backgroundColor: '#fff',
-              }}
-            >
+            <select name="facilitador_id" required>
               <option value="">Selecione um facilitador</option>
-              {pessoas.map((pessoa: any) => (
+              {pessoas.map((pessoa: { id: string; nome: string }) => (
                 <option key={pessoa.id} value={pessoa.id}>
                   {pessoa.nome}
                 </option>
@@ -106,23 +80,15 @@ export default async function NovaTurmaPage() {
 
           <div className="admin-form-group">
             <label>Data de Início *</label>
-            <input
-              type="date"
-              name="data_inicio"
-              required
-            />
+            <input type="date" name="data_inicio" required />
           </div>
 
           <div className="admin-form-group">
             <label>Data de Término *</label>
-            <input
-              type="date"
-              name="data_fim"
-              required
-            />
+            <input type="date" name="data_fim" required />
           </div>
 
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+          <div className="form-actions-row">
             <button type="submit" className="admin-btn admin-btn-primary">
               ✅ Criar Turma
             </button>

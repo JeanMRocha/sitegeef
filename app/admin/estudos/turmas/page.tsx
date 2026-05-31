@@ -50,16 +50,10 @@ async function TurmasContent() {
                 {turmaList.map((turma) => (
                   <tr key={turma.id}>
                     <td>
-                      <strong>
-                      {turma.curso?.nome}
-                      </strong>
+                      <strong>{turma.curso?.nome}</strong>
                     </td>
-                    <td className="text-sm-muted">
-                      {turma.facilitador?.nome}
-                    </td>
-                    <td className="text-sm-muted">
-                      {turma.horario}
-                    </td>
+                    <td className="text-sm-muted">{turma.facilitador?.nome}</td>
+                    <td className="text-sm-muted">{turma.horario}</td>
                     <td className="text-sm-muted">
                       {new Date(turma.data_inicio).toLocaleDateString('pt-BR')} a {new Date(turma.data_fim).toLocaleDateString('pt-BR')}
                     </td>
