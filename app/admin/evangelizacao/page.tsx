@@ -6,11 +6,21 @@ export const metadata = {
   title: 'Evangelização Infantil - Admin GEEF',
 };
 
+type TurmaItem = {
+  id: string;
+  nome: string;
+  faixa_etaria?: string | null;
+  horario?: string | null;
+  sala?: string | null;
+  capacidade?: number | null;
+  status?: string | null;
+};
+
 async function EvangelizacaoContent() {
   const turmas = await getTurmas();
   const criancas = await getCriancas();
-
-  const turmasAtivas = turmas.filter((t: any) => t.status === 'ativa');
+  const turmaList = turmas as TurmaItem[];
+  const turmasAtivas = turmaList.filter((t) => t.status === 'ativa');
 
   return (
     <div className="area-page">
@@ -66,8 +76,8 @@ async function EvangelizacaoContent() {
         </div>
         <div className="table-surface">
           {turmasAtivas.length > 0 ? (
-            <div className="module-grid">
-              {turmasAtivas.map((turma: any) => (
+            <div className="module-grid grid-auto-300">
+              {turmasAtivas.map((turma) => (
                 <Link key={turma.id} href={`/admin/evangelizacao/turmas/${turma.id}`} className="module-card">
                   <h3 className="module-title">{turma.nome}</h3>
                   <div className="tag-list">
@@ -89,7 +99,7 @@ async function EvangelizacaoContent() {
 
 export default function EvangelizacaoPage() {
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <EvangelizacaoContent />
     </Suspense>
   );

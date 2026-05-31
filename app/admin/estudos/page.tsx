@@ -6,15 +6,28 @@ export const metadata = {
   title: "Estudos - Admin GEEF",
 };
 
+type CursoItem = {
+  id: string;
+  nome: string;
+  descricao?: string | null;
+  ativo?: boolean | null;
+};
+
+type TurmaItem = {
+  status?: string | null;
+};
+
 async function EstudosContent() {
   const cursos = await getCursos();
   const turmas = await getTurmas();
-  const turmasAtivas = turmas.filter((t: any) => t.status === "em_andamento");
+  const cursoList = cursos as CursoItem[];
+  const turmaList = turmas as TurmaItem[];
+  const turmasAtivas = turmaList.filter((t) => t.status === "em_andamento");
 
   const cards = [
-    { label: "Cursos ativos", value: cursos.filter((c: any) => c.ativo).length },
+    { label: "Cursos ativos", value: cursoList.filter((c) => c.ativo).length },
     { label: "Turmas em andamento", value: turmasAtivas.length },
-    { label: "Total de turmas", value: turmas.length },
+    { label: "Total de turmas", value: turmaList.length },
   ];
 
   return (
@@ -59,10 +72,9 @@ async function EstudosContent() {
           <p>Cards de acesso rápido para cada curso.</p>
         </div>
         <div className="table-surface">
-
-          {cursos.length > 0 ? (
-            <div className="module-grid" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))" }}>
-              {cursos.map((curso: any) => (
+          {cursoList.length > 0 ? (
+            <div className="module-grid grid-auto-300">
+              {cursoList.map((curso) => (
                 <Link
                   key={curso.id}
                   href={`/admin/estudos/cursos/${curso.id}`}
@@ -70,14 +82,7 @@ async function EstudosContent() {
                 >
                   <p className="module-title">{curso.nome}</p>
                   <p>{curso.descricao || "Sem descrição"}</p>
-                  <span
-                    className="inline-status"
-                    style={{
-                      marginTop: "0.75rem",
-                      backgroundColor: curso.ativo ? "rgba(34, 197, 94, 0.1)" : "rgba(107, 114, 128, 0.1)",
-                      color: curso.ativo ? "#22c55e" : "#6b7280",
-                    }}
-                  >
+                  <span className={`inline-status ${curso.ativo ? "inline-status-success" : "inline-status-neutral"} mt-075`}>
                     {curso.ativo ? "✓ Ativo" : "✕ Inativo"}
                   </span>
                 </Link>
@@ -94,7 +99,7 @@ async function EstudosContent() {
 
 export default function EstudosPage() {
   return (
-    <Suspense fallback={<div style={{ padding: "2rem", textAlign: "center" }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <EstudosContent />
     </Suspense>
   );
