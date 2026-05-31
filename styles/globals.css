@@ -428,6 +428,7 @@ body.musica-display-route .site-shell {
   background: transparent;
   box-shadow: none;
   backdrop-filter: none;
+  margin-top: 1.5rem;
   margin-bottom: 0.85rem;
 }
 
@@ -459,7 +460,8 @@ body.musica-display-route .site-shell {
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
   font-size: 0.88rem;
-  background: white;
+  background: var(--input-bg);
+  color: var(--input-text);
   cursor: pointer;
   flex: 0 0 auto;
 }
@@ -476,7 +478,7 @@ body.musica-display-route .site-shell {
   padding: 0 0.75rem;
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
-  background: white;
+  background: var(--input-bg);
   gap: 0.4rem;
   flex: 1;
   min-width: 10rem;
@@ -488,7 +490,12 @@ body.musica-display-route .site-shell {
   outline: none;
   background: transparent;
   font-size: 0.88rem;
+  color: var(--input-text);
   width: 100%;
+}
+
+.musica-toolbar-search-input::placeholder {
+  color: var(--input-placeholder);
 }
 
 .musica-toolbar-search-clear {
@@ -1170,7 +1177,7 @@ body.musica-display-route .site-shell {
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--uva);
+  color: var(--label-color);
   flex: 0 0 auto;
 }
 

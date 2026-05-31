@@ -254,6 +254,9 @@
 
   --focus-ring: rgba(138, 0, 90, 0.2);
   --focus-outline: #8a005a;
+
+  --label-color: #8a005a;
+  --label-color-muted: rgba(138, 0, 90, 0.65);
 }
 
 :root.dark {
@@ -263,4 +266,7 @@
 
   --focus-ring: rgba(224, 138, 196, 0.2);
   --focus-outline: #e08ac4;
+
+  --label-color: #f4afe7;
+  --label-color-muted: rgba(244, 175, 231, 0.85);
 }
