@@ -4,6 +4,7 @@ import { unstable_cache } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { createServiceRoleClient } from '@/lib/supabase/service-role';
 import { invalidateAdminAtendimentoCache } from '@/lib/admin/cache';
+import { applyDateRangeFilter } from '@/lib/admin/query-helpers';
 
 // Recepção
 async function loadRecepcoes(mes?: number, ano?: number) {
@@ -18,9 +19,7 @@ async function loadRecepcoes(mes?: number, ano?: number) {
     if (mes && ano) {
       const dataInicio = `${ano}-${String(mes).padStart(2, '0')}-01`;
       const dataFim = new Date(ano, mes, 0).toISOString().split('T')[0];
-      query = query
-        .gte('data', dataInicio)
-        .lte('data', dataFim);
+      query = applyDateRangeFilter(query, 'data', dataInicio, dataFim);
     }
 
     const { data, error } = await query;
@@ -146,9 +145,7 @@ async function loadAtendimentosFraterno(mes?: number, ano?: number) {
     if (mes && ano) {
       const dataInicio = `${ano}-${String(mes).padStart(2, '0')}-01`;
       const dataFim = new Date(ano, mes, 0).toISOString().split('T')[0];
-      query = query
-        .gte('data', dataInicio)
-        .lte('data', dataFim);
+      query = applyDateRangeFilter(query, 'data', dataInicio, dataFim);
     }
 
     const { data, error } = await query;

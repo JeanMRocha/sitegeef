@@ -1,6 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
+import { applyDateRangeFilter } from '@/lib/admin/query-helpers';
 
 export async function getPlanoContas(status?: string) {
   const supabase = await createClient();
@@ -186,9 +187,7 @@ export async function getMovimentosFinanceiros(mes?: number, ano?: number) {
   if (mes && ano) {
     const dataInicio = `${ano}-${String(mes).padStart(2, '0')}-01`;
     const dataFim = new Date(ano, mes, 0).toISOString().split('T')[0];
-    query = query
-      .gte('data', dataInicio)
-      .lte('data', dataFim);
+    query = applyDateRangeFilter(query, 'data', dataInicio, dataFim);
   }
 
   const { data, error } = await query;

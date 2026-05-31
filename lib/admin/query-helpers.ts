@@ -61,6 +61,25 @@ export function applySearchFilter<T extends { or: (filter: string) => T }>(
 }
 
 /**
+ * Apply an inclusive date range filter to a Supabase query builder.
+ */
+export function applyDateRangeFilter<T extends {
+  gte: (field: string, value: string) => T;
+  lte: (field: string, value: string) => T;
+}>(
+  query: T,
+  field: string,
+  start?: string | null,
+  end?: string | null
+): T {
+  if (!start || !end) {
+    return query;
+  }
+
+  return query.gte(field, start).lte(field, end);
+}
+
+/**
  * Apply status filter to items
  * Used for filtering records by status field
  * @example
