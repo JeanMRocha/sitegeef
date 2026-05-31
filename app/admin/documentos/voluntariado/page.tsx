@@ -6,15 +6,33 @@ export const metadata = {
   title: 'Serviços Voluntários - Admin GEEF',
 };
 
+type ServicoVoluntarioItem = {
+  id: string;
+  servico: string;
+  data_inicio: string;
+  status?: string | null;
+  pessoas?: { nome?: string | null } | null;
+  departamentos?: { nome?: string | null } | null;
+};
+
 async function ServicosList({ searchParams }: { searchParams: { page?: string } }) {
-  const page = parseInt(searchParams.page || '1');
+  const page = parseInt(searchParams.page || '1', 10);
 
   const { servicos, total, pageSize } = await getServicosVoluntarios(page);
+  const servicoList = servicos as ServicoVoluntarioItem[];
   const totalPages = Math.ceil(total / pageSize);
+
+  const tabs = [
+    { href: '/admin/documentos', label: '📄 Modelos' },
+    { href: '/admin/documentos/pedidos', label: '📮 Pedidos do Titular' },
+    { href: '/admin/documentos/termos', label: '✍️ Termos Assinados' },
+    { href: '/admin/documentos/consentimentos', label: '🔒 Consentimentos LGPD' },
+    { href: '/admin/documentos/voluntariado', label: '🤝 Serviços Voluntários', active: true },
+    { href: '/admin/documentos/auditoria', label: '🧭 Auditoria LGPD' },
+  ];
 
   return (
     <div>
-      {/* Header */}
       <div className="admin-page-header">
         <div>
           <h1 className="admin-page-title">Serviços Voluntários</h1>
@@ -26,111 +44,79 @@ async function ServicosList({ searchParams }: { searchParams: { page?: string } 
       </div>
 
       <div className="admin-card" style={{ marginBottom: '1rem', padding: '0.9rem 1rem' }}>
-        <p style={{ margin: 0, color: 'var(--muted)', lineHeight: 1.6 }}>
+        <p className="panel-note">
           Registre só o necessário para comprovar o vínculo e o período de atuação.
         </p>
       </div>
 
-      {/* Tabs Navigation */}
-      <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--admin-border)', paddingBottom: '1rem' }}>
-        <Link href="/admin/documentos" style={{ paddingBottom: '0.5rem', color: 'var(--muted)', textDecoration: 'none' }}>
-          📄 Modelos
-        </Link>
-        <Link href="/admin/documentos/pedidos" style={{ paddingBottom: '0.5rem', color: 'var(--muted)', textDecoration: 'none' }}>
-          📮 Pedidos do Titular
-        </Link>
-        <Link href="/admin/documentos/termos" style={{ paddingBottom: '0.5rem', color: 'var(--muted)', textDecoration: 'none' }}>
-          ✍️ Termos Assinados
-        </Link>
-        <Link href="/admin/documentos/consentimentos" style={{ paddingBottom: '0.5rem', color: 'var(--muted)', textDecoration: 'none' }}>
-          🔒 Consentimentos LGPD
-        </Link>
-        <Link href="/admin/documentos/voluntariado" style={{ paddingBottom: '0.5rem', borderBottom: '2px solid var(--primary)', color: 'var(--primary)', fontWeight: 600, textDecoration: 'none' }}>
-          🤝 Serviços Voluntários
-        </Link>
-        <Link href="/admin/documentos/auditoria" style={{ paddingBottom: '0.5rem', color: 'var(--muted)', textDecoration: 'none' }}>
-          🧭 Auditoria LGPD
-        </Link>
+      <div className="document-tabs">
+        {tabs.map((tab) => (
+          <Link
+            key={tab.href}
+            href={tab.href}
+            className={`document-tab${tab.active ? ' document-tab-active' : ''}`}
+          >
+            {tab.label}
+          </Link>
+        ))}
       </div>
 
-      {/* Table */}
-      <div className="admin-card" style={{ overflowX: 'auto' }}>
-        {servicos.length === 0 ? (
-          <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--muted)' }}>
+      <div className="admin-card">
+        {servicoList.length === 0 ? (
+          <div className="text-center-muted" style={{ padding: '2rem' }}>
             <p>Nenhum serviço voluntário registrado.</p>
-            <Link href="/admin/documentos/voluntariado/novo" className="admin-btn admin-btn-primary" style={{ marginTop: '1rem' }}>
+            <Link href="/admin/documentos/voluntariado/novo" className="admin-btn admin-btn-primary mt-1">
               ➕ Registrar primeiro serviço
             </Link>
           </div>
         ) : (
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>Voluntário</th>
-                <th>Departamento</th>
-                <th>Serviço</th>
-                <th>Data Início</th>
-                <th>Status</th>
-                <th>Ação</th>
-              </tr>
-            </thead>
-            <tbody>
-              {servicos.map((servico: any) => (
-                <tr key={servico.id}>
-                  <td style={{ fontWeight: 500 }}>{servico.pessoas?.nome || '—'}</td>
-                  <td style={{ fontSize: '0.9rem' }}>
-                    <span style={{
-                      display: 'inline-block',
-                      padding: '0.35rem 0.7rem',
-                      backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                      color: 'var(--primary)',
-                      borderRadius: '0.4rem',
-                      fontSize: '0.85rem',
-                    }}>
-                      {servico.departamentos?.nome || '—'}
-                    </span>
-                  </td>
-                  <td style={{ fontSize: '0.9rem' }}>{servico.servico}</td>
-                  <td style={{ fontSize: '0.9rem' }}>
-                    {new Date(servico.data_inicio + 'T00:00:00').toLocaleDateString('pt-BR')}
-                  </td>
-                  <td>
-                    <span style={{
-                      display: 'inline-block',
-                      padding: '0.35rem 0.7rem',
-                      backgroundColor:
-                        servico.status === 'ativo' ? 'rgba(34, 197, 94, 0.1)' :
-                        'rgba(107, 114, 128, 0.1)',
-                      color:
-                        servico.status === 'ativo' ? '#22c55e' :
-                        '#6b7280',
-                      borderRadius: '0.4rem',
-                      fontSize: '0.85rem',
-                    }}>
-                      {servico.status}
-                    </span>
-                  </td>
-                  <td>
-                    <Link href={`/admin/documentos/voluntariado/${servico.id}`} className="admin-btn admin-btn-small">
-                      ✏️ Ver
-                    </Link>
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Voluntário</th>
+                  <th>Departamento</th>
+                  <th>Serviço</th>
+                  <th>Data Início</th>
+                  <th>Status</th>
+                  <th>Ação</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {servicoList.map((servico) => (
+                  <tr key={servico.id}>
+                    <td><strong>{servico.pessoas?.nome || '—'}</strong></td>
+                    <td><span className="tag">{servico.departamentos?.nome || '—'}</span></td>
+                    <td className="text-sm-muted">{servico.servico}</td>
+                    <td className="text-sm-muted">
+                      {new Date(servico.data_inicio + 'T00:00:00').toLocaleDateString('pt-BR')}
+                    </td>
+                    <td>
+                      <span className={servico.status === 'ativo' ? 'inline-status inline-status-success' : 'inline-status inline-status-neutral'}>
+                        {servico.status}
+                      </span>
+                    </td>
+                    <td>
+                      <Link href={`/admin/documentos/voluntariado/${servico.id}`} className="admin-btn admin-btn-small">
+                        ✏️ Ver
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
 
-      {/* Pagination */}
       {totalPages > 1 && (
-        <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', marginTop: '2rem' }}>
+        <div className="page-pagination">
           {page > 1 && (
             <Link href={`/admin/documentos/voluntariado?page=${page - 1}`} className="admin-btn admin-btn-secondary">
               ← Anterior
             </Link>
           )}
-          <span style={{ padding: '0.6rem 1.2rem', alignSelf: 'center', fontWeight: 600 }}>
+          <span className="page-pagination-label">
             Página {page} de {totalPages}
           </span>
           {page < totalPages && (
@@ -147,7 +133,7 @@ async function ServicosList({ searchParams }: { searchParams: { page?: string } 
 export default async function VoluntariadoPage({ searchParams }: { searchParams: Promise<any> }) {
   const resolvedSearchParams = await searchParams;
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <ServicosList searchParams={resolvedSearchParams} />
     </Suspense>
   );
