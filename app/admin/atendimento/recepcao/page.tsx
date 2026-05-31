@@ -6,12 +6,21 @@ export const metadata = {
   title: 'Recepção - Admin GEEF',
 };
 
+type RecepcaoItem = {
+  id: string;
+  data: string;
+  pessoas_atendidas: number;
+  motivo_geral: string;
+  encaminhamento?: string | null;
+};
+
 async function RecepcaoContent({ searchParams }: { searchParams: { mes?: string; ano?: string } }) {
   const hoje = new Date();
-  const mes = searchParams.mes ? parseInt(searchParams.mes) : hoje.getMonth() + 1;
-  const ano = searchParams.ano ? parseInt(searchParams.ano) : hoje.getFullYear();
+  const mes = searchParams.mes ? parseInt(searchParams.mes, 10) : hoje.getMonth() + 1;
+  const ano = searchParams.ano ? parseInt(searchParams.ano, 10) : hoje.getFullYear();
 
   const recepcoes = await getRecepcoes(mes, ano);
+  const recepcaoList = recepcoes as RecepcaoItem[];
   const mesTexto = new Date(ano, mes - 1).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
 
   return (
@@ -31,7 +40,7 @@ async function RecepcaoContent({ searchParams }: { searchParams: { mes?: string;
 
       <section className="area-section">
         <div className="table-surface">
-          <form method="get" className="module-grid" style={{ alignItems: 'end' }}>
+          <form method="get" className="module-grid align-end">
             <label className="profile-form-field">
               <span>Mês</span>
               <select name="mes" defaultValue={mes} className="profile-form-input">
@@ -61,7 +70,7 @@ async function RecepcaoContent({ searchParams }: { searchParams: { mes?: string;
           <p>Registros do mês filtrado.</p>
         </div>
         <div className="table-surface">
-          {recepcoes.length > 0 ? (
+          {recepcaoList.length > 0 ? (
             <table className="admin-table">
               <thead>
                 <tr>
@@ -73,12 +82,12 @@ async function RecepcaoContent({ searchParams }: { searchParams: { mes?: string;
                 </tr>
               </thead>
               <tbody>
-                {recepcoes.map((rec: any) => (
+                {recepcaoList.map((rec) => (
                   <tr key={rec.id}>
-                    <td style={{ fontWeight: 500 }}>{new Date(rec.data).toLocaleDateString('pt-BR')}</td>
-                    <td style={{ fontWeight: 600, textAlign: 'center' }}>{rec.pessoas_atendidas}</td>
+                    <td><strong>{new Date(rec.data).toLocaleDateString('pt-BR')}</strong></td>
+                    <td className="table-cell-center"><strong>{rec.pessoas_atendidas}</strong></td>
                     <td>{rec.motivo_geral}</td>
-                    <td style={{ color: 'var(--muted)' }}>{rec.encaminhamento || '—'}</td>
+                    <td className="text-sm-muted">{rec.encaminhamento || '—'}</td>
                     <td>
                       <Link href={`/admin/atendimento/recepcao/${rec.id}`} className="profile-form-btn profile-form-btn-secondary">
                         Editar
@@ -100,7 +109,7 @@ async function RecepcaoContent({ searchParams }: { searchParams: { mes?: string;
 export default async function RecepcaoPage({ searchParams }: { searchParams: Promise<any> }) {
   const resolvedSearchParams = await searchParams;
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <RecepcaoContent searchParams={resolvedSearchParams} />
     </Suspense>
   );

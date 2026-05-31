@@ -8,12 +8,23 @@ export const metadata = {
 
 export const dynamic = 'force-dynamic';
 
+type FraternoItem = {
+  id: string;
+  data: string;
+  tipo?: string | null;
+  status?: string | null;
+  sigilo?: boolean | null;
+  pessoas?: { nome?: string | null } | null;
+  atendente?: { nome?: string | null } | null;
+};
+
 async function FraternoContent({ searchParams }: { searchParams: { mes?: string; ano?: string } }) {
   const hoje = new Date();
-  const mes = searchParams.mes ? parseInt(searchParams.mes) : hoje.getMonth() + 1;
-  const ano = searchParams.ano ? parseInt(searchParams.ano) : hoje.getFullYear();
+  const mes = searchParams.mes ? parseInt(searchParams.mes, 10) : hoje.getMonth() + 1;
+  const ano = searchParams.ano ? parseInt(searchParams.ano, 10) : hoje.getFullYear();
 
   const atendimentos = await getAtendimentosFraterno(mes, ano);
+  const atendimentoList = atendimentos as FraternoItem[];
   const mesTexto = new Date(ano, mes - 1).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
 
   return (
@@ -33,7 +44,7 @@ async function FraternoContent({ searchParams }: { searchParams: { mes?: string;
 
       <section className="area-section">
         <div className="table-surface">
-          <form method="get" className="module-grid" style={{ alignItems: 'end' }}>
+          <form method="get" className="module-grid align-end">
             <label className="profile-form-field">
               <span>Mês</span>
               <select name="mes" defaultValue={mes} className="profile-form-input">
@@ -63,7 +74,7 @@ async function FraternoContent({ searchParams }: { searchParams: { mes?: string;
           <p>Registros do mês filtrado.</p>
         </div>
         <div className="table-surface">
-          {atendimentos.length > 0 ? (
+          {atendimentoList.length > 0 ? (
             <table className="admin-table">
               <thead>
                 <tr>
@@ -77,11 +88,11 @@ async function FraternoContent({ searchParams }: { searchParams: { mes?: string;
                 </tr>
               </thead>
               <tbody>
-                {atendimentos.map((atend: any) => (
+                {atendimentoList.map((atend) => (
                   <tr key={atend.id}>
-                    <td style={{ fontWeight: 500 }}>{new Date(atend.data).toLocaleDateString('pt-BR')}</td>
-                    <td style={{ fontWeight: 500 }}>{atend.pessoas?.nome}</td>
-                    <td style={{ color: 'var(--muted)' }}>{atend.atendente?.nome}</td>
+                    <td><strong>{new Date(atend.data).toLocaleDateString('pt-BR')}</strong></td>
+                    <td><strong>{atend.pessoas?.nome}</strong></td>
+                    <td className="text-sm-muted">{atend.atendente?.nome}</td>
                     <td>{atend.tipo}</td>
                     <td>
                       <span className={atend.status === 'em_aberto' ? 'inline-status inline-status-success' : 'inline-status inline-status-warning'}>
@@ -114,7 +125,7 @@ async function FraternoContent({ searchParams }: { searchParams: { mes?: string;
 export default async function FraternoPage({ searchParams }: { searchParams: Promise<any> }) {
   const resolvedSearchParams = await searchParams;
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <FraternoContent searchParams={resolvedSearchParams} />
     </Suspense>
   );

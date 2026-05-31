@@ -57,6 +57,10 @@
   align-items: start;
 }
 
+.align-end {
+  align-items: end;
+}
+
 .details-summary {
   cursor: pointer;
   font-weight: 600;
