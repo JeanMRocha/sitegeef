@@ -1398,6 +1398,11 @@
   gap: 0.8rem;
 }
 
+/* Spacing variant for admin page header */
+.admin-page-header-spaced {
+  margin-bottom: 2rem;
+}
+
 .admin-dashboard-mini-card {
   display: grid;
   gap: 0.35rem;
