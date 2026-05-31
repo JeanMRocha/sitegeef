@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { getAtendimentos } from '../actions';
 import { Suspense } from 'react';
 

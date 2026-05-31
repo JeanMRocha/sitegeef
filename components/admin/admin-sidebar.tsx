@@ -28,7 +28,6 @@ export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
   const currentPerfil = usuarioSistema?.perfil ?? '';
   const { area } = useAdminShellArea();
   const showUserArea = area === 'pessoas' || area === 'perfil';
-  const showGovernanceArea = area === 'governanca';
   const showDocumentsArea = area === 'documentos';
   const showSystemArea = area === 'sistema';
   const showDashboardArea = area === 'painel';
