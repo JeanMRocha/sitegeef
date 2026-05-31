@@ -7,12 +7,25 @@ export const metadata = {
   title: 'Atendimento - Admin GEEF',
 };
 
+type AtendimentoFraternoListItem = {
+  id: string;
+  data: string;
+  tipo?: string | null;
+  sigilo?: boolean | null;
+  pessoas?: { nome?: string | null } | null;
+  atendente?: { nome?: string | null } | null;
+};
+
+type RecepcaoListItem = {
+  pessoas_atendidas: number;
+};
+
 async function AtendimentoContent() {
   const allowed = await checkPermission('pode_atendimento');
 
   if (!allowed) {
     return (
-      <div className="admin-page-header" style={{ marginBottom: '2rem' }}>
+      <div className="admin-page-header atendimento-summary">
         <div>
           <h1 className="admin-page-title">🔒 Módulo Restrito</h1>
           <p className="admin-page-subtitle">Acesso negado ao Atendimento Espiritual</p>
@@ -29,12 +42,14 @@ async function AtendimentoContent() {
   const fraternos = await getAtendimentosFraterno(mesAtual, anoAtual);
   const evangelhos = await getEvangelhasNoLar();
   const irradiacoes = await getIrradiacoes(true);
+  const recepcaoList = recepcoes as RecepcaoListItem[];
+  const fraternoList = fraternos as AtendimentoFraternoListItem[];
 
-  const totalPessoasAtendidas = recepcoes.reduce((sum: number, r: any) => sum + r.pessoas_atendidas, 0);
+  const totalPessoasAtendidas = recepcaoList.reduce((sum, r) => sum + r.pessoas_atendidas, 0);
   const summary = [
-    { label: "Recepção", value: recepcoes.length, note: "Registros no mês" },
+    { label: "Recepção", value: recepcaoList.length, note: "Registros no mês" },
     { label: "Pessoas atendidas", value: totalPessoasAtendidas, note: "Total consolidado" },
-    { label: "Fraterno", value: fraternos.length, note: "Histórico recente" },
+    { label: "Fraterno", value: fraternoList.length, note: "Histórico recente" },
     { label: "Irradiações", value: irradiacoes.length, note: "Ativas" },
     { label: "Evangelho no Lar", value: evangelhos.length, note: "Sessões registradas" },
   ];
@@ -94,25 +109,21 @@ async function AtendimentoContent() {
 
       <section className="area-section">
         <div className="admin-card">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
-            <h2 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text)' }}>Últimos atendimentos</h2>
+          <div className="atendimento-section-header">
+            <h2>Últimos atendimentos</h2>
             <Link href="/admin/atendimento/fraterno" className="admin-btn admin-btn-small">
-            Ver Todos →
+              Ver Todos →
             </Link>
           </div>
 
-          {fraternos.length > 0 ? (
-            <div className="area-panel-grid">
-              {fraternos.slice(0, 5).map((atend: any) => (
+          {fraternoList.length > 0 ? (
+            <div className="atendimento-list">
+              {fraternoList.slice(0, 5).map((atend) => (
                 <div
                   key={atend.id}
-                  className="area-panel-item"
-                  style={{
-                    borderLeft: atend.sigilo ? '4px solid #ef4444' : '4px solid #3b82f6',
-                    paddingLeft: '0.9rem',
-                  }}
+                  className={`area-panel-item atendimento-list-item ${atend.sigilo ? 'atendimento-list-item--sigilo' : ''}`}
                 >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', gap: '1rem' }}>
+                  <div className="atendimento-list-item-content">
                     <div>
                       <strong>{atend.pessoas?.nome}</strong>
                       <p>
@@ -139,7 +150,7 @@ async function AtendimentoContent() {
 
 export default function AtendimentoPage() {
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <AtendimentoContent />
     </Suspense>
   );
