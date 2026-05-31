@@ -2727,12 +2727,9 @@ a.button.musica-icon-button {
 
 .area-hero {
   padding: clamp(1.2rem, 3vw, 2rem);
-  border: 1px solid rgba(14, 36, 8, 0.08);
+  border: 1px solid var(--border-light);
   border-radius: 28px;
-  background:
-    radial-gradient(circle at top right, rgba(138, 0, 90, 0.08), transparent 24%),
-    radial-gradient(circle at bottom left, rgba(99, 213, 31, 0.08), transparent 20%),
-    linear-gradient(180deg, rgba(248, 240, 255, 0.98), rgba(236, 223, 248, 0.96));
+  background: var(--surface-primary);
   box-shadow: 0 20px 48px rgba(124, 63, 163, 0.08);
 }
 
@@ -2744,10 +2741,9 @@ a.button.musica-icon-button {
 
 .area-menu-card {
   padding: 1rem;
-  border: 1px solid rgba(14, 36, 8, 0.08);
+  border: 1px solid var(--border-light);
   border-radius: 24px;
-  background:
-    linear-gradient(180deg, rgba(250, 244, 255, 0.98), rgba(241, 231, 248, 0.96));
+  background: var(--surface-secondary);
   box-shadow: 0 18px 40px rgba(124, 63, 163, 0.08);
 }
 
@@ -2778,8 +2774,8 @@ a.button.musica-icon-button {
   gap: 0.75rem;
   padding: 0.8rem 0.9rem;
   border-radius: 16px;
-  border: 1px solid rgba(14, 36, 8, 0.08);
-  background: rgba(244, 233, 255, 0.92);
+  border: 1px solid var(--border-light);
+  background: var(--surface-tertiary);
   color: var(--text);
   text-decoration: none;
   transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
@@ -2840,8 +2836,8 @@ a.button.musica-icon-button {
 .area-summary-card {
   padding: 1rem;
   border-radius: 18px;
-  border: 1px solid rgba(14, 36, 8, 0.08);
-  background: rgba(244, 233, 255, 0.92);
+  border: 1px solid var(--border-light);
+  background: var(--surface-tertiary);
 }
 
 .area-summary-card strong {
@@ -2887,6 +2883,33 @@ a.button.musica-icon-button {
 
 .area-panel-item p {
   margin: 0.35rem 0 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.area-panel-error {
+  background: var(--status-error-bg);
+  border-color: var(--status-error-text);
+}
+
+.area-panel-error strong {
+  color: var(--status-error-text);
+}
+
+.area-panel-grid--mb {
+  margin-bottom: 1rem;
+}
+
+.area-panel-grid--mt {
+  margin-top: 0.85rem;
+}
+
+.area-section-title--sm {
+  font-size: 1rem;
+}
+
+.area-section-lead {
+  margin: 0;
   color: var(--muted);
   line-height: 1.6;
 }

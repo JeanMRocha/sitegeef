@@ -268,7 +268,7 @@ async function MinhaAreaContent() {
           <section className="area-section" id="pedido-titular">
             <h2 className="area-section-title">{copy.requestTitle}</h2>
             <div className="admin-card">
-              <p style={{ marginTop: 0, color: "var(--muted)", lineHeight: 1.6 }}>
+              <p className="area-section-lead">
                 {copy.requestLead}
               </p>
               <LgpdRequestModal
@@ -328,13 +328,13 @@ async function MinhaAreaContent() {
               <h2 className="area-section-title">{copy.lib}</h2>
               <div className="admin-card">
                 {emprestimosVencidos.length > 0 && (
-                  <div className="area-panel-item" style={{ marginBottom: "1rem", background: "rgba(239, 68, 68, 0.05)" }}>
+                  <div className="area-panel-item area-panel-error" style={{ marginBottom: "1rem" }}>
                     <strong className="inline-status inline-status-danger">
                       {locale === "en"
                         ? `Overdue loans (${emprestimosVencidos.length})`
                         : `Empréstimos vencidos (${emprestimosVencidos.length})`}
                     </strong>
-                    <div className="area-panel-grid" style={{ marginTop: "0.85rem" }}>
+                    <div className="area-panel-grid area-panel-grid--mt">
                       {emprestimosVencidos.map((e: any) => (
                         <div key={e.id} className="area-panel-item">
                           <strong>{e.exemplares?.obra?.titulo}</strong>
@@ -346,8 +346,8 @@ async function MinhaAreaContent() {
                 )}
 
                 {emprestimosAtivos.length > 0 && (
-                  <div className="area-panel-grid" style={{ marginBottom: "1rem" }}>
-                    <strong className="area-section-title" style={{ fontSize: "1rem" }}>
+                  <div className="area-panel-grid area-panel-grid--mb">
+                    <strong className="area-section-title area-section-title--sm">
                       {locale === "en"
                         ? `Active loans (${emprestimosAtivos.length})`
                         : `Empréstimos ativos (${emprestimosAtivos.length})`}
@@ -363,7 +363,7 @@ async function MinhaAreaContent() {
 
                 {reservas.length > 0 && (
                   <div className="area-panel-grid">
-                    <strong className="area-section-title" style={{ fontSize: "1rem" }}>
+                    <strong className="area-section-title area-section-title--sm">
                       {locale === "en" ? `Reservations (${reservas.length})` : `Reservas (${reservas.length})`}
                     </strong>
                     {reservas.map((r: any) => (
