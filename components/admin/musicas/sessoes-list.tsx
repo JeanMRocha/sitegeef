@@ -4,6 +4,14 @@ import { useState } from "react";
 import { SessaoActionsButton } from "./sessao-actions-button";
 import type { MusicaResumo, MusicaSessao } from "@/lib/musicas";
 
+function SessaoStatusBadge({ ativo }: { ativo: boolean }) {
+  return (
+    <span className={`inline-status inline-status--${ativo ? 'ativa' : 'inativa'}`}>
+      {ativo ? 'Ativa' : 'Inativa'}
+    </span>
+  );
+}
+
 type SessoesListProps = {
   initialSessoes: MusicaSessao[];
   musicas: MusicaResumo[];
@@ -31,13 +39,13 @@ export function SessoesList({ initialSessoes, musicas }: SessoesListProps) {
           <th>Modo</th>
           <th>Música</th>
           <th>Status</th>
-          <th style={{ textAlign: "right" }}>Ações</th>
+          <th className="table-align-right">Ações</th>
         </tr>
       </thead>
       <tbody>
         {sessoes.length === 0 ? (
           <tr>
-            <td colSpan={6} style={{ textAlign: "center", padding: "2rem" }}>
+            <td colSpan={6} className="table-cell-empty">
               Nenhuma sessão criada
             </td>
           </tr>
@@ -47,25 +55,16 @@ export function SessoesList({ initialSessoes, musicas }: SessoesListProps) {
 
             return (
               <tr key={sessao.id}>
-                <td style={{ fontWeight: 600, fontFamily: "monospace" }}>
+                <td className="table-cell-monospace">
                   {sessao.codigo_pareamento}
                 </td>
                 <td>{sessao.nome_tela || "—"}</td>
                 <td>{sessao.modo === "exibicao" ? "Exibição" : "Catálogo"}</td>
                 <td>{musica ? musica.titulo : "Nenhuma"}</td>
                 <td>
-                  <span
-                    className="inline-status"
-                    style={{
-                      backgroundColor: sessao.ativo ? "var(--status-success-bg)" : "var(--surface-secondary-hover)",
-                      color: sessao.ativo ? "var(--status-success-text)" : "var(--text-primary)",
-                      border: "1px solid var(--border-medium)",
-                    }}
-                  >
-                    {sessao.ativo ? "Ativa" : "Inativa"}
-                  </span>
+                  <SessaoStatusBadge ativo={sessao.ativo} />
                 </td>
-                <td style={{ textAlign: "right" }}>
+                <td className="table-align-right">
                   <SessaoActionsButton
                     sessao={sessao}
                     onUpdate={(updated) => handleUpdate(sessao.codigo_pareamento, updated)}
