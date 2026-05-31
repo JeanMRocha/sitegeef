@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import type { Musica } from "@/lib/musicas";
 import { formatParteTipoLabel, isTituloSameasTipo } from "@/lib/musicas";
 import { IconArrowLeft, IconExternalLink, IconPrinter } from "@/components/icons";
@@ -80,7 +79,6 @@ export function MusicaReader({
   showBranding = true,
 }: MusicaReaderProps) {
   const isDisplay = mode === "exibicao";
-  const router = useRouter();
   const displayScreenRef = useRef<HTMLElement | null>(null);
   const [viewMode, setViewMode] = useState<"letra" | "cifra">("letra");
   const [pipExpanded, setPipExpanded] = useState(false);
@@ -233,22 +231,15 @@ export function MusicaReader({
         className="musica-display-screen musica-display-screen--reader"
       >
         <div className="musica-display-floating-controls">
-          <button
-            type="button"
+          <Link
+            href="/musicas"
             className="musica-display-back-btn"
-            onClick={() => {
-              if (window.history.length > 1) {
-                router.back();
-                return;
-              }
-              router.push("/musicas");
-            }}
-            aria-label="Voltar"
-            title="Voltar"
+            aria-label="Voltar ao catálogo"
+            title="Voltar ao catálogo"
           >
             <IconArrowLeft size={16} />
             <span>Voltar</span>
-          </button>
+          </Link>
         </div>
 
         <div className="musica-display-header-16x9">
