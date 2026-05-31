@@ -30,7 +30,7 @@ export function BrandLogoDisclosure({
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <article className="public-trust-item" style={{ padding: "1rem", display: "grid", gap: "0.7rem" }}>
+    <article className="brand-disclosure-item">
       <button
         type="button"
         className="brand-disclosure-summary"
@@ -42,50 +42,30 @@ export function BrandLogoDisclosure({
       </button>
 
       <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          minHeight: expanded ? "190px" : "92px",
-          borderRadius: "0.95rem",
-          border: "1px solid var(--line)",
-          background: previewBackground,
-          overflow: "hidden",
-          boxShadow: accentPreview ? "inset 0 0 0 1px rgba(255,255,255,0.6)" : "none",
-        }}
+        className={`brand-disclosure-preview ${expanded ? 'brand-disclosure-preview-expanded' : 'brand-disclosure-preview-compact'} ${accentPreview ? 'brand-disclosure-preview-accent' : ''}`}
+        style={{ background: previewBackground }}
       >
         <img
           src={src}
           alt={title}
-          style={{
-            maxWidth: "100%",
-            maxHeight: expanded ? "170px" : "72px",
-            objectFit: "contain",
-          }}
+          className={`brand-disclosure-image ${expanded ? 'brand-disclosure-image-expanded' : 'brand-disclosure-image-compact'}`}
         />
       </div>
 
-      {expanded ? <p style={{ margin: 0, color: "var(--muted)", lineHeight: 1.55 }}>{description}</p> : null}
+      {expanded ? <p className="brand-disclosure-description">{description}</p> : null}
 
       {expanded ? (
-        <div
-          className="hero-actions"
-          style={{
-            marginTop: "0.15rem",
-            flexWrap: "nowrap",
-            gap: "0.6rem",
-          }}
-        >
-          <a href={src} download={downloadName} className="button button-secondary" style={{ flex: "1 1 0" }}>
+        <div className="brand-disclosure-actions">
+          <a href={src} download={downloadName} className="button button-secondary brand-disclosure-btn">
             {downloadLabel}
           </a>
-          <a href={src} target="_blank" rel="noreferrer" className="button button-secondary" style={{ flex: "1 1 0" }}>
+          <a href={src} target="_blank" rel="noreferrer" className="button button-secondary brand-disclosure-btn">
             {openLabel}
           </a>
         </div>
       ) : (
-        <div style={{ color: "var(--muted)", fontSize: "0.86rem", lineHeight: 1.45 }}>
-          {compactLabel} <button type="button" onClick={() => setExpanded(true)} style={{ border: 0, background: "transparent", color: "var(--uva)", padding: 0, cursor: "pointer", font: "inherit" }}>{expandLabel}</button>
+        <div className="brand-disclosure-compact-hint">
+          {compactLabel} <button type="button" onClick={() => setExpanded(true)} className="brand-disclosure-expand-btn">{expandLabel}</button>
         </div>
       )}
     </article>
