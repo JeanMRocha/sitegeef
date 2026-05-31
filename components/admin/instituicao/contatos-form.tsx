@@ -100,35 +100,21 @@ export default function ContatosForm({ tiposDisponiveis = [], pessoasDisponiveis
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ maxWidth: '600px' }}>
+    <form onSubmit={handleSubmit} className="form-max-width">
       {error && (
-        <div style={{
-          padding: '1rem',
-          marginBottom: '1rem',
-          backgroundColor: '#fee2e2',
-          color: '#dc2626',
-          borderRadius: '0.5rem',
-          border: '1px solid #fca5a5',
-        }}>
+        <div className="alert alert-error">
           {error}
         </div>
       )}
 
       {success && (
-        <div style={{
-          padding: '1rem',
-          marginBottom: '1rem',
-          backgroundColor: '#dcfce7',
-          color: '#16a34a',
-          borderRadius: '0.5rem',
-          border: '1px solid #86efac',
-        }}>
+        <div className="alert alert-success">
           Contato adicionado com sucesso!
         </div>
       )}
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label htmlFor="tipo" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+      <div className="form-group">
+        <label htmlFor="tipo" className="form-label">
           Tipo de Contato *
         </label>
         <select
@@ -137,13 +123,7 @@ export default function ContatosForm({ tiposDisponiveis = [], pessoasDisponiveis
           value={formData.tipo}
           onChange={handleChange}
           required
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            fontSize: '1rem',
-          }}
+          className="form-input"
         >
           <option value="">Selecione um tipo</option>
           {tiposDisponiveis.map(tipo => (
@@ -154,8 +134,8 @@ export default function ContatosForm({ tiposDisponiveis = [], pessoasDisponiveis
         </select>
       </div>
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label htmlFor="telefone" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+      <div className="form-group">
+        <label htmlFor="telefone" className="form-label">
           Telefone
         </label>
         <input
@@ -165,18 +145,12 @@ export default function ContatosForm({ tiposDisponiveis = [], pessoasDisponiveis
           value={formData.telefone}
           onChange={handleChange}
           placeholder="(XX) XXXXX-XXXX"
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            fontSize: '1rem',
-          }}
+          className="form-input"
         />
       </div>
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label htmlFor="whatsapp" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+      <div className="form-group">
+        <label htmlFor="whatsapp" className="form-label">
           WhatsApp
         </label>
         <input
@@ -186,18 +160,12 @@ export default function ContatosForm({ tiposDisponiveis = [], pessoasDisponiveis
           value={formData.whatsapp}
           onChange={handleChange}
           placeholder="(XX) XXXXX-XXXX"
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            fontSize: '1rem',
-          }}
+          className="form-input"
         />
       </div>
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label htmlFor="email" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+      <div className="form-group">
+        <label htmlFor="email" className="form-label">
           Email
         </label>
         <input
@@ -207,18 +175,12 @@ export default function ContatosForm({ tiposDisponiveis = [], pessoasDisponiveis
           value={formData.email}
           onChange={handleChange}
           placeholder="email@exemplo.com"
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            fontSize: '1rem',
-          }}
+          className="form-input"
         />
       </div>
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label htmlFor="instagram" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+      <div className="form-group">
+        <label htmlFor="instagram" className="form-label">
           Instagram
         </label>
         <input
@@ -228,18 +190,12 @@ export default function ContatosForm({ tiposDisponiveis = [], pessoasDisponiveis
           value={formData.instagram}
           onChange={handleChange}
           placeholder="@usuario"
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            fontSize: '1rem',
-          }}
+          className="form-input"
         />
       </div>
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label htmlFor="facebook" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+      <div className="form-group">
+        <label htmlFor="facebook" className="form-label">
           Facebook
         </label>
         <input
@@ -249,18 +205,12 @@ export default function ContatosForm({ tiposDisponiveis = [], pessoasDisponiveis
           value={formData.facebook}
           onChange={handleChange}
           placeholder="URL do Facebook"
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            fontSize: '1rem',
-          }}
+          className="form-input"
         />
       </div>
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label htmlFor="youtube" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+      <div className="form-group">
+        <label htmlFor="youtube" className="form-label">
           YouTube
         </label>
         <input
@@ -270,18 +220,12 @@ export default function ContatosForm({ tiposDisponiveis = [], pessoasDisponiveis
           value={formData.youtube}
           onChange={handleChange}
           placeholder="URL do YouTube"
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            fontSize: '1rem',
-          }}
+          className="form-input"
         />
       </div>
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label htmlFor="site" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+      <div className="form-group">
+        <label htmlFor="site" className="form-label">
           Site/Página Web
         </label>
         <input
@@ -291,18 +235,12 @@ export default function ContatosForm({ tiposDisponiveis = [], pessoasDisponiveis
           value={formData.site}
           onChange={handleChange}
           placeholder="https://exemplo.com"
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            fontSize: '1rem',
-          }}
+          className="form-input"
         />
       </div>
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label htmlFor="responsavel_id" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+      <div className="form-group">
+        <label htmlFor="responsavel_id" className="form-label">
           Responsável (Pessoa)
         </label>
         <select
@@ -310,13 +248,7 @@ export default function ContatosForm({ tiposDisponiveis = [], pessoasDisponiveis
           name="responsavel_id"
           value={formData.responsavel_id}
           onChange={handleChange}
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            fontSize: '1rem',
-          }}
+          className="form-input"
         >
           <option value="">Selecione uma pessoa (opcional)</option>
           {pessoasDisponiveis.map(pessoa => (
@@ -327,34 +259,18 @@ export default function ContatosForm({ tiposDisponiveis = [], pessoasDisponiveis
         </select>
       </div>
 
-      <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
+      <div className="form-actions">
         <button
           type="button"
           onClick={() => router.back()}
-          style={{
-            padding: '0.75rem 1.5rem',
-            backgroundColor: 'var(--bg-secondary)',
-            border: '1px solid var(--border)',
-            borderRadius: '0.5rem',
-            cursor: 'pointer',
-            fontSize: '1rem',
-          }}
+          className="form-btn form-btn-secondary"
         >
           Cancelar
         </button>
         <button
           type="submit"
           disabled={isLoading}
-          style={{
-            padding: '0.75rem 1.5rem',
-            backgroundColor: 'var(--primary)',
-            color: 'white',
-            border: 'none',
-            borderRadius: '0.5rem',
-            cursor: isLoading ? 'not-allowed' : 'pointer',
-            fontSize: '1rem',
-            opacity: isLoading ? 0.6 : 1,
-          }}
+          className={`form-btn form-btn-primary ${isLoading ? 'disabled' : ''}`}
         >
           {isLoading ? 'Adicionando...' : 'Adicionar Contato'}
         </button>
