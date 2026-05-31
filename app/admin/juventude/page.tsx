@@ -6,9 +6,18 @@ export const metadata = {
   title: 'Juventude - Admin GEEF',
 };
 
+type GrupoItem = {
+  id: string;
+  nome: string;
+  descricao?: string | null;
+  status?: string | null;
+  coordenador?: { nome?: string | null } | null;
+};
+
 async function JuventudeContent() {
   const grupos = await getGrupos();
-  const gruposAtivos = grupos.filter((g: any) => g.status === 'ativo');
+  const grupoList = grupos as GrupoItem[];
+  const gruposAtivos = grupoList.filter((g) => g.status === 'ativo');
 
   return (
     <div className="area-page">
@@ -42,8 +51,8 @@ async function JuventudeContent() {
           <p>Visão geral dos grupos cadastrados e seus coordenadores.</p>
         </div>
         <div className="table-surface">
-          {grupos.length > 0 ? (
-            <div style={{ overflowX: 'auto' }}>
+          {grupoList.length > 0 ? (
+            <div className="overflow-x-auto">
               <table className="admin-table">
                 <thead>
                   <tr>
@@ -52,16 +61,18 @@ async function JuventudeContent() {
                     <th>Descrição</th>
                     <th>Status</th>
                     <th>Ação</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {grupos.map((grupo: any) => (
+                </tr>
+              </thead>
+              <tbody>
+                  {grupoList.map((grupo) => (
                     <tr key={grupo.id}>
-                      <td style={{ fontWeight: 500 }}>{grupo.nome}</td>
-                      <td>{grupo.coordenador?.nome || '—'}</td>
-                      <td style={{ color: 'var(--muted)' }}>{grupo.descricao || '—'}</td>
                       <td>
-                        <span className={grupo.status === 'ativo' ? 'inline-status inline-status-success' : 'inline-status'}>
+                        <strong>{grupo.nome}</strong>
+                      </td>
+                      <td>{grupo.coordenador?.nome || '—'}</td>
+                      <td className="text-sm-muted">{grupo.descricao || '—'}</td>
+                      <td>
+                        <span className={grupo.status === 'ativo' ? 'inline-status inline-status-success' : 'inline-status inline-status-neutral'}>
                           {grupo.status === 'ativo' ? 'Ativo' : 'Inativo'}
                         </span>
                       </td>
@@ -86,7 +97,7 @@ async function JuventudeContent() {
 
 export default function JuventudePagePage() {
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <JuventudeContent />
     </Suspense>
   );

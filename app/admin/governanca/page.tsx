@@ -6,17 +6,34 @@ export const metadata = {
   title: "Governança - Admin GEEF",
 };
 
+type DiretoriaItem = {
+  id: string;
+  nome: string;
+  status?: string | null;
+};
+
+type CargoOcupacaoItem = {
+  id: string;
+  diretoria_id?: string | null;
+  status?: string | null;
+  data_inicio?: string | null;
+  pessoa?: { nome?: string | null } | null;
+  cargo?: { nome?: string | null } | null;
+};
+
 async function GovernancaContent() {
   const diretorias = await getDiretorias();
   const cargos = await getCargos();
   const ocupacoes = await getCargoOcupacoes();
   const assembleias = await getAssembleias();
-  const diretoriaAtiva = diretorias.find((d: any) => d.status === "ativa");
+  const diretoriaList = diretorias as DiretoriaItem[];
+  const ocupacaoList = ocupacoes as CargoOcupacaoItem[];
+  const diretoriaAtiva = diretoriaList.find((d) => d.status === "ativa");
 
   const cards = [
-    { label: "Diretorias", value: diretorias.length },
+    { label: "Diretorias", value: diretoriaList.length },
     { label: "Cargos cadastrados", value: cargos.length },
-    { label: "Pessoas em cargo", value: ocupacoes.filter((o: any) => o.status === "ativo").length },
+    { label: "Pessoas em cargo", value: ocupacaoList.filter((o) => o.status === "ativo").length },
     { label: "Assembleias", value: assembleias.length },
   ];
 
@@ -72,7 +89,7 @@ async function GovernancaContent() {
               <p>Composição atual e ocupações em vigor.</p>
             </div>
 
-            {ocupacoes.length > 0 ? (
+            {ocupacaoList.length > 0 ? (
               <table className="admin-table">
                 <thead>
                   <tr>
@@ -83,13 +100,15 @@ async function GovernancaContent() {
                   </tr>
                 </thead>
                 <tbody>
-                  {ocupacoes
-                    .filter((o: any) => o.diretoria_id === diretoriaAtiva.id && o.status === "ativo")
-                    .map((ocupacao: any) => (
+                  {ocupacaoList
+                    .filter((o) => o.diretoria_id === diretoriaAtiva.id && o.status === "ativo")
+                    .map((ocupacao) => (
                       <tr key={ocupacao.id}>
-                        <td style={{ fontWeight: 500 }}>{ocupacao.pessoa?.nome}</td>
+                        <td>
+                          <strong>{ocupacao.pessoa?.nome}</strong>
+                        </td>
                         <td>{ocupacao.cargo?.nome}</td>
-                        <td style={{ color: "var(--muted)" }}>
+                        <td className="text-sm-muted">
                           {ocupacao.data_inicio ? new Date(ocupacao.data_inicio).toLocaleDateString("pt-BR") : "—"}
                         </td>
                         <td><span className="inline-status inline-status-success">Ativo</span></td>
@@ -109,7 +128,7 @@ async function GovernancaContent() {
 
 export default function GovernancaPage() {
   return (
-    <Suspense fallback={<div style={{ padding: "2rem", textAlign: "center" }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <GovernancaContent />
     </Suspense>
   );
