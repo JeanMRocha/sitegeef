@@ -1,6 +1,8 @@
 import { getAtendimentos } from '../actions';
 import { Suspense } from 'react';
 
+type AtendimentoApse = Awaited<ReturnType<typeof getAtendimentos>>[number];
+
 export const metadata = {
   title: 'Atendimentos APSE - Admin GEEF',
 };
@@ -19,7 +21,7 @@ async function AtendimentosContent() {
 
       <div className="admin-card">
         {atendimentos.length > 0 ? (
-          <div style={{ overflowX: 'auto' }}>
+          <div className="overflow-x-auto">
             <table className="admin-table">
               <thead>
                 <tr>
@@ -32,28 +34,28 @@ async function AtendimentosContent() {
                 </tr>
               </thead>
               <tbody>
-                {atendimentos.map((atend: any) => (
+                {atendimentos.map((atend: AtendimentoApse) => (
                   <tr key={atend.id}>
-                    <td style={{ fontSize: '0.9rem', fontWeight: 500 }}>
+                    <td className="text-sm-500">
                       {new Date(atend.data).toLocaleDateString('pt-BR')}
                     </td>
-                    <td style={{ fontWeight: 500 }}>
+                    <td className="text-sm-500">
                       {atend.tipo === 'visita' && '🏠'}
                       {atend.tipo === 'campanha' && '📢'}
                       {atend.tipo === 'cesta' && '🎁'}
                       {atend.tipo === 'encaminhamento' && '➡️'}
                       {' '}{atend.tipo}
                     </td>
-                    <td style={{ fontSize: '0.9rem' }}>
+                    <td className="text-sm-muted">
                       {atend.familia?.responsavel_id ? 'Registrada' : '—'}
                     </td>
-                    <td style={{ fontSize: '0.9rem' }}>
+                    <td className="text-sm-muted">
                       {atend.pessoa?.nome}
                     </td>
-                    <td style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>
+                    <td className="text-xs-muted">
                       {atend.responsavel?.nome}
                     </td>
-                    <td style={{ fontSize: '0.85rem' }}>
+                    <td className="text-xs-muted">
                       {atend.descricao || '—'}
                     </td>
                   </tr>
@@ -62,7 +64,7 @@ async function AtendimentosContent() {
             </table>
           </div>
         ) : (
-          <p style={{ color: 'var(--muted)', textAlign: 'center' }}>Nenhum atendimento registrado.</p>
+          <p className="text-center-muted">Nenhum atendimento registrado.</p>
         )}
       </div>
     </div>
@@ -71,7 +73,7 @@ async function AtendimentosContent() {
 
 export default function AtendimentosPage() {
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <AtendimentosContent />
     </Suspense>
   );

@@ -68,6 +68,34 @@
   border: 1px solid var(--line);
 }
 
+.overflow-x-auto {
+  overflow-x: auto;
+}
+
+.text-sm-500 {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.text-xs-muted {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.text-sm-muted {
+  font-size: 0.9rem;
+}
+
+.text-center-muted {
+  color: var(--muted);
+  text-align: center;
+}
+
+.suspense-center {
+  padding: 2rem;
+  text-align: center;
+}
+
 /* Músicas */
 .musica-page {
   width: min(1200px, calc(100% - 2rem));
