@@ -55,7 +55,7 @@ export default async function MusicaExibicaoPage({ params }: PageProps) {
   }
 
   if (exibicao.tipo === "musica") {
-    return <MusicaReader musica={exibicao.musica} logoSrc={brand.logoSemFundoUrl} mode="exibicao" showBackLink={false} showBranding={false} />;
+    return <MusicaReader musica={exibicao.musica} logoSrc={brand.logoSemFundoUrl} showBranding={false} />;
   }
 
   return (
