@@ -139,7 +139,7 @@ async function ObservabilityContent({ searchParams }: { searchParams: SearchPara
           </div>
         </div>
 
-        <div className="tag-list" style={{ marginTop: "1rem" }}>
+        <div className="tag-list mt-1">
           {tabs.map((item) => (
             <Link
               key={item.key}
@@ -165,22 +165,22 @@ async function ObservabilityContent({ searchParams }: { searchParams: SearchPara
               <h2>Atalhos</h2>
               <p>Entradas rápidas para triagem e conformidade.</p>
             </div>
-            <div className="module-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))" }}>
+            <div className="module-grid grid-auto-220">
               <Link href={buildTabHref(baseParams, "erros")} className="module-card">
                 <p className="module-title">Erros</p>
-                <p style={{ color: "var(--muted)" }}>Incidentes de runtime e payload técnico.</p>
+                <p className="text-muted">Incidentes de runtime e payload técnico.</p>
               </Link>
               <Link href={buildTabHref(baseParams, "supabase")} className="module-card">
                 <p className="module-title">Supabase</p>
-                <p style={{ color: "var(--muted)" }}>Falhas silenciosas e integrações com fallback.</p>
+                <p className="text-muted">Falhas silenciosas e integrações com fallback.</p>
               </Link>
               <Link href={buildTabHref(baseParams, "lgpd")} className="module-card">
                 <p className="module-title">LGPD</p>
-                <p style={{ color: "var(--muted)" }}>Cookies, consentimentos e severidade.</p>
+                <p className="text-muted">Cookies, consentimentos e severidade.</p>
               </Link>
               <Link href={buildTabHref(baseParams, "fila")} className="module-card">
                 <p className="module-title">Fila</p>
-                <p style={{ color: "var(--muted)" }}>Pedidos do titular e notificações.</p>
+                <p className="text-muted">Pedidos do titular e notificações.</p>
               </Link>
             </div>
           </section>
@@ -190,10 +190,10 @@ async function ObservabilityContent({ searchParams }: { searchParams: SearchPara
               <h2>Resumo recente</h2>
               <p>Últimos incidentes e trilha LGPD condensados.</p>
             </div>
-            <div className="module-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))" }}>
+            <div className="module-grid grid-auto-300">
               <div className="admin-card">
                 <strong>Eventos recentes</strong>
-                <div className="area-panel-grid" style={{ marginTop: "0.75rem" }}>
+                <div className="area-panel-grid mt-075">
                   {recentOps.length === 0 ? (
                     <div className="area-empty">Nenhum evento encontrado.</div>
                   ) : (
@@ -209,7 +209,7 @@ async function ObservabilityContent({ searchParams }: { searchParams: SearchPara
 
               <div className="admin-card">
                 <strong>LGPD por severidade</strong>
-                <div className="area-summary-grid" style={{ marginTop: "0.75rem" }}>
+                <div className="area-summary-grid mt-075">
                   {(["info", "low", "medium", "high", "critical"] as const).map((severity) => (
                     <div key={severity} className="area-summary-card">
                       <strong>{lgpdSeverityCounts[severity] || 0}</strong>
@@ -254,7 +254,7 @@ async function ObservabilityContent({ searchParams }: { searchParams: SearchPara
                   <input name="q" defaultValue={q || ""} className="profile-form-input" placeholder="texto da mensagem" />
                 </label>
 
-                <div className="area-panel-item" style={{ alignSelf: "end" }}>
+                <div className="area-panel-item align-start">
                   <button type="submit" className="profile-form-btn profile-form-btn-primary">Filtrar</button>
                   <Link href="/admin/observability?tab=erros" className="profile-form-btn profile-form-btn-secondary">Limpar</Link>
                 </div>
@@ -274,7 +274,7 @@ async function ObservabilityContent({ searchParams }: { searchParams: SearchPara
                 <div className="area-panel-grid">
                   {recentOps.map((event) => (
                     <article key={event.id} className="area-panel-item">
-                      <div className="area-hero-top" style={{ alignItems: "start" }}>
+                      <div className="area-hero-top align-start">
                         <div>
                           <h3 className="module-title">{event.message}</h3>
                           <p className="area-subtitle">
@@ -288,18 +288,8 @@ async function ObservabilityContent({ searchParams }: { searchParams: SearchPara
                       </div>
 
                       <details>
-                        <summary style={{ cursor: "pointer", fontWeight: 600 }}>Ver detalhes técnicos</summary>
-                        <pre
-                          style={{
-                            marginTop: "0.75rem",
-                            padding: "0.9rem",
-                            borderRadius: "0.75rem",
-                            overflowX: "auto",
-                            background: "var(--admin-bg)",
-                            border: "1px solid var(--line)",
-                            fontSize: "0.82rem",
-                          }}
-                        >
+                        <summary className="details-summary">Ver detalhes técnicos</summary>
+                        <pre className="details-box">
                           {JSON.stringify(event.payload, null, 2)}
                         </pre>
                       </details>
@@ -326,7 +316,7 @@ async function ObservabilityContent({ searchParams }: { searchParams: SearchPara
                 <div className="area-panel-grid">
                   {supabaseEvents.map((event) => (
                     <article key={event.id} className="area-panel-item">
-                      <div className="area-hero-top" style={{ alignItems: "start" }}>
+                      <div className="area-hero-top align-start">
                         <div>
                           <h3 className="module-title">{event.message}</h3>
                           <p className="area-subtitle">
@@ -338,7 +328,7 @@ async function ObservabilityContent({ searchParams }: { searchParams: SearchPara
                           <span className="tag">{event.event_type}</span>
                         </div>
                       </div>
-                      <p className="area-subtitle" style={{ marginTop: "0.4rem" }}>
+                      <p className="area-subtitle mt-035">
                         Operação: {String(event.payload.operation || "—")}
                       </p>
                     </article>
@@ -373,7 +363,7 @@ async function ObservabilityContent({ searchParams }: { searchParams: SearchPara
               <p>Resumo por categoria para leitura rápida.</p>
             </div>
             <div className="admin-card">
-              <div className="module-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))" }}>
+              <div className="module-grid grid-auto-220">
                 {Object.values(
                   lgpdData.registros.reduce<Record<string, { category: string; total: number; accepted: number; rejected: number; latest: string }>>(
                     (acc, item) => {
@@ -402,7 +392,7 @@ async function ObservabilityContent({ searchParams }: { searchParams: SearchPara
                   .map((item) => (
                     <div key={item.category} className="area-panel-item">
                       <strong>{item.category}</strong>
-                      <p style={{ marginTop: "0.35rem" }}>
+                      <p className="mt-035">
                         Total: {item.total} <br />
                         Aceitos: {item.accepted} <br />
                         Recusados: {item.rejected} <br />
@@ -462,10 +452,10 @@ async function ObservabilityContent({ searchParams }: { searchParams: SearchPara
               <h2>Notificações</h2>
               <p>Entregas fora da interface e pendências de triagem.</p>
             </div>
-            <div className="module-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))" }}>
+            <div className="module-grid grid-auto-300">
               <div className="admin-card">
                 <strong>Notificações LGPD</strong>
-                <div className="area-panel-grid" style={{ marginTop: "0.75rem" }}>
+                <div className="area-panel-grid mt-075">
                   {lgpdData.notificacoes.length === 0 ? (
                     <div className="area-empty">Sem notificações recentes.</div>
                   ) : (
@@ -481,7 +471,7 @@ async function ObservabilityContent({ searchParams }: { searchParams: SearchPara
 
               <div className="admin-card">
                 <strong>Eventos técnicos</strong>
-                <div className="area-panel-grid" style={{ marginTop: "0.75rem" }}>
+                <div className="area-panel-grid mt-075">
                   {lgpdData.eventos.length === 0 ? (
                     <div className="area-empty">Sem eventos LGPD.</div>
                   ) : (
@@ -489,7 +479,7 @@ async function ObservabilityContent({ searchParams }: { searchParams: SearchPara
                       <div key={item.id} className="area-panel-item">
                         <strong>{item.source}</strong>
                         <p>{item.level} · {item.message}</p>
-                        <p style={{ marginTop: "0.35rem" }}>{formatDate(item.created_at)}</p>
+                        <p className="mt-035">{formatDate(item.created_at)}</p>
                       </div>
                     ))
                   )}

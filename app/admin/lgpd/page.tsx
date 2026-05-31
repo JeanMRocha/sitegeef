@@ -113,7 +113,7 @@ export default async function AdminLgpdPage() {
           </div>
         </div>
 
-        <div className="area-summary-grid" style={{ marginTop: "1rem" }}>
+        <div className="area-summary-grid mt-1">
           {(["info", "low", "medium", "high", "critical"] as const).map((severity) => (
             <div key={severity} className="area-summary-card">
               <strong>{severityCounts[severity] || 0}</strong>
@@ -126,14 +126,14 @@ export default async function AdminLgpdPage() {
       <section className="area-section">
         <h2 className="area-section-title">Preferências</h2>
         <div className="admin-card">
-          <div className="module-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))" }}>
+          <div className="module-grid grid-auto-220">
             {groupedByCategory.length === 0 ? (
               <div className="area-empty">Nenhum registro LGPD encontrado.</div>
             ) : (
               groupedByCategory.map((item) => (
                 <div key={item.category} className="area-panel-item">
                   <strong>{item.category}</strong>
-                  <p style={{ marginTop: "0.35rem" }}>
+                  <p className="mt-035">
                     Total: {item.total} <br />
                     Aceitos: {item.accepted} <br />
                     Recusados: {item.rejected} <br />
@@ -219,10 +219,10 @@ export default async function AdminLgpdPage() {
 
       <section className="area-section">
         <h2 className="area-section-title">Notificações e auditoria</h2>
-        <div className="module-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))" }}>
+        <div className="module-grid grid-auto-300">
           <div className="admin-card">
             <strong>Notificações LGPD</strong>
-            <div className="area-panel-grid" style={{ marginTop: "0.75rem" }}>
+            <div className="area-panel-grid mt-075">
               {notificacoes.length === 0 ? (
                 <div className="area-empty">Sem notificações recentes.</div>
               ) : (
@@ -238,7 +238,7 @@ export default async function AdminLgpdPage() {
 
           <div className="admin-card">
             <strong>Eventos técnicos</strong>
-            <div className="area-panel-grid" style={{ marginTop: "0.75rem" }}>
+            <div className="area-panel-grid mt-075">
               {eventos.length === 0 ? (
                 <div className="area-empty">Sem eventos LGPD.</div>
               ) : (
@@ -246,7 +246,7 @@ export default async function AdminLgpdPage() {
                   <div key={item.id} className="area-panel-item">
                     <strong>{item.source}</strong>
                     <p>{item.level} · {item.message}</p>
-                    <p style={{ marginTop: "0.35rem" }}>{formatDate(item.created_at)}</p>
+                    <p className="mt-035">{formatDate(item.created_at)}</p>
                   </div>
                 ))
               )}
