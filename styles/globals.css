@@ -91,6 +91,20 @@
   text-align: center;
 }
 
+.page-pagination {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.page-pagination-label {
+  padding: 0.6rem 1.2rem;
+  align-self: center;
+  font-weight: 600;
+}
+
 .suspense-center {
   padding: 2rem;
   text-align: center;
