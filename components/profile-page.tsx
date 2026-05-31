@@ -73,7 +73,7 @@ export async function ProfilePageView({ locale = "pt" }: Readonly<ProfilePageVie
               </span>
               <h1>{displayName}</h1>
               <p>{user.email}</p>
-              <div className="tag-list profile-role-row" style={{ marginTop: "0.75rem" }}>
+              <div className="tag-list profile-role-row">
                 <span className="tag">{roleLabel}</span>
                 <span className="tag">{locale === "en" ? "Secure access" : "Acesso seguro"}</span>
               </div>

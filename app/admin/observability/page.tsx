@@ -256,7 +256,7 @@ async function ObservabilityContent({ searchParams }: { searchParams: SearchPara
 
                 <div className="area-panel-item" style={{ alignSelf: "end" }}>
                   <button type="submit" className="profile-form-btn profile-form-btn-primary">Filtrar</button>
-                  <a href="/admin/observability?tab=erros" className="profile-form-btn profile-form-btn-secondary">Limpar</a>
+                  <Link href="/admin/observability?tab=erros" className="profile-form-btn profile-form-btn-secondary">Limpar</Link>
                 </div>
               </form>
             </div>

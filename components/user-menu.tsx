@@ -211,9 +211,9 @@ export function UserMenu({
                 </button>
               </div>
             </div>
-            <a href="/logout" className="site-header-user-logout">
+            <Link href="/logout" className="site-header-user-logout">
               <span>🚪</span> {copy.header.signOut}
-            </a>
+            </Link>
           </nav>
         </div>
       )}

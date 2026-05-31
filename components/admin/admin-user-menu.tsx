@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { MoonIcon, SunIcon } from "@/components/site-icons";
 import { clearUserData } from "@/hooks/useUserPersistence";
 import { useTheme } from "@/hooks/useTheme";
-import { getMultilingualCopy, type Locale } from "@/lib/multilingual/client";
+import { getMultilingualCopy, MULTILINGUAL_COOKIE_NAME, type Locale } from "@/lib/multilingual/client";
 
 type AdminUserMenuProps = {
   locale: Locale;
@@ -25,11 +25,17 @@ function getInitials(value?: string) {
 
 export function AdminUserMenu({ locale, email, fullName }: AdminUserMenuProps) {
   const [open, setOpen] = useState(false);
+  const [currentLocale, setCurrentLocale] = useState(locale);
   const menuRef = useRef<HTMLDivElement>(null);
   const { theme, toggleTheme } = useTheme();
   const copy = getMultilingualCopy(locale);
   const displayName = fullName || email || "Usuário";
   const initials = getInitials(displayName);
+  const nextLocale = currentLocale === "pt" ? "en" : "pt";
+
+  useEffect(() => {
+    setCurrentLocale(locale);
+  }, [locale]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -43,6 +49,20 @@ export function AdminUserMenu({ locale, email, fullName }: AdminUserMenuProps) {
       return () => document.removeEventListener("mousedown", handleClickOutside);
     }
   }, [open]);
+
+  const handleLocaleToggle = () => {
+    document.cookie = `${MULTILINGUAL_COOKIE_NAME}=${nextLocale}; path=/; max-age=31536000; samesite=lax`;
+
+    try {
+      localStorage.setItem(MULTILINGUAL_COOKIE_NAME, nextLocale);
+    } catch {
+      // Cookie already persists the selected locale.
+    }
+
+    setCurrentLocale(nextLocale);
+    setOpen(false);
+    window.location.reload();
+  };
 
   return (
     <div ref={menuRef} className="admin-user-menu">
@@ -78,8 +98,18 @@ export function AdminUserMenu({ locale, email, fullName }: AdminUserMenuProps) {
             </Link>
 
             <div className="admin-user-menu-controls">
-              <div className="admin-user-menu-controls-label">Tema</div>
+              <div className="admin-user-menu-controls-label">Idioma e tema</div>
               <div className="admin-user-menu-controls-row">
+                <button
+                  type="button"
+                  onClick={handleLocaleToggle}
+                  className="site-icon-toggle site-icon-toggle--locale"
+                  title={`${copy.header.language}: ${currentLocale === "pt" ? copy.header.english : copy.header.portuguese}`}
+                  aria-label={`${copy.header.language}: ${currentLocale === "pt" ? copy.header.english : copy.header.portuguese}`}
+                >
+                  <span aria-hidden="true">🌐</span>
+                  <span className="site-icon-toggle-text">{currentLocale.toUpperCase()}</span>
+                </button>
                 <button
                   type="button"
                   onClick={toggleTheme}
@@ -96,7 +126,7 @@ export function AdminUserMenu({ locale, email, fullName }: AdminUserMenuProps) {
               </div>
             </div>
 
-            <a
+            <Link
               href="/logout"
               className="admin-user-menu-item admin-user-menu-item-logout"
               onClick={() => {
@@ -105,7 +135,7 @@ export function AdminUserMenu({ locale, email, fullName }: AdminUserMenuProps) {
               }}
             >
               🚪 Sair
-            </a>
+            </Link>
           </nav>
         </div>
       )}

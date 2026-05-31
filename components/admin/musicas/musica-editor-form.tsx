@@ -145,7 +145,7 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
           </label>
 
           <div className="flex-center-gap flex-end-align">
-            <label className="profile-form-field profile-form-field-no-margin flex-1"">
+            <label className="profile-form-field profile-form-field-no-margin flex-1">
               <span>Autor (opcional)</span>
               <div className="flex-center-gap">
                 <select
@@ -204,13 +204,12 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
 
         <label className="profile-form-field">
           <span>Versão</span>
-          <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+          <div className="flex-center-gap">
             <select
-              className="profile-form-input"
+              className="profile-form-input flex-1"
               name="versao"
               value={versaoSelecionada}
               onChange={(e) => setVersaoSelecionada(e.target.value)}
-              style={{ flex: 1 }}
             >
               <option value="">Selecione...</option>
               {versoes.map((versao) => (
@@ -222,8 +221,7 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
             <button
               type="button"
               onClick={() => setVersaoModal(true)}
-              className="admin-btn admin-btn-small"
-              style={{ padding: "0.5rem 0.75rem" }}
+              className="admin-btn admin-btn-small admin-btn-compact"
               title="Criar nova versão"
             >
               +
@@ -381,24 +379,14 @@ export function MusicaEditorForm({ musica, autores: initialAutores = [], versoes
             value={novoAutor}
             onChange={(e) => setNovoAutor(e.target.value)}
             placeholder="Nome do autor"
-            style={{
-              width: "100%",
-              padding: "0.75rem",
-              border: "1px solid var(--input-border)",
-              borderRadius: "0.5rem",
-              fontSize: "1rem",
-              marginBottom: "1.5rem",
-              boxSizing: "border-box",
-              backgroundColor: "var(--input-bg)",
-              color: "var(--input-text)",
-            }}
+            className="modal-input"
             onKeyPress={(e) => {
               if (e.key === "Enter") {
                 handleSaveAutor();
               }
             }}
           />
-          <div style={{ display: "flex", gap: "0.75rem", justifyContent: "flex-end" }}>
+          <div className="modal-actions">
             <button
               type="button"
               onClick={() => setAutorModal(false)}

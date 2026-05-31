@@ -257,6 +257,137 @@ body.musica-display-route .site-shell {
   margin-left: auto;
 }
 
+.musica-control-remote-page {
+  min-height: 100vh;
+  background: var(--bg);
+  padding-bottom: 2rem;
+  font-family: var(--font-body);
+}
+
+.musica-control-remote-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--primary);
+  color: #fff;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.musica-control-remote-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.musica-control-remote-title {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.musica-control-remote-open-display {
+  padding: 0.7rem 1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.musica-control-remote-search {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  box-sizing: border-box;
+}
+
+.musica-control-remote-grid {
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.musica-control-remote-empty {
+  grid-column: 1 / -1;
+  padding: 3rem 1rem;
+  text-align: center;
+  color: var(--text-muted, #666);
+}
+
+.musica-control-remote-empty-text {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.musica-control-remote-card {
+  padding: 1.5rem;
+  background: var(--surface, #fff);
+  color: var(--text, #333);
+  border: 2px solid var(--border-medium, #ddd);
+  border-radius: 0.75rem;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.musica-control-remote-card:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.musica-control-remote-card:disabled {
+  cursor: not-allowed;
+}
+
+.musica-control-remote-card.is-active {
+  background: var(--primary, #8a005a);
+  color: #fff;
+  border: 3px solid var(--primary, #8a005a);
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(138, 0, 90, 0.2);
+}
+
+.musica-control-remote-card.is-loading:not(.is-active) {
+  opacity: 0.5;
+}
+
+.musica-control-remote-card-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.musica-control-remote-card-author {
+  margin: 0.5rem 0 0;
+  font-size: 0.95rem;
+  opacity: 0.7;
+}
+
+.musica-control-remote-card-tone {
+  margin: 0.25rem 0 0;
+  font-size: 0.85rem;
+  opacity: 0.6;
+}
+
+.musica-control-remote-card-status {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.musica-pip-content iframe,
+.musica-pip-content audio {
+  border-radius: 0.5rem;
+}
+
 .musica-toolbar-actions {
   display: flex;
   align-items: center;
@@ -1206,6 +1337,14 @@ body.musica-display-route .musica-display-screen--reader {
 
   .musica-display-body-16x9 {
     padding-top: 0.85rem;
+  }
+
+  .musica-control-remote-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .musica-control-remote-title {
+    font-size: 1.25rem;
   }
 }
 
@@ -5281,6 +5420,33 @@ a.button.musica-icon-button {
 
 .profile-role-row {
   margin-top: 0.75rem;
+}
+
+.descritivo-field {
+  gap: 0.6rem;
+}
+
+.descritivo-field--full {
+  grid-column: 1 / -1;
+}
+
+.descritivo-field-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.descritivo-field-count {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.descritivo-field-note {
+  font-size: 0.82rem;
+  color: var(--muted);
 }
 
 .profile-summary-card--highlight {

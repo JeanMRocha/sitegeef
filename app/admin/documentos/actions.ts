@@ -61,7 +61,7 @@ async function notifyTitularRequestStakeholders(
       .filter(Boolean)
       .join('\n');
 
-    let targetPessoaId = solicitacao.responsavel_id || null;
+    const targetPessoaId = solicitacao.responsavel_id || null;
     let targetNome = 'Encarregado LGPD';
     let targetEmail = fallbackEmail;
     let notificacaoId: string | null = null;

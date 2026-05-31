@@ -160,9 +160,9 @@ async function AuditoriaContent({ searchParams }: { searchParams: { source?: str
               <button type="submit" className="profile-form-btn profile-form-btn-primary">
                 Filtrar
               </button>
-              <a href="/admin/documentos/auditoria" className="profile-form-btn profile-form-btn-secondary">
+              <Link href="/admin/documentos/auditoria" className="profile-form-btn profile-form-btn-secondary">
                 Limpar
-              </a>
+              </Link>
             </div>
           </form>
         </div>

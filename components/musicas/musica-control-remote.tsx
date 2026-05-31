@@ -58,7 +58,6 @@ export function MusicaControlRemote({ codigo, initialSessao, musicas }: MusicaCo
 
   useEffect(() => {
     let cancelled = false;
-    let intervalId: number | undefined;
 
     async function refresh() {
       try {
@@ -82,7 +81,8 @@ export function MusicaControlRemote({ codigo, initialSessao, musicas }: MusicaCo
       }
     }
 
-    intervalId = window.setInterval(refresh, 3000);
+    const intervalId = window.setInterval(refresh, 3000);
+    refresh();
 
     return () => {
       cancelled = true;
@@ -93,39 +93,14 @@ export function MusicaControlRemote({ codigo, initialSessao, musicas }: MusicaCo
   }, [codigo]);
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        backgroundColor: "var(--bg-light, #ffffff)",
-        paddingBottom: "2rem",
-        fontFamily: "system-ui, -apple-system, sans-serif",
-      }}
-    >
-      <div
-        style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 100,
-          backgroundColor: "var(--primary, #8a005a)",
-          color: "white",
-          padding: "1.5rem",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1rem", marginBottom: "1rem" }}>
-          <h1 style={{ margin: 0, fontSize: "1.5rem" }}>Controle de Sessão</h1>
+    <div className="musica-control-remote-page">
+      <div className="musica-control-remote-header">
+        <div className="musica-control-remote-toolbar">
+          <h1 className="musica-control-remote-title">Controle de Sessão</h1>
           <button
             type="button"
             onClick={openDisplayPopup}
-            style={{
-              padding: "0.7rem 1rem",
-              borderRadius: "999px",
-              border: "1px solid rgba(255,255,255,0.35)",
-              background: "rgba(255,255,255,0.12)",
-              color: "#fff",
-              fontWeight: 700,
-              cursor: "pointer",
-            }}
+            className="musica-control-remote-open-display"
           >
             Abrir exibição
           </button>
@@ -135,35 +110,14 @@ export function MusicaControlRemote({ codigo, initialSessao, musicas }: MusicaCo
           placeholder="Buscar música..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          style={{
-            width: "100%",
-            padding: "0.75rem",
-            fontSize: "1rem",
-            border: "none",
-            borderRadius: "0.5rem",
-            boxSizing: "border-box",
-          }}
+          className="musica-control-remote-search"
         />
       </div>
 
-      <div
-        style={{
-          padding: "1rem",
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-          gap: "1rem",
-        }}
-      >
+      <div className="musica-control-remote-grid">
         {filteredMusicas.length === 0 ? (
-          <div
-            style={{
-              gridColumn: "1 / -1",
-              padding: "3rem 1rem",
-              textAlign: "center",
-              color: "var(--text-muted, #666)",
-            }}
-          >
-            <p style={{ fontSize: "1.1rem", margin: 0 }}>Nenhuma música encontrada</p>
+          <div className="musica-control-remote-empty">
+            <p className="musica-control-remote-empty-text">Nenhuma música encontrada</p>
           </div>
         ) : (
           filteredMusicas.map((musica) => {
@@ -174,40 +128,22 @@ export function MusicaControlRemote({ codigo, initialSessao, musicas }: MusicaCo
                 key={musica.id}
                 onClick={() => handleSelectMusica(musica.id)}
                 disabled={loading}
-                style={{
-                  padding: "1.5rem",
-                  backgroundColor: isActive ? "var(--primary, #8a005a)" : "white",
-                  color: isActive ? "white" : "var(--text-dark, #333)",
-                  border: isActive ? "3px solid var(--primary, #8a005a)" : "2px solid var(--border-medium, #ddd)",
-                  borderRadius: "0.75rem",
-                  cursor: "pointer",
-                  textAlign: "left",
-                  transition: "all 0.2s ease",
-                  opacity: loading && !isActive ? 0.5 : 1,
-                  transform: isActive ? "scale(1.02)" : "scale(1)",
-                  boxShadow: isActive ? "0 4px 12px rgba(138, 0, 90, 0.2)" : "0 2px 4px rgba(0, 0, 0, 0.05)",
-                }}
+                className={`musica-control-remote-card ${isActive ? "is-active" : ""} ${loading ? "is-loading" : ""}`}
+                data-active={isActive}
               >
-                <h2 style={{ margin: "0 0 0.5rem", fontSize: "1.25rem", fontWeight: 600 }}>
+                <h2 className="musica-control-remote-card-title">
                   {musica.titulo}
                 </h2>
-                <p style={{ margin: "0.5rem 0 0", fontSize: "0.95rem", opacity: isActive ? 0.9 : 0.7 }}>
+                <p className="musica-control-remote-card-author">
                   {musica.autor}
                 </p>
                 {musica.tom && (
-                  <p style={{ margin: "0.25rem 0 0", fontSize: "0.85rem", opacity: isActive ? 0.8 : 0.6 }}>
+                  <p className="musica-control-remote-card-tone">
                     Tom: {musica.tom}
                   </p>
                 )}
                 {isActive && (
-                  <div
-                    style={{
-                      marginTop: "0.75rem",
-                      fontSize: "0.9rem",
-                      fontWeight: 600,
-                      opacity: 0.9,
-                    }}
-                  >
+                  <div className="musica-control-remote-card-status">
                     ✓ Exibindo agora
                   </div>
                 )}
@@ -216,17 +152,6 @@ export function MusicaControlRemote({ codigo, initialSessao, musicas }: MusicaCo
           })
         )}
       </div>
-
-      <style jsx>{`
-        @media (max-width: 768px) {
-          div[style*="gridTemplateColumns"] {
-            grid-template-columns: 1fr !important;
-          }
-          h1 {
-            font-size: 1.25rem !important;
-          }
-        }
-      `}</style>
     </div>
   );
 }

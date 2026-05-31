@@ -9,7 +9,7 @@ export async function getRelatorioFinanceiro(mes?: number, ano?: number) {
   const mesAtual = mes || now.getMonth() + 1;
   const anoAtual = ano || now.getFullYear();
 
-  let query = supabase
+  const query = supabase
     .from('movimentos_financeiros')
     .select(`
       *,

@@ -31,7 +31,6 @@ export function MusicaDisplayLive({
 
   useEffect(() => {
     let cancelled = false;
-    let intervalId: number | undefined;
     const endpoint =
       pollUrl ?? (codigo ? `/api/musicas/sessoes/${encodeURIComponent(codigo)}` : "/api/musicas/exibicao");
 
@@ -60,8 +59,8 @@ export function MusicaDisplayLive({
       }
     }
 
+    const intervalId = window.setInterval(refresh, 5000);
     refresh();
-    intervalId = window.setInterval(refresh, 5000);
 
     return () => {
       cancelled = true;

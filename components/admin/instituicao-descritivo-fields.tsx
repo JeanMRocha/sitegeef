@@ -27,10 +27,10 @@ export function DescritivoField({
   const currentLength = useMemo(() => countChars(value), [value]);
 
   return (
-    <label className="profile-form-field" style={{ gridColumn: "1 / -1" }}>
-      <span style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: "1rem" }}>
+    <label className="profile-form-field descritivo-field descritivo-field--full">
+      <span className="descritivo-field-head">
         <span>{label}</span>
-        <span style={{ fontSize: "0.82rem", fontWeight: 600, color: "var(--muted)", whiteSpace: "nowrap" }}>
+        <span className="descritivo-field-count">
           {currentLength} / {recommendedLength}
         </span>
       </span>
@@ -43,7 +43,7 @@ export function DescritivoField({
         className="profile-form-input"
         onChange={(event) => setValue(event.target.value)}
       />
-      <span style={{ fontSize: "0.82rem", color: "var(--muted)" }}>
+      <span className="descritivo-field-note">
         Recomendado: até {recommendedLength} caracteres.
       </span>
     </label>

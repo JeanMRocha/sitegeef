@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
+import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { withTimeout } from '@/lib/admin/safe-supabase';
 import { AdminSidebar } from '@/components/admin/admin-sidebar';
@@ -73,9 +74,9 @@ export default async function AdminLayout({
           <p style={{ marginTop: '0.5rem', color: 'var(--muted)' }}>
             Você não tem permissão para acessar o painel administrativo.
           </p>
-          <a href="/" style={{ marginTop: '1rem', display: 'inline-block', color: 'var(--uva)' }}>
+          <Link href="/" style={{ marginTop: '1rem', display: 'inline-block', color: 'var(--uva)' }}>
             Voltar para home
-          </a>
+          </Link>
         </div>
       </div>
     );

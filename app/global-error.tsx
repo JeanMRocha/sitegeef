@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 export default function GlobalError({
   error,
   reset,
@@ -22,9 +24,9 @@ export default function GlobalError({
               <button type="button" className="button button-primary" onClick={reset}>
                 Tentar novamente
               </button>
-              <a href="/" className="button button-secondary">
+              <Link href="/" className="button button-secondary">
                 Ir para a home
-              </a>
+              </Link>
             </div>
 
             <details className="error-details">

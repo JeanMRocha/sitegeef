@@ -252,13 +252,13 @@ async function MinhaAreaContent() {
                 <div className="area-panel-item">
                   <strong>{locale === "en" ? "Where to read" : "Onde ver"}</strong>
                   <p>
-                    <a href="/privacidade">{copy.policy}</a> · <a href="/lgpd">{copy.details}</a>
+                    <Link href="/privacidade">{copy.policy}</Link> · <Link href="/lgpd">{copy.details}</Link>
                   </p>
                 </div>
                 <div className="area-panel-item">
                   <strong>{locale === "en" ? "Download data" : "Baixar dados"}</strong>
                   <p>
-                    <a href="/api/lgpd/export">{copy.download}</a>
+                    <Link href="/api/lgpd/export">{copy.download}</Link>
                   </p>
                 </div>
               </div>

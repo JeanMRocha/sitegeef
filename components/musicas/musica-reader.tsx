@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -81,6 +81,7 @@ export function MusicaReader({
 }: MusicaReaderProps) {
   const isDisplay = mode === "exibicao";
   const router = useRouter();
+  const displayScreenRef = useRef<HTMLElement | null>(null);
   const [viewMode, setViewMode] = useState<"letra" | "cifra">("letra");
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [pipExpanded, setPipExpanded] = useState(false);
@@ -165,6 +166,41 @@ export function MusicaReader({
       verseMinHeight,
     };
   }, [partesVisiveis, viewport.height, viewport.width]);
+
+  useEffect(() => {
+    const el = displayScreenRef.current;
+    if (!isDisplay || !el) {
+      return;
+    }
+
+    const properties: Record<string, string> = {
+      "--display-scale": String(displayMetrics.scale),
+      "--display-columns": String(displayMetrics.columns),
+      "--display-body-gap": `${displayMetrics.bodyGap}rem`,
+      "--display-header-pad-y": `${displayMetrics.headerPaddingY}rem`,
+      "--display-header-pad-x": `${displayMetrics.headerPaddingX}rem`,
+      "--display-body-pad-x": `${displayMetrics.headerPaddingX}rem`,
+      "--display-title-size": `${displayMetrics.titleSize}rem`,
+      "--display-subtitle-size": `${displayMetrics.subtitleSize}rem`,
+      "--display-logo-width": `${displayMetrics.logoWidth}px`,
+      "--display-body-pad-top": `${displayMetrics.bodyPaddingTop}rem`,
+      "--display-verse-pad": `${displayMetrics.versePad}rem`,
+      "--display-verse-title": `${displayMetrics.verseTitle}rem`,
+      "--display-verse-text": `${displayMetrics.verseText}rem`,
+      "--display-verse-min-height": `${displayMetrics.verseMinHeight}rem`,
+    };
+
+    Object.entries(properties).forEach(([property, value]) => {
+      el.style.setProperty(property, value);
+    });
+
+    return () => {
+      Object.keys(properties).forEach((property) => {
+        el.style.removeProperty(property);
+      });
+    };
+  }, [displayMetrics, isDisplay]);
+
   useEffect(() => {
     if (isDisplay) {
       document.body.classList.add("musica-display-route");
@@ -200,25 +236,8 @@ export function MusicaReader({
 
     return (
       <main
+        ref={displayScreenRef}
         className="musica-display-screen musica-display-screen--reader"
-        style={
-          {
-            ["--display-scale" as string]: displayMetrics.scale,
-            ["--display-columns" as string]: displayMetrics.columns,
-            ["--display-body-gap" as string]: `${displayMetrics.bodyGap}rem`,
-            ["--display-header-pad-y" as string]: `${displayMetrics.headerPaddingY}rem`,
-            ["--display-header-pad-x" as string]: `${displayMetrics.headerPaddingX}rem`,
-            ["--display-body-pad-x" as string]: `${displayMetrics.headerPaddingX}rem`,
-            ["--display-title-size" as string]: `${displayMetrics.titleSize}rem`,
-            ["--display-subtitle-size" as string]: `${displayMetrics.subtitleSize}rem`,
-            ["--display-logo-width" as string]: `${displayMetrics.logoWidth}px`,
-            ["--display-body-pad-top" as string]: `${displayMetrics.bodyPaddingTop}rem`,
-            ["--display-verse-pad" as string]: `${displayMetrics.versePad}rem`,
-            ["--display-verse-title" as string]: `${displayMetrics.verseTitle}rem`,
-            ["--display-verse-text" as string]: `${displayMetrics.verseText}rem`,
-            ["--display-verse-min-height" as string]: `${displayMetrics.verseMinHeight}rem`,
-          } as CSSProperties
-        }
       >
         <div className="musica-display-floating-controls">
           <button
@@ -415,11 +434,10 @@ export function MusicaReader({
                       title="YouTube video player"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                       allowFullScreen
-                      style={{ borderRadius: "0.5rem" }}
                     />
                   )}
                   {!musica.youtube_url && musica.audio_url && (
-                    <audio controls style={{ width: "100%", borderRadius: "0.5rem" }}>
+                    <audio controls>
                       <source src={musica.audio_url} type="audio/mpeg" />
                       Seu navegador não suporta reprodução de áudio.
                     </audio>
@@ -472,7 +490,7 @@ export function MusicaReader({
                         />
                       )}
                       {!musica.youtube_url && musica.audio_url && (
-                        <audio controls style={{ width: "100%" }}>
+                        <audio controls>
                           <source src={musica.audio_url} type="audio/mpeg" />
                           Seu navegador não suporta reprodução de áudio.
                         </audio>
