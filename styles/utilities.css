@@ -1,0 +1,25 @@
+/* Flex Utilities — Reusable layout patterns */
+
+.flex-center {
+  display: flex;
+  align-items: center;
+}
+
+.flex-center-gap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.flex-space-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.flex-end-gap {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}

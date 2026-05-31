@@ -1,0 +1,202 @@
+"use client";
+
+import Link from "next/link";
+import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { IconPlus } from "@/components/icons";
+import type { Musica } from "@/lib/musicas";
+import { getStatusLabel } from "@/lib/musicas";
+
+type MusicasCatalogTableProps = {
+  musicas: Musica[];
+  initialQuery?: string;
+  isSaved?: boolean;
+};
+
+function normalizeText(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+}
+
+function musicaMatchesSearch(musica: Musica, search: string) {
+  const normalizedSearch = normalizeText(search);
+  if (!normalizedSearch) {
+    return true;
+  }
+
+  const searchBlob = normalizeText(
+    [
+      musica.titulo,
+      musica.autor,
+      musica.tom ?? "",
+      musica.versao ?? "",
+      musica.observacoes ?? "",
+      ...musica.partes.flatMap((parte) => [parte.titulo, parte.conteudo, parte.cifra ?? ""]),
+    ]
+      .filter(Boolean)
+      .join(" "),
+  );
+
+  return searchBlob.includes(normalizedSearch);
+}
+
+export function MusicasCatalogTable({ musicas, initialQuery = "", isSaved = false }: MusicasCatalogTableProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const updateTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [searchText, setSearchText] = useState(initialQuery);
+  const deferredSearchText = useDeferredValue(searchText);
+
+  const filteredMusicas = useMemo(
+    () => musicas.filter((musica) => musicaMatchesSearch(musica, deferredSearchText)),
+    [deferredSearchText, musicas],
+  );
+
+  useEffect(() => {
+    setSearchText(initialQuery);
+  }, [initialQuery]);
+
+  useEffect(() => {
+    searchInputRef.current?.focus();
+    searchInputRef.current?.select();
+  }, []);
+
+  useEffect(() => {
+    if (updateTimerRef.current) {
+      clearTimeout(updateTimerRef.current);
+    }
+
+    updateTimerRef.current = setTimeout(() => {
+      const normalizedSearch = searchText.trim();
+      const currentSearch = searchParams.get("q") ?? "";
+
+      if (normalizedSearch === currentSearch) {
+        return;
+      }
+
+      const params = new URLSearchParams(searchParams.toString());
+
+      if (normalizedSearch) {
+        params.set("q", normalizedSearch);
+      } else {
+        params.delete("q");
+      }
+
+      const queryString = params.toString();
+      router.replace(queryString ? `${pathname}?${queryString}` : pathname, { scroll: false });
+    }, 250);
+
+    return () => {
+      if (updateTimerRef.current) {
+        clearTimeout(updateTimerRef.current);
+      }
+    };
+  }, [pathname, router, searchParams, searchText]);
+
+  return (
+    <div className="area-page">
+      <div className="admin-page-header admin-page-header--music-catalog">
+        <div className="admin-page-header-copy">
+          <span className="admin-dashboard-kicker">Reunião pública</span>
+          <div className="admin-page-title-row">
+            <h1 className="admin-page-title">Músicas</h1>
+            <span className="music-catalog-count-pill">{musicas.length} cadastradas</span>
+          </div>
+        </div>
+
+        <div className="admin-search-bar admin-search-bar--catalog" role="search">
+          <label className="sr-only" htmlFor="musicas-admin-search">
+            Buscar músicas
+          </label>
+          <input
+            ref={searchInputRef}
+            id="musicas-admin-search"
+            type="search"
+            value={searchText}
+            onChange={(event) => setSearchText(event.target.value)}
+            placeholder="Buscar por autor, título ou letra..."
+            aria-label="Buscar músicas"
+          />
+        </div>
+
+        <Link href="/admin/reuniao-publica/musicas/nova" className="admin-btn admin-btn-primary flex-center-gap">
+          <IconPlus size={18} />
+          Nova música
+        </Link>
+      </div>
+
+      {isSaved && (
+        <section className="area-section">
+          <div className="admin-save-banner success">
+            <p>✓ Música salva com sucesso!</p>
+          </div>
+        </section>
+      )}
+
+      <section className="area-section">
+        <div className="admin-card table-surface">
+          <div className="area-section-title flex-space-between">
+            <h2>Catálogo</h2>
+            <span style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>
+              {filteredMusicas.length} {filteredMusicas.length === 1 ? "resultado" : "resultados"}
+            </span>
+          </div>
+
+          {filteredMusicas.length === 0 ? (
+            <div className="area-empty">
+              <p>Nenhuma música encontrada.</p>
+              {searchText.trim() && (
+                <p style={{ fontSize: "0.875rem", marginTop: "0.5rem", color: "var(--text-muted)" }}>
+                  Tente outro termo de busca.
+                </p>
+              )}
+            </div>
+          ) : (
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Título</th>
+                  <th>Autor</th>
+                  <th>Tom</th>
+                  <th>Partes</th>
+                  <th>Status</th>
+                  <th style={{ textAlign: "right" }}>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredMusicas.map((musica) => (
+                  <tr key={musica.id}>
+                    <td style={{ fontWeight: 600 }}>{musica.titulo}</td>
+                    <td>{musica.autor}</td>
+                    <td>{musica.tom || "—"}</td>
+                    <td>{musica.partes.length}</td>
+                    <td>
+                      <span className={`inline-status inline-status--${musica.status}`}>
+                        {getStatusLabel(musica.status)}
+                      </span>
+                    </td>
+                    <td style={{ textAlign: "right" }}>
+                      <div className="flex-end-gap">
+                        <Link href={`/admin/reuniao-publica/musicas/${musica.id}`} className="admin-btn admin-btn-small">
+                          Editar
+                        </Link>
+                        <Link href={`/musicas/${musica.slug}`} className="admin-btn admin-btn-small" target="_blank" rel="noreferrer">
+                          Ver
+                        </Link>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </section>
+    </div>
+  );
+}

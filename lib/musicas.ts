@@ -97,6 +97,15 @@ export function generatePairingCode() {
   return Array.from(bytes, (byte) => alphabet[byte % alphabet.length]).join("");
 }
 
+export function getStatusLabel(status: string): string {
+  const labels: Record<string, string> = {
+    ativa: "Ativa",
+    rascunho: "Rascunho",
+    inativa: "Inativa",
+  };
+  return labels[status] || "Desconhecido";
+}
+
 export function parsePartesFromText(texto: string): MusicaParte[] {
   if (!texto || typeof texto !== "string") {
     return [];

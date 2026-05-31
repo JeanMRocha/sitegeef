@@ -1,4 +1,5 @@
 @import url('./identity-system.css');
+@import url('./utilities.css');
 
 :root {
   --admin-sidebar-width: 290px;
@@ -171,6 +172,30 @@
   display: grid;
   gap: 0.3rem;
   padding-top: 0.75rem;
+}
+
+.admin-user-menu-controls {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0.35rem 0 0.1rem;
+  padding: 0.75rem 0.8rem;
+  border-radius: 18px;
+  background: rgba(138, 0, 90, 0.04);
+  border: 1px solid rgba(138, 0, 90, 0.06);
+}
+
+.admin-user-menu-controls-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.admin-user-menu-controls-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
 }
 
 .admin-user-menu-item {
@@ -635,6 +660,32 @@
   background: var(--status-error-bg);
   border: 1px solid var(--status-error-border, transparent);
   color: var(--status-error-text);
+}
+
+/* Status Badge — Music module status indicators */
+.inline-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-medium);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.inline-status--ativa {
+  background-color: var(--status-success-bg);
+  color: var(--status-success-text);
+}
+
+.inline-status--rascunho {
+  background-color: var(--status-info-bg);
+  color: var(--status-info-text);
+}
+
+.inline-status--inativa {
+  background-color: var(--surface-secondary-hover);
+  color: var(--text-primary);
 }
 
 .admin-card {
@@ -1302,6 +1353,21 @@
 :root.dark .inline-status-danger {
   background: var(--status-error-bg);
   color: var(--status-error-text);
+}
+
+:root.dark .inline-status--ativa {
+  background-color: var(--status-success-bg);
+  color: var(--status-success-text);
+}
+
+:root.dark .inline-status--rascunho {
+  background-color: var(--status-info-bg);
+  color: var(--status-info-text);
+}
+
+:root.dark .inline-status--inativa {
+  background-color: var(--surface-secondary-hover);
+  color: var(--text-primary);
 }
 
 :root.dark .admin-btn-primary {
