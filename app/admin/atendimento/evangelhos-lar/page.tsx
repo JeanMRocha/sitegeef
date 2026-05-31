@@ -6,14 +6,39 @@ export const metadata = {
   title: 'Evangelho no Lar - Admin GEEF',
 };
 
+type EvangelhoItem = {
+  id: string;
+  data: string;
+  situacao?: string | null;
+  endereco?: string | null;
+  equipe?: string | null;
+  pessoas?: { nome?: string | null } | null;
+};
+
 async function EvangelhasContent() {
   const evangelhos = await getEvangelhasNoLar();
+  const evangelhoList = evangelhos as EvangelhoItem[];
 
   const situacoes: { [key: string]: { label: string; color: string } } = {
     'planejada': { label: '📋 Planejada', color: '#3b82f6' },
     'realizada': { label: '✓ Realizada', color: '#22c55e' },
     'adiada': { label: '⏸️ Adiada', color: '#f97316' },
     'cancelada': { label: '❌ Cancelada', color: '#ef4444' },
+  };
+
+  const getSituacaoClass = (situacao?: string | null) => {
+    switch (situacao) {
+      case 'planejada':
+        return 'inline-status inline-status-info';
+      case 'realizada':
+        return 'inline-status inline-status-success';
+      case 'adiada':
+        return 'inline-status inline-status-warning';
+      case 'cancelada':
+        return 'inline-status inline-status-danger';
+      default:
+        return 'inline-status inline-status-neutral';
+    }
   };
 
   return (
@@ -31,8 +56,8 @@ async function EvangelhasContent() {
 
       {/* Tabela */}
       <div className="admin-card">
-        {evangelhos.length > 0 ? (
-          <div style={{ overflowX: 'auto' }}>
+        {evangelhoList.length > 0 ? (
+          <div className="overflow-x-auto">
             <table className="admin-table">
               <thead>
                 <tr>
@@ -45,31 +70,29 @@ async function EvangelhasContent() {
                 </tr>
               </thead>
               <tbody>
-                {evangelhos.map((ev: any) => {
-                  const sit = situacoes[ev.situacao] || { label: ev.situacao, color: '#999' };
+                {evangelhoList.map((ev) => {
+                  const situacao = ev.situacao || 'indefinida';
+                  const sit = situacoes[situacao] || { label: situacao, color: '#999' };
                   return (
                     <tr key={ev.id}>
-                      <td style={{ fontSize: '0.9rem', fontWeight: 500 }}>
+                      <td>
+                        <strong className="text-sm-500">
                         {new Date(ev.data).toLocaleDateString('pt-BR')}
+                        </strong>
                       </td>
-                      <td style={{ fontWeight: 500 }}>
+                      <td>
+                        <strong>
                         {ev.pessoas?.nome}
+                        </strong>
                       </td>
-                      <td style={{ fontSize: '0.9rem' }}>
+                      <td className="text-sm-muted">
                         {ev.endereco}
                       </td>
-                      <td style={{ fontSize: '0.9rem', color: 'var(--muted)' }}>
+                      <td className="text-sm-muted">
                         {ev.equipe}
                       </td>
                       <td>
-                        <span style={{
-                          display: 'inline-block',
-                          padding: '0.25rem 0.6rem',
-                          backgroundColor: `${sit.color}20`,
-                          color: sit.color,
-                          borderRadius: '0.3rem',
-                          fontSize: '0.85rem',
-                        }}>
+                        <span className={getSituacaoClass(ev.situacao)}>
                           {sit.label}
                         </span>
                       </td>
@@ -85,13 +108,7 @@ async function EvangelhasContent() {
             </table>
           </div>
         ) : (
-          <div style={{
-            padding: '2rem',
-            textAlign: 'center',
-            backgroundColor: 'var(--admin-bg)',
-            borderRadius: '0.6rem',
-            color: 'var(--muted)',
-          }}>
+          <div className="area-empty">
             <p>Nenhum evangelho no lar registrado.</p>
           </div>
         )}
@@ -102,7 +119,7 @@ async function EvangelhasContent() {
 
 export default function EvangelhasPage() {
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <EvangelhasContent />
     </Suspense>
   );

@@ -6,8 +6,32 @@ export const metadata = {
   title: 'Assembleias - Admin GEEF',
 };
 
+type AssembleiaItem = {
+  id: string;
+  tipo?: string | null;
+  data: string;
+  pauta?: string | null;
+  status?: string | null;
+};
+
 async function AssembleiasContent() {
   const assembleias = await getAssembleias();
+  const assembleiaList = assembleias as AssembleiaItem[];
+
+  const getTipoLabel = (tipo?: string | null) => {
+    switch (tipo) {
+      case 'AGO':
+        return '📊 AGO';
+      case 'AGE':
+        return '📋 AGE';
+      case 'reuniao_diretoria':
+        return '👔 Reunião Diretoria';
+      case 'reuniao_departamento':
+        return '🏢 Reunião Departamento';
+      default:
+        return tipo || '—';
+    }
+  };
 
   return (
     <div>
@@ -16,14 +40,14 @@ async function AssembleiasContent() {
           <h1 className="admin-page-title">Assembleias</h1>
           <p className="admin-page-subtitle">Registro de assembleias, AGOs, AGEs e reuniões</p>
         </div>
-        <Link href="/admin/governanca/assembleias/nova" className="admin-btn admin-btn-primary" style={{ width: 'auto' }}>
+        <Link href="/admin/governanca/assembleias/nova" className="admin-btn admin-btn-primary">
           ➕ Nova Assembleia
         </Link>
       </div>
 
       <div className="admin-card">
-        {assembleias.length > 0 ? (
-          <div style={{ overflowX: 'auto' }}>
+        {assembleiaList.length > 0 ? (
+          <div className="overflow-x-auto">
             <table className="admin-table">
               <thead>
                 <tr>
@@ -35,29 +59,15 @@ async function AssembleiasContent() {
                 </tr>
               </thead>
               <tbody>
-                {assembleias.map((assembleia: any) => (
+                {assembleiaList.map((assembleia) => (
                   <tr key={assembleia.id}>
-                    <td style={{ fontWeight: 500 }}>
-                      {assembleia.tipo === 'AGO' && '📊 AGO'}
-                      {assembleia.tipo === 'AGE' && '📋 AGE'}
-                      {assembleia.tipo === 'reuniao_diretoria' && '👔 Reunião Diretoria'}
-                      {assembleia.tipo === 'reuniao_departamento' && '🏢 Reunião Departamento'}
-                    </td>
-                    <td style={{ fontSize: '0.9rem', fontWeight: 500 }}>
-                      {new Date(assembleia.data).toLocaleDateString('pt-BR')}
-                    </td>
-                    <td style={{ fontSize: '0.9rem', color: 'var(--muted)', maxWidth: '200px' }}>
+                    <td><strong>{getTipoLabel(assembleia.tipo)}</strong></td>
+                    <td><strong className="text-sm-500">{new Date(assembleia.data).toLocaleDateString('pt-BR')}</strong></td>
+                    <td className="text-sm-muted table-cell-truncate">
                       {assembleia.pauta ? assembleia.pauta.substring(0, 50) + '...' : '—'}
                     </td>
                     <td>
-                      <span style={{
-                        display: 'inline-block',
-                        padding: '0.25rem 0.6rem',
-                        backgroundColor: assembleia.status === 'rascunho' ? 'rgba(107, 114, 128, 0.1)' : 'rgba(34, 197, 94, 0.1)',
-                        color: assembleia.status === 'rascunho' ? '#6b7280' : '#22c55e',
-                        borderRadius: '0.3rem',
-                        fontSize: '0.85rem',
-                      }}>
+                      <span className={assembleia.status === 'rascunho' ? 'inline-status inline-status-neutral' : 'inline-status inline-status-success'}>
                         {assembleia.status === 'rascunho' ? '📝 Rascunho' : '✓ Finalizada'}
                       </span>
                     </td>
@@ -72,7 +82,7 @@ async function AssembleiasContent() {
             </table>
           </div>
         ) : (
-          <p style={{ color: 'var(--muted)', textAlign: 'center' }}>Nenhuma assembleia registrada.</p>
+          <p className="text-center-muted">Nenhuma assembleia registrada.</p>
         )}
       </div>
     </div>
@@ -81,7 +91,7 @@ async function AssembleiasContent() {
 
 export default function AssembleiasPage() {
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <AssembleiasContent />
     </Suspense>
   );
