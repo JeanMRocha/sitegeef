@@ -126,6 +126,12 @@
   text-align: center;
 }
 
+.panel-note {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
 .page-pagination {
   display: flex;
   gap: 0.5rem;
