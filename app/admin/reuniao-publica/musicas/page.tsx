@@ -1,11 +1,13 @@
 import { Suspense } from "react";
 import { AdminModuleGate } from "@/components/admin/admin-module-gate";
 import { MusicasCatalogTable } from "@/components/admin/musicas/musicas-catalog-table";
-import { listMusicas } from "@/lib/musicas";
+import { getMusicaExibicaoPublicaAtual, listMusicas } from "@/lib/musicas";
 
 export const metadata = {
   title: "Músicas - Reunião pública - Admin GEEF",
 };
+
+export const dynamic = "force-dynamic";
 
 type PageProps = {
   searchParams?: Promise<{ q?: string; salvo?: string }>;
@@ -16,9 +18,17 @@ async function MusicasContent({ searchParams }: PageProps) {
   const q = typeof params.q === "string" ? params.q : "";
   const isSaved = params.salvo === "1";
 
-  const musicas = await listMusicas();
+  const [musicas, exibicaoAtual] = await Promise.all([listMusicas(), getMusicaExibicaoPublicaAtual()]);
 
-  return <MusicasCatalogTable musicas={musicas} initialQuery={q} isSaved={isSaved} />;
+  return (
+    <MusicasCatalogTable
+      musicas={musicas}
+      musicaAtivaId={exibicaoAtual?.musica?.id ?? null}
+      musicaAtivaTitulo={exibicaoAtual?.musica?.titulo ?? null}
+      initialQuery={q}
+      isSaved={isSaved}
+    />
+  );
 }
 
 export default function MusicasPage(props: PageProps) {

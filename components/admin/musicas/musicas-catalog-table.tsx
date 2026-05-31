@@ -6,9 +6,12 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { IconPlus } from "@/components/icons";
 import type { Musica } from "@/lib/musicas";
 import { getStatusLabel } from "@/lib/musicas";
+import { MusicaExibicaoPublicaButton } from "./musica-exibicao-publica-button";
 
 type MusicasCatalogTableProps = {
   musicas: Musica[];
+  musicaAtivaId?: string | null;
+  musicaAtivaTitulo?: string | null;
   initialQuery?: string;
   isSaved?: boolean;
 };
@@ -43,7 +46,13 @@ function musicaMatchesSearch(musica: Musica, search: string) {
   return searchBlob.includes(normalizedSearch);
 }
 
-export function MusicasCatalogTable({ musicas, initialQuery = "", isSaved = false }: MusicasCatalogTableProps) {
+export function MusicasCatalogTable({
+  musicas,
+  musicaAtivaId = null,
+  musicaAtivaTitulo = null,
+  initialQuery = "",
+  isSaved = false,
+}: MusicasCatalogTableProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -130,6 +139,16 @@ export function MusicasCatalogTable({ musicas, initialQuery = "", isSaved = fals
         </Link>
       </div>
 
+      <div className="content-surface-note content-surface-note-inline">
+        {musicaAtivaTitulo ? (
+          <>
+            Exibição pública atual: <strong>{musicaAtivaTitulo}</strong>
+          </>
+        ) : (
+          "Nenhuma música está marcada como exibição pública no momento."
+        )}
+      </div>
+
       {isSaved && (
         <section className="area-section">
           <div className="admin-save-banner success">
@@ -163,7 +182,7 @@ export function MusicasCatalogTable({ musicas, initialQuery = "", isSaved = fals
                   <th>Título</th>
                   <th>Autor</th>
                   <th>Tom</th>
-                  <th>Partes</th>
+                  <th>Exibição pública</th>
                   <th>Status</th>
                   <th className="table-align-right">Ações</th>
                 </tr>
@@ -174,7 +193,9 @@ export function MusicasCatalogTable({ musicas, initialQuery = "", isSaved = fals
                     <td className="table-cell-bold">{musica.titulo}</td>
                     <td>{musica.autor}</td>
                     <td>{musica.tom || "—"}</td>
-                    <td>{musica.partes.length}</td>
+                    <td>
+                      <MusicaExibicaoPublicaButton musicaId={musica.id} isAtiva={musica.id === musicaAtivaId} />
+                    </td>
                     <td>
                       <span className={`inline-status inline-status--${musica.status}`}>
                         {getStatusLabel(musica.status)}
@@ -186,7 +207,7 @@ export function MusicasCatalogTable({ musicas, initialQuery = "", isSaved = fals
                           Editar
                         </Link>
                         <Link href={`/musicas/${musica.slug}`} className="admin-btn admin-btn-small" target="_blank" rel="noreferrer">
-                          Ver
+                          Ler
                         </Link>
                       </div>
                     </td>

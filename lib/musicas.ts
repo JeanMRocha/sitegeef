@@ -3,6 +3,8 @@ import { createServiceRoleClient } from "@/lib/supabase/service-role";
 export type MusicaParteTipo = "estrofe" | "refrao" | "ponte" | "intro" | "cifra";
 export type MusicaSessaoModo = "exibicao" | "catalogo";
 
+export const MUSICA_EXIBICAO_PUBLICA_CODIGO = "EXIBICAO_PUBLICA";
+
 export type MusicaParte = {
   id?: string;
   ordem: number;
@@ -370,6 +372,33 @@ export async function getMusicaExibicaoAtual() {
     sessao: sessaoAtiva,
     musica,
   };
+}
+
+export async function getMusicaExibicaoPublicaAtual() {
+  const sessao = await getMusicaSessaoComMusica(MUSICA_EXIBICAO_PUBLICA_CODIGO);
+
+  if (sessao?.sessao.ativo && sessao.musica) {
+    return sessao;
+  }
+
+  return null;
+}
+
+export async function saveMusicaExibicaoPublica(musicaId: string) {
+  const musica = await getMusicaById(musicaId);
+
+  if (!musica) {
+    return null;
+  }
+
+  return saveMusicaSessao({
+    codigo_pareamento: MUSICA_EXIBICAO_PUBLICA_CODIGO,
+    nome_tela: "Exibição pública",
+    musica_id: musica.id,
+    modo: "exibicao",
+    ativo: true,
+    ultimo_acesso_em: new Date().toISOString(),
+  });
 }
 
 export async function listMusicaSessoes() {

@@ -193,6 +193,16 @@
   color: #22c55e;
 }
 
+.musica-public-toggle-button {
+  min-width: 9.5rem;
+  justify-content: center;
+}
+
+.musica-public-toggle-badge {
+  min-width: 6rem;
+  justify-content: center;
+}
+
 .progress-row {
   display: flex;
   align-items: center;

@@ -15,7 +15,7 @@ Este documento descreve o modulo de musicas e a navegacao da area de reuniao pub
 
 - `/musicas` - catalogo publico com busca.
 - `/musicas/[slug]` - leitura completa de uma musica ativa.
-- `/musicas/exibir` - pagina neutra de orientacao; nao cria sessao automaticamente.
+- `/musicas/exibir` - tela publica ao vivo controlada pelo admin.
 - `/musicas/exibir/[codigo]` - tela publica pareada por codigo.
 
 ### Admin
@@ -74,20 +74,23 @@ Responsabilidades:
   - `getMusicaBySlug()`
   - `getMusicaById()`
   - `getMusicasResumo()`
-  - `getMusicaSessaoByCodigo()`
-  - `getMusicaSessaoComMusica()`
-  - `listMusicaSessoes()`
+- `getMusicaSessaoByCodigo()`
+- `getMusicaSessaoComMusica()`
+- `listMusicaSessoes()`
+- `getMusicaExibicaoPublicaAtual()`
 - escrita:
   - `saveMusica()`
   - `deleteMusica()`
   - `saveMusicaSessao()`
+  - `saveMusicaExibicaoPublica()`
   - `createMusicaSessao()`
   - `patchMusicaSessao()`
 - `touchMusicaSessao()`
 
 Regras de exibicao:
 
-- a rota `/musicas/exibir` nao cria mais sessao por visita;
+- a rota `/musicas/exibir` le a musica marcada como exibição pública no admin;
+- a musica marcada como exibição pública usa uma sessao unica reservada;
 - a tela publica pareada `/musicas/exibir/[codigo]` acompanha apenas uma sessao ja criada na area interna;
 - se uma sessao ficar sem acesso por mais de 1 hora, ela e encerrada como inativa na proxima leitura do estado;
 - enquanto a apresentacao estiver aberta, o polling da tela publica renova `ultimo_acesso_em`;
@@ -98,6 +101,7 @@ Observacoes:
 - O helper usa `createServiceRoleClient()`.
 - O catalogo e a tela publica leem a mesma fonte de verdade.
 - A busca compara titulo, autor, tom, versao, observacoes, titulo das partes, conteudo e cifra.
+- O link do catalogo publico aponta para `/musicas/[slug]`; a exibição ao vivo fica em `/musicas/exibir`.
 
 ## Fluxo do admin
 
@@ -110,6 +114,8 @@ O que essa pagina faz:
 - carrega musicas cadastradas
 - carrega resumo de musicas e sessoes
 - permite buscar por termo
+- mostra qual musica esta marcada como exibição pública
+- permite marcar uma unica musica como ao vivo para a tela pública
 - permite editar uma musica existente
 - permite criar uma nova musica
 - permite criar e salvar sessao de pareamento
@@ -218,6 +224,7 @@ Observacoes:
 - a leitura publica foi desenhada para caber bem em 16:9
 - o modulo tenta manter logo, cores e divisao por partes
 - o admin recebeu estilos de editor de musica e pareamento
+- a lista do admin nao exibe mais a contagem de partes; esse espaco virou o controle de exibição pública
 
 ## Permissoes
 

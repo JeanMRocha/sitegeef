@@ -1,5 +1,5 @@
 import { getInstitutionBrand } from "@/lib/institution-brand";
-import { getMusicaExibicaoAtual } from "@/lib/musicas";
+import { getMusicaExibicaoPublicaAtual } from "@/lib/musicas";
 import { MusicaDisplayLive } from "@/components/musicas/musica-display-live";
 
 export const metadata = {
@@ -7,8 +7,10 @@ export const metadata = {
   description: "Tela pública ao vivo para músicas do GEEF.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function MusicasExibirPage() {
-  const [brand, exibicaoAtual] = await Promise.all([getInstitutionBrand(), getMusicaExibicaoAtual()]);
+  const [brand, exibicaoAtual] = await Promise.all([getInstitutionBrand(), getMusicaExibicaoPublicaAtual()]);
 
   return (
     <MusicaDisplayLive

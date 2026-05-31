@@ -93,10 +93,10 @@ export function MusicasCatalog({ musicas }: MusicasCatalogProps) {
 
                   <div className="musica-catalog-actions">
                     <Link
-                      href={`/musicas/exibir/${musica.slug}`}
+                      href={`/musicas/${musica.slug}`}
                       className="button button-secondary"
                     >
-                      Ver
+                      Ler
                     </Link>
                   </div>
                 </div>

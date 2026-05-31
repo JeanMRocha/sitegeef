@@ -5,6 +5,7 @@ import {
   createMusicaSessao,
   deleteMusica,
   deleteMusicaSessao,
+  saveMusicaExibicaoPublica,
   normalizePartes,
   patchMusicaSessao,
   listMusicaSessoes,
@@ -102,6 +103,21 @@ export async function createMusicaSessaoAction() {
   const sessao = await createMusicaSessao();
   invalidateMusicasCache();
   redirect(`/admin/reuniao-publica/musicas/sessoes?codigo=${encodeURIComponent(sessao.codigo_pareamento)}&nova=1`);
+}
+
+export async function setMusicaExibicaoPublicaAction(musicaId: string) {
+  if (!musicaId || typeof musicaId !== "string") {
+    throw new Error("Música inválida");
+  }
+
+  const sessao = await saveMusicaExibicaoPublica(musicaId);
+
+  if (!sessao) {
+    throw new Error("Música não encontrada");
+  }
+
+  invalidateMusicasCache();
+  return sessao;
 }
 
 export async function setMusicaSessaoAtivaAction(codigo: string, ativo: boolean) {
