@@ -197,6 +197,13 @@
   min-width: 30px;
 }
 
+.status-pill {
+  display: inline-block;
+  padding: 0.35rem 0.7rem;
+  border-radius: 0.4rem;
+  font-size: 0.85rem;
+}
+
 .page-pagination {
   display: flex;
   gap: 0.5rem;

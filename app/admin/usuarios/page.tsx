@@ -6,11 +6,29 @@ export const metadata = {
   title: 'Usuários - Admin GEEF',
 };
 
+type UsuarioItem = {
+  id: string;
+  nome?: string | null;
+  email?: string | null;
+  perfil?: string | null;
+  pessoas?: { email?: string | null } | null;
+  pode_escalas?: boolean | null;
+  pode_biblioteca?: boolean | null;
+  pode_livraria?: boolean | null;
+  pode_financeiro?: boolean | null;
+  pode_pessoas?: boolean | null;
+  pode_publicar?: boolean | null;
+  pode_mediunidade?: boolean | null;
+  pode_atendimento?: boolean | null;
+  pode_apse?: boolean | null;
+};
+
 async function UsuariosList({ searchParams }: { searchParams: { page?: string } }) {
-  const page = parseInt(searchParams.page || '1');
+  const page = parseInt(searchParams.page || '1', 10);
 
   const { usuarios, total, pageSize, erro } = await getUsuarios(page);
   const totalPages = Math.ceil(total / pageSize);
+  const usuarioList = usuarios as UsuarioItem[];
 
   const perfilColor: Record<string, string> = {
     administrador: '#8a005a',
@@ -33,6 +51,8 @@ async function UsuariosList({ searchParams }: { searchParams: { page?: string } 
     publico: '#aaaaaa',
   };
 
+  const isPermissionLabel = (value: string | boolean | null | undefined): value is string => Boolean(value);
+
   return (
     <div className="area-page">
       <div className="admin-page-header">
@@ -52,10 +72,10 @@ async function UsuariosList({ searchParams }: { searchParams: { page?: string } 
             {erro}
           </div>
         ) : null}
-        {usuarios.length === 0 ? (
-          <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--muted)' }}>
+        {usuarioList.length === 0 ? (
+          <div className="text-center-muted" style={{ padding: '2rem' }}>
             <p>Nenhum usuário cadastrado.</p>
-            <Link href="/admin/usuarios/novo" className="admin-btn admin-btn-primary" style={{ marginTop: '1rem' }}>
+            <Link href="/admin/usuarios/novo" className="admin-btn admin-btn-primary mt-1">
               ➕ Criar primeiro usuário
             </Link>
           </div>
@@ -71,7 +91,7 @@ async function UsuariosList({ searchParams }: { searchParams: { page?: string } 
               </tr>
             </thead>
             <tbody>
-              {usuarios.map((usuario: any) => {
+              {usuarioList.map((usuario) => {
                 const perms = [
                   usuario.pode_escalas && 'Escalas',
                   usuario.pode_biblioteca && 'Biblioteca',
@@ -82,24 +102,24 @@ async function UsuariosList({ searchParams }: { searchParams: { page?: string } 
                   usuario.pode_mediunidade && 'Mediunidade',
                   usuario.pode_atendimento && 'Atendimento',
                   usuario.pode_apse && 'APSE',
-                ].filter(Boolean);
+                ].filter(isPermissionLabel);
 
                 return (
                   <tr key={usuario.id}>
-                    <td style={{ fontWeight: 600 }}>{usuario.nome || usuario.email || 'N/A'}</td>
-                    <td style={{ fontSize: '0.9rem', color: 'var(--muted)' }}>{usuario.email || usuario.pessoas?.email || '—'}</td>
+                    <td><strong>{usuario.nome || usuario.email || 'N/A'}</strong></td>
+                    <td className="text-sm-muted">{usuario.email || usuario.pessoas?.email || '—'}</td>
                     <td>
                       <span
-                        className="inline-status"
+                        className="status-pill inline-status"
                         style={{
-                          backgroundColor: `${perfilColor[usuario.perfil] || '#999'}22`,
-                          color: perfilColor[usuario.perfil] || '#666',
+                          backgroundColor: `${perfilColor[usuario.perfil || ''] || '#999'}22`,
+                          color: perfilColor[usuario.perfil || ''] || '#666',
                         }}
                       >
                         {usuario.perfil}
                       </span>
                     </td>
-                    <td style={{ fontSize: '0.85rem' }}>
+                    <td className="text-xs-muted">
                       {perms.length > 0 ? (
                         <div className="tag-list">
                           {perms.slice(0, 3).map((p) => (
@@ -108,11 +128,11 @@ async function UsuariosList({ searchParams }: { searchParams: { page?: string } 
                             </span>
                           ))}
                           {perms.length > 3 && (
-                            <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>+{perms.length - 3}</span>
+                            <span className="text-xs-muted">+{perms.length - 3}</span>
                           )}
                         </div>
                       ) : (
-                        <span style={{ color: 'var(--muted)' }}>—</span>
+                        <span className="text-sm-muted">—</span>
                       )}
                     </td>
                     <td>
@@ -130,13 +150,13 @@ async function UsuariosList({ searchParams }: { searchParams: { page?: string } 
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', marginTop: '2rem', flexWrap: 'wrap' }}>
+        <div className="page-pagination">
           {page > 1 && (
             <Link href={`/admin/usuarios?page=${page - 1}`} className="admin-btn admin-btn-secondary">
               ← Anterior
             </Link>
           )}
-          <span style={{ padding: '0.6rem 1.2rem', alignSelf: 'center', fontWeight: 600 }}>
+          <span className="page-pagination-label">
             Página {page} de {totalPages}
           </span>
           {page < totalPages && (
@@ -153,7 +173,7 @@ async function UsuariosList({ searchParams }: { searchParams: { page?: string } 
 export default async function UsuariosPage({ searchParams }: { searchParams: Promise<any> }) {
   const resolvedSearchParams = await searchParams;
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <UsuariosList searchParams={resolvedSearchParams} />
     </Suspense>
   );
