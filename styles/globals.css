@@ -3065,6 +3065,16 @@ a.button.musica-icon-button {
   color: #2d6a14;
 }
 
+.inline-status-info {
+  background: rgba(59, 130, 246, 0.14);
+  color: #1d4ed8;
+}
+
+.inline-status-primary {
+  background: rgba(168, 85, 247, 0.14);
+  color: #7e22ce;
+}
+
 .inline-status-warning {
   background: rgba(245, 158, 11, 0.14);
   color: #b45309;
@@ -6145,6 +6155,16 @@ a.button.musica-icon-button {
 :root.dark .inline-status-success {
   color: #8fd4a2;
   background: rgba(99, 213, 31, 0.15);
+}
+
+:root.dark .inline-status-info {
+  color: #93c5fd;
+  background: rgba(59, 130, 246, 0.18);
+}
+
+:root.dark .inline-status-primary {
+  color: #d8b4fe;
+  background: rgba(168, 85, 247, 0.18);
 }
 
 :root.dark .inline-status-warning {

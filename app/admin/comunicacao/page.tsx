@@ -6,16 +6,34 @@ export const metadata = {
   title: "Comunicação - Admin GEEF",
 };
 
+type PublicacaoListItem = {
+  id: string;
+  titulo: string;
+  tipo?: string | null;
+  status?: string | null;
+  autor?: { nome?: string | null } | null;
+  publicado_em?: string | null;
+  criado_em: string;
+};
+
 async function ComunicacaoContent() {
   const publicacoes = await getPublicacoes();
-  const publicadas = publicacoes.filter((p: any) => p.status === "publicado");
-  const rascunhos = publicacoes.filter((p: any) => p.status === "rascunho");
+  const publicacaoList = publicacoes as PublicacaoListItem[];
+  const publicadas = publicacaoList.filter((p) => p.status === "publicado");
+  const rascunhos = publicacaoList.filter((p) => p.status === "rascunho");
 
   const cards = [
     { label: "Publicadas", value: publicadas.length },
     { label: "Rascunhos", value: rascunhos.length },
-    { label: "Total", value: publicacoes.length },
+    { label: "Total", value: publicacaoList.length },
   ];
+
+  const getStatusClass = (status?: string | null) => {
+    if (status === "rascunho") return "inline-status inline-status-neutral";
+    if (status === "revisao") return "inline-status inline-status-primary";
+    if (status === "aprovado") return "inline-status inline-status-info";
+    return "inline-status inline-status-success";
+  };
 
   return (
     <div className="area-page">
@@ -49,7 +67,7 @@ async function ComunicacaoContent() {
           <p>Visão geral do conteúdo já cadastrado.</p>
         </div>
         <div className="table-surface">
-          {publicacoes.length > 0 ? (
+          {publicacaoList.length > 0 ? (
             <table className="admin-table">
               <thead>
                 <tr>
@@ -62,34 +80,19 @@ async function ComunicacaoContent() {
                 </tr>
               </thead>
               <tbody>
-                {publicacoes.map((publicacao: any) => (
+                {publicacaoList.map((publicacao) => (
                   <tr key={publicacao.id}>
-                    <td style={{ fontWeight: 500, maxWidth: "200px" }}>{publicacao.titulo}</td>
+                    <td>
+                      <strong>{publicacao.titulo}</strong>
+                    </td>
                     <td>{publicacao.tipo || "—"}</td>
                     <td>{publicacao.autor?.nome || "—"}</td>
                     <td>
-                      <span className="inline-status" style={{
-                        backgroundColor:
-                          publicacao.status === "rascunho"
-                            ? "rgba(107, 114, 128, 0.1)"
-                            : publicacao.status === "revisao"
-                              ? "rgba(168, 85, 247, 0.1)"
-                              : publicacao.status === "aprovado"
-                                ? "rgba(59, 130, 246, 0.1)"
-                                : "rgba(34, 197, 94, 0.1)",
-                        color:
-                          publicacao.status === "rascunho"
-                            ? "#6b7280"
-                            : publicacao.status === "revisao"
-                              ? "#a855f7"
-                              : publicacao.status === "aprovado"
-                                ? "#3b82f6"
-                                : "#22c55e",
-                      }}>
+                      <span className={getStatusClass(publicacao.status)}>
                         {publicacao.status}
                       </span>
                     </td>
-                    <td style={{ color: "var(--muted)" }}>
+                    <td className="text-sm-muted">
                       {publicacao.publicado_em
                         ? new Date(publicacao.publicado_em).toLocaleDateString("pt-BR")
                         : new Date(publicacao.criado_em).toLocaleDateString("pt-BR")}
@@ -114,7 +117,7 @@ async function ComunicacaoContent() {
 
 export default function ComunicacaoPage() {
   return (
-    <Suspense fallback={<div style={{ padding: "2rem", textAlign: "center" }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <ComunicacaoContent />
     </Suspense>
   );
