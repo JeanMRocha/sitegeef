@@ -107,23 +107,31 @@ export function MusicaReader({
     const widthFactor = Math.min(1, viewport.width / 1600);
     const densityFactor = density > 1200 ? 0.78 : density > 900 ? 0.86 : density > 650 ? 0.92 : 1;
     const scale = Math.max(0.78, Math.min(1, heightFactor * widthFactor * densityFactor + 0.08));
-    const maxColumnsByWidth = Math.min(4, Math.max(2, Math.floor((viewport.width - 96) / 360)));
+    const maxColumnsByWidth = Math.min(4, Math.max(2, Math.floor((viewport.width - 80) / 280)));
     const versesPerColumn = viewport.height < 760 ? 5 : viewport.height < 880 ? 6 : 7;
-    const columnsByVerseCount = Math.max(1, Math.ceil(partesVisiveis.length / versesPerColumn));
-    const columnsByHeight = Math.max(
-      1,
-      Math.ceil(
-        (totalLines * 17 + partesVisiveis.length * 34) /
-          Math.max(380, viewport.height - 260),
-      ),
-    );
-    const columns = viewport.width < 980
-      ? 1
-      : Math.min(maxColumnsByWidth, Math.max(columnsByVerseCount, columnsByHeight));
+
+    // Para músicas curtas: force mais colunas para melhor legibilidade
+    let columns;
+    if (viewport.width < 980) {
+      columns = 1;
+    } else if (totalLines <= 16) {
+      // Música muito curta: prefira 3-4 colunas
+      columns = Math.min(maxColumnsByWidth, 4);
+    } else if (totalLines <= 30) {
+      // Música curta: prefira 2-3 colunas
+      columns = Math.min(maxColumnsByWidth, 3);
+    } else if (totalLines <= 45) {
+      // Música média: prefira 3 colunas
+      columns = Math.min(maxColumnsByWidth, 3);
+    } else {
+      // Música muito longa (>45 linhas): force 4 colunas
+      columns = Math.min(maxColumnsByWidth, 4);
+    }
+
     const bodyGap = columns >= 4 ? 0.48 : columns === 3 ? 0.58 : scale < 0.85 ? 0.7 : scale < 0.92 ? 0.8 : 0.9;
     const headerPaddingY = scale < 0.85 ? 0.82 : scale < 0.92 ? 1 : 1.2;
     const headerPaddingX = scale < 0.85 ? 0.75 : scale < 0.92 ? 1 : 1.25;
-    const titleSize = columns >= 4 ? 1.55 : columns === 3 ? 2.05 : scale < 0.85 ? 1.7 : scale < 0.92 ? 1.9 : 2.2;
+    const titleSize = columns >= 4 ? 1.45 : columns === 3 ? 1.65 : scale < 0.85 ? 1.55 : scale < 0.92 ? 1.6 : 1.7;
     const subtitleSize = columns >= 4 ? 0.8 : columns === 3 ? 0.92 : scale < 0.85 ? 0.86 : scale < 0.92 ? 0.94 : 1;
     const logoWidth = columns >= 4 ? 62 : columns === 3 ? 78 : scale < 0.85 ? 76 : scale < 0.92 ? 86 : 96;
     const bodyPaddingTop = columns >= 4 ? 0.45 : columns === 3 ? 0.7 : scale < 0.85 ? 0.65 : scale < 0.92 ? 0.9 : 1.15;
@@ -200,6 +208,7 @@ export function MusicaReader({
             ["--display-body-gap" as string]: `${displayMetrics.bodyGap}rem`,
             ["--display-header-pad-y" as string]: `${displayMetrics.headerPaddingY}rem`,
             ["--display-header-pad-x" as string]: `${displayMetrics.headerPaddingX}rem`,
+            ["--display-body-pad-x" as string]: `${displayMetrics.headerPaddingX}rem`,
             ["--display-title-size" as string]: `${displayMetrics.titleSize}rem`,
             ["--display-subtitle-size" as string]: `${displayMetrics.subtitleSize}rem`,
             ["--display-logo-width" as string]: `${displayMetrics.logoWidth}px`,

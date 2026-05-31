@@ -918,7 +918,7 @@ body.musica-display-route .site-shell {
   padding:
     calc(var(--display-header-pad-y, 1rem) * 3.55)
     clamp(1rem, 1.5vw, 1.5rem)
-    clamp(1.1rem, 1.7vw, 1.7rem)
+    calc(clamp(1.6rem, 2.4vw, 2.4rem) + env(safe-area-inset-bottom, 0px))
     clamp(1rem, 1.5vw, 1.5rem);
   box-sizing: border-box;
 }
@@ -982,15 +982,22 @@ body.musica-display-route .musica-display-screen--reader {
 .musica-display-header-title h1 {
   margin: 0;
   font-family: var(--font-heading);
-  font-size: clamp(1.7rem, var(--display-title-size, 2rem), 2.85rem);
-  color: #4a0030;
+  font-size: var(--display-title-size, 2rem);
+  color: #fff8f4;
   line-height: 1.1;
+  -webkit-text-stroke: 1px rgba(74, 0, 48, 0.32);
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.18),
+    0 0 12px rgba(0, 0, 0, 0.08);
 }
 
 .musica-display-header-subtitle {
   margin: 0.5rem 0 0;
-  font-size: clamp(0.84rem, var(--display-subtitle-size, 0.95rem), 1.08rem);
-  color: var(--muted);
+  font-size: var(--display-subtitle-size, 0.95rem);
+  color: rgba(255, 252, 248, 0.94);
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.2),
+    0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .musica-display-header-logo {
@@ -1010,16 +1017,12 @@ body.musica-display-route .musica-display-screen--reader {
 /* Body com colunas */
 .musica-display-body-16x9 {
   flex: 1;
-  overflow: hidden;
-  padding: var(--display-body-pad-top, 1rem) 0 clamp(1.15rem, 1.7vw, 1.85rem);
+  overflow: visible;
+  padding: var(--display-body-pad-top, 1rem) var(--display-body-pad-x, 1rem) calc(clamp(2.4rem, 3.5vw, 3.5rem) + env(safe-area-inset-bottom, 0px)) var(--display-body-pad-x, 1rem);
   column-count: var(--display-columns, 2);
   column-gap: var(--display-body-gap, 0.95rem);
   column-fill: balance;
   min-height: 0;
-}
-
-.musica-display-screen--reader .musica-display-body-16x9 {
-  overflow: hidden;
 }
 
 /* Verse container */
@@ -1034,11 +1037,18 @@ body.musica-display-route .musica-display-screen--reader {
 
 .musica-display-verse-16x9--reader {
   padding: var(--display-verse-pad, 1rem);
-  border-radius: 0.72rem;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  min-height: var(--display-verse-min-height, 6.5rem);
-  align-self: stretch;
+  border-radius: 0 0.5rem 0.5rem 0;
+  background: rgba(255, 255, 255, 0.03);
+  border: none;
+  border-left: 3px solid rgba(138, 0, 90, 0.35);
+  padding-left: 1rem;
+  min-height: 0;
+  align-self: auto;
+}
+
+.musica-display-verse-16x9--reader.is-highlighted {
+  border-left-color: rgba(246, 173, 85, 0.65);
+  background: rgba(246, 173, 85, 0.06);
 }
 
 .musica-display-verse-num {
@@ -1071,10 +1081,10 @@ body.musica-display-route .musica-display-screen--reader {
 
 .musica-display-verse-label {
   margin: 0;
-  font-size: 0.4rem;
+  font-size: 0.68rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: rgba(245, 235, 253, 0.58);
+  color: rgba(245, 235, 253, 0.68);
 }
 
 .musica-display-verse-title {
@@ -1082,13 +1092,14 @@ body.musica-display-route .musica-display-screen--reader {
   font-family: var(--font-heading);
   font-size: clamp(0.92rem, var(--display-verse-title, 1rem), 1.24rem);
   color: #fffaf5;
+  line-height: 1.18;
 }
 
 .musica-display-verse-content pre {
   margin: 0;
   font-family: inherit;
-  font-size: clamp(0.82rem, var(--display-verse-text, 1rem), 1.06rem);
-  line-height: 1.4;
+  font-size: var(--display-verse-text, 1rem);
+  line-height: 1.46;
   white-space: pre-wrap;
   word-wrap: break-word;
   color: #f4efe7;
@@ -1099,8 +1110,8 @@ body.musica-display-route .musica-display-screen--reader {
   white-space: pre-wrap;
   word-wrap: break-word;
   font-family: inherit;
-  font-size: clamp(0.82rem, var(--display-verse-text, 1rem), 1.06rem);
-  line-height: 1.4;
+  font-size: var(--display-verse-text, 1rem);
+  line-height: 1.46;
   color: #f4efe7;
 }
 
