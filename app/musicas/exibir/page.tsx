@@ -1,6 +1,6 @@
 import { getInstitutionBrand } from "@/lib/institution-brand";
 import { getMusicaExibicaoPublicaAtual } from "@/lib/musicas";
-import { MusicaDisplayLive } from "@/components/musicas/musica-display-live";
+import { MusicaExibicaoPublicaLive } from "@/components/musicas/musica-exibicao-publica-live";
 
 export const metadata = {
   title: "Exibição pública - Músicas GEEF",
@@ -13,12 +13,11 @@ export default async function MusicasExibirPage() {
   const [brand, exibicaoAtual] = await Promise.all([getInstitutionBrand(), getMusicaExibicaoPublicaAtual()]);
 
   return (
-    <MusicaDisplayLive
+    <MusicaExibicaoPublicaLive
       logoSrc={brand.logoSemFundoUrl}
       initialSessao={exibicaoAtual?.sessao ?? null}
       initialMusica={exibicaoAtual?.musica ?? null}
       pollUrl="/api/musicas/exibicao"
-      showPairingInfo={false}
     />
   );
 }
