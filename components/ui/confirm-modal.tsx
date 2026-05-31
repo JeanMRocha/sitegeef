@@ -44,37 +44,20 @@ export function ConfirmModal({
 
   return (
     <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        backgroundColor: "var(--modal-overlay)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 1000,
-      }}
+      className="modal-overlay"
       onClick={handleCancel}
     >
       <div
-        style={{
-          backgroundColor: "var(--modal-bg)",
-          border: "1px solid var(--modal-border)",
-          borderRadius: "0.9rem",
-          padding: "2rem",
-          maxWidth: "400px",
-          width: "90%",
-          boxShadow: "var(--modal-shadow)",
-          color: "var(--text-primary)",
-        }}
+        className="modal-content confirm-modal-content"
         onClick={(e) => e.stopPropagation()}
       >
-        <h3 style={{ margin: "0 0 0.75rem", fontSize: "1.25rem", color: "var(--text-primary)" }}>
+        <h3 className="confirm-modal-title">
           {title}
         </h3>
-        <p style={{ margin: "0 0 1.5rem", color: "var(--text-secondary)" }}>
+        <p className="confirm-modal-message">
           {message}
         </p>
-        <div style={{ display: "flex", gap: "0.75rem", justifyContent: "flex-end" }}>
+        <div className="modal-actions">
           <button
             onClick={handleCancel}
             disabled={loading}
