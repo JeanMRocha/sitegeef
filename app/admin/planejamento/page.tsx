@@ -6,10 +6,20 @@ export const metadata = {
   title: 'Planejamento - Admin GEEF',
 };
 
+type MetaItem = {
+  id: string;
+  objetivo: string;
+  andamento?: number | null;
+  prazo?: string | null;
+  status?: string | null;
+  responsavel?: { nome?: string | null } | null;
+};
+
 async function PlanejamentoContent() {
   const metas = await getMetas();
-  const ativas = metas.filter((m: any) => m.status === 'em_execucao' || m.status === 'planejada');
-  const concluidas = metas.filter((m: any) => m.status === 'concluida');
+  const metaList = metas as MetaItem[];
+  const ativas = metaList.filter((m) => m.status === 'em_execucao' || m.status === 'planejada');
+  const concluidas = metaList.filter((m) => m.status === 'concluida');
 
   return (
     <div className="area-page">
@@ -47,8 +57,8 @@ async function PlanejamentoContent() {
           <p>Panorama de andamento, prazo e status de execução.</p>
         </div>
         <div className="table-surface">
-          {metas.length > 0 ? (
-            <div style={{ overflowX: 'auto' }}>
+          {metaList.length > 0 ? (
+            <div className="overflow-x-auto">
               <table className="admin-table">
                 <thead>
                   <tr>
@@ -59,21 +69,21 @@ async function PlanejamentoContent() {
                     <th>Status</th>
                     <th>Ação</th>
                   </tr>
-                </thead>
-                <tbody>
-                  {metas.map((meta: any) => (
+              </thead>
+              <tbody>
+                  {metaList.map((meta) => (
                     <tr key={meta.id}>
-                      <td style={{ fontWeight: 500, maxWidth: '220px' }}>{meta.objetivo}</td>
+                      <td className="table-cell-truncate"><strong>{meta.objetivo}</strong></td>
                       <td>{meta.responsavel?.nome || '—'}</td>
                       <td>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', minWidth: '140px' }}>
-                          <div style={{ flex: 1, height: '6px', backgroundColor: 'var(--line)', borderRadius: '3px', overflow: 'hidden' }}>
-                            <div style={{ height: '100%', backgroundColor: 'var(--accent)', width: `${meta.andamento || 0}%` }} />
+                        <div className="progress-row">
+                          <div className="progress-track">
+                            <div className="progress-fill" style={{ width: `${meta.andamento || 0}%` }} />
                           </div>
-                          <span style={{ fontSize: '0.8rem', minWidth: '30px' }}>{meta.andamento || 0}%</span>
+                          <span className="progress-value">{meta.andamento || 0}%</span>
                         </div>
                       </td>
-                      <td style={{ color: 'var(--muted)' }}>
+                      <td className="text-sm-muted">
                         {meta.prazo ? new Date(meta.prazo).toLocaleDateString('pt-BR') : '—'}
                       </td>
                       <td>
@@ -115,7 +125,7 @@ async function PlanejamentoContent() {
 
 export default function PlanejamentoPage() {
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <PlanejamentoContent />
     </Suspense>
   );

@@ -6,10 +6,20 @@ export const metadata = {
   title: 'Reuniões Virtuais - Admin GEEF',
 };
 
+type ReuniaoItem = {
+  id: string;
+  titulo: string;
+  plataforma?: string | null;
+  data_hora?: string | null;
+  status?: string | null;
+  anfitriao?: { nome?: string | null } | null;
+};
+
 async function ReunioesvirtualaisContent() {
   const reunioes = await getReunioes();
-  const planejadas = reunioes.filter((r: any) => r.status === 'planejada');
-  const finalizadas = reunioes.filter((r: any) => r.status === 'finalizada');
+  const reuniaoList = reunioes as ReuniaoItem[];
+  const planejadas = reuniaoList.filter((r) => r.status === 'planejada');
+  const finalizadas = reuniaoList.filter((r) => r.status === 'finalizada');
 
   return (
     <div className="area-page">
@@ -47,8 +57,8 @@ async function ReunioesvirtualaisContent() {
           <p>Panorama dos encontros agendados e concluídos.</p>
         </div>
         <div className="table-surface">
-          {reunioes.length > 0 ? (
-            <div style={{ overflowX: 'auto' }}>
+          {reuniaoList.length > 0 ? (
+            <div className="overflow-x-auto">
               <table className="admin-table">
                 <thead>
                   <tr>
@@ -59,14 +69,14 @@ async function ReunioesvirtualaisContent() {
                     <th>Status</th>
                     <th>Ação</th>
                   </tr>
-                </thead>
-                <tbody>
-                  {reunioes.map((reuniao: any) => (
+              </thead>
+              <tbody>
+                  {reuniaoList.map((reuniao) => (
                     <tr key={reuniao.id}>
-                      <td style={{ fontWeight: 500 }}>{reuniao.titulo}</td>
+                      <td><strong>{reuniao.titulo}</strong></td>
                       <td>{reuniao.plataforma ? reuniao.plataforma : '—'}</td>
                       <td>{reuniao.anfitriao?.nome || '—'}</td>
-                      <td style={{ color: 'var(--muted)' }}>
+                      <td className="text-sm-muted">
                         {reuniao.data_hora ? new Date(reuniao.data_hora).toLocaleDateString('pt-BR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : '—'}
                       </td>
                       <td>
@@ -95,7 +105,7 @@ async function ReunioesvirtualaisContent() {
 
 export default function ReunioesvirtualaisPage() {
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <ReunioesvirtualaisContent />
     </Suspense>
   );

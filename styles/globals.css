@@ -172,6 +172,31 @@
   color: #22c55e;
 }
 
+.progress-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 140px;
+}
+
+.progress-track {
+  flex: 1;
+  height: 6px;
+  background: var(--line);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+}
+
+.progress-value {
+  font-size: 0.8rem;
+  min-width: 30px;
+}
+
 .page-pagination {
   display: flex;
   gap: 0.5rem;
