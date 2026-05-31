@@ -23,12 +23,7 @@ export function EncerrarMusicasSessoesButton({ action, disabled = false, count }
     >
       <button
         type="submit"
-        className="profile-form-btn profile-form-btn-secondary"
-        style={
-          !disabled
-            ? { color: "var(--danger)", borderColor: "rgba(239, 68, 68, 0.28)" }
-            : { opacity: 0.55, cursor: "not-allowed" }
-        }
+        className={`profile-form-btn profile-form-btn-secondary profile-form-btn-danger ${disabled ? 'disabled' : ''}`}
         disabled={disabled}
       >
         Encerrar todas as ativas
