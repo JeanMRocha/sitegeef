@@ -3349,6 +3349,11 @@ a.button.musica-icon-button {
   align-items: center;
 }
 
+.content-surface-note-danger {
+  background: rgba(239, 68, 68, 0.05);
+  align-items: flex-start;
+}
+
 .content-surface-note-bordered {
   margin-top: 2rem;
   border-top: 1px solid var(--admin-border);
