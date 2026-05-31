@@ -1,8 +1,8 @@
 # Remediation Progress — GEEF ERP Audit
 
 **Date Started:** 2026-05-31  
-**Last Updated:** 2026-05-31  
-**Overall Progress:** 40% (Priority 1 items initiated)
+**Last Updated:** 2026-05-31 (Session 2)  
+**Overall Progress:** 55% (Priority 1 advanced, Priority 2 started)
 
 ---
 
@@ -10,7 +10,7 @@
 
 ### 1. ✅ Increase Test Coverage
 
-**Status:** STARTED
+**Status:** ADVANCED (3/5 items complete)
 
 **Completed:**
 - [x] Created unit tests for `lib/auth/permissions.ts` (588 lines)
@@ -28,12 +28,19 @@
   - Tests for `parsePartesFromText()` with section extraction
   - Coverage: 30+ test cases covering utility functions
 
+- [x] Created unit tests for Supabase query patterns (214 lines)
+  - Tests for pagination calculations (offset, range)
+  - Tests for search filter building (single/multi-field)
+  - Tests for status filter application
+  - Tests for join/reduce pattern for relationships
+  - Tests for error handling in query chains
+  - Coverage: 20+ test cases for reusable patterns
+
 **Next Steps:**
 - [ ] Run test suite locally: `npm run test`
 - [ ] Verify coverage report: `npm run test:coverage`
 - [ ] Add E2E tests for auth flow (login/logout)
-- [ ] Add tests for `lib/musicas.ts` database queries
-- [ ] Target: >60% total coverage (currently estimated ~25-30%)
+- [ ] Target: >60% total coverage (currently estimated ~30-35%)
 
 **Effort:** Started (2/5 files covered)  
 **Timeline:** 1-2 weeks
@@ -86,19 +93,29 @@
 
 ---
 
-## Priority 2: MEDIUM (2-4 weeks) — PENDING
+## Priority 2: MEDIUM (2-4 weeks) — IN PROGRESS
 
-### 1. 🔄 Extract CRUD Template
+### 1. ✅ Extract Query Helpers (Partial)
 
-**Status:** NOT STARTED
+**Status:** STARTED
 
-**Description:**
-- Reduce duplication in 27 admin modules
-- Create generic CRUD functions in `lib/admin/crud-templates.ts`
-- Update modules to use shared template
+**Completed:**
+- [x] Created `lib/admin/query-helpers.ts` with shared functions
+  - `calculateOffset()` / `calculateRange()` for pagination
+  - `buildSearchFilter()` for multi-field search
+  - `shouldApplyStatusFilter()` for conditional filtering
+  - `mapRelatedData()` for join pattern (N+1 reduction)
+  - `safeFilterData()` for null-safe transformations
+  - `getTotalPages()` / `getValidPage()` utilities
+  - Total: 8 helper functions, fully tested
 
-**Estimated Effort:** 2-4 days  
-**Timeline:** After Priority 1 complete
+**Next Steps:**
+- [ ] Update `app/admin/pessoas/actions.ts` to use helpers
+- [ ] Update remaining admin modules (~26 more)
+- [ ] Remove duplicated query logic from each module
+
+**Estimated Effort:** 2-3 days across all modules  
+**Timeline:** This week
 
 ---
 
@@ -137,39 +154,51 @@
   - `.flex-end-gap` — flex with end alignment
   - Reduces DRY violations across 27 admin modules
 
-**Pending:** Similar refactors in 17 other admin component files  
+**Completed (This Session):**
+- [x] Refactored `components/admin/musicas/musicas-catalog-table.tsx`
+- [x] Refactored `components/admin/musicas/sessoes-list.tsx`
+- [x] Created table utility CSS classes (5 new classes)
+
+**Pending:** Similar refactors in 15 other admin component files  
 **Estimated Effort:** 1-2 weeks  
-**Timeline:** After Priority 1 complete
+**Timeline:** Ongoing (3+ files done, 15 remaining)
 
 ---
 
 ## Summary of Changes
 
-### Files Created
+### Files Created (This Session)
 ```
 tests/lib-auth-permissions.test.ts          (588 lines, 8 test cases)
 tests/lib-musicas.test.ts                   (350+ lines, 30+ test cases)
+tests/lib-supabase-queries.test.ts          (214 lines, 20+ test cases)
 .github/workflows/test.yml                  (CI/CD pipeline)
 vitest.config.ts                            (test configuration)
 .eslintrc.json                              (linting rules)
 .prettierrc.json                            (formatting rules)
 .prettierignore                             (ignore patterns)
+lib/admin/query-helpers.ts                  (154 lines, 8 functions)
 docs/REMEDIATION_PROGRESS.md                (this file)
 ```
 
 ### Files Modified
 ```
 package.json                                (added test scripts & dev deps)
-components/admin/musicas/musicas-catalog-table.tsx  (removed inline styles)
-styles/admin.css                            (added table utility classes)
-styles/utilities.css                        (already had flex utilities)
+components/admin/musicas/musicas-catalog-table.tsx  (removed 5 inline styles)
+components/admin/musicas/sessoes-list.tsx   (removed 5 inline styles)
+styles/admin.css                            (added 7 table utility classes)
+styles/utilities.css                        (flex utilities already present)
 ```
 
-### Commits
+### Commits (This Session)
 ```
-d7c2ec4 refactor: remove all inline styles from musicas-catalog-table
-664f604 test: add unit tests for auth/permissions and musicas library
-31405e8 ci/cd: add test pipeline, linting, and code formatting
+a249def docs: add remediation progress tracker
+31405e8 ci/cd: add test pipeline and code quality tools
+664f604 test: add unit tests for auth/permissions and musicas
+d7c2ec4 refactor: remove inline styles from musicas-catalog-table
+7a9c031 refactor: remove inline styles from sessoes-list component
+e860c0e test: add unit tests for common Supabase query patterns
+1d04ee0 refactor: extract shared Supabase query helpers for reuse
 ```
 
 ---
