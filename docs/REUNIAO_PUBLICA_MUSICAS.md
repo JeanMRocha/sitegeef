@@ -93,6 +93,7 @@ Regras de exibicao:
 - a musica marcada como exibição pública usa uma sessao unica reservada;
 - a tela publica escuta a troca da sessão publicizada e atualiza sem refresh manual;
 - a tela `/musicas/exibir` usa o mesmo leitor visual de `/musicas/[slug]`, só trocando o conteúdo em tempo real;
+- músicas muito longas podem cair automaticamente no layout compacto de exibição para caber sem scroll;
 - a tela publica pareada `/musicas/exibir/[codigo]` acompanha apenas uma sessao ja criada na area interna;
 - se uma sessao ficar sem acesso por mais de 1 hora, ela e encerrada como inativa na proxima leitura do estado;
 - enquanto a apresentacao estiver aberta, o polling da tela publica renova `ultimo_acesso_em`;
