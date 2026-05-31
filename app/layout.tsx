@@ -66,6 +66,12 @@ export default async function RootLayout({
     var theme = saved === 'dark' ? 'dark' : 'light';
     window.__GEEF_THEME__ = theme;
     var root = document.documentElement;
+    var pathname = window.location.pathname || '';
+    if (pathname.startsWith('/musicas/exibir')) {
+      root.classList.add('musica-display-route');
+    } else {
+      root.classList.remove('musica-display-route');
+    }
     if (theme === 'dark') {
       root.classList.add('dark');
       root.style.colorScheme = 'dark';

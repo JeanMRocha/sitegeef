@@ -93,22 +93,25 @@ export function UserMenu({
                 <span>🛡️</span> {copy.header.privacy}
               </Link>
               <div className="site-header-user-controls">
-                <LanguageSwitcher
-                  locale={locale}
-                  onLocaleChange={() => setMenuOpen(false)}
-                />
-                <button
-                  onClick={toggleTheme}
-                  className="site-icon-toggle"
-                  title={theme === "light" ? copy.header.themeLight : copy.header.themeDark}
-                  aria-label={theme === "light" ? copy.header.themeLight : copy.header.themeDark}
-                >
-                  {theme === "light" ? (
-                    <MoonIcon className="site-icon-toggle-svg" />
-                  ) : (
-                    <SunIcon className="site-icon-toggle-svg" />
-                  )}
-                </button>
+                <div className="site-header-user-controls-label">Idioma e tema</div>
+                <div className="site-header-user-controls-row">
+                  <LanguageSwitcher
+                    locale={locale}
+                    onLocaleChange={() => setMenuOpen(false)}
+                  />
+                  <button
+                    onClick={toggleTheme}
+                    className="site-icon-toggle"
+                    title={theme === "light" ? copy.header.themeLight : copy.header.themeDark}
+                    aria-label={theme === "light" ? copy.header.themeLight : copy.header.themeDark}
+                  >
+                    {theme === "light" ? (
+                      <MoonIcon className="site-icon-toggle-svg" />
+                    ) : (
+                      <SunIcon className="site-icon-toggle-svg" />
+                    )}
+                  </button>
+                </div>
               </div>
             </nav>
           </div>
@@ -188,22 +191,25 @@ export function UserMenu({
             </Link>
 
             <div className="site-header-user-controls">
-              <LanguageSwitcher
-                locale={locale}
-                onLocaleChange={() => setMenuOpen(false)}
-              />
-              <button
-                onClick={toggleTheme}
-                className="site-icon-toggle"
-                title={theme === "light" ? copy.header.themeLight : copy.header.themeDark}
-                aria-label={theme === "light" ? copy.header.themeLight : copy.header.themeDark}
-              >
-                {theme === "light" ? (
-                  <MoonIcon className="site-icon-toggle-svg" />
-                ) : (
-                  <SunIcon className="site-icon-toggle-svg" />
-                )}
-              </button>
+              <div className="site-header-user-controls-label">Idioma e tema</div>
+              <div className="site-header-user-controls-row">
+                <LanguageSwitcher
+                  locale={locale}
+                  onLocaleChange={() => setMenuOpen(false)}
+                />
+                <button
+                  onClick={toggleTheme}
+                  className="site-icon-toggle"
+                  title={theme === "light" ? copy.header.themeLight : copy.header.themeDark}
+                  aria-label={theme === "light" ? copy.header.themeLight : copy.header.themeDark}
+                >
+                  {theme === "light" ? (
+                    <MoonIcon className="site-icon-toggle-svg" />
+                  ) : (
+                    <SunIcon className="site-icon-toggle-svg" />
+                  )}
+                </button>
+              </div>
             </div>
             <a href="/logout" className="site-header-user-logout">
               <span>🚪</span> {copy.header.signOut}

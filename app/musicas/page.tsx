@@ -36,30 +36,26 @@ export default async function MusicasPage({ searchParams }: PageProps) {
             </article>
           ) : (
             musicas.map((musica) => (
-              <article key={musica.id} className="musica-catalog-card musica-catalog-card--presentation">
-                <div className="musica-catalog-summary-main">
-                  <span className="musica-catalog-author">{musica.autor}</span>
-                  <strong className="musica-catalog-title">{musica.titulo}</strong>
-                  <span className="musica-catalog-meta">
-                    {musica.tom ? `Tom ${musica.tom}` : "Tom não definido"}
-                    {musica.versao ? ` • ${musica.versao}` : ""}
-                    <span className="musica-catalog-partes">{` • ${musica.partes.length} partes`}</span>
-                  </span>
-                </div>
+              <article key={musica.id} className="musica-catalog-card musica-catalog-card--compact">
+                {(() => {
+                  const meta = [musica.tom ? `Tom ${musica.tom}` : null, musica.versao ?? null].filter(Boolean).join(" • ");
 
-                <p className="musica-catalog-summary musica-catalog-summary--single">
-                  {musica.partes
-                    .map((parte) => parte.conteudo)
-                    .join(" ")
-                    .replace(/\s+/g, " ")
-                    .trim() || "Música disponível para leitura e exibição."}
-                </p>
+                  return (
+                <div className="musica-catalog-summary-row">
+                  <p className="musica-catalog-line" title={`${musica.autor} • ${musica.titulo}`}>
+                    <span className="musica-catalog-author-inline">{musica.autor}</span>
+                    <span className="musica-catalog-title-inline">{musica.titulo}</span>
+                    {meta ? <span className="musica-catalog-meta-inline">{meta}</span> : null}
+                  </p>
 
-                <div className="musica-catalog-actions">
-                  <Link href="/musicas/exibir" className="button button-secondary">
-                    Ver
-                  </Link>
+                  <div className="musica-catalog-actions">
+                    <Link href={`/musicas/exibir/${musica.slug}`} className="button button-secondary">
+                      Ver
+                    </Link>
+                  </div>
                 </div>
+                  );
+                })()}
               </article>
             ))
           )}

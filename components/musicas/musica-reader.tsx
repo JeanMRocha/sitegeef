@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import type { Musica } from "@/lib/musicas";
 import { formatParteTipoLabel, isTituloSameasTipo } from "@/lib/musicas";
 import { IconArrowLeft, IconExternalLink, IconPrinter } from "@/components/icons";
@@ -79,10 +80,15 @@ export function MusicaReader({
   showBranding = true,
 }: MusicaReaderProps) {
   const isDisplay = mode === "exibicao";
+  const router = useRouter();
   const [viewMode, setViewMode] = useState<"letra" | "cifra">("letra");
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [pipExpanded, setPipExpanded] = useState(false);
   const [pipHidden, setPipHidden] = useState(false);
+  const [viewport, setViewport] = useState(() => ({
+    width: 1366,
+    height: 768,
+  }));
 
   const partesComCifra = musica.partes.filter((p) => p.cifra);
   const hasInlineChords = musica.partes.some((p) =>
@@ -93,125 +99,183 @@ export function MusicaReader({
 
   const hasMedia = musica.youtube_url || musica.audio_url;
   const partesVisiveis = musica.partes.filter((parte) => !mostrarCifra || parte.cifra);
-  const meio = Math.ceil(partesVisiveis.length / 2);
-  const blocosLetra = [
-    partesVisiveis.slice(0, meio),
-    partesVisiveis.slice(meio),
-  ].filter((bloco) => bloco.length > 0);
+  const displayMetrics = useMemo(() => {
+    const totalLines = partesVisiveis.reduce((sum, parte) => sum + parte.conteudo.split("\n").length, 0);
+    const totalChars = partesVisiveis.reduce((sum, parte) => sum + parte.conteudo.length, 0);
+    const density = totalLines * 24 + totalChars / 22 + partesVisiveis.length * 72;
+    const heightFactor = Math.min(1, viewport.height / 900);
+    const widthFactor = Math.min(1, viewport.width / 1600);
+    const densityFactor = density > 1200 ? 0.78 : density > 900 ? 0.86 : density > 650 ? 0.92 : 1;
+    const scale = Math.max(0.78, Math.min(1, heightFactor * widthFactor * densityFactor + 0.08));
+    const maxColumnsByWidth = Math.min(4, Math.max(2, Math.floor((viewport.width - 96) / 360)));
+    const versesPerColumn = viewport.height < 760 ? 5 : viewport.height < 880 ? 6 : 7;
+    const columnsByVerseCount = Math.max(1, Math.ceil(partesVisiveis.length / versesPerColumn));
+    const columnsByHeight = Math.max(
+      1,
+      Math.ceil(
+        (totalLines * 17 + partesVisiveis.length * 34) /
+          Math.max(380, viewport.height - 260),
+      ),
+    );
+    const columns = viewport.width < 980
+      ? 1
+      : Math.min(maxColumnsByWidth, Math.max(columnsByVerseCount, columnsByHeight));
+    const bodyGap = columns >= 4 ? 0.48 : columns === 3 ? 0.58 : scale < 0.85 ? 0.7 : scale < 0.92 ? 0.8 : 0.9;
+    const headerPaddingY = scale < 0.85 ? 0.82 : scale < 0.92 ? 1 : 1.2;
+    const headerPaddingX = scale < 0.85 ? 0.75 : scale < 0.92 ? 1 : 1.25;
+    const titleSize = columns >= 4 ? 1.55 : columns === 3 ? 2.05 : scale < 0.85 ? 1.7 : scale < 0.92 ? 1.9 : 2.2;
+    const subtitleSize = columns >= 4 ? 0.8 : columns === 3 ? 0.92 : scale < 0.85 ? 0.86 : scale < 0.92 ? 0.94 : 1;
+    const logoWidth = columns >= 4 ? 62 : columns === 3 ? 78 : scale < 0.85 ? 76 : scale < 0.92 ? 86 : 96;
+    const bodyPaddingTop = columns >= 4 ? 0.45 : columns === 3 ? 0.7 : scale < 0.85 ? 0.65 : scale < 0.92 ? 0.9 : 1.15;
+    const versePad = columns >= 4 ? 0.58 : columns === 3 ? 0.85 : scale < 0.85 ? 0.8 : scale < 0.92 ? 0.92 : 1.02;
+    const verseTitle = columns >= 4 ? 0.9 : columns === 3 ? 1.08 : scale < 0.85 ? 0.98 : scale < 0.92 ? 1.04 : 1.15;
+    const verseText = columns >= 4 ? 0.9 : columns === 3 ? 1.08 : scale < 0.85 ? 0.92 : scale < 0.92 ? 1 : 1.08;
+    const verseMinHeight =
+      totalLines <= 14
+        ? 8.8
+        : totalLines <= 20
+          ? 8
+          : totalLines <= 30
+            ? 7.1
+            : totalLines <= 42
+              ? 6.4
+              : 5.8;
 
+    return {
+      scale,
+      columns,
+      bodyGap,
+      headerPaddingY,
+      headerPaddingX,
+      titleSize,
+      subtitleSize,
+      logoWidth,
+      bodyPaddingTop,
+      versePad,
+      verseTitle,
+      verseText,
+      verseMinHeight,
+    };
+  }, [partesVisiveis, viewport.height, viewport.width]);
   useEffect(() => {
     if (isDisplay) {
+      document.body.classList.add("musica-display-route");
       setIsTransitioning(true);
       const timer = setTimeout(() => {
         setIsTransitioning(false);
       }, 500);
-      return () => clearTimeout(timer);
+      return () => {
+        clearTimeout(timer);
+        document.body.classList.remove("musica-display-route");
+      };
     }
+    document.body.classList.remove("musica-display-route");
   }, [musica.id, isDisplay]);
 
+  useEffect(() => {
+    if (!isDisplay) return;
+
+    function handleResize() {
+      setViewport({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    }
+
+    handleResize();
+    window.addEventListener("resize", handleResize, { passive: true });
+    return () => window.removeEventListener("resize", handleResize);
+  }, [isDisplay, musica.id]);
+
   if (isDisplay) {
+    let estrofeCount = 0;
+
     return (
       <main
-        className="musica-display-shell musica-display-shell--live"
-        style={{
-          width: "100vw",
-          height: "100vh",
-          aspectRatio: "16 / 9",
-          display: "flex",
-          flexDirection: "column",
-          backgroundColor: "var(--bg-dark, #1a1a1a)",
-          color: "var(--text-light, #ffffff)",
-          overflow: "hidden",
-        }}
+        className="musica-display-screen musica-display-screen--reader"
+        style={
+          {
+            ["--display-scale" as string]: displayMetrics.scale,
+            ["--display-columns" as string]: displayMetrics.columns,
+            ["--display-body-gap" as string]: `${displayMetrics.bodyGap}rem`,
+            ["--display-header-pad-y" as string]: `${displayMetrics.headerPaddingY}rem`,
+            ["--display-header-pad-x" as string]: `${displayMetrics.headerPaddingX}rem`,
+            ["--display-title-size" as string]: `${displayMetrics.titleSize}rem`,
+            ["--display-subtitle-size" as string]: `${displayMetrics.subtitleSize}rem`,
+            ["--display-logo-width" as string]: `${displayMetrics.logoWidth}px`,
+            ["--display-body-pad-top" as string]: `${displayMetrics.bodyPaddingTop}rem`,
+            ["--display-verse-pad" as string]: `${displayMetrics.versePad}rem`,
+            ["--display-verse-title" as string]: `${displayMetrics.verseTitle}rem`,
+            ["--display-verse-text" as string]: `${displayMetrics.verseText}rem`,
+            ["--display-verse-min-height" as string]: `${displayMetrics.verseMinHeight}rem`,
+          } as CSSProperties
+        }
       >
-        <div
-          style={{
-            position: "absolute",
-            top: "1.5rem",
-            left: "1.5rem",
-            zIndex: 10,
-            opacity: 0.7,
-          }}
-        >
-          <img src={logoSrc} alt="Logo GEEF" style={{ height: "3rem", width: "auto" }} />
+        <div className="musica-display-floating-controls">
+          <button
+            type="button"
+            className="musica-display-back-btn"
+            onClick={() => {
+              if (window.history.length > 1) {
+                router.back();
+                return;
+              }
+              router.push("/musicas");
+            }}
+            aria-label="Voltar"
+            title="Voltar"
+          >
+            <IconArrowLeft size={16} />
+            <span>Voltar</span>
+          </button>
         </div>
 
-        <div
-          style={{
-            position: "sticky",
-            top: 0,
-            zIndex: 5,
-            padding: "2rem 2rem 1rem",
-            backgroundColor: "rgba(26, 26, 26, 0.95)",
-            borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
-          }}
-        >
-          <h1 style={{ margin: "0 0 0.5rem", fontSize: "2rem" }}>{musica.titulo}</h1>
-          <p style={{ margin: 0, fontSize: "1rem", opacity: 0.8 }}>
-            {musica.autor}
-            {musica.tom ? ` • Tom ${musica.tom}` : ""}
-          </p>
-        </div>
+        <div className="musica-display-header-16x9">
+          <div className="musica-display-header-spacer" aria-hidden="true" />
+          <div className="musica-display-header-title">
+            <h1>{musica.titulo}</h1>
+            <p className="musica-display-header-subtitle">
+              {musica.autor}
+              {musica.tom ? ` • Tom ${musica.tom}` : ""}
+              {musica.versao ? ` • ${musica.versao}` : ""}
+            </p>
+          </div>
 
-        <div
-          style={{
-            flex: 1,
-            overflow: "auto",
-            padding: "2rem",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            opacity: isTransitioning ? 0 : 1,
-            transition: "opacity 0.5s ease",
-          }}
-        >
-          <div style={{ display: "grid", gap: "2rem" }}>
-            {musica.partes
-              .filter((parte) => !mostrarCifra || parte.cifra)
-              .map((parte, index) => (
-                <section
-                  key={parte.id ?? `${musica.id}-${index}`}
-                  style={{
-                    padding: "1.5rem",
-                    backgroundColor: parte.destaque ? "rgba(138, 0, 90, 0.2)" : "rgba(255, 255, 255, 0.05)",
-                    borderRadius: "0.5rem",
-                    borderLeft: parte.destaque ? "4px solid #8a005a" : "4px solid transparent",
-                  }}
-                >
-                  <div style={{ marginBottom: "1rem" }}>
-                    <p style={{ fontSize: "0.9rem", opacity: 0.6, margin: "0 0 0.5rem" }}>
-                      {formatParteTipoLabel(parte.tipo)}
-                    </p>
-                    <h2 style={{ margin: 0, fontSize: "1.5rem" }}>
-                      {parte.titulo || formatParteTipoLabel(parte.tipo)}
-                    </h2>
-                  </div>
-                  <pre
-                    style={{
-                      margin: 0,
-                      fontFamily: "inherit",
-                      fontSize: "1.1rem",
-                      lineHeight: 1.8,
-                      whiteSpace: "pre-wrap",
-                      wordWrap: "break-word",
-                    }}
-                  >
-                    {mostrarCifra ? parte.cifra : parte.conteudo}
-                  </pre>
-                </section>
-              ))}
+          <div className="musica-display-header-logo-wrap">
+            <img src={logoSrc} alt="Logo GEEF" className="musica-display-header-logo" />
           </div>
         </div>
 
-        <style jsx>{`
-          @media (max-aspect-ratio: 16/9) {
-            .musica-display-shell--live {
-              height: 100vw;
-              width: auto;
-              aspect-ratio: 9 / 16;
-            }
-          }
-        `}</style>
+        <div className="musica-display-body-16x9">
+          {musica.partes
+            .filter((parte) => !mostrarCifra || parte.cifra)
+            .map((parte, index) => {
+              if (parte.tipo === "estrofe") {
+                estrofeCount += 1;
+              }
+
+              const tipoLabel = formatParteTipoLabel(parte.tipo);
+              const displayLabel =
+                parte.tipo === "estrofe" ? `${tipoLabel} ${String(estrofeCount).padStart(2, "0")}` : tipoLabel;
+
+              return (
+                <div
+                  key={parte.id ?? `${musica.id}-${index}`}
+                  className={`musica-display-verse-16x9 musica-display-verse-16x9--reader ${parte.destaque ? "is-highlighted" : ""}`}
+                >
+                  <div className="musica-display-verse-content musica-display-verse-content--reader">
+                    <p className="musica-display-verse-label">{displayLabel}</p>
+                    {parte.titulo && !isTituloSameasTipo(parte.titulo, tipoLabel) ? (
+                      <h2 className="musica-display-verse-title">{parte.titulo}</h2>
+                    ) : null}
+                    <pre className="musica-display-verse-text">
+                      {mostrarCifra ? parte.cifra : parte.conteudo}
+                    </pre>
+                  </div>
+                </div>
+              );
+            })}
+        </div>
       </main>
     );
   }

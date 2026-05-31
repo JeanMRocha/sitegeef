@@ -21,45 +21,33 @@ async function MusicasContent({ searchParams }: PageProps) {
 
   return (
     <div className="area-page">
-      <div className="admin-page-header">
-        <div>
+      <div className="admin-page-header admin-page-header--music-catalog">
+        <div className="admin-page-header-copy">
           <span className="admin-dashboard-kicker">Reunião pública</span>
-          <h1 className="admin-page-title">Músicas</h1>
+          <div className="admin-page-title-row">
+            <h1 className="admin-page-title">Músicas</h1>
+            <span className="music-catalog-count-pill">{musicasResumo.length} cadastradas</span>
+          </div>
         </div>
-        <div style={{ display: "flex", gap: "0.5rem" }}>
-          <Link href="/admin/reuniao-publica/musicas/autores" className="admin-btn admin-btn-secondary" title="Gerenciar autores">
-            Autores
-          </Link>
-          <Link href="/admin/reuniao-publica/musicas/sessoes" className="admin-btn admin-btn-secondary" title="Sessões e controle">
-            Sessões
-          </Link>
-          <Link href="/admin/reuniao-publica/musicas/nova" className="admin-btn admin-btn-primary" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            <IconPlus size={18} />
-            Nova música
-          </Link>
-        </div>
-      </div>
 
-      <section className="area-section">
-        <div className="stat-grid">
-          <div className="stat-card">
-            <span>Músicas cadastradas</span>
-            <strong>{musicasResumo.length}</strong>
-          </div>
-          <div className="stat-card">
-            <span>Ativas</span>
-            <strong>{musicasResumo.filter((m) => m.status === "ativa").length}</strong>
-          </div>
-          <div className="stat-card">
-            <span>Rascunhos</span>
-            <strong>{musicasResumo.filter((m) => m.status === "rascunho").length}</strong>
-          </div>
-          <div className="stat-card">
-            <span>Inativas</span>
-            <strong>{musicasResumo.filter((m) => m.status === "inativa").length}</strong>
-          </div>
-        </div>
-      </section>
+        <form method="get" className="admin-search-bar admin-search-bar--catalog">
+          <input
+            name="q"
+            type="search"
+            defaultValue={q}
+            placeholder="Buscar por autor, título ou letra..."
+          />
+          <button type="submit" className="profile-form-btn profile-form-btn-secondary" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            <IconSearch size={16} />
+            Buscar
+          </button>
+        </form>
+
+        <Link href="/admin/reuniao-publica/musicas/nova" className="admin-btn admin-btn-primary" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <IconPlus size={18} />
+          Nova música
+        </Link>
+      </div>
 
       {isSaved && (
         <section className="area-section">
@@ -70,27 +58,9 @@ async function MusicasContent({ searchParams }: PageProps) {
       )}
 
       <section className="area-section">
-        <div className="admin-card">
-          <form method="get" className="admin-search-bar">
-            <input
-              name="q"
-              type="search"
-              defaultValue={q}
-              placeholder="Buscar por autor, título ou letra..."
-            />
-            <button type="submit" className="profile-form-btn profile-form-btn-secondary" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-              <IconSearch size={16} />
-              Buscar
-            </button>
-          </form>
-        </div>
-      </section>
-
-      <section className="area-section">
         <div className="admin-card table-surface">
           <div className="area-section-title">
             <h2>Catálogo</h2>
-            <p>Abra uma música para editar, visualizar ou remover.</p>
           </div>
 
           {musicas.length === 0 ? (

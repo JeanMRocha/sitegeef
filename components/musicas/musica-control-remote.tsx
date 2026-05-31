@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import type { Musica, MusicaSessao } from "@/lib/musicas";
 import { setMusicaAtualAction } from "@/app/musicas/controle/[codigo]/actions";
 
@@ -14,12 +14,28 @@ export function MusicaControlRemote({ codigo, initialSessao, musicas }: MusicaCo
   const [sessao, setSessao] = useState(initialSessao);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
+  const popupRef = useRef<Window | null>(null);
 
   const filteredMusicas = musicas.filter(
     (m) =>
       m.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
       m.autor.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const openDisplayPopup = useCallback(() => {
+    if (typeof window === "undefined") return;
+
+    if (popupRef.current && !popupRef.current.closed) {
+      popupRef.current.focus();
+      return;
+    }
+
+    popupRef.current = window.open(
+      "/musicas/exibir?popup=1",
+      "geef-musica-exibicao",
+      "popup=yes,width=1280,height=720"
+    );
+  }, []);
 
   const handleSelectMusica = useCallback(
     async (musicaId: string) => {
@@ -96,7 +112,24 @@ export function MusicaControlRemote({ codigo, initialSessao, musicas }: MusicaCo
           boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <h1 style={{ margin: "0 0 1rem", fontSize: "1.5rem" }}>Controle de Sessão</h1>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1rem", marginBottom: "1rem" }}>
+          <h1 style={{ margin: 0, fontSize: "1.5rem" }}>Controle de Sessão</h1>
+          <button
+            type="button"
+            onClick={openDisplayPopup}
+            style={{
+              padding: "0.7rem 1rem",
+              borderRadius: "999px",
+              border: "1px solid rgba(255,255,255,0.35)",
+              background: "rgba(255,255,255,0.12)",
+              color: "#fff",
+              fontWeight: 700,
+              cursor: "pointer",
+            }}
+          >
+            Abrir exibição
+          </button>
+        </div>
         <input
           type="search"
           placeholder="Buscar música..."

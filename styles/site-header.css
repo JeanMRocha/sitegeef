@@ -277,6 +277,12 @@
   z-index: 1001;
 }
 
+:root.dark .site-header-user-dropdown {
+  background: rgba(34, 31, 29, 0.98);
+  border-color: rgba(233, 160, 201, 0.24);
+  box-shadow: 0 24px 55px rgba(0, 0, 0, 0.5);
+}
+
 /* User Info Section */
 .site-header-user-info {
   display: flex;
@@ -285,6 +291,11 @@
   padding: var(--space-4);
   background: var(--surface-secondary);
   border-bottom: 1px solid var(--border-medium);
+}
+
+:root.dark .site-header-user-info {
+  background: rgba(45, 41, 38, 0.98);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 
 .site-header-user-info-compact {
@@ -314,6 +325,14 @@
   font-size: var(--text-xs);
   color: var(--text-muted);
   word-break: break-all;
+}
+
+:root.dark .site-header-user-details strong {
+  color: #fffaf5;
+}
+
+:root.dark .site-header-user-details span {
+  color: #e6dbcf;
 }
 
 /* User Navigation */
@@ -358,9 +377,33 @@
 
 .site-header-user-controls {
   display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.55rem;
+  padding: 0.85rem 1rem 1rem;
+  border-top: 1px solid var(--border-medium);
+}
+
+:root.dark .site-header-user-controls {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+.site-header-user-controls-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-hint);
+}
+
+:root.dark .site-header-user-controls-label {
+  color: #d4ccc1;
+}
+
+.site-header-user-controls-row {
+  display: flex;
   align-items: center;
   gap: 0.45rem;
-  padding: 0.85rem 1rem 1rem;
 }
 
 .site-icon-toggle {
@@ -380,10 +423,21 @@
   flex-shrink: 0;
 }
 
+:root.dark .site-icon-toggle {
+  background: rgba(60, 52, 45, 0.98);
+  border-color: rgba(233, 160, 201, 0.28);
+  color: #fffaf5;
+}
+
 .site-icon-toggle:hover {
   background: var(--dropdown-item-hover);
   border-color: var(--border-light);
   transform: translateY(-1px);
+}
+
+:root.dark .site-icon-toggle:hover {
+  background: rgba(72, 63, 55, 0.98);
+  border-color: rgba(233, 160, 201, 0.45);
 }
 
 .site-icon-toggle span {
@@ -440,6 +494,10 @@
   border-left: 3px solid transparent;
   text-align: left;
   margin: 0;
+}
+
+:root.dark .site-header-user-logout {
+  color: #ff7b8d;
 }
 
 .site-header-user-logout:hover {
