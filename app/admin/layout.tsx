@@ -5,6 +5,7 @@ import { withTimeout } from '@/lib/admin/safe-supabase';
 import { AdminSidebar } from '@/components/admin/admin-sidebar';
 import { AdminHeader } from '@/components/admin/admin-header';
 import { NotificationFlashBridge } from '@/components/notification-flash-bridge';
+import { getRequestLocale } from '@/lib/multilingual/server';
 import '@/styles/admin.css';
 import '@/styles/admin-sidebar.css';
 
@@ -20,6 +21,7 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const locale = await getRequestLocale();
   const supabase = await createClient();
   let user = null;
 
@@ -104,6 +106,7 @@ export default async function AdminLayout({
         <NotificationFlashBridge />
       </Suspense>
       <AdminHeader
+        locale={locale}
         user={{ email: user.email, fullName: displayName }}
       />
       <div className="admin-container">

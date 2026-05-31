@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { EnsureUserSystem } from "@/components/ensure-user-system";
 import { LgpdRequestModal } from "@/components/lgpd/lgpd-request-modal";
 import { getCachedUserArea } from "@/lib/areas/user-area";
-import { getRequestLocale } from "@/lib/multilingual";
+import { getRequestLocale } from "@/lib/multilingual/server";
 import { createClient } from "@/lib/supabase/server";
 import { submitTitularRequest } from "./actions";
 

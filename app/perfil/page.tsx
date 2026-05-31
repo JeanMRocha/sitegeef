@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getRequestLocale } from "@/lib/multilingual";
+import { getRequestLocale } from "@/lib/multilingual/server";
 import { ProfilePageView } from "@/components/profile-page";
 
 export async function generateMetadata(): Promise<Metadata> {

@@ -3,15 +3,17 @@
 import Link from 'next/link';
 import { useAdminShellArea } from '@/components/admin/use-admin-shell-area';
 import { AdminUserMenu } from '@/components/admin/admin-user-menu';
+import type { Locale } from '@/lib/multilingual';
 
 interface AdminHeaderProps {
+  locale: Locale;
   user: {
     email?: string;
     fullName?: string;
   };
 }
 
-export function AdminHeader({ user }: AdminHeaderProps) {
+export function AdminHeader({ locale, user }: AdminHeaderProps) {
   const displayName = user.fullName || user.email || 'Usuário';
   const { area, topAreas, routes } = useAdminShellArea();
 
@@ -37,7 +39,7 @@ export function AdminHeader({ user }: AdminHeaderProps) {
       </div>
 
       <div className="admin-header-right">
-        <AdminUserMenu email={user.email} fullName={displayName} />
+        <AdminUserMenu locale={locale} email={user.email} fullName={displayName} />
       </div>
     </header>
   );

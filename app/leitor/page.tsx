@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCachedUserArea } from "@/lib/areas/user-area";
-import { getRequestLocale } from "@/lib/multilingual";
+import { getRequestLocale } from "@/lib/multilingual/server";
 import { createClient } from "@/lib/supabase/server";
 
 export async function generateMetadata(): Promise<Metadata> {

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LoginForm } from "@/components/auth/login-form";
-import { getMultilingualCopy, getRequestLocale } from "@/lib/multilingual";
+import { getMultilingualCopy } from "@/lib/multilingual";
+import { getRequestLocale } from "@/lib/multilingual/server";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();

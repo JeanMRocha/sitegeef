@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { CalendarIcon, GroupIcon, HeartIcon, MailIcon, ShieldIcon } from "@/components/site-icons";
-import { getMultilingualCopy, getRequestLocale } from "@/lib/multilingual";
+import { getMultilingualCopy } from "@/lib/multilingual";
+import { getRequestLocale } from "@/lib/multilingual/server";
 import { normalizeInternalPath } from "@/lib/security";
 import { getPublicContactDataStatic } from "@/lib/site-contact-public";
 

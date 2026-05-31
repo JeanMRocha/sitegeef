@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getMultilingualCopy } from "@/lib/multilingual";
+import { getMultilingualCopy } from "@/lib/multilingual/client";
 
 export const metadata = {
   title: "Idiomas - Admin GEEF",

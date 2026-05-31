@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { schedule } from "@/lib/site-data";
 import { getPublicEscalas } from "@/lib/escalas/public-escalas";
-import { getRequestLocale } from "@/lib/multilingual";
+import { getRequestLocale } from "@/lib/multilingual/server";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();

@@ -382,12 +382,6 @@ export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
             >
               🔧 Fix Usuários
             </Link>
-            <Link
-              href="/admin/idiomas"
-              className={`admin-nav-item ${isActive('/admin/idiomas') ? 'active' : ''}`}
-            >
-              🌐 Idiomas
-            </Link>
           </div>
         )}
 
@@ -403,9 +397,6 @@ export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
             </Link>
             <Link href="/" target="_blank" rel="noopener noreferrer" className="admin-nav-item">
               🏠 Home →
-            </Link>
-            <Link href="/admin/idiomas" className={`admin-nav-item ${isActive('/admin/idiomas') ? 'active' : ''}`}>
-              🌐 Idiomas
             </Link>
           </div>
         )}

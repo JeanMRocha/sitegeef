@@ -2,9 +2,13 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { MoonIcon, SunIcon } from "@/components/site-icons";
 import { clearUserData } from "@/hooks/useUserPersistence";
+import { useTheme } from "@/hooks/useTheme";
+import { getMultilingualCopy, type Locale } from "@/lib/multilingual/client";
 
 type AdminUserMenuProps = {
+  locale: Locale;
   email?: string;
   fullName?: string;
 };
@@ -19,9 +23,11 @@ function getInitials(value?: string) {
   return (initials || value.slice(0, 2)).toUpperCase();
 }
 
-export function AdminUserMenu({ email, fullName }: AdminUserMenuProps) {
+export function AdminUserMenu({ locale, email, fullName }: AdminUserMenuProps) {
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const { theme, toggleTheme } = useTheme();
+  const copy = getMultilingualCopy(locale);
   const displayName = fullName || email || "Usuário";
   const initials = getInitials(displayName);
 
@@ -52,6 +58,11 @@ export function AdminUserMenu({ email, fullName }: AdminUserMenuProps) {
 
       {open && (
         <div className="admin-user-menu-popover">
+          <div className="admin-user-menu-info">
+            <strong>{displayName}</strong>
+            <span>{email}</span>
+          </div>
+
           <nav className="admin-user-menu-nav">
             <Link href="/perfil" className="admin-user-menu-item" onClick={() => setOpen(false)}>
               👤 Perfil
@@ -62,6 +73,29 @@ export function AdminUserMenu({ email, fullName }: AdminUserMenuProps) {
             <Link href="/admin/painel" className="admin-user-menu-item" onClick={() => setOpen(false)}>
               🛠️ Painel
             </Link>
+            <Link href="/" className="admin-user-menu-item" onClick={() => setOpen(false)}>
+              🌐 Ver site
+            </Link>
+
+            <div className="admin-user-menu-controls">
+              <div className="admin-user-menu-controls-label">Tema</div>
+              <div className="admin-user-menu-controls-row">
+                <button
+                  type="button"
+                  onClick={toggleTheme}
+                  className="site-icon-toggle"
+                  title={theme === "light" ? copy.header.themeLight : copy.header.themeDark}
+                  aria-label={theme === "light" ? copy.header.themeLight : copy.header.themeDark}
+                >
+                  {theme === "light" ? (
+                    <MoonIcon className="site-icon-toggle-svg" />
+                  ) : (
+                    <SunIcon className="site-icon-toggle-svg" />
+                  )}
+                </button>
+              </div>
+            </div>
+
             <a
               href="/logout"
               className="admin-user-menu-item admin-user-menu-item-logout"

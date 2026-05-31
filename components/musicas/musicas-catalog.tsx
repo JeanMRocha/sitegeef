@@ -12,58 +12,28 @@ type MusicasCatalogProps = {
 
 export function MusicasCatalog({ musicas }: MusicasCatalogProps) {
   const [searchText, setSearchText] = useState("");
-  const [filterAuthor, setFilterAuthor] = useState("");
 
-  // Derive unique authors sorted alphabetically
-  const autores = useMemo(
-    () =>
-      [...new Set(musicas.map((m) => m.autor).filter(Boolean))].sort(),
-    [musicas]
-  );
-
-  // Filter client-side
   const filtered = useMemo(() => {
-    return musicas.filter((m) => {
-      const matchSearch = !searchText || musicaMatchesSearch(m, searchText);
-      const matchAuthor = !filterAuthor || m.autor === filterAuthor;
-      return matchSearch && matchAuthor;
-    });
-  }, [musicas, searchText, filterAuthor]);
+    return musicas.filter((m) => !searchText || musicaMatchesSearch(m, searchText));
+  }, [musicas, searchText]);
 
   const isEmpty = filtered.length === 0;
 
   return (
     <>
-      {/* Toolbar with filters */}
       <div className="musica-toolbar">
         <div className="musica-toolbar-title">
           <h1>Músicas</h1>
         </div>
 
         <div className="musica-toolbar-filters">
-          {/* Author filter select */}
-          <select
-            value={filterAuthor}
-            onChange={(e) => setFilterAuthor(e.target.value)}
-            className="musica-toolbar-select"
-            aria-label="Filtrar por autor"
-          >
-            <option value="">Todos os autores</option>
-            {autores.map((author) => (
-              <option key={author} value={author}>
-                {author}
-              </option>
-            ))}
-          </select>
-
-          {/* Text search input */}
           <div className="musica-toolbar-search-wrap">
             <IconSearch size={16} />
             <input
               type="search"
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
-              placeholder="Buscar título ou trecho..."
+              placeholder="Buscar título, autor ou trecho..."
               className="musica-toolbar-search-input"
               aria-label="Buscar músicas"
             />
@@ -79,19 +49,17 @@ export function MusicasCatalog({ musicas }: MusicasCatalogProps) {
             )}
           </div>
 
-          {/* Result counter */}
           <div className="musica-toolbar-count">
             {filtered.length} {filtered.length === 1 ? "música" : "músicas"}
           </div>
         </div>
       </div>
 
-      {/* Catalog grid */}
       <div className="musica-catalog-grid">
         {isEmpty ? (
           <article className="content-card">
             <h2>Nenhuma música encontrada</h2>
-            <p>Tente ajustar o filtro ou o termo de busca.</p>
+            <p>Tente ajustar o termo de busca.</p>
           </article>
         ) : (
           filtered.map((musica) => {
