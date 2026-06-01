@@ -1037,7 +1037,7 @@
 }
 
 .inline-confirm-btn-danger {
-  background-color: #dc2626;
+  background-color: var(--status-error-text);
   color: white;
 }
 
@@ -1296,8 +1296,8 @@
 }
 
 .admin-status-chip[data-status="revisada"] {
-  background: rgba(255, 193, 7, 0.16);
-  color: #b26a00;
+  background: var(--status-warning-bg);
+  color: var(--status-warning-text);
   border-color: rgba(255, 193, 7, 0.22);
 }
 
@@ -1413,7 +1413,7 @@
 }
 
 .field-note-warning {
-  color: #a54b2a;
+  color: var(--status-warning-text);
 }
 
 /* Area panel full-width item */
@@ -1924,7 +1924,7 @@
 }
 
 :root.dark .admin-user-menu-avatar {
-  color: #fffaf5;
+  color: var(--text-primary);
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.42);
 }
 
@@ -1964,7 +1964,7 @@
 :root.dark .admin-user-menu-item:focus-visible {
   background: rgba(233, 160, 201, 0.12);
   border-color: rgba(233, 160, 201, 0.15);
-  color: #f4afe7;
+  color: var(--text-primary);
 }
 
 :root.dark .admin-user-avatar {
@@ -1973,12 +1973,12 @@
 
 :root.dark .admin-page-header {
   background: rgba(40, 36, 33, 0.82);
-  border-color: #5a5349;
+  border-color: var(--border-light);
 }
 
 :root.dark .admin-table {
   background: rgba(40, 36, 33, 0.96);
-  border-color: #5a5349;
+  border-color: var(--border-light);
 }
 
 :root.dark .admin-table thead {
@@ -2000,7 +2000,7 @@
 
 :root.dark .table-surface {
   background: rgba(40, 36, 33, 0.96);
-  border-color: #5a5349;
+  border-color: var(--border-light);
 }
 
 :root.dark .inline-status {
@@ -2073,13 +2073,13 @@
 :root.dark .admin-nav-item.active {
   background: linear-gradient(180deg, rgba(60, 52, 45, 0.98), rgba(45, 41, 38, 0.98));
   border-color: rgba(224, 138, 196, 0.22);
-  color: #f4efe7;
+  color: var(--text-primary);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03), 0 12px 24px rgba(0, 0, 0, 0.22);
 }
 
 :root.dark .admin-status-panel {
   background: rgba(60, 52, 45, 0.8);
-  border-color: #5a5349;
+  border-color: var(--border-light);
   color: var(--text-primary);
 }
 
