@@ -122,7 +122,7 @@ export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
               href="/admin/painel"
               className={`admin-nav-item ${isActive('/admin/painel') ? 'active' : ''}`}
             >
-              📊 Painel
+              <span aria-label="Painel de controle (dashboard)">📊</span> Painel
             </Link>
           </div>
         )}
@@ -176,7 +176,7 @@ export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
               href="/admin/instituicao/contas"
               className={`admin-nav-item ${isActive('/admin/instituicao/contas') ? 'active' : ''}`}
             >
-              💰 Contas Bancárias
+              <span aria-label="Contas e gestão bancária">💰</span> Contas Bancárias
             </Link>
           </NavGroup>
         )}
@@ -392,7 +392,7 @@ export function AdminSidebar({ usuarioSistema }: AdminSidebarProps) {
               👁️ Escalas Públicas →
             </Link>
             <Link href="/leitor" target="_blank" rel="noopener noreferrer" className="admin-nav-item">
-              📖 Área do Leitor →
+              <span aria-label="Área do leitor e catálogo de músicas">📖</span> Área do Leitor →
             </Link>
             <Link href="/" target="_blank" rel="noopener noreferrer" className="admin-nav-item">
               🏠 Home →
