@@ -23,18 +23,7 @@ export function MusicasCatalog({ musicas }: MusicasCatalogProps) {
     <>
       <div className="musica-toolbar">
         <div className="musica-toolbar-title">
-          <div className="musica-toolbar-title-row">
-            <h1>Músicas</h1>
-            <Link
-              href="/musicas/exibir"
-              className="button button-primary musica-toolbar-live-btn"
-              aria-label="Abrir exibição ao vivo"
-              title="Abrir exibição ao vivo"
-            >
-              <IconExternalLink size={16} />
-              <span>Ao vivo</span>
-            </Link>
-          </div>
+          <h1>Músicas</h1>
         </div>
 
         <div className="musica-toolbar-filters">
@@ -63,6 +52,18 @@ export function MusicasCatalog({ musicas }: MusicasCatalogProps) {
           <div className="musica-toolbar-count">
             {filtered.length} {filtered.length === 1 ? "música" : "músicas"}
           </div>
+        </div>
+
+        <div className="musica-toolbar-actions musica-toolbar-actions--catalog">
+          <Link
+            href="/musicas/exibir"
+            className="button button-primary musica-toolbar-live-btn"
+            aria-label="Abrir exibição ao vivo"
+            title="Abrir exibição ao vivo"
+          >
+            <IconExternalLink size={16} />
+            <span>Ao vivo</span>
+          </Link>
         </div>
       </div>
 

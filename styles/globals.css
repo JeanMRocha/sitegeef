@@ -467,6 +467,9 @@ body.musica-display-route .site-shell {
   align-items: center;
   gap: 0.45rem;
   white-space: nowrap;
+  padding-inline: 0.9rem;
+  min-height: 2.5rem;
+  font-size: 0.9rem;
 }
 
 .musica-toolbar-filters {
@@ -545,6 +548,10 @@ body.musica-display-route .site-shell {
   color: var(--muted);
   flex: 0 0 auto;
   white-space: nowrap;
+}
+
+.musica-toolbar-actions--catalog {
+  flex: 0 0 auto;
   margin-left: auto;
 }
 
@@ -1710,6 +1717,10 @@ body.musica-display-route .musica-display-screen--reader {
   .musica-toolbar {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .musica-toolbar-actions--catalog {
+    margin-left: 0;
   }
 
   .musica-toolbar-actions {
