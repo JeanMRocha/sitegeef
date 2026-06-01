@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { UserPersistenceWrapper } from "@/components/user-persistence-wrapper";
 import { NotificationProvider } from "@/components/providers/NotificationProvider";
 import { ToastContainer } from "@/components/ui/toast-notification";
+import { MusicaDisplayRouteSync } from "@/components/musica-display-route-sync";
 import { getHtmlLang } from "@/lib/multilingual";
 import { getRequestLocale } from "@/lib/multilingual/server";
 import { withTimeout } from "@/lib/admin/safe-supabase";
@@ -67,12 +68,6 @@ export default async function RootLayout({
     var theme = saved === 'dark' ? 'dark' : 'light';
     window.__GEEF_THEME__ = theme;
     var root = document.documentElement;
-    var pathname = window.location.pathname || '';
-    if (pathname.startsWith('/musicas/exibir')) {
-      root.classList.add('musica-display-route');
-    } else {
-      root.classList.remove('musica-display-route');
-    }
     if (theme === 'dark') {
       root.classList.add('dark');
       root.style.colorScheme = 'dark';
@@ -88,6 +83,7 @@ export default async function RootLayout({
       <body className={`${headingFont.variable} ${bodyFont.variable}`}>
         <ThemeProvider>
           <NotificationProvider>
+            <MusicaDisplayRouteSync />
             <UserPersistenceWrapper user={user}>
               <SiteShell locale={locale} user={user}>
                 {children}
