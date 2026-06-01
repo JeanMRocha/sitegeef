@@ -16,7 +16,6 @@ Este documento descreve o modulo de musicas e a navegacao da area de reuniao pub
 - `/musicas` - catalogo publico com busca.
 - `/musicas/[slug]` - leitura completa de uma musica ativa.
 - `/musicas/exibir` - tela publica ao vivo controlada pelo admin.
-- `/musicas/exibir/[codigo]` - tela publica pareada por codigo.
 
 ### Admin
 
@@ -94,7 +93,6 @@ Regras de exibicao:
 - a tela publica escuta a troca da sessão publicizada e atualiza sem refresh manual;
 - a tela `/musicas/exibir` usa o mesmo leitor visual de `/musicas/[slug]`, só trocando o conteúdo em tempo real;
 - músicas muito longas podem cair automaticamente no layout compacto de exibição para caber sem scroll;
-- a tela publica pareada `/musicas/exibir/[codigo]` acompanha apenas uma sessao ja criada na area interna;
 - se uma sessao ficar sem acesso por mais de 1 hora, ela e encerrada como inativa na proxima leitura do estado;
 - enquanto a apresentacao estiver aberta, o polling da tela publica renova `ultimo_acesso_em`;
 - quando a abertura precisar ser manual, o atalho do admin deve apontar para `/admin/reuniao-publica/musicas/sessoes`.
@@ -155,17 +153,6 @@ Cache:
   - `/admin/reuniao-publica/musicas`
 
 ## Fluxo da tela publica
-
-Arquivo:
-
-- `app/musicas/exibir/[codigo]/page.tsx`
-
-Comportamento:
-
-- busca a sessao pelo codigo
-- busca a musica vinculada
-- se nao encontrar, retorna 404
-- renderiza `MusicaDisplayLive`
 
 Arquivo:
 
@@ -259,7 +246,6 @@ Valido no momento em que este doc foi escrito:
 - Nao remover o redirect legado de `/admin/instituicao/musicas` sem atualizar links e caches.
 - Se mexer em `next dev` e `next build` no mesmo checkout, reiniciar o dev server antes de confiar em CSS/chunks.
 - Se aparecer erro de MIME tipo `text/plain` para CSS/JS, limpar `.next` e subir o dev server de novo antes de culpar o componente.
-- O endpoint `/api/musicas/sessoes/[codigo]` e a tela `/musicas/exibir/[codigo]` sao parte do pareamento ao vivo e nao devem deixar de responder em 200 quando a sessao existe.
 - A rota `/musicas/exibir` e apenas orientativa, entao nao deve gerar sessao por conta propria.
 
 ## Proximo passo natural

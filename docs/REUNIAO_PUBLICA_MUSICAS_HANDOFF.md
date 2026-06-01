@@ -15,7 +15,6 @@ Resumo operacional para continuidade sem reexplorar o codigo.
   - `/musicas/[slug]`
 - Criado o fluxo de exibicao pareada:
   - `/musicas/exibir`
-  - `/musicas/exibir/[codigo]`
 - A rota `/musicas/exibir` agora e uma pagina neutra de orientacao e nao cria sessao automaticamente.
 - O encerramento por inatividade agora considera 1 hora sem leitura; a sessao e marcada como inativa na proxima consulta.
 - Aplicada a normalizacao de autores com:
@@ -48,7 +47,6 @@ Resumo operacional para continuidade sem reexplorar o codigo.
 - `app/musicas/page.tsx`
 - `app/musicas/[slug]/page.tsx`
 - `app/musicas/exibir/page.tsx`
-- `app/musicas/exibir/[codigo]/page.tsx`
 - `components/admin/admin-sidebar.tsx`
 - `components/admin/admin-dashboard-workspace.tsx`
 - `components/admin/use-admin-shell-area.ts`
@@ -110,6 +108,6 @@ Resumo operacional para continuidade sem reexplorar o codigo.
 
 1. Criar uma musica real de exemplo.
 2. Testar pareamento em `/admin/reuniao-publica/musicas`.
-3. Abrir `/musicas/exibir/[codigo]` e confirmar troca em tempo real.
-4. Confirmar que `/musicas/exibir` nao cria sessao por conta propria.
+3. Confirmar que `/musicas/exibir` nao cria sessao por conta propria.
+4. Confirmar que `/musicas/[slug]` continua sendo o padrão unico de leitura completa.
 5. Decidir se o bloco `catalogo` continua necessario no fluxo operacional.

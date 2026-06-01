@@ -134,7 +134,7 @@ Fluxo recomendado quando a sessão precisar do Autoreflex:
 - Foi criado o modulo de `Reuniao publica` para musicas, com menu proprio no topo do admin e submenu lateral dedicado.
 - O caminho oficial de administracao de musicas agora e `/admin/reuniao-publica/musicas`; o caminho legado `/admin/instituicao/musicas` apenas redireciona.
 - O catalogo publico de musicas ficou em `/musicas` e a leitura individual em `/musicas/[slug]`.
-- A tela de exibicao pareada ficou em `/musicas/exibir/[codigo]`, e `/musicas/exibir` virou uma pagina neutra de orientacao sem criar sessao automaticamente.
+- A tela de exibicao ao vivo ficou em `/musicas/exibir`, e `/musicas/[slug]` segue como o padrao unico para leitura completa.
 - A sessao de exibicao agora expira por inatividade: se ficar mais de 1 hora sem leitura, a proxima consulta a marca como inativa.
 - A sincronizacao ao vivo usa `GET /api/musicas/sessoes/[codigo]` para devolver sessao + musica e atualizar `ultimo_acesso_em`.
 - O catálogo de créditos de música passou a ser unificado em `supabase/migrations/20260527030702_musica_creditos_unificados.sql`, com autores e versões compartilhando `public.musica_creditos` e o CRUD interno filtrando por `tipo`.

@@ -145,7 +145,6 @@
 - `app/musicas/page.tsx`
 - `app/musicas/[slug]/page.tsx`
 - `app/musicas/exibir/page.tsx`
-- `app/musicas/exibir/[codigo]/page.tsx`
 - `app/api/musicas/sessoes/[codigo]/route.ts`
 - `components/admin/musicas/musica-editor-form.tsx`
 - `components/musicas/musica-reader.tsx`
