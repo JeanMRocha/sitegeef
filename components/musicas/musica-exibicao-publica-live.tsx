@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { createClient as createSupabaseClient } from "@/lib/supabase/client";
 import type { Musica, MusicaSessao } from "@/lib/musicas";
 import { MusicaReader } from "./musica-reader";
@@ -87,25 +87,6 @@ export function MusicaExibicaoPublicaLive({
 
   const sessao = data?.sessao ?? null;
   const musica = data?.musica ?? null;
-  const useCompactDisplay = useMemo(() => {
-    if (!musica) {
-      return false;
-    }
-
-    const compactSlugs = new Set([
-      "aos-pes-do-monte-3f5d1e8b",
-      "santa-casa-santa-e3448514",
-    ]);
-
-    if (compactSlugs.has(musica.slug)) {
-      return true;
-    }
-
-    const totalLines = musica.partes.reduce((sum, parte) => sum + parte.conteudo.split("\n").length, 0);
-    const totalChars = musica.partes.reduce((sum, parte) => sum + parte.conteudo.length, 0);
-
-    return totalLines > 32 || totalChars > 1800 || musica.partes.length > 8;
-  }, [musica]);
 
   if (!sessao || !sessao.ativo || !musica) {
     return (
@@ -129,5 +110,5 @@ export function MusicaExibicaoPublicaLive({
     );
   }
 
-  return <MusicaReader musica={musica} logoSrc={logoSrc} mode={useCompactDisplay ? "exibicao" : "publico"} showBranding={false} />;
+  return <MusicaReader musica={musica} logoSrc={logoSrc} showBranding={false} />;
 }
