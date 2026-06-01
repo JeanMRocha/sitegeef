@@ -39,7 +39,7 @@
 }
 
 .mb-2 {
-  margin-bottom: 2rem;
+  margin-bottom: var(--spacing-xl);
 }
 
 .mt-075 {
@@ -157,7 +157,7 @@
 .document-tabs {
   display: flex;
   gap: 1rem;
-  margin-bottom: 2rem;
+  margin-bottom: var(--spacing-xl);
   border-bottom: 1px solid var(--admin-border);
   padding-bottom: 1rem;
   flex-wrap: wrap;
@@ -251,7 +251,7 @@
 }
 
 .atendimento-summary {
-  margin-bottom: 2rem;
+  margin-bottom: var(--spacing-xl);
 }
 
 .atendimento-section-header {
@@ -259,7 +259,7 @@
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-md);
   flex-wrap: wrap;
 }
 
@@ -339,7 +339,7 @@ body.musica-display-route .site-shell {
 }
 
 .musica-hero {
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-md);
 }
 
 .musica-reader-header {
@@ -578,7 +578,7 @@ body.musica-display-route .site-shell {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-md);
   flex-wrap: wrap;
 }
 
@@ -1348,7 +1348,7 @@ body.musica-display-route .site-shell {
 .musica-display-pairing-logo {
   width: min(12rem, 15vw);
   height: auto;
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-md);
 }
 
 .musica-display-pairing-content {
@@ -2914,7 +2914,7 @@ a.button.musica-icon-button {
   justify-content: space-between;
   align-items: flex-start;
   gap: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-md);
 }
 
 .area-hero-title {
@@ -3002,7 +3002,7 @@ a.button.musica-icon-button {
 }
 
 .area-panel-grid--mb {
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-md);
 }
 
 .area-panel-grid--mt {
@@ -3280,7 +3280,7 @@ a.button.musica-icon-button {
   }
 }
 
-@media (max-width: 980px) {
+@media (max-width: var(--bp-desktop)) {
   .governance-docs-shell {
     grid-template-columns: 1fr;
   }
@@ -3304,7 +3304,7 @@ a.button.musica-icon-button {
   }
 }
 
-@media (max-width: 720px) {
+@media (max-width: var(--bp-tablet)) {
   .area-page {
     width: min(100%, calc(100% - 1rem));
   }
@@ -3446,7 +3446,7 @@ a.button.musica-icon-button {
 }
 
 .panel-accent-card {
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-md);
   padding: 0.95rem 1rem;
   border-left: 3px solid var(--primary);
 }
@@ -3464,7 +3464,7 @@ a.button.musica-icon-button {
 }
 
 .content-surface-note {
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-md);
   padding: 1rem;
   border-radius: 0.75rem;
   background: rgba(138, 0, 90, 0.06);
@@ -5286,7 +5286,7 @@ a.button.musica-icon-button {
   align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-md);
 }
 
 .login-modal-head h1 {
@@ -5412,7 +5412,7 @@ a.button.musica-icon-button {
 
 .login-header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: var(--spacing-xl);
 }
 
 .login-header h1 {
@@ -5430,7 +5430,7 @@ a.button.musica-icon-button {
 .login-tabs {
   display: flex;
   gap: 0;
-  margin-bottom: 2rem;
+  margin-bottom: var(--spacing-xl);
   border-bottom: 2px solid var(--line);
 }
 
@@ -5983,7 +5983,7 @@ a.button.musica-icon-button {
 
 .profile-header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: var(--spacing-xl);
 }
 
 .profile-header h1 {
@@ -6002,7 +6002,7 @@ a.button.musica-icon-button {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 2rem;
-  margin-bottom: 2rem;
+  margin-bottom: var(--spacing-xl);
   padding: 2rem;
   align-items: start;
 }

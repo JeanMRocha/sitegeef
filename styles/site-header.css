@@ -643,3 +643,18 @@
   background: linear-gradient(135deg, #b0427d, #c6547a);
   color: #ffffff;
 }
+
+/* Backdrop-filter fallback for Firefox and older browsers */
+@supports not (backdrop-filter: blur(1px)) {
+  .site-header,
+  .site-header-nav,
+  .site-user-menu {
+    background-color: rgba(249, 242, 255, 0.90) !important;
+  }
+
+  :root.dark .site-header,
+  :root.dark .site-header-nav,
+  :root.dark .site-user-menu {
+    background-color: rgba(34, 31, 29, 0.95) !important;
+  }
+}
