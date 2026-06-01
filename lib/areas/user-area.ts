@@ -3,19 +3,39 @@ import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { recordSupabaseFailureEvent } from "@/lib/observability";
 
 type UserAreaData = {
-  perfil: any | null;
-  usuario: any | null;
-  pessoa: any | null;
+  perfil: UserAreaProfile | null;
+  usuario: UserAreaUsuario | null;
+  pessoa: UserAreaPessoa | null;
   siteRole: string | null;
   hasAdminAccess: boolean;
-  emprestimos: any[];
-  reservas: any[];
-  movimentosLivraria: any[];
-  escalas: any[];
-  voluntariados: any[];
-  consentimentos: any[];
-  pedidosTitular: any[];
+  emprestimos: unknown[];
+  reservas: unknown[];
+  movimentosLivraria: unknown[];
+  escalas: unknown[];
+  voluntariados: unknown[];
+  consentimentos: unknown[];
+  pedidosTitular: unknown[];
 };
+
+type UserAreaRecord = Record<string, unknown>;
+
+type UserAreaProfile = UserAreaRecord;
+
+type UserAreaUsuario = {
+  perfil?: string | null;
+  pessoa_id?: string | null;
+  pode_biblioteca?: boolean | null;
+  pode_livraria?: boolean | null;
+  pode_escalas?: boolean | null;
+} & UserAreaRecord;
+
+type UserAreaPessoa = {
+  nome?: string | null;
+  cpf?: string | null;
+  telefone?: string | null;
+  status?: string | null;
+  email?: string | null;
+} & UserAreaRecord;
 
 async function logUserAreaFallback(
   operation: string,
@@ -121,7 +141,7 @@ export async function loadUserArea(userId: string): Promise<UserAreaData> {
             .eq("pessoa_id", pessoaId)
             .eq("status", "em_aberto")
             .order("prazo_devolucao", { ascending: true })
-        : Promise.resolve({ data: [] as any[] }),
+        : Promise.resolve({ data: [] as unknown[] }),
       usuario?.pode_biblioteca
         ? supabase
             .from("reservas")
@@ -132,7 +152,7 @@ export async function loadUserArea(userId: string): Promise<UserAreaData> {
             .eq("pessoa_id", pessoaId)
             .eq("status", "aguardando")
             .order("posicao_fila", { ascending: true })
-        : Promise.resolve({ data: [] as any[] }),
+        : Promise.resolve({ data: [] as unknown[] }),
       usuario?.pode_livraria
         ? supabase
             .from("movimentos_livraria")
@@ -143,7 +163,7 @@ export async function loadUserArea(userId: string): Promise<UserAreaData> {
             .eq("pessoa_id", pessoaId)
             .order("criado_em", { ascending: false })
             .limit(10)
-        : Promise.resolve({ data: [] as any[] }),
+        : Promise.resolve({ data: [] as unknown[] }),
       usuario?.pode_escalas
         ? supabase
             .from("escala_funcoes")
@@ -155,7 +175,7 @@ export async function loadUserArea(userId: string): Promise<UserAreaData> {
             .eq("pessoa_id", pessoaId)
             .order("reunioes(data)", { ascending: false })
             .limit(10)
-        : Promise.resolve({ data: [] as any[] }),
+        : Promise.resolve({ data: [] as unknown[] }),
       supabase
         .from("servicos_voluntarios")
         .select("*")

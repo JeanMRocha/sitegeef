@@ -106,7 +106,7 @@ async function RecepcaoContent({ searchParams }: { searchParams: { mes?: string;
   );
 }
 
-export default async function RecepcaoPage({ searchParams }: { searchParams: Promise<any> }) {
+export default async function RecepcaoPage({ searchParams }: { searchParams: Promise<{ mes?: string; ano?: string }> }) {
   const resolvedSearchParams = await searchParams;
   return (
     <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
