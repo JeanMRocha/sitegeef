@@ -100,31 +100,40 @@ export function MusicaReader({
   const readerMetrics = useMemo(() => {
     const totalLines = partesVisiveis.reduce((sum, parte) => sum + parte.conteudo.split("\n").length, 0);
     const totalChars = partesVisiveis.reduce((sum, parte) => sum + parte.conteudo.length, 0);
-    const isCompact = totalLines > 18 || totalChars > 900 || partesVisiveis.length > 6;
-    const isDense = totalLines > 30 || totalChars > 1400 || partesVisiveis.length > 9;
-    const maxColumnsByWidth = Math.min(4, Math.max(2, Math.floor((viewport.width - 64) / 260)));
+    const isCompact = totalLines > 14 || totalChars > 700 || partesVisiveis.length > 5;
+    const isDense = totalLines > 24 || totalChars > 1100 || partesVisiveis.length > 7;
+    const maxColumnsByWidth = Math.min(6, Math.max(2, Math.floor((viewport.width - 40) / 210)));
 
     let columns;
     if (viewport.width < 960) {
       columns = 1;
     } else if (isDense) {
-      columns = Math.min(maxColumnsByWidth, viewport.width >= 1400 ? 4 : 3);
+      columns = Math.min(maxColumnsByWidth, viewport.width >= 1500 ? 6 : viewport.width >= 1200 ? 5 : 4);
     } else if (isCompact) {
-      columns = Math.min(maxColumnsByWidth, 3);
+      columns = Math.min(maxColumnsByWidth, viewport.width >= 1300 ? 4 : 3);
     } else {
       columns = Math.min(maxColumnsByWidth, 2);
     }
 
-    const columnWidth = columns >= 4 ? 14 : columns === 3 ? 16 : 18.5;
-    const columnGap = columns >= 4 ? 0.7 : columns === 3 ? 0.85 : 1;
-    const lyricsMarginTop = columns >= 4 ? 0.35 : columns === 3 ? 0.45 : 0.65;
-    const lyricsPanelPadding = columns >= 4 ? "0.6rem 0.8rem 0.85rem" : columns === 3 ? "0.75rem 0.9rem 0.95rem" : "0.85rem 1rem 1rem";
-    const partePad = columns >= 4 ? 0.55 : columns === 3 ? 0.7 : 0.9;
-    const labelSize = columns >= 4 ? 0.62 : columns === 3 ? 0.66 : 0.72;
-    const titleSize = columns >= 4 ? 0.94 : columns === 3 ? 1.0 : 1.05;
-    const textSize = columns >= 4 ? 0.82 : columns === 3 ? 0.88 : 0.96;
-    const lineHeight = columns >= 4 ? 1.38 : columns === 3 ? 1.48 : 1.62;
-    const lyricSpacer = columns >= 4 ? 0.28 : columns === 3 ? 0.36 : 0.5;
+    const columnWidth = columns >= 6 ? 11.5 : columns === 5 ? 13 : columns === 4 ? 15.5 : columns === 3 ? 17.5 : 19;
+    const columnGap = columns >= 6 ? 0.35 : columns === 5 ? 0.5 : columns === 4 ? 0.65 : columns === 3 ? 0.85 : 1;
+    const lyricsMarginTop = columns >= 6 ? 0.22 : columns === 5 ? 0.3 : columns === 4 ? 0.4 : columns === 3 ? 0.5 : 0.65;
+    const lyricsPanelPadding =
+      columns >= 6
+        ? "0.45rem 0.65rem 0.75rem"
+        : columns === 5
+          ? "0.55rem 0.75rem 0.8rem"
+          : columns === 4
+            ? "0.65rem 0.85rem 0.9rem"
+            : columns === 3
+              ? "0.75rem 0.9rem 0.95rem"
+              : "0.85rem 1rem 1rem";
+    const partePad = columns >= 6 ? 0.35 : columns === 5 ? 0.45 : columns === 4 ? 0.55 : columns === 3 ? 0.7 : 0.9;
+    const labelSize = columns >= 6 ? 0.55 : columns === 5 ? 0.58 : columns === 4 ? 0.62 : columns === 3 ? 0.66 : 0.72;
+    const titleSize = columns >= 6 ? 0.8 : columns === 5 ? 0.86 : columns === 4 ? 0.92 : columns === 3 ? 1.0 : 1.05;
+    const textSize = columns >= 6 ? 0.72 : columns === 5 ? 0.76 : columns === 4 ? 0.82 : columns === 3 ? 0.88 : 0.96;
+    const lineHeight = columns >= 6 ? 1.16 : columns === 5 ? 1.22 : columns === 4 ? 1.34 : columns === 3 ? 1.48 : 1.62;
+    const lyricSpacer = columns >= 6 ? 0.08 : columns === 5 ? 0.12 : columns === 4 ? 0.2 : columns === 3 ? 0.3 : 0.5;
 
     return {
       columns,
