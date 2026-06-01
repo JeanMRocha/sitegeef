@@ -34,7 +34,7 @@ export function MusicaDisplayLive({
     let cancelled = false;
     const intervalId = window.setInterval(() => {
       void refresh();
-    }, 15000);
+    }, 3000);
     const endpoint =
       pollUrl ?? (codigo ? `/api/musicas/sessoes/${encodeURIComponent(codigo)}` : "/api/musicas/exibicao");
     const supabase = createSupabaseClient();
@@ -86,11 +86,22 @@ export function MusicaDisplayLive({
 
     void refresh();
 
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        void refresh();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("focus", handleVisibilityChange);
+
     return () => {
       cancelled = true;
       if (intervalId !== undefined) {
         window.clearInterval(intervalId);
       }
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("focus", handleVisibilityChange);
       void supabase.removeChannel(channel);
     };
   }, [codigo, pollUrl]);

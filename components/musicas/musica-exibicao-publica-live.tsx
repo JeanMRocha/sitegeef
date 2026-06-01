@@ -32,7 +32,7 @@ export function MusicaExibicaoPublicaLive({
     const supabase = createSupabaseClient();
     const intervalId = window.setInterval(() => {
       void refresh();
-    }, 15000);
+    }, 3000);
 
     async function refresh() {
       try {
@@ -78,9 +78,20 @@ export function MusicaExibicaoPublicaLive({
 
     void refresh();
 
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        void refresh();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("focus", handleVisibilityChange);
+
     return () => {
       cancelled = true;
       window.clearInterval(intervalId);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("focus", handleVisibilityChange);
       void supabase.removeChannel(channel);
     };
   }, [pollUrl]);
