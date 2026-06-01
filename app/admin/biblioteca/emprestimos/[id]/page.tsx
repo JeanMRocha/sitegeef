@@ -1,4 +1,4 @@
-import { redirect } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getEmprestimoById, updateEmprestimo, devolverEmprestimo } from '../actions';
 import { Suspense } from 'react';
@@ -7,6 +7,24 @@ import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 
 export const metadata = {
   title: 'Detalhes do Empréstimo - Admin GEEF',
+};
+
+type EmprestimoDetalhe = {
+  id: string;
+  data_retirada: string;
+  prazo_devolucao: string;
+  data_devolucao?: string | null;
+  observacao?: string | null;
+  pessoas?: {
+    nome?: string | null;
+    email?: string | null;
+  } | null;
+  exemplares?: {
+    codigo?: string | null;
+    obra?: {
+      titulo?: string | null;
+    } | null;
+  } | null;
 };
 
 async function handleUpdate(id: string, formData: FormData) {
@@ -40,7 +58,10 @@ async function handleDevolver(id: string) {
 }
 
 async function EmprestimoContent({ id }: { id: string }) {
-  const emprestimo = await getEmprestimoById(id);
+  const emprestimo = (await getEmprestimoById(id)) as EmprestimoDetalhe | null;
+  if (!emprestimo) {
+    notFound();
+  }
   const today = new Date().toISOString().split('T')[0];
   const vencido = emprestimo.prazo_devolucao < today;
 
@@ -56,7 +77,7 @@ async function EmprestimoContent({ id }: { id: string }) {
           <h1 className="admin-page-title">Empréstimo</h1>
           <p className="admin-page-subtitle">{emprestimo.exemplares?.obra?.titulo}</p>
         </div>
-        <form action={() => handleDevolver(id)} style={{ display: 'inline' }}>
+        <form action={() => handleDevolver(id)}>
           <button
             type="submit"
             className="admin-btn admin-btn-primary"
@@ -72,43 +93,32 @@ async function EmprestimoContent({ id }: { id: string }) {
       </div>
 
       {/* Info Box */}
-      <div className="admin-card" style={{
-        marginBottom: '2rem',
-        backgroundColor: vencido ? 'rgba(239, 68, 68, 0.05)' : 'rgba(59, 130, 246, 0.05)',
-        borderLeft: `4px solid ${vencido ? '#ef4444' : 'var(--primary)'}`
-      }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '2rem' }}>
+      <div className={`admin-card panel-accent-card ${vencido ? 'content-surface-note-danger' : ''}`}>
+        <div className="area-panel-grid grid-auto-220 align-start">
           <div>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.85rem', color: 'var(--muted)', textTransform: 'uppercase' }}>Pessoa</p>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.95rem', fontWeight: 500 }}>
+            <p className="text-xs-muted">Pessoa</p>
+            <p className="text-sm-500">
               {emprestimo.pessoas?.nome}
             </p>
           </div>
           <div>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.85rem', color: 'var(--muted)', textTransform: 'uppercase' }}>Código</p>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.95rem', fontWeight: 500 }}>
+            <p className="text-xs-muted">Código</p>
+            <p className="text-sm-500">
               {emprestimo.exemplares?.codigo}
             </p>
           </div>
           <div>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.85rem', color: 'var(--muted)', textTransform: 'uppercase' }}>Status</p>
-            <p style={{ margin: '0.5rem 0' }}>
-              <span style={{
-                display: 'inline-block',
-                padding: '0.35rem 0.7rem',
-                backgroundColor: vencido ? 'rgba(239, 68, 68, 0.1)' : 'rgba(251, 146, 60, 0.1)',
-                color: vencido ? '#ef4444' : '#f97316',
-                borderRadius: '0.4rem',
-                fontSize: '0.85rem',
-              }}>
+            <p className="text-xs-muted">Status</p>
+            <p>
+              <span className={vencido ? 'inline-status inline-status-danger' : 'inline-status inline-status-warning'}>
                 {vencido ? 'Vencido' : 'Em aberto'}
               </span>
             </p>
           </div>
           {vencido && (
             <div>
-              <p style={{ margin: '0.5rem 0', fontSize: '0.85rem', color: 'var(--muted)', textTransform: 'uppercase' }}>Dias Atraso</p>
-              <p style={{ margin: '0.5rem 0', fontSize: '1.1rem', fontWeight: 600, color: '#ef4444' }}>
+              <p className="text-xs-muted">Dias Atraso</p>
+              <p className="text-sm-500 text-danger">
                 {diasAtraso} dias
               </p>
             </div>
@@ -117,19 +127,19 @@ async function EmprestimoContent({ id }: { id: string }) {
       </div>
 
       {/* Datas */}
-      <div className="admin-card" style={{ marginBottom: '2rem', maxWidth: '600px', margin: '0 auto 2rem' }}>
-        <h2 style={{ margin: '0 0 1.5rem', fontSize: '1.1rem', color: 'var(--text)' }}>Datas</h2>
+      <div className="admin-card form-panel-centered-sm">
+        <h2 className="form-card-title">Datas</h2>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+        <div className="area-panel-grid grid-auto-220">
           <div>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.85rem', color: 'var(--muted)' }}>Retirada</p>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.95rem', fontWeight: 500 }}>
+            <p className="text-xs-muted">Retirada</p>
+            <p className="text-sm-500">
               {new Date(emprestimo.data_retirada + 'T00:00:00').toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
             </p>
           </div>
           <div>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.85rem', color: 'var(--muted)' }}>Prazo Devolução</p>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.95rem', fontWeight: 500, color: vencido ? '#ef4444' : 'var(--text)' }}>
+            <p className="text-xs-muted">Prazo Devolução</p>
+            <p className={vencido ? 'text-sm-500 text-danger' : 'text-sm-500'}>
               {new Date(emprestimo.prazo_devolucao + 'T00:00:00').toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
             </p>
           </div>
@@ -137,8 +147,8 @@ async function EmprestimoContent({ id }: { id: string }) {
       </div>
 
       {/* Edit Form */}
-      <div className="admin-card" style={{ maxWidth: '600px', margin: '0 auto' }}>
-        <h2 style={{ margin: '0 0 1.5rem', fontSize: '1.1rem', color: 'var(--text)' }}>Editar Empréstimo</h2>
+      <div className="admin-card form-panel-centered-sm">
+        <h2 className="form-card-title">Editar Empréstimo</h2>
 
         <form action={(formData) => handleUpdate(id, formData)}>
           <LgpdFormNotice text="Usamos estes dados para controlar a devolução e o histórico do empréstimo." />
@@ -158,19 +168,11 @@ async function EmprestimoContent({ id }: { id: string }) {
               rows={3}
               defaultValue={emprestimo.observacao || ''}
               placeholder="Ex: Renovação de prazo, motivo atraso, etc."
-              style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-                resize: 'vertical',
-              }}
+              className="profile-input"
             />
           </div>
 
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+          <div className="form-actions-row">
             <button type="submit" className="admin-btn admin-btn-primary">
               ✅ Salvar
             </button>
@@ -184,10 +186,14 @@ async function EmprestimoContent({ id }: { id: string }) {
   );
 }
 
-export default async function EmprestimoPage({ params }: { params: Promise<any> }) {
+type EmprestimoParams = {
+  id: string;
+};
+
+export default async function EmprestimoPage({ params }: { params: Promise<EmprestimoParams> }) {
   const resolvedParams = await params;
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <EmprestimoContent id={resolvedParams.id} />
     </Suspense>
   );

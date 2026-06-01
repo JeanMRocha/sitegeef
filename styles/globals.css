@@ -3460,6 +3460,11 @@ a.button.musica-icon-button {
   margin: 0 auto;
 }
 
+.form-panel-centered-sm {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
 .form-panel-centered-lg {
   max-width: 800px;
   margin: 0 auto;

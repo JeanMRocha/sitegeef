@@ -15,7 +15,12 @@ type EmprestimoItem = {
   exemplares?: { codigo?: string | null; obra?: { titulo?: string | null } | null } | null;
 };
 
-async function EmprestimosList({ searchParams }: { searchParams: { page?: string; view?: string } }) {
+type EmprestimosSearchParams = {
+  page?: string;
+  view?: string;
+};
+
+async function EmprestimosList({ searchParams }: { searchParams: EmprestimosSearchParams }) {
   const page = parseInt(searchParams.page || '1', 10);
   const view = searchParams.view || 'ativos';
 
@@ -140,7 +145,7 @@ async function EmprestimosList({ searchParams }: { searchParams: { page?: string
   );
 }
 
-export default async function EmprestimosPage({ searchParams }: { searchParams: Promise<any> }) {
+export default async function EmprestimosPage({ searchParams }: { searchParams: Promise<EmprestimosSearchParams> }) {
   const resolvedSearchParams = await searchParams;
   return (
     <Suspense fallback={<div className="suspense-center">Carregando...</div>}>

@@ -8,6 +8,19 @@ export const metadata = {
   title: 'Novo Empréstimo - Admin GEEF',
 };
 
+type PessoaOption = {
+  id: string;
+  nome: string;
+};
+
+type ExemplarOption = {
+  id: string;
+  codigo: string;
+  obra?: {
+    titulo?: string | null;
+  } | null;
+};
+
 async function handleSubmit(formData: FormData) {
   'use server';
 
@@ -28,8 +41,8 @@ async function handleSubmit(formData: FormData) {
 }
 
 export default async function NovoEmprestimoPage() {
-  const pessoas = await getPessoasDisponiveis();
-  const exemplares = await getExemplaresdisponveisParaEmprestimo();
+  const pessoas = (await getPessoasDisponiveis()) as PessoaOption[];
+  const exemplares = (await getExemplaresdisponveisParaEmprestimo()) as ExemplarOption[];
 
   // Calculate default return date (14 days from today)
   const today = new Date();
@@ -47,7 +60,7 @@ export default async function NovoEmprestimoPage() {
       </div>
 
       {/* Form */}
-      <div className="admin-card" style={{ maxWidth: '600px', margin: '0 auto' }}>
+      <div className="admin-card form-panel-centered-sm">
         <form action={handleSubmit}>
           <LgpdFormNotice text="Usamos os dados para registrar o empréstimo e manter o controle de devolução." />
           <div className="admin-form-group">
@@ -55,17 +68,10 @@ export default async function NovoEmprestimoPage() {
             <select
               name="pessoa_id"
               required
-              style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-              }}
+              className="profile-form-input"
             >
               <option value="">— Selecione —</option>
-              {pessoas.map((p: any) => (
+              {pessoas.map((p) => (
                 <option key={p.id} value={p.id}>
                   {p.nome}
                 </option>
@@ -78,17 +84,10 @@ export default async function NovoEmprestimoPage() {
             <select
               name="exemplar_id"
               required
-              style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-              }}
+              className="profile-form-input"
             >
               <option value="">— Selecione —</option>
-              {exemplares.map((e: any) => (
+              {exemplares.map((e) => (
                 <option key={e.id} value={e.id}>
                   {e.obra?.titulo} ({e.codigo})
                 </option>
@@ -115,7 +114,7 @@ export default async function NovoEmprestimoPage() {
             />
           </div>
 
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+          <div className="form-actions-row">
             <button type="submit" className="admin-btn admin-btn-primary">
               ✅ Registrar Empréstimo
             </button>
