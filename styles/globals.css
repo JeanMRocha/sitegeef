@@ -5474,6 +5474,7 @@ a.button.musica-icon-button {
 .form-group {
   display: grid;
   gap: 0.4rem;
+  margin-bottom: var(--spacing-md);
 }
 
 .form-group label {
