@@ -899,9 +899,9 @@
 
 .delete-btn {
   padding: 0.25rem 0.5rem;
-  background-color: #fee2e2;
-  color: #dc2626;
-  border: 1px solid #fca5a5;
+  background-color: var(--status-error-bg);
+  color: var(--status-error-text);
+  border: 1px solid var(--status-error-border, var(--status-error-bg));
   border-radius: 0.25rem;
   cursor: pointer;
   font-size: 0.75rem;
@@ -915,7 +915,7 @@
 
 .delete-btn-confirm {
   padding: 0.25rem 0.5rem;
-  background-color: #dc2626;
+  background-color: var(--status-error-text);
   color: white;
   border: none;
   border-radius: 0.25rem;
@@ -942,15 +942,15 @@
 }
 
 .alert-error {
-  background-color: #fee2e2;
-  color: #dc2626;
-  border-color: #fca5a5;
+  background-color: var(--status-error-bg);
+  color: var(--status-error-text);
+  border-color: var(--status-error-border, var(--status-error-bg));
 }
 
 .alert-success {
-  background-color: #dcfce7;
-  color: #16a34a;
-  border-color: #86efac;
+  background-color: var(--status-success-bg);
+  color: var(--status-success-text);
+  border-color: var(--status-success-border, var(--status-success-bg));
 }
 
 .form-group {
@@ -1008,12 +1008,12 @@
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
-  background-color: white;
-  border: 1px solid var(--border);
+  background-color: var(--modal-bg);
+  border: 1px solid var(--modal-border);
   border-radius: 0.5rem;
   padding: 0.5rem;
   z-index: 10;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--modal-shadow);
 }
 
 .inline-confirm-title {
@@ -1054,7 +1054,7 @@
 .inline-delete-icon-btn {
   background-color: transparent;
   border: none;
-  color: #dc2626;
+  color: var(--status-error-text);
   cursor: pointer;
   font-size: 1rem;
   padding: 0.25rem;
@@ -1619,18 +1619,22 @@
 
 .toast-item.toast-success {
   background-color: rgba(34, 197, 94, 0.98);
+  color: white;
 }
 
 .toast-item.toast-error {
   background-color: rgba(239, 68, 68, 0.98);
+  color: white;
 }
 
 .toast-item.toast-warning {
   background-color: rgba(251, 146, 60, 0.98);
+  color: white;
 }
 
 .toast-item.toast-info {
   background-color: rgba(59, 130, 246, 0.98);
+  color: white;
 }
 
 .toast-title {
