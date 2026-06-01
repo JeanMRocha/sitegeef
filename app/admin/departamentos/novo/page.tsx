@@ -53,18 +53,18 @@ export default async function NovoDepartamentoPage() {
         <form action={handleSubmit}>
           <div className="admin-form-group">
             <label>Nome *</label>
-            <input type="text" name="nome" required />
+            <input type="text" name="nome" required className="profile-form-input" />
           </div>
 
           <div className="admin-form-group">
             <label>Descrição</label>
-            <textarea name="descricao" rows={4} />
+            <textarea name="descricao" rows={4} className="profile-form-input" />
           </div>
 
           <div className="form-grid-2">
             <div className="admin-form-group">
               <label>Coordenador</label>
-              <select name="coordenador_id">
+              <select name="coordenador_id" className="profile-form-input">
                 <option value="">— Selecione —</option>
                 {pessoas.map((p) => (
                   <option key={p.id} value={p.id}>
@@ -76,7 +76,7 @@ export default async function NovoDepartamentoPage() {
 
             <div className="admin-form-group">
               <label>Vice-Coordenador</label>
-              <select name="vice_id">
+              <select name="vice_id" className="profile-form-input">
                 <option value="">— Selecione —</option>
                 {pessoas.map((p) => (
                   <option key={p.id} value={p.id}>

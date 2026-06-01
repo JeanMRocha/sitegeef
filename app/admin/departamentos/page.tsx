@@ -1,9 +1,9 @@
-import Link from "next/link";
-import { getDepartamentos } from "./actions";
-import { Suspense } from "react";
+import Link from 'next/link';
+import { Suspense } from 'react';
+import { getDepartamentos } from './actions';
 
 export const metadata = {
-  title: "Departamentos - Admin GEEF",
+  title: 'Departamentos - Admin GEEF',
 };
 
 type DepartamentoListItem = {
@@ -14,12 +14,15 @@ type DepartamentoListItem = {
   departamento_membros?: Array<{ pessoa_id?: string | null }>;
 };
 
-async function DepartamentosList({ searchParams }: { searchParams: { page?: string } }) {
-  const page = parseInt(searchParams.page || "1", 10);
+type DepartamentosSearchParams = {
+  page?: string;
+};
 
+async function DepartamentosList({ searchParams }: { searchParams: DepartamentosSearchParams }) {
+  const page = Number.parseInt(searchParams.page || '1', 10);
   const { departamentos, total, pageSize } = await getDepartamentos(page);
   const departamentoList = departamentos as DepartamentoListItem[];
-  const totalPages = Math.ceil(total / pageSize);
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
   return (
     <div className="area-page">
@@ -35,9 +38,9 @@ async function DepartamentosList({ searchParams }: { searchParams: { page?: stri
       </div>
 
       <section className="area-section">
-        <div className="admin-card table-surface">
+        <div className="admin-card panel-accent-card">
           {departamentoList.length === 0 ? (
-            <div className="suspense-center text-center-muted">
+            <div className="area-empty">
               <p>Nenhum departamento cadastrado.</p>
               <Link href="/admin/departamentos/novo" className="admin-btn admin-btn-primary mt-1">
                 ➕ Criar primeiro departamento
@@ -62,10 +65,10 @@ async function DepartamentosList({ searchParams }: { searchParams: { page?: stri
                         <strong>{dept.nome}</strong>
                       </td>
                       <td className="text-sm-muted">
-                        {dept.descricao ? dept.descricao.substring(0, 50) : "—"}
-                        {dept.descricao && dept.descricao.length > 50 ? "..." : ""}
+                        {dept.descricao ? dept.descricao.substring(0, 50) : '—'}
+                        {dept.descricao && dept.descricao.length > 50 ? '...' : ''}
                       </td>
-                      <td className="text-sm-muted">{dept.coordenador_id ? "✅ Sim" : "—"}</td>
+                      <td className="text-sm-muted">{dept.coordenador_id ? '✅ Sim' : '—'}</td>
                       <td className="text-sm-muted">
                         <strong>{dept.departamento_membros?.length || 0}</strong>
                       </td>
@@ -104,8 +107,17 @@ async function DepartamentosList({ searchParams }: { searchParams: { page?: stri
   );
 }
 
-export default async function DepartamentosPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
+type DepartamentosPageParams = {
+  page?: string;
+};
+
+export default async function DepartamentosPage({
+  searchParams,
+}: {
+  searchParams: Promise<DepartamentosPageParams>;
+}) {
   const resolvedSearchParams = await searchParams;
+
   return (
     <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <DepartamentosList searchParams={resolvedSearchParams} />

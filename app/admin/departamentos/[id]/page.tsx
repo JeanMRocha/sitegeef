@@ -1,147 +1,246 @@
-import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { getDepartamentoById, updateDepartamento, addMembro, removeMembro, getPessoasDisponiveis, toggleDepartamentoStatus } from '../actions';
+import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
+import {
+  addMembro,
+  getDepartamentoById,
+  getPessoasDisponiveis,
+  removeMembro,
+  toggleDepartamentoStatus,
+  updateDepartamento,
+} from '../actions';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
-  title: 'Editar Departamento - Admin GEEF',
+  title: 'Departamento - Admin GEEF',
 };
 
-async function handleUpdate(deptId: string, formData: FormData) {
+type DepartamentoMembro = {
+  id: string;
+  cargo?: string | null;
+  desde?: string | null;
+  pessoas?: {
+    nome?: string | null;
+    email?: string | null;
+  } | null;
+};
+
+type DepartamentoDetalhe = {
+  id: string;
+  nome: string;
+  descricao?: string | null;
+  coordenador_id?: string | null;
+  vice_id?: string | null;
+  ativo: boolean;
+  departamento_membros?: DepartamentoMembro[] | null;
+};
+
+type PessoaDisponivel = {
+  id: string;
+  nome: string | null;
+  email?: string | null;
+};
+
+type DepartamentoParams = {
+  id: string;
+};
+
+async function handleUpdate(id: string, formData: FormData) {
   'use server';
 
-  try {
-    await updateDepartamento(deptId, {
-      nome: (formData.get('nome') as string) || undefined,
-      descricao: (formData.get('descricao') as string) || undefined,
-      coordenador_id: (formData.get('coordenador_id') as string) || undefined,
-      vice_id: (formData.get('vice_id') as string) || undefined,
-    });
+  const nome = String(formData.get('nome') || '').trim();
+  const descricao = String(formData.get('descricao') || '').trim();
+  const coordenadorId = String(formData.get('coordenador_id') || '').trim();
+  const viceId = String(formData.get('vice_id') || '').trim();
 
-    redirect(buildFlashNoticeUrl(`/admin/departamentos/${deptId}`, { variant: 'success', message: 'Departamento salvo.' }));
-  } catch (error) {
-    void error;
-    redirect(buildFlashNoticeUrl(`/admin/departamentos/${deptId}`, { variant: 'error', message: 'Não foi possível salvar o departamento.' }));
-    return;
-  }
-}
+  const result = await updateDepartamento(id, {
+    nome,
+    descricao: descricao || undefined,
+    coordenador_id: coordenadorId || undefined,
+    vice_id: viceId || undefined,
+  });
 
-async function handleAddMembro(deptId: string, formData: FormData) {
-  'use server';
-
-  try {
-    await addMembro(
-      deptId,
-      formData.get('pessoa_id') as string,
-      (formData.get('cargo') as string) || undefined,
-      (formData.get('desde') as string) || undefined
+  if (!result?.success) {
+    redirect(
+      buildFlashNoticeUrl(`/admin/departamentos/${id}`, {
+        variant: 'error',
+        message: 'Não foi possível salvar o departamento.',
+      })
     );
-
-    redirect(buildFlashNoticeUrl(`/admin/departamentos/${deptId}`, { variant: 'success', message: 'Membro adicionado.' }));
-  } catch (error) {
-    void error;
-    redirect(buildFlashNoticeUrl(`/admin/departamentos/${deptId}`, { variant: 'error', message: 'Não foi possível adicionar o membro.' }));
-    return;
   }
+
+  redirect(
+    buildFlashNoticeUrl(`/admin/departamentos/${id}`, {
+      variant: 'success',
+      message: 'Departamento salvo.',
+    })
+  );
 }
 
-async function handleRemoveMembro(membroId: string, deptId: string) {
+async function handleToggle(id: string, ativo: boolean) {
   'use server';
 
-  try {
-    await removeMembro(membroId);
-    redirect(buildFlashNoticeUrl(`/admin/departamentos/${deptId}`, { variant: 'success', message: 'Membro removido.' }));
-  } catch (error) {
-    void error;
-    redirect(buildFlashNoticeUrl(`/admin/departamentos/${deptId}`, { variant: 'error', message: 'Não foi possível remover o membro.' }));
-    return;
+  const result = await toggleDepartamentoStatus(id, ativo);
+
+  if (!result?.success) {
+    redirect(
+      buildFlashNoticeUrl(`/admin/departamentos/${id}`, {
+        variant: 'error',
+        message: 'Não foi possível alterar o status.',
+      })
+    );
   }
+
+  redirect(
+    buildFlashNoticeUrl(`/admin/departamentos/${id}`, {
+      variant: 'success',
+      message: ativo ? 'Departamento ativado.' : 'Departamento inativado.',
+    })
+  );
 }
 
-async function EditDepartamentoContent({ id }: { id: string }) {
-  const departamento = await getDepartamentoById(id);
-  const pessoas = await getPessoasDisponiveis();
+async function handleAddMember(id: string, formData: FormData) {
+  'use server';
+
+  const pessoaId = String(formData.get('pessoa_id') || '').trim();
+  const cargo = String(formData.get('cargo') || '').trim();
+  const desde = String(formData.get('desde') || '').trim();
+
+  if (!pessoaId) {
+    redirect(
+      buildFlashNoticeUrl(`/admin/departamentos/${id}`, {
+        variant: 'error',
+        message: 'Selecione uma pessoa.',
+      })
+    );
+  }
+
+  const result = await addMembro(id, pessoaId, cargo || undefined, desde || undefined);
+
+  if (!result?.success) {
+    redirect(
+      buildFlashNoticeUrl(`/admin/departamentos/${id}`, {
+        variant: 'error',
+        message: 'Não foi possível adicionar o membro.',
+      })
+    );
+  }
+
+  redirect(
+    buildFlashNoticeUrl(`/admin/departamentos/${id}`, {
+      variant: 'success',
+      message: 'Membro adicionado.',
+    })
+  );
+}
+
+async function handleRemoveMember(departamentoId: string, membroId: string) {
+  'use server';
+
+  const result = await removeMembro(membroId);
+
+  if (!result?.success) {
+    redirect(
+      buildFlashNoticeUrl(`/admin/departamentos/${departamentoId}`, {
+        variant: 'error',
+        message: 'Não foi possível remover o membro.',
+      })
+    );
+  }
+
+  redirect(
+    buildFlashNoticeUrl(`/admin/departamentos/${departamentoId}`, {
+      variant: 'success',
+      message: 'Membro removido.',
+    })
+  );
+}
+
+async function DepartamentoContent({ id }: { id: string }) {
+  const [departamentoRaw, pessoasRaw] = await Promise.all([getDepartamentoById(id), getPessoasDisponiveis()]);
+  const departamento = departamentoRaw as DepartamentoDetalhe | null;
+  const pessoas = pessoasRaw as PessoaDisponivel[];
 
   if (!departamento) {
-    return (
-      <div className="area-page">
-        <div className="admin-page-header">
-          <div>
-            <h1 className="admin-page-title">Departamento não encontrado</h1>
-            <p className="admin-page-subtitle">O registro pode não existir ou a tabela não estar disponível no ambiente.</p>
-          </div>
-        </div>
-
-        <div className="admin-card">
-          <p style={{ marginTop: 0, color: 'var(--muted)' }}>
-            A tela foi carregada em modo seguro para evitar erro de aplicação.
-          </p>
-          <Link href="/admin/departamentos" className="admin-btn admin-btn-secondary">
-            ← Voltar para departamentos
-          </Link>
-        </div>
-      </div>
-    );
+    notFound();
   }
 
+  const membros = departamento.departamento_membros ?? [];
+  const coordenador = pessoas.find((p) => p.id === departamento.coordenador_id)?.nome || '—';
+  const vice = pessoas.find((p) => p.id === departamento.vice_id)?.nome || '—';
+
   return (
-    <div>
-      {/* Header */}
+    <div className="area-page">
       <div className="admin-page-header">
         <div>
-          <h1 className="admin-page-title">Editar Departamento</h1>
-          <p className="admin-page-subtitle">{departamento.nome}</p>
+          <span className="admin-dashboard-kicker">Estrutura</span>
+          <h1 className="admin-page-title">{departamento.nome}</h1>
+          <p className="admin-page-subtitle">Gestão de membros e responsáveis</p>
+        </div>
+        <form action={() => handleToggle(id, !departamento.ativo)} className="inline-form">
+          <button
+            type="submit"
+            className={`admin-btn status-toggle-btn ${departamento.ativo ? 'status-toggle-btn--active' : 'status-toggle-btn--inactive'}`}
+          >
+            {departamento.ativo ? '✓ Ativo' : '○ Inativo'}
+          </button>
+        </form>
+      </div>
+
+      <div className="admin-card panel-accent-card">
+        <div className="area-panel-grid grid-auto-220">
+          <div className="area-panel-item">
+            <p className="text-xs-muted">Membros</p>
+            <p className="text-sm-500">{membros.length}</p>
+          </div>
+          <div className="area-panel-item">
+            <p className="text-xs-muted">Coordenador</p>
+            <p className="text-sm-500">{coordenador}</p>
+          </div>
+          <div className="area-panel-item">
+            <p className="text-xs-muted">Vice</p>
+            <p className="text-sm-500">{vice}</p>
+          </div>
+          <div className="area-panel-item">
+            <p className="text-xs-muted">Status</p>
+            <p className={departamento.ativo ? 'text-sm-500 text-success' : 'text-sm-500 text-danger'}>
+              {departamento.ativo ? 'Ativo' : 'Inativo'}
+            </p>
+          </div>
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
-        {/* Coluna 1: Dados do Departamento */}
+      <div className="admin-card form-panel-centered-lg">
+        <h2 className="form-card-title">Dados do Departamento</h2>
+
         <form action={(formData) => handleUpdate(id, formData)}>
-          <div className="admin-card">
-            <h2 style={{ margin: '0 0 1.5rem', fontSize: '1.1rem', color: 'var(--text)' }}>📋 Dados</h2>
+          <div className="admin-form-group">
+            <label>Nome *</label>
+            <input type="text" name="nome" defaultValue={departamento.nome} className="profile-form-input" required />
+          </div>
 
-            <div className="admin-form-group">
-              <label>Nome *</label>
-              <input type="text" name="nome" defaultValue={departamento.nome} required />
-            </div>
+          <div className="admin-form-group">
+            <label>Descrição</label>
+            <textarea
+              name="descricao"
+              rows={4}
+              defaultValue={departamento.descricao || ''}
+              className="profile-form-input"
+            />
+          </div>
 
-            <div className="admin-form-group">
-              <label>Descrição</label>
-              <textarea
-                name="descricao"
-                defaultValue={departamento.descricao || ''}
-                rows={4}
-                style={{
-                  padding: '0.65rem 0.85rem',
-                  border: '1px solid var(--admin-border)',
-                  borderRadius: '0.6rem',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.95rem',
-                  color: 'var(--text)',
-                  resize: 'vertical',
-                }}
-              />
-            </div>
-
+          <div className="form-grid-2">
             <div className="admin-form-group">
               <label>Coordenador</label>
               <select
                 name="coordenador_id"
                 defaultValue={departamento.coordenador_id || ''}
-                style={{
-                  padding: '0.65rem 0.85rem',
-                  border: '1px solid var(--admin-border)',
-                  borderRadius: '0.6rem',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.95rem',
-                  color: 'var(--text)',
-                }}
+                className="profile-form-input"
               >
                 <option value="">— Selecione —</option>
-                {pessoas.map((p: any) => (
+                {pessoas.map((p) => (
                   <option key={p.id} value={p.id}>
-                    {p.nome}
+                    {p.nome || p.email || '—'}
                   </option>
                 ))}
               </select>
@@ -149,144 +248,120 @@ async function EditDepartamentoContent({ id }: { id: string }) {
 
             <div className="admin-form-group">
               <label>Vice-Coordenador</label>
-              <select
-                name="vice_id"
-                defaultValue={departamento.vice_id || ''}
-                style={{
-                  padding: '0.65rem 0.85rem',
-                  border: '1px solid var(--admin-border)',
-                  borderRadius: '0.6rem',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.95rem',
-                  color: 'var(--text)',
-                }}
-              >
+              <select name="vice_id" defaultValue={departamento.vice_id || ''} className="profile-form-input">
                 <option value="">— Selecione —</option>
-                {pessoas.map((p: any) => (
+                {pessoas.map((p) => (
                   <option key={p.id} value={p.id}>
-                    {p.nome}
+                    {p.nome || p.email || '—'}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="form-actions-row">
+            <button type="submit" className="admin-btn admin-btn-primary">
+              ✅ Salvar Alterações
+            </button>
+            <Link href="/admin/departamentos" className="admin-btn admin-btn-secondary">
+              ← Voltar
+            </Link>
+          </div>
+        </form>
+      </div>
+
+      <div className="admin-card panel-accent-card">
+        <div className="area-top-line">
+          <h2 className="form-card-title">Adicionar membro</h2>
+        </div>
+
+        <form action={(formData) => handleAddMember(id, formData)}>
+          <div className="form-grid-2">
+            <div className="admin-form-group">
+              <label>Pessoa *</label>
+              <select name="pessoa_id" className="profile-form-input" required>
+                <option value="">— Selecione —</option>
+                {pessoas.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.nome || p.email || '—'}
                   </option>
                 ))}
               </select>
             </div>
 
-            <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
-              <button type="submit" className="admin-btn admin-btn-primary">
-                ✅ Salvar
-              </button>
-              <Link href="/admin/departamentos" className="admin-btn admin-btn-secondary">
-                ❌ Cancelar
-              </Link>
+            <div className="admin-form-group">
+              <label>Cargo</label>
+              <input type="text" name="cargo" className="profile-form-input" placeholder="Ex.: Secretário" />
             </div>
+
+            <div className="admin-form-group">
+              <label>Desde</label>
+              <input type="date" name="desde" className="profile-form-input" />
+            </div>
+          </div>
+
+          <div className="form-actions-row">
+            <button type="submit" className="admin-btn admin-btn-primary">
+              ➕ Adicionar membro
+            </button>
           </div>
         </form>
+      </div>
 
-        {/* Coluna 2: Membros */}
-        <div>
-          {/* Adicionar Membro */}
-          <form action={(formData) => handleAddMembro(id, formData)}>
-            <div className="admin-card" style={{ marginBottom: '2rem' }}>
-              <h2 style={{ margin: '0 0 1.5rem', fontSize: '1.1rem', color: 'var(--text)' }}>👥 Adicionar Membro</h2>
-
-              <div className="admin-form-group">
-                <label>Pessoa *</label>
-                <select
-                  name="pessoa_id"
-                  required
-                  style={{
-                    padding: '0.65rem 0.85rem',
-                    border: '1px solid var(--admin-border)',
-                    borderRadius: '0.6rem',
-                    fontFamily: 'var(--font-body)',
-                    fontSize: '0.95rem',
-                    color: 'var(--text)',
-                  }}
-                >
-                  <option value="">— Selecione —</option>
-                  {pessoas.map((p: any) => (
-                    <option key={p.id} value={p.id}>
-                      {p.nome}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="admin-form-group">
-                <label>Cargo</label>
-                <input type="text" name="cargo" placeholder="Ex: Tesoureiro" />
-              </div>
-
-              <div className="admin-form-group">
-                <label>Data de Entrada</label>
-                <input type="date" name="desde" defaultValue={new Date().toISOString().split('T')[0]} />
-              </div>
-
-              <button type="submit" className="admin-btn admin-btn-primary" style={{ width: '100%' }}>
-                ➕ Adicionar Membro
-              </button>
-            </div>
-          </form>
-
-          {/* Lista de Membros */}
-          <div className="admin-card">
-            <h2 style={{ margin: '0 0 1.5rem', fontSize: '1.1rem', color: 'var(--text)' }}>
-              📋 Membros ({departamento.departamento_membros?.length || 0})
-            </h2>
-
-            {departamento.departamento_membros && departamento.departamento_membros.length > 0 ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                {departamento.departamento_membros.map((membro: any) => (
-                  <div
-                    key={membro.id}
-                    style={{
-                      padding: '1rem',
-                      backgroundColor: 'var(--admin-bg)',
-                      borderRadius: '0.6rem',
-                      border: '1px solid var(--admin-border)',
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <div>
-                      <p style={{ margin: 0, fontWeight: 600 }}>{membro.pessoas?.nome}</p>
-                      <p style={{ margin: '0.25rem 0 0', fontSize: '0.85rem', color: 'var(--muted)' }}>
-                        {membro.cargo || 'Membro'} {membro.desde && `· Desde ${new Date(membro.desde).toLocaleDateString('pt-BR')}`}
-                      </p>
-                    </div>
-                    <form action={() => handleRemoveMembro(membro.id, id)}>
-                      <button
-                        type="submit"
-                        className="admin-btn"
-                        style={{
-                          backgroundColor: 'rgba(200, 0, 0, 0.15)',
-                          color: '#c00',
-                          border: '1px solid rgba(200, 0, 0, 0.3)',
-                          padding: '0.4rem 0.8rem',
-                          fontSize: '0.8rem',
-                        }}
-                      >
-                        ✕ Remover
-                      </button>
-                    </form>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p style={{ color: 'var(--muted)', margin: 0 }}>Nenhum membro adicionado ainda.</p>
-            )}
-          </div>
+      <div className="admin-card panel-accent-card">
+        <div className="area-top-line">
+          <h2 className="form-card-title">Membros do Departamento</h2>
+          <span className="page-pagination-label">{membros.length} registrados</span>
         </div>
+
+        {membros.length > 0 ? (
+          <div className="department-stack">
+            {membros.map((membro) => {
+              const membroDesde = membro.desde ? new Date(`${membro.desde}T00:00:00`) : null;
+
+              return (
+                <div key={membro.id} className="department-member-row">
+                  <div>
+                    <strong>{membro.pessoas?.nome || 'Pessoa'}</strong>
+                    <p className="department-member-meta">
+                      {membro.cargo || 'Sem cargo'}
+                      {membroDesde ? ` • desde ${membroDesde.toLocaleDateString('pt-BR')}` : ''}
+                      {membro.pessoas?.email ? ` • ${membro.pessoas.email}` : ''}
+                    </p>
+                  </div>
+                  <form action={() => handleRemoveMember(id, membro.id)} className="inline-form">
+                    <button
+                      type="submit"
+                      className="admin-btn admin-btn-secondary admin-btn-danger admin-btn-small"
+                      onClick={(event) => {
+                        if (!confirm('Remover este membro do departamento?')) {
+                          event.preventDefault();
+                        }
+                      }}
+                    >
+                      Remover
+                    </button>
+                  </form>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="area-empty">
+            <p>Nenhum membro vinculado.</p>
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
-export default async function EditDepartamentoPage({ params }: { params: Promise<any> }) {
+export default async function DepartamentoPage({ params }: { params: Promise<DepartamentoParams> }) {
   const resolvedParams = await params;
+
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
-      <EditDepartamentoContent id={resolvedParams.id} />
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
+      <DepartamentoContent id={resolvedParams.id} />
     </Suspense>
   );
 }

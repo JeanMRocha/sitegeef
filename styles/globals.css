@@ -3491,6 +3491,29 @@ a.button.musica-icon-button {
   margin: 0 auto;
 }
 
+.department-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.department-member-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  background: var(--surface);
+}
+
+.department-member-meta {
+  margin: 0.25rem 0 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
 .panel-accent-card {
   margin-bottom: var(--spacing-md);
   padding: 0.95rem 1rem;
