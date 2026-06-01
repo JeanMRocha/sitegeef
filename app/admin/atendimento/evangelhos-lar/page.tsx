@@ -15,31 +15,26 @@ type EvangelhoItem = {
   pessoas?: { nome?: string | null } | null;
 };
 
+type EvangelhoSituacao = 'planejada' | 'realizada' | 'adiada' | 'cancelada' | string | null | undefined;
+
+function resolveSituacaoClass(situacao: EvangelhoSituacao) {
+  switch (situacao) {
+    case 'planejada':
+      return 'inline-status inline-status-info';
+    case 'realizada':
+      return 'inline-status inline-status-success';
+    case 'adiada':
+      return 'inline-status inline-status-warning';
+    case 'cancelada':
+      return 'inline-status inline-status-danger';
+    default:
+      return 'inline-status inline-status-neutral';
+  }
+}
+
 async function EvangelhasContent() {
   const evangelhos = await getEvangelhasNoLar();
   const evangelhoList = evangelhos as EvangelhoItem[];
-
-  const situacoes: { [key: string]: { label: string; color: string } } = {
-    'planejada': { label: '📋 Planejada', color: '#3b82f6' },
-    'realizada': { label: '✓ Realizada', color: '#22c55e' },
-    'adiada': { label: '⏸️ Adiada', color: '#f97316' },
-    'cancelada': { label: '❌ Cancelada', color: '#ef4444' },
-  };
-
-  const getSituacaoClass = (situacao?: string | null) => {
-    switch (situacao) {
-      case 'planejada':
-        return 'inline-status inline-status-info';
-      case 'realizada':
-        return 'inline-status inline-status-success';
-      case 'adiada':
-        return 'inline-status inline-status-warning';
-      case 'cancelada':
-        return 'inline-status inline-status-danger';
-      default:
-        return 'inline-status inline-status-neutral';
-    }
-  };
 
   return (
     <div>
@@ -72,18 +67,13 @@ async function EvangelhasContent() {
               <tbody>
                 {evangelhoList.map((ev) => {
                   const situacao = ev.situacao || 'indefinida';
-                  const sit = situacoes[situacao] || { label: situacao, color: '#999' };
                   return (
                     <tr key={ev.id}>
                       <td>
-                        <strong className="text-sm-500">
-                        {new Date(ev.data).toLocaleDateString('pt-BR')}
-                        </strong>
+                        <strong className="text-sm-500">{new Date(ev.data).toLocaleDateString('pt-BR')}</strong>
                       </td>
                       <td>
-                        <strong>
-                        {ev.pessoas?.nome}
-                        </strong>
+                        <strong>{ev.pessoas?.nome}</strong>
                       </td>
                       <td className="text-sm-muted">
                         {ev.endereco}
@@ -92,8 +82,16 @@ async function EvangelhasContent() {
                         {ev.equipe}
                       </td>
                       <td>
-                        <span className={getSituacaoClass(ev.situacao)}>
-                          {sit.label}
+                        <span className={resolveSituacaoClass(ev.situacao)}>
+                          {situacao === 'planejada'
+                            ? '📋 Planejada'
+                            : situacao === 'realizada'
+                              ? '✓ Realizada'
+                              : situacao === 'adiada'
+                                ? '⏸️ Adiada'
+                                : situacao === 'cancelada'
+                                  ? '❌ Cancelada'
+                                  : situacao}
                         </span>
                       </td>
                       <td>

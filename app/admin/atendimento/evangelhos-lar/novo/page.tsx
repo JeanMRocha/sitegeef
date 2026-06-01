@@ -8,6 +8,11 @@ export const metadata = {
   title: 'Novo Evangelho no Lar - Admin GEEF',
 };
 
+type PessoaDisponivel = {
+  id: string;
+  nome: string | null;
+};
+
 async function handleSubmit(formData: FormData) {
   'use server';
 
@@ -30,7 +35,7 @@ async function handleSubmit(formData: FormData) {
 }
 
 async function NovoPage() {
-  const pessoas = await getPessoasDisponiveis();
+  const pessoas = (await getPessoasDisponiveis()) as PessoaDisponivel[];
   const hoje = new Date().toISOString().split('T')[0];
 
   return (
@@ -42,25 +47,14 @@ async function NovoPage() {
         </div>
       </div>
 
-      <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto' }}>
+      <div className="admin-card form-panel-centered">
         <form action={handleSubmit}>
           <LgpdFormNotice text="Usamos estes dados para organizar a atividade e manter o histórico do atendimento." />
           <div className="admin-form-group">
             <label>Pessoa *</label>
-            <select
-              name="pessoa_id"
-              required
-              style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-              }}
-            >
+            <select name="pessoa_id" required className="profile-form-input">
               <option value="">— Selecione —</option>
-              {pessoas.map((p: any) => (
+              {pessoas.map((p) => (
                 <option key={p.id} value={p.id}>
                   {p.nome}
                 </option>
@@ -75,10 +69,11 @@ async function NovoPage() {
               name="endereco"
               placeholder="Rua, número, bairro"
               required
+              className="profile-form-input"
             />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+          <div className="form-grid-2">
             <div className="admin-form-group">
               <label>Data *</label>
               <input
@@ -86,22 +81,12 @@ async function NovoPage() {
                 name="data"
                 defaultValue={hoje}
                 required
+                className="profile-form-input"
               />
             </div>
             <div className="admin-form-group">
               <label>Situação *</label>
-              <select
-                name="situacao"
-                required
-                style={{
-                  padding: '0.65rem 0.85rem',
-                  border: '1px solid var(--admin-border)',
-                  borderRadius: '0.6rem',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.95rem',
-                  color: 'var(--text)',
-                }}
-              >
+              <select name="situacao" required className="profile-form-input">
                 <option value="">— Selecione —</option>
                 <option value="planejada">Planejada</option>
                 <option value="realizada">Realizada</option>
@@ -118,6 +103,7 @@ async function NovoPage() {
               name="equipe"
               placeholder="Nomes dos evangelizadores"
               required
+              className="profile-form-input"
             />
           </div>
 
@@ -127,19 +113,11 @@ async function NovoPage() {
               name="observacoes"
               placeholder="Notas sobre a atividade..."
               rows={3}
-              style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-                resize: 'vertical',
-              }}
+              className="profile-form-input"
             />
           </div>
 
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+          <div className="form-actions-row">
             <button type="submit" className="admin-btn admin-btn-primary">
               ✅ Registrar
             </button>

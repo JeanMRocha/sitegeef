@@ -8,6 +8,25 @@ export const metadata = {
   title: 'Evangelho no Lar - Admin GEEF',
 };
 
+type EvangelhoDetalhe = {
+  id: string;
+  endereco?: string | null;
+  data: string;
+  situacao?: string | null;
+  equipe?: string | null;
+  observacoes?: string | null;
+  pessoas?: { id?: string | null; nome?: string | null } | null;
+};
+
+type PessoaDisponivel = {
+  id: string;
+  nome: string | null;
+};
+
+type EvangelhoParams = {
+  id: string;
+};
+
 async function handleSubmit(id: string, formData: FormData) {
   'use server';
 
@@ -43,8 +62,8 @@ async function handleDelete(id: string) {
 }
 
 async function Content({ id }: { id: string }) {
-  const ev = await getEvangelhoNoLarById(id);
-  const pessoas = await getPessoasDisponiveis();
+  const ev = (await getEvangelhoNoLarById(id)) as EvangelhoDetalhe;
+  const pessoas = (await getPessoasDisponiveis()) as PessoaDisponivel[];
 
   return (
     <div>
@@ -53,15 +72,10 @@ async function Content({ id }: { id: string }) {
           <h1 className="admin-page-title">{ev.endereco}</h1>
           <p className="admin-page-subtitle">{ev.pessoas?.nome}</p>
         </div>
-        <form action={() => handleDelete(id)} style={{ display: 'inline' }}>
+        <form action={() => handleDelete(id)} className="inline-form">
           <button
             type="submit"
-            className="admin-btn"
-            style={{
-              backgroundColor: 'rgba(239, 68, 68, 0.1)',
-              color: '#ef4444',
-              border: '1px solid rgba(239, 68, 68, 0.3)',
-            }}
+            className="admin-btn admin-btn-secondary admin-btn-danger"
             onClick={(e) => {
               if (!confirm('Deletar?')) e.preventDefault();
             }}
@@ -71,25 +85,18 @@ async function Content({ id }: { id: string }) {
         </form>
       </div>
 
-      <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto' }}>
+      <div className="admin-card form-panel-centered">
         <form action={(formData) => handleSubmit(id, formData)}>
           <div className="admin-form-group">
             <label>Pessoa *</label>
             <select
               name="pessoa_id"
-              defaultValue={ev.pessoas?.id}
+              defaultValue={ev.pessoas?.id || ''}
               required
-              style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-              }}
+              className="profile-form-input"
             >
               <option value="">— Selecione —</option>
-              {pessoas.map((p: any) => (
+              {pessoas.map((p) => (
                 <option key={p.id} value={p.id}>
                   {p.nome}
                 </option>
@@ -102,12 +109,13 @@ async function Content({ id }: { id: string }) {
             <input
               type="text"
               name="endereco"
-              defaultValue={ev.endereco}
+              defaultValue={ev.endereco || ''}
               required
+              className="profile-form-input"
             />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+          <div className="form-grid-2">
             <div className="admin-form-group">
               <label>Data *</label>
               <input
@@ -115,22 +123,16 @@ async function Content({ id }: { id: string }) {
                 name="data"
                 defaultValue={ev.data}
                 required
+                className="profile-form-input"
               />
             </div>
             <div className="admin-form-group">
               <label>Situação *</label>
               <select
                 name="situacao"
-                defaultValue={ev.situacao}
+                defaultValue={ev.situacao || ''}
                 required
-                style={{
-                  padding: '0.65rem 0.85rem',
-                  border: '1px solid var(--admin-border)',
-                  borderRadius: '0.6rem',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.95rem',
-                  color: 'var(--text)',
-                }}
+                className="profile-form-input"
               >
                 <option value="planejada">Planejada</option>
                 <option value="realizada">Realizada</option>
@@ -145,8 +147,9 @@ async function Content({ id }: { id: string }) {
             <input
               type="text"
               name="equipe"
-              defaultValue={ev.equipe}
+              defaultValue={ev.equipe || ''}
               required
+              className="profile-form-input"
             />
           </div>
 
@@ -156,19 +159,11 @@ async function Content({ id }: { id: string }) {
               name="observacoes"
               defaultValue={ev.observacoes || ''}
               rows={3}
-              style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-                resize: 'vertical',
-              }}
+              className="profile-form-input"
             />
           </div>
 
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+          <div className="form-actions-row">
             <button type="submit" className="admin-btn admin-btn-primary">
               ✅ Salvar
             </button>
@@ -182,10 +177,10 @@ async function Content({ id }: { id: string }) {
   );
 }
 
-export default async function Page({ params }: { params: Promise<any> }) {
+export default async function Page({ params }: { params: Promise<EvangelhoParams> }) {
   const resolvedParams = await params;
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <Content id={resolvedParams.id} />
     </Suspense>
   );
