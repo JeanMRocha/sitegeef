@@ -18,7 +18,16 @@ type FraternoItem = {
   atendente?: { nome?: string | null } | null;
 };
 
-async function FraternoContent({ searchParams }: { searchParams: { mes?: string; ano?: string } }) {
+type FraternoSearchParams = {
+  mes?: string;
+  ano?: string;
+};
+
+function resolveStatusClass(status?: string | null) {
+  return status === 'em_aberto' ? 'inline-status inline-status-success' : 'inline-status inline-status-warning';
+}
+
+async function FraternoContent({ searchParams }: { searchParams: FraternoSearchParams }) {
   const hoje = new Date();
   const mes = searchParams.mes ? parseInt(searchParams.mes, 10) : hoje.getMonth() + 1;
   const ano = searchParams.ano ? parseInt(searchParams.ano, 10) : hoje.getFullYear();
@@ -61,7 +70,7 @@ async function FraternoContent({ searchParams }: { searchParams: { mes?: string;
                 ))}
               </select>
             </label>
-            <div className="area-panel-item">
+            <div className="area-panel-item area-panel-item-end">
               <button type="submit" className="profile-form-btn profile-form-btn-primary">Filtrar</button>
             </div>
           </form>
@@ -95,7 +104,7 @@ async function FraternoContent({ searchParams }: { searchParams: { mes?: string;
                     <td className="text-sm-muted">{atend.atendente?.nome}</td>
                     <td>{atend.tipo}</td>
                     <td>
-                      <span className={atend.status === 'em_aberto' ? 'inline-status inline-status-success' : 'inline-status inline-status-warning'}>
+                      <span className={resolveStatusClass(atend.status)}>
                         {atend.status === 'em_aberto' ? 'Aberto' : 'Encerrado'}
                       </span>
                     </td>
@@ -122,7 +131,7 @@ async function FraternoContent({ searchParams }: { searchParams: { mes?: string;
   );
 }
 
-export default async function FraternoPage({ searchParams }: { searchParams: Promise<{ mes?: string; ano?: string }> }) {
+export default async function FraternoPage({ searchParams }: { searchParams: Promise<FraternoSearchParams> }) {
   const resolvedSearchParams = await searchParams;
   return (
     <Suspense fallback={<div className="suspense-center">Carregando...</div>}>

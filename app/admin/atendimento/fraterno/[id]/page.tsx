@@ -18,6 +18,18 @@ type PessoaDisponivel = {
   nome: string | null;
 };
 
+type AtendimentoFraternoDetalhe = {
+  id: string;
+  data: string;
+  tipo?: string | null;
+  status: string;
+  sigilo?: boolean | null;
+  encaminhamento?: string | null;
+  observacoes?: string | null;
+  pessoas?: { id?: string | null; nome?: string | null } | null;
+  atendente?: { id?: string | null; nome?: string | null } | null;
+};
+
 async function handleSubmit(id: string, formData: FormData) {
   'use server';
 
@@ -55,7 +67,7 @@ async function handleDelete(id: string) {
 }
 
 async function AtendimentoContent({ id }: { id: string }) {
-  const atend = await getAtendimentoFraternoById(id);
+  const atend = (await getAtendimentoFraternoById(id)) as AtendimentoFraternoDetalhe;
   const pessoas = (await getPessoasDisponiveis()) as PessoaDisponivel[];
   const tipos = ['consolo', 'esclarecimento', 'orientação espiritual', 'apoio emocional', 'outro'];
 
@@ -88,7 +100,7 @@ async function AtendimentoContent({ id }: { id: string }) {
           <div className="form-grid-2">
             <div className="admin-form-group">
               <label>Pessoa Atendida *</label>
-              <select name="pessoa_id" defaultValue={atend.pessoas?.id} required>
+              <select name="pessoa_id" defaultValue={atend.pessoas?.id || ''} required className="profile-form-input">
                 <option value="">— Selecione —</option>
                 {pessoas.map((p) => (
                   <option key={p.id} value={p.id}>
@@ -100,7 +112,7 @@ async function AtendimentoContent({ id }: { id: string }) {
 
             <div className="admin-form-group">
               <label>Atendente *</label>
-              <select name="atendente_id" defaultValue={atend.atendente?.id} required>
+              <select name="atendente_id" defaultValue={atend.atendente?.id || ''} required className="profile-form-input">
                 <option value="">— Selecione —</option>
                 {pessoas.map((p) => (
                   <option key={p.id} value={p.id}>
@@ -114,12 +126,12 @@ async function AtendimentoContent({ id }: { id: string }) {
           <div className="form-grid-2">
             <div className="admin-form-group">
               <label>Data *</label>
-              <input type="date" name="data" defaultValue={atend.data} required />
+              <input type="date" name="data" defaultValue={atend.data} required className="profile-form-input" />
             </div>
 
             <div className="admin-form-group">
               <label>Tipo de Atendimento *</label>
-              <select name="tipo" defaultValue={atend.tipo} required>
+              <select name="tipo" defaultValue={atend.tipo || ''} required className="profile-form-input">
                 <option value="">— Selecione —</option>
                 {tipos.map((t) => (
                   <option key={t} value={t}>
@@ -132,12 +144,12 @@ async function AtendimentoContent({ id }: { id: string }) {
 
           <div className="admin-form-group">
             <label>Encaminhamento</label>
-            <input type="text" name="encaminhamento" defaultValue={atend.encaminhamento || ''} />
+            <input type="text" name="encaminhamento" defaultValue={atend.encaminhamento || ''} className="profile-form-input" />
           </div>
 
           <div className="admin-form-group">
             <label>Observações (Sigiloso)</label>
-            <textarea name="observacoes" defaultValue={atend.observacoes || ''} rows={3} />
+            <textarea name="observacoes" defaultValue={atend.observacoes || ''} rows={3} className="profile-form-input" />
           </div>
 
           <div className="content-surface-note content-surface-note-inline content-surface-note-danger mb-2">
@@ -145,7 +157,7 @@ async function AtendimentoContent({ id }: { id: string }) {
               type="checkbox"
               name="sigilo"
               id="sigilo"
-              defaultChecked={atend.sigilo}
+              defaultChecked={Boolean(atend.sigilo)}
             />
             <label htmlFor="sigilo" className="mb-0">
               🔒 Marcar este atendimento como sigiloso
@@ -154,7 +166,7 @@ async function AtendimentoContent({ id }: { id: string }) {
 
           <div className="admin-form-group">
             <label>Status *</label>
-            <select name="status" defaultValue={atend.status} required>
+            <select name="status" defaultValue={atend.status} required className="profile-form-input">
               <option value="em_aberto">🔓 Em Aberto</option>
               <option value="encerrado">✓ Encerrado</option>
             </select>

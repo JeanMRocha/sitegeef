@@ -10,6 +10,11 @@ export const metadata = {
 
 export const dynamic = 'force-dynamic';
 
+type PessoaDisponivel = {
+  id: string;
+  nome: string | null;
+};
+
 async function handleSubmit(formData: FormData) {
   'use server';
 
@@ -33,7 +38,7 @@ async function handleSubmit(formData: FormData) {
 }
 
 async function NovoAtendimentoPage() {
-  const pessoas = await getPessoasDisponiveis();
+  const pessoas = (await getPessoasDisponiveis()) as PessoaDisponivel[];
   const hoje = new Date().toISOString().split('T')[0];
   const tipos = ['consolo', 'esclarecimento', 'orientação espiritual', 'apoio emocional', 'outro'];
 
@@ -48,29 +53,22 @@ async function NovoAtendimentoPage() {
       </div>
 
       {/* Form */}
-      <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto' }}>
+      <div className="admin-card form-panel-centered">
         <LgpdFormNotice
           title="Atendimento fraterno"
           text="Os dados informados serão usados para acolhimento, encaminhamento e registro seguro do atendimento."
         />
         <form action={handleSubmit}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+          <div className="form-grid-2">
             <div className="admin-form-group">
               <label>Pessoa Atendida *</label>
               <select
                 name="pessoa_id"
                 required
-                style={{
-                  padding: '0.65rem 0.85rem',
-                  border: '1px solid var(--admin-border)',
-                  borderRadius: '0.6rem',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.95rem',
-                  color: 'var(--text)',
-                }}
+                className="profile-form-input"
               >
                 <option value="">— Selecione —</option>
-                {pessoas.map((p: any) => (
+                {pessoas.map((p) => (
                   <option key={p.id} value={p.id}>
                     {p.nome}
                   </option>
@@ -82,17 +80,10 @@ async function NovoAtendimentoPage() {
               <select
                 name="atendente_id"
                 required
-                style={{
-                  padding: '0.65rem 0.85rem',
-                  border: '1px solid var(--admin-border)',
-                  borderRadius: '0.6rem',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.95rem',
-                  color: 'var(--text)',
-                }}
+                className="profile-form-input"
               >
                 <option value="">— Selecione —</option>
-                {pessoas.map((p: any) => (
+                {pessoas.map((p) => (
                   <option key={p.id} value={p.id}>
                     {p.nome}
                   </option>
@@ -101,7 +92,7 @@ async function NovoAtendimentoPage() {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+          <div className="form-grid-2">
             <div className="admin-form-group">
               <label>Data *</label>
               <input
@@ -109,6 +100,7 @@ async function NovoAtendimentoPage() {
                 name="data"
                 defaultValue={hoje}
                 required
+                className="profile-form-input"
               />
             </div>
             <div className="admin-form-group">
@@ -116,14 +108,7 @@ async function NovoAtendimentoPage() {
               <select
                 name="tipo"
                 required
-                style={{
-                  padding: '0.65rem 0.85rem',
-                  border: '1px solid var(--admin-border)',
-                  borderRadius: '0.6rem',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.95rem',
-                  color: 'var(--text)',
-                }}
+                className="profile-form-input"
               >
                 <option value="">— Selecione —</option>
                 {tipos.map((t) => (
@@ -141,6 +126,7 @@ async function NovoAtendimentoPage() {
               type="text"
               name="encaminhamento"
               placeholder="Ex: Passe, atendimento medico"
+              className="profile-form-input"
             />
           </div>
 
@@ -150,39 +136,23 @@ async function NovoAtendimentoPage() {
               name="observacoes"
               placeholder="Notas sobre o atendimento... (este campo é sigiloso)"
               rows={3}
-              style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-                resize: 'vertical',
-              }}
+              className="profile-form-input"
             />
           </div>
 
-          <div style={{
-            padding: '1rem',
-            backgroundColor: 'rgba(239, 68, 68, 0.05)',
-            borderRadius: '0.6rem',
-            marginBottom: '1.5rem',
-            display: 'flex',
-            gap: '0.75rem',
-            alignItems: 'flex-start',
-          }}>
+          <div className="content-surface-note content-surface-note-inline content-surface-note-danger">
             <input
               type="checkbox"
               name="sigilo"
               id="sigilo"
-              style={{ marginTop: '0.3rem' }}
+              className="mt-035"
             />
-            <label htmlFor="sigilo" style={{ fontSize: '0.95rem', color: 'var(--text)', margin: 0 }}>
+            <label htmlFor="sigilo" className="mb-0">
               🔒 Marcar este atendimento como sigiloso (só visível para pode_atendimento)
             </label>
           </div>
 
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+          <div className="form-actions-row">
             <button type="submit" className="admin-btn admin-btn-primary">
               ✅ Registrar Atendimento
             </button>
