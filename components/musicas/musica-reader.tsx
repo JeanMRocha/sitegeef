@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Musica } from "@/lib/musicas";
 import { formatParteTipoLabel, isTituloSameasTipo } from "@/lib/musicas";
-import { IconArrowLeft, IconExternalLink, IconPrinter } from "@/components/icons";
+import { IconArrowLeft, IconPrinter } from "@/components/icons";
 
 function isChordLine(line: string): boolean {
   if (!line || !line.trim()) return false;
@@ -292,8 +292,6 @@ export function MusicaReader({
     );
   }
 
-  const openExibicaoHref = `/admin/reuniao-publica/musicas/sessoes/novo?musica_id=${encodeURIComponent(musica.id)}`;
-
   return (
     <main className={`musica-page ${isDisplay ? "musica-page--display" : ""}`}>
       <section className="musica-hero public-hero-shell">
@@ -351,16 +349,6 @@ export function MusicaReader({
               >
                 🎼
               </button>
-            ) : null}
-            {!isDisplay ? (
-              <Link
-                href={openExibicaoHref}
-                className="button button-primary musica-icon-button"
-                aria-label="Levar a música para exibição"
-                title="Levar a música para exibição"
-              >
-                <IconExternalLink size={18} />
-              </Link>
             ) : null}
           </div>
         </div>
