@@ -3525,6 +3525,21 @@ a.button.musica-icon-button {
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
+.reader-loan-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: start;
+}
+
+.reader-meta-right {
+  text-align: right;
+}
+
+.text-warning {
+  color: #f97316;
+}
+
 .module-card p {
   margin: 0;
 }

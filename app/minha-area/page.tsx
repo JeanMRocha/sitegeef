@@ -8,6 +8,67 @@ import { getRequestLocale } from "@/lib/multilingual/server";
 import { createClient } from "@/lib/supabase/server";
 import { submitTitularRequest } from "./actions";
 
+type EmprestimoArea = {
+  id: string;
+  prazo_devolucao?: string | null;
+  exemplares?: {
+    codigo?: string | null;
+    obra?: {
+      titulo?: string | null;
+      autor?: string | null;
+    } | null;
+  } | null;
+};
+
+type ReservaArea = {
+  id: string;
+  criado_em?: string | null;
+  posicao_fila?: number | null;
+  obras?: {
+    titulo?: string | null;
+    autor?: string | null;
+  } | null;
+};
+
+type PedidoArea = {
+  id: string;
+  request_type?: "acesso" | "correcao" | "revogacao" | "eliminacao" | string | null;
+  status?: string | null;
+  resolvido_em?: string | null;
+  created_at?: string | null;
+};
+
+type MovimentoArea = {
+  id: string;
+  tipo?: string | null;
+  criado_em?: string | null;
+  produtos_livraria?: {
+    titulo?: string | null;
+  } | null;
+};
+
+type EscalaArea = {
+  id: string;
+  funcoes?: {
+    nome?: string | null;
+  } | null;
+  reunioes?: {
+    data?: string | null;
+  } | null;
+};
+
+type VoluntariadoArea = {
+  id: string;
+  servico?: string | null;
+  horarios?: string | null;
+};
+
+type ConsentimentoArea = {
+  id: string;
+  finalidade?: string | null;
+  data_consentimento?: string | null;
+};
+
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
 
@@ -27,10 +88,17 @@ async function MinhaAreaContent() {
 
   const { usuario, pessoa, siteRole, hasAdminAccess, emprestimos, reservas, movimentosLivraria, escalas, voluntariados, consentimentos, pedidosTitular } =
     await getCachedUserArea(user.id);
+  const emprestimosTyped = emprestimos as EmprestimoArea[];
+  const reservasTyped = reservas as ReservaArea[];
+  const movimentosTyped = movimentosLivraria as MovimentoArea[];
+  const escalasTyped = escalas as EscalaArea[];
+  const voluntariadosTyped = voluntariados as VoluntariadoArea[];
+  const consentimentosTyped = consentimentos as ConsentimentoArea[];
+  const pedidosTitularTyped = pedidosTitular as PedidoArea[];
 
   const today = new Date().toISOString().split("T")[0];
-  const emprestimosVencidos = emprestimos.filter((e: any) => e.prazo_devolucao < today);
-  const emprestimosAtivos = emprestimos.filter((e: any) => e.prazo_devolucao >= today);
+  const emprestimosVencidos = emprestimosTyped.filter((e) => (e.prazo_devolucao ?? "") < today);
+  const emprestimosAtivos = emprestimosTyped.filter((e) => (e.prazo_devolucao ?? "") >= today);
   const copy =
     locale === "en"
       ? {
@@ -136,11 +204,11 @@ async function MinhaAreaContent() {
 
   const summaryCards = [
     { label: copy.summary[0][0], value: emprestimosAtivos.length, note: copy.summary[0][1] },
-    { label: copy.summary[1][0], value: reservas.length, note: copy.summary[1][1] },
-    { label: copy.summary[2][0], value: movimentosLivraria.length, note: copy.summary[2][1] },
-    { label: copy.summary[3][0], value: escalas.length, note: copy.summary[3][1] },
-    { label: copy.summary[4][0], value: voluntariados.length, note: copy.summary[4][1] },
-    { label: copy.summary[5][0], value: consentimentos.length, note: copy.summary[5][1] },
+    { label: copy.summary[1][0], value: reservasTyped.length, note: copy.summary[1][1] },
+    { label: copy.summary[2][0], value: movimentosTyped.length, note: copy.summary[2][1] },
+    { label: copy.summary[3][0], value: escalasTyped.length, note: copy.summary[3][1] },
+    { label: copy.summary[4][0], value: voluntariadosTyped.length, note: copy.summary[4][1] },
+    { label: copy.summary[5][0], value: consentimentosTyped.length, note: copy.summary[5][1] },
   ];
 
   const menuItems = [
@@ -148,12 +216,12 @@ async function MinhaAreaContent() {
     pessoa ? { href: "#dados-pessoais", label: copy.personalData, note: locale === "en" ? "Personal data" : "Cadastro" } : null,
     { href: "#privacidade", label: copy.privacy, note: locale === "en" ? "LGPD" : "Direitos" },
     { href: "#pedido-titular", label: copy.requestTitle, note: locale === "en" ? "Privacy request" : "Solicitações" },
-    pedidosTitular.length > 0 ? { href: "#pedidos-recentes", label: copy.recent, note: `${pedidosTitular.length} ${locale === "en" ? "items" : "registros"}` } : null,
+    pedidosTitularTyped.length > 0 ? { href: "#pedidos-recentes", label: copy.recent, note: `${pedidosTitularTyped.length} ${locale === "en" ? "items" : "registros"}` } : null,
     usuario?.pode_biblioteca ? { href: "#biblioteca", label: copy.lib, note: locale === "en" ? "Library access" : "Acervo" } : null,
-    usuario?.pode_livraria && movimentosLivraria.length > 0 ? { href: "#livraria", label: copy.movements, note: `${movimentosLivraria.length} ${locale === "en" ? "records" : "registros"}` } : null,
-    usuario?.pode_escalas && escalas.length > 0 ? { href: "#escalas", label: copy.schedules, note: `${escalas.length} ${locale === "en" ? "items" : "compromissos"}` } : null,
-    voluntariados.length > 0 ? { href: "#voluntariado", label: copy.volunteering, note: `${voluntariados.length} ${locale === "en" ? "items" : "serviços"}` } : null,
-    consentimentos.length > 0 ? { href: "#consentimentos", label: copy.consents, note: `${consentimentos.length} ${locale === "en" ? "items" : "consentimentos"}` } : null,
+    usuario?.pode_livraria && movimentosTyped.length > 0 ? { href: "#livraria", label: copy.movements, note: `${movimentosTyped.length} ${locale === "en" ? "records" : "registros"}` } : null,
+    usuario?.pode_escalas && escalasTyped.length > 0 ? { href: "#escalas", label: copy.schedules, note: `${escalasTyped.length} ${locale === "en" ? "items" : "compromissos"}` } : null,
+    voluntariadosTyped.length > 0 ? { href: "#voluntariado", label: copy.volunteering, note: `${voluntariadosTyped.length} ${locale === "en" ? "items" : "serviços"}` } : null,
+    consentimentosTyped.length > 0 ? { href: "#consentimentos", label: copy.consents, note: `${consentimentosTyped.length} ${locale === "en" ? "items" : "consentimentos"}` } : null,
   ].filter(Boolean) as { href: string; label: string; note: string }[];
 
   return (
@@ -203,7 +271,7 @@ async function MinhaAreaContent() {
             <section className="area-section" id="dados-pessoais">
               <h2 className="area-section-title">{copy.personalData}</h2>
               <div className="admin-card">
-                <div className="stat-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))" }}>
+                <div className="stat-grid stat-grid-220">
                   <div className="area-panel-item">
                     <strong>{locale === "en" ? "Name" : "Nome"}</strong>
                     <p>{pessoa.nome}</p>
@@ -240,7 +308,7 @@ async function MinhaAreaContent() {
           <section className="area-section" id="privacidade">
             <h2 className="area-section-title">{copy.privacy}</h2>
             <div className="admin-card">
-              <div className="area-panel-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))" }}>
+              <div className="area-panel-grid area-panel-grid-220">
                 <div className="area-panel-item">
                   <strong>{locale === "en" ? "What you can request" : "O que você pode pedir"}</strong>
                   <p>{copy.rights}</p>
@@ -296,7 +364,7 @@ async function MinhaAreaContent() {
               <h2 className="area-section-title">{copy.recent}</h2>
               <div className="admin-card">
                 <div className="area-panel-grid">
-                  {pedidosTitular.map((pedido: any) => (
+                  {pedidosTitularTyped.map((pedido) => (
                     <div key={pedido.id} className="area-panel-item">
                       <strong>
                         {pedido.request_type === "acesso"
@@ -307,14 +375,14 @@ async function MinhaAreaContent() {
                               ? copy.requestTypes.revogacao
                               : copy.requestTypes.eliminacao}
                       </strong>
-                      <p style={{ marginBottom: '0.25rem' }}>
+                      <p className="mb-1">
                         {pedido.status}
                         {pedido.resolvido_em
                           ? ` · ${locale === "en" ? "completed on" : "concluído em"} ${new Date(pedido.resolvido_em).toLocaleDateString(locale === "en" ? "en-US" : "pt-BR")}`
                           : ""}
                       </p>
-                      <p style={{ color: "var(--muted)" }}>
-                        {new Date(pedido.created_at).toLocaleDateString(locale === "en" ? "en-US" : "pt-BR")}
+                      <p className="text-sm-muted">
+                        {new Date(pedido.created_at ?? new Date().toISOString()).toLocaleDateString(locale === "en" ? "en-US" : "pt-BR")}
                       </p>
                     </div>
                   ))}
@@ -328,14 +396,14 @@ async function MinhaAreaContent() {
               <h2 className="area-section-title">{copy.lib}</h2>
               <div className="admin-card">
                 {emprestimosVencidos.length > 0 && (
-                  <div className="area-panel-item area-panel-error" style={{ marginBottom: "1rem" }}>
+                  <div className="area-panel-item area-panel-error mb-1">
                     <strong className="inline-status inline-status-danger">
                       {locale === "en"
                         ? `Overdue loans (${emprestimosVencidos.length})`
                         : `Empréstimos vencidos (${emprestimosVencidos.length})`}
                     </strong>
                     <div className="area-panel-grid area-panel-grid--mt">
-                      {emprestimosVencidos.map((e: any) => (
+                      {emprestimosVencidos.map((e) => (
                         <div key={e.id} className="area-panel-item">
                           <strong>{e.exemplares?.obra?.titulo}</strong>
                           <p>{copy.returnsIn} {e.prazo_devolucao}</p>
@@ -352,7 +420,7 @@ async function MinhaAreaContent() {
                         ? `Active loans (${emprestimosAtivos.length})`
                         : `Empréstimos ativos (${emprestimosAtivos.length})`}
                     </strong>
-                    {emprestimosAtivos.map((e: any) => (
+                    {emprestimosAtivos.map((e) => (
                       <div key={e.id} className="area-panel-item">
                         <strong>{e.exemplares?.obra?.titulo}</strong>
                         <p>{copy.dueIn} {e.prazo_devolucao}</p>
@@ -366,7 +434,7 @@ async function MinhaAreaContent() {
                     <strong className="area-section-title area-section-title--sm">
                       {locale === "en" ? `Reservations (${reservas.length})` : `Reservas (${reservas.length})`}
                     </strong>
-                    {reservas.map((r: any) => (
+                    {reservasTyped.map((r) => (
                       <div key={r.id} className="area-panel-item">
                         <strong>{r.obras?.titulo}</strong>
                         <p>{copy.queue}: {r.posicao_fila}</p>
@@ -387,11 +455,11 @@ async function MinhaAreaContent() {
               <h2 className="area-section-title">{copy.movements}</h2>
               <div className="admin-card">
                 <div className="area-panel-grid">
-                  {movimentosLivraria.map((m: any) => (
+                  {movimentosTyped.map((m) => (
                     <div key={m.id} className="area-panel-item">
                       <strong>{m.produtos_livraria?.titulo}</strong>
                       <p>
-                        {m.tipo} · {new Date(m.criado_em).toLocaleDateString("pt-BR")}
+                        {m.tipo} · {new Date(m.criado_em ?? new Date().toISOString()).toLocaleDateString("pt-BR")}
                       </p>
                     </div>
                   ))}
@@ -405,7 +473,7 @@ async function MinhaAreaContent() {
               <h2 className="area-section-title">{copy.schedules}</h2>
               <div className="admin-card">
                 <div className="area-panel-grid">
-                  {escalas.map((e: any) => (
+                  {escalasTyped.map((e) => (
                     <div key={e.id} className="area-panel-item">
                       <strong>{e.funcoes?.nome}</strong>
                       <p>{e.reunioes?.data}</p>
@@ -421,7 +489,7 @@ async function MinhaAreaContent() {
               <h2 className="area-section-title">{copy.volunteering}</h2>
               <div className="admin-card">
                 <div className="area-panel-grid">
-                  {voluntariados.map((v: any) => (
+                  {voluntariadosTyped.map((v) => (
                     <div key={v.id} className="area-panel-item">
                       <strong>{v.servico}</strong>
                       <p>{v.horarios}</p>
@@ -437,11 +505,11 @@ async function MinhaAreaContent() {
               <h2 className="area-section-title">{copy.consents}</h2>
               <div className="admin-card">
                 <div className="area-panel-grid">
-                  {consentimentos.map((c: any) => (
+                  {consentimentosTyped.map((c) => (
                     <div key={c.id} className="area-panel-item">
                       <strong>{c.finalidade}</strong>
                       <p>
-                        {copy.consented} {new Date(c.data_consentimento).toLocaleDateString(locale === "en" ? "en-US" : "pt-BR")}
+                        {copy.consented} {new Date(c.data_consentimento ?? new Date().toISOString()).toLocaleDateString(locale === "en" ? "en-US" : "pt-BR")}
                       </p>
                     </div>
                   ))}
