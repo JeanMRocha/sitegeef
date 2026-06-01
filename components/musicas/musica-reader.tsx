@@ -67,6 +67,7 @@ type MusicaReaderProps = {
   displayCode?: string | null;
   mode?: "publico" | "exibicao";
   displayDensity?: "standard" | "full";
+  readerDensity?: "standard" | "full";
   showBackLink?: boolean;
   showBranding?: boolean;
 };
@@ -77,6 +78,7 @@ export function MusicaReader({
   displayCode,
   mode = "publico",
   displayDensity = "standard",
+  readerDensity = "standard",
   showBackLink = true,
   showBranding = true,
 }: MusicaReaderProps) {
@@ -151,6 +153,25 @@ export function MusicaReader({
       lyricSpacer,
     };
   }, [partesVisiveis, viewport.height, viewport.width]);
+  const publicReaderMetrics = useMemo(() => {
+    if (readerDensity !== "full") {
+      return readerMetrics;
+    }
+
+    return {
+      ...readerMetrics,
+      columnWidth: readerMetrics.columnWidth + 2.25,
+      columnGap: Math.max(0.28, readerMetrics.columnGap - 0.12),
+      lyricsMarginTop: Math.max(0.2, readerMetrics.lyricsMarginTop - 0.12),
+      lyricsPanelPadding: "0.95rem 1.1rem 1.15rem",
+      partePad: readerMetrics.partePad + 0.1,
+      labelSize: readerMetrics.labelSize + 0.1,
+      titleSize: readerMetrics.titleSize + 0.15,
+      textSize: readerMetrics.textSize + 0.18,
+      lineHeight: readerMetrics.lineHeight + 0.12,
+      lyricSpacer: Math.max(0.16, readerMetrics.lyricSpacer - 0.08),
+    };
+  }, [readerDensity, readerMetrics]);
   const displayMetrics = useMemo(() => {
     const isFullDisplay = displayDensity === "full";
     const totalLines = partesVisiveis.reduce((sum, parte) => sum + parte.conteudo.split("\n").length, 0);
@@ -549,20 +570,20 @@ export function MusicaReader({
 
       {!isDisplay && (
         <>
-          <section className="musica-reader-lyrics" style={{ marginTop: `${readerMetrics.lyricsMarginTop}rem` }}>
+          <section className="musica-reader-lyrics" style={{ marginTop: `${publicReaderMetrics.lyricsMarginTop}rem` }}>
             <article
               className="musica-reader-panel musica-reader-panel--lyrics musica-reader-panel--lyrics-full"
               style={
                 {
-                  "--reader-lyrics-panel-padding": readerMetrics.lyricsPanelPadding,
-                  "--reader-column-width": `${readerMetrics.columnWidth}rem`,
-                  "--reader-column-gap": `${readerMetrics.columnGap}rem`,
-                  "--reader-parte-padding": `${readerMetrics.partePad}rem`,
-                  "--reader-label-size": `${readerMetrics.labelSize}rem`,
-                  "--reader-title-size": `${readerMetrics.titleSize}rem`,
-                  "--reader-text-size": `${readerMetrics.textSize}rem`,
-                  "--reader-line-height": String(readerMetrics.lineHeight),
-                  "--reader-lyric-spacer": `${readerMetrics.lyricSpacer}rem`,
+                  "--reader-lyrics-panel-padding": publicReaderMetrics.lyricsPanelPadding,
+                  "--reader-column-width": `${publicReaderMetrics.columnWidth}rem`,
+                  "--reader-column-gap": `${publicReaderMetrics.columnGap}rem`,
+                  "--reader-parte-padding": `${publicReaderMetrics.partePad}rem`,
+                  "--reader-label-size": `${publicReaderMetrics.labelSize}rem`,
+                  "--reader-title-size": `${publicReaderMetrics.titleSize}rem`,
+                  "--reader-text-size": `${publicReaderMetrics.textSize}rem`,
+                  "--reader-line-height": String(publicReaderMetrics.lineHeight),
+                  "--reader-lyric-spacer": `${publicReaderMetrics.lyricSpacer}rem`,
                 } as CSSProperties
               }
             >
