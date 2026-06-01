@@ -3,6 +3,14 @@ Site do GEEF
 
 ## Documentacao de manutencao
 
+Se for continuar o projeto, comece por:
+
+1. `README_HANDOFF.md`
+2. `CONTINUATION_GUIDE.md`
+3. `AGENT_GUIDE.md`
+4. `QUICK_REFERENCE.md`
+
+Guias de apoio:
 - `HANDOFF.md`
 - `docs/AGENT_PLAYBOOK.md`
 - `docs/MODULE_MAP.md`
