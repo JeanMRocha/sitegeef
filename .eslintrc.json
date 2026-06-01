@@ -21,7 +21,22 @@
     "react/react-in-jsx-scope": "off",
     "react/no-children-prop": "warn",
     "@typescript-eslint/explicit-function-return-types": "off",
-    "@typescript-eslint/no-non-null-assertion": "warn"
+    "@typescript-eslint/no-non-null-assertion": "warn",
+    "no-restricted-syntax": [
+      "warn",
+      {
+        "selector": "JSXAttribute[name.name='style'] > JSXExpressionContainer > ObjectExpression",
+        "message": "Inline styles detected. Use CSS classes from styles/utilities.css or design system variables instead."
+      },
+      {
+        "selector": "Literal[value=/^#[0-9a-fA-F]{3,6}$/]",
+        "message": "Hardcoded hex color detected. Use CSS variables from identity-system.css instead (e.g., var(--text-primary))."
+      },
+      {
+        "selector": "CallExpression[callee.name='rgba'] > Literal",
+        "message": "Hardcoded rgba() color detected. Use CSS variables from identity-system.css instead."
+      }
+    ]
   },
   "env": {
     "browser": true,

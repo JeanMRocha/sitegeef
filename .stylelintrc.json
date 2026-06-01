@@ -1,0 +1,19 @@
+{
+  "extends": ["stylelint-config-standard"],
+  "customSyntax": "postcss-scss",
+  "rules": {
+    "color-no-hex": null,
+    "color-function-notation": "modern",
+    "declaration-property-value-no-unknown": [
+      true,
+      {
+        "ignoreProperties": ["^--"]
+      }
+    ]
+  },
+  "ignoreFiles": [
+    "**/node_modules/**",
+    "**/.next/**",
+    "**/coverage/**"
+  ]
+}
