@@ -794,8 +794,10 @@ body.musica-display-route .site-shell {
 }
 
 .musica-letra-blocos {
-  column-count: 2;
+  column-count: auto;
+  column-width: clamp(16rem, 22vw, 19rem);
   column-gap: 1rem;
+  column-fill: balance;
 }
 
 .musica-parte-musical {
@@ -1619,6 +1621,11 @@ body.musica-display-route .musica-display-screen--reader {
 @media (max-width: 1100px) {
   .musica-display-body-16x9 {
     column-count: 1;
+  }
+
+  .musica-letra-blocos {
+    column-count: 1;
+    column-width: auto;
   }
 }
 
