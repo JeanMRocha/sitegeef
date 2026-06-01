@@ -8,6 +8,17 @@ export const metadata = {
   title: 'Novo Termo Assinado - Admin GEEF',
 };
 
+type PessoaOption = {
+  id: string;
+  nome: string;
+};
+
+type ModeloOption = {
+  id: string;
+  tipo?: string | null;
+  titulo?: string | null;
+};
+
 async function handleSubmit(formData: FormData) {
   'use server';
 
@@ -30,8 +41,8 @@ async function handleSubmit(formData: FormData) {
 }
 
 export default async function NovoTermoPage() {
-  const pessoas = await getPessoasDisponiveis();
-  const modelos = await getModelosDocumentos();
+  const pessoas = (await getPessoasDisponiveis()) as PessoaOption[];
+  const modelos = (await getModelosDocumentos()) as ModeloOption[];
 
   return (
     <div>
@@ -43,14 +54,14 @@ export default async function NovoTermoPage() {
         </div>
       </div>
 
-      <div className="admin-card" style={{ marginBottom: '1rem', padding: '0.95rem 1rem', borderLeft: '3px solid var(--primary)' }}>
-        <p style={{ margin: 0, color: 'var(--muted)', lineHeight: 1.6 }}>
+      <div className="admin-card panel-accent-card">
+        <p className="panel-note">
           Confira o modelo antes de salvar e evite anexar arquivo externo se o conteúdo já estiver no cadastro.
         </p>
       </div>
 
       {/* Form */}
-      <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto' }}>
+      <div className="admin-card form-panel-centered">
         <LgpdFormNotice
           title="Termo assinado"
           text="Registre apenas a prova necessária e mantenha a vigência e a finalidade visíveis."
@@ -61,17 +72,10 @@ export default async function NovoTermoPage() {
             <select
               name="pessoa_id"
               required
-              style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-              }}
+              className="profile-form-input form-control-full"
             >
               <option value="">— Selecione —</option>
-              {pessoas.map((p: any) => (
+              {pessoas.map((p) => (
                 <option key={p.id} value={p.id}>
                   {p.nome}
                 </option>
@@ -84,17 +88,10 @@ export default async function NovoTermoPage() {
             <select
               name="modelo_id"
               required
-              style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-              }}
+              className="profile-form-input form-control-full"
             >
               <option value="">— Selecione —</option>
-              {modelos.map((m: any) => (
+              {modelos.map((m) => (
                 <option key={m.id} value={m.id}>
                   {m.tipo} - {m.titulo}
                 </option>
@@ -102,7 +99,7 @@ export default async function NovoTermoPage() {
             </select>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+          <div className="grid-auto-300 mb-1-5">
             <div className="admin-form-group">
               <label>Data de Assinatura</label>
               <input
@@ -133,17 +130,10 @@ export default async function NovoTermoPage() {
             <label>Responsável legal (se aplicável)</label>
             <select
               name="responsavel_id"
-              style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-              }}
+              className="profile-form-input form-control-full"
             >
               <option value="">— Nenhum —</option>
-              {pessoas.map((p: any) => (
+              {pessoas.map((p) => (
                 <option key={p.id} value={p.id}>
                   {p.nome}
                 </option>
@@ -151,7 +141,7 @@ export default async function NovoTermoPage() {
             </select>
           </div>
 
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+          <div className="form-actions-row">
             <button type="submit" className="admin-btn admin-btn-primary">
               ✅ Registrar Termo
             </button>

@@ -15,7 +15,11 @@ type TermoItem = {
   documentos_modelo?: { tipo?: string | null } | null;
 };
 
-async function TermosList({ searchParams }: { searchParams: { page?: string } }) {
+type TermosSearchParams = {
+  page?: string;
+};
+
+async function TermosList({ searchParams }: { searchParams: TermosSearchParams }) {
   const page = parseInt(searchParams.page || '1', 10);
 
   const { termos, total, pageSize } = await getTermosAssinados(page);
@@ -44,19 +48,18 @@ async function TermosList({ searchParams }: { searchParams: { page?: string } })
         </Link>
       </div>
 
-      <div className="admin-card" style={{ marginBottom: '1rem', padding: '0.9rem 1rem' }}>
+      <div className="admin-card panel-accent-card">
         <p className="panel-note">
           Use o modelo correto, guarde só o essencial e confirme a validade antes de assinar.
         </p>
       </div>
 
-      <div className="module-grid grid-auto-220" style={{ marginBottom: '2rem' }}>
+      <div className="module-grid grid-auto-220 mb-2">
         {tabs.map((tab) => (
           <Link
             key={tab.href}
             href={tab.href}
-            className="module-card"
-            style={tab.active ? { borderColor: 'var(--primary)' } : undefined}
+            className={`module-card${tab.active ? ' module-card-accent' : ''}`}
           >
             <p className="module-title">{tab.label}</p>
           </Link>
@@ -65,7 +68,7 @@ async function TermosList({ searchParams }: { searchParams: { page?: string } })
 
       <div className="admin-card">
         {termoList.length === 0 ? (
-          <div className="text-center-muted" style={{ padding: '2rem' }}>
+          <div className="area-empty">
             <p>Nenhum termo assinado registrado.</p>
             <Link href="/admin/documentos/termos/novo" className="admin-btn admin-btn-primary mt-1">
               ➕ Registrar primeiro termo
@@ -140,7 +143,7 @@ async function TermosList({ searchParams }: { searchParams: { page?: string } })
   );
 }
 
-export default async function TermosPage({ searchParams }: { searchParams: Promise<any> }) {
+export default async function TermosPage({ searchParams }: { searchParams: Promise<TermosSearchParams> }) {
   const resolvedSearchParams = await searchParams;
   return (
     <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
