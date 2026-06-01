@@ -257,6 +257,19 @@
 
   --label-color: #8a005a;
   --label-color-muted: rgba(138, 0, 90, 0.65);
+
+  /* Responsive Design Breakpoints */
+  --bp-mobile: 640px;      /* XS — 0-639px */
+  --bp-tablet: 768px;      /* SM — 640-767px */
+  --bp-desktop: 960px;     /* MD — 768-959px */
+  --bp-wide: 1200px;       /* LG — 960px+ */
+
+  /* Spacing Scale */
+  --spacing-xs: 0.25rem;   /* 4px */
+  --spacing-sm: 0.5rem;    /* 8px */
+  --spacing-md: 1rem;      /* 16px */
+  --spacing-lg: 1.5rem;    /* 24px */
+  --spacing-xl: 2rem;      /* 32px */
 }
 
 :root.dark {

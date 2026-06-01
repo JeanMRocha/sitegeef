@@ -337,7 +337,7 @@
 }
 
 /* Responsive */
-@media (max-width: 1024px) {
+@media (max-width: var(--bp-wide)) {
   .admin-sidebar {
     width: 100%;
     max-height: none;

@@ -1823,7 +1823,7 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: var(--bp-mobile)) {
   .admin-header {
     padding: 0.85rem 1rem;
     gap: 1rem;
@@ -2244,7 +2244,7 @@
   gap: 1rem;
 }
 
-@media (max-width: 900px) {
+@media (max-width: var(--bp-desktop)) {
   .admin-grid-two,
   .musica-editor-grid,
   .musica-editor-part-grid {
