@@ -648,7 +648,7 @@
 .admin-info-hint:focus-visible {
   background: var(--surface-secondary-hover);
   border-color: var(--border-light);
-  outline: none;
+  outline: 2px solid var(--focus-outline);
 }
 
 .admin-save-banner {
@@ -1150,7 +1150,7 @@
 .admin-form-group input:focus,
 .admin-form-group textarea:focus,
 .admin-form-group select:focus {
-  outline: none;
+  outline: 2px solid var(--focus-outline);
   border-color: var(--input-border-focus);
   background: var(--input-bg);
   box-shadow: 0 0 0 4px var(--input-focus-ring);

@@ -1,4 +1,5 @@
 @import url('./identity-system.css');
+@import url('./utilities.css');
 
 :root {
   color-scheme: light;
@@ -494,7 +495,7 @@ body.musica-display-route .site-shell {
 }
 
 .musica-toolbar-select:focus {
-  outline: none;
+  outline: 2px solid var(--focus-outline);
   border-color: var(--uva);
 }
 
@@ -514,7 +515,7 @@ body.musica-display-route .site-shell {
 
 .musica-toolbar-search-input {
   border: none;
-  outline: none;
+  outline: 2px solid var(--focus-outline);
   background: transparent;
   font-size: 0.88rem;
   color: var(--input-text);
@@ -712,7 +713,7 @@ body.musica-display-route .site-shell {
 }
 
 .musica-toolbar-search input:focus {
-  outline: none;
+  outline: 2px solid var(--focus-outline);
   border-color: var(--uva);
   box-shadow: 0 0 0 4px rgba(138, 0, 90, 0.08);
 }
@@ -2043,7 +2044,7 @@ img {
 .site-user-menu-trigger:hover,
 .site-user-menu-trigger:focus-visible {
   background: rgba(138, 0, 90, 0.08);
-  outline: none;
+  outline: 2px solid var(--focus-outline);
 }
 
 .site-user-menu-popover {
@@ -2096,7 +2097,7 @@ img {
 .site-user-menu-item:focus-visible {
   background: rgba(138, 0, 90, 0.08);
   color: var(--uva-strong);
-  outline: none;
+  outline: 2px solid var(--focus-outline);
 }
 
 .site-user-menu-form {
@@ -2187,7 +2188,7 @@ img {
 .notification-close:hover,
 .notification-close:focus-visible {
   color: var(--text);
-  outline: none;
+  outline: 2px solid var(--focus-outline);
 }
 
 .site-user-menu-logout {
@@ -2205,7 +2206,7 @@ img {
 .site-nav a:focus-visible {
   background: rgba(138, 0, 90, 0.08);
   color: var(--text);
-  outline: none;
+  outline: 2px solid var(--focus-outline);
 }
 
 .hero {
@@ -2352,7 +2353,7 @@ img {
 .button:hover,
 .button:focus-visible {
   transform: translateY(-1px);
-  outline: none;
+  outline: 2px solid var(--focus-outline);
 }
 
 .button-primary {
@@ -2554,7 +2555,7 @@ a.button.musica-icon-button {
   transform: translateY(-2px);
   border-color: rgba(138, 0, 90, 0.24);
   box-shadow: 0 28px 60px rgba(24, 37, 78, 0.14);
-  outline: none;
+  outline: 2px solid var(--focus-outline);
 }
 
 .feature-card-top {
@@ -4453,7 +4454,7 @@ a.button.musica-icon-button {
 
 .contact-form-input:focus {
   border-color: var(--uva);
-  outline: none;
+  outline: 2px solid var(--focus-outline);
   box-shadow: 0 0 0 3px rgba(138, 0, 90, 0.1);
   background: rgba(255, 255, 255, 1);
   transform: translateY(-1px);
@@ -4987,7 +4988,7 @@ a.button.musica-icon-button {
   transform: translateY(-1px);
   border-color: rgba(138, 0, 90, 0.24);
   background: rgba(255, 255, 255, 0.96);
-  outline: none;
+  outline: 2px solid var(--focus-outline);
 }
 
 .lgpd-request-backdrop {
@@ -5320,7 +5321,7 @@ a.button.musica-icon-button {
 
 .login-close-link:hover,
 .login-close-link:focus-visible {
-  outline: none;
+  outline: 2px solid var(--focus-outline);
   background: rgba(138, 0, 90, 0.08);
   border-color: rgba(138, 0, 90, 0.2);
 }
@@ -5493,7 +5494,7 @@ a.button.musica-icon-button {
 }
 
 .form-group input:focus {
-  outline: none;
+  outline: 2px solid var(--focus-outline);
   border-color: var(--uva);
   background: rgba(138, 0, 90, 0.02);
 }
@@ -5591,7 +5592,7 @@ a.button.musica-icon-button {
 }
 
 .google-signin-btn:focus {
-  outline: none;
+  outline: 2px solid var(--focus-outline);
   border-color: #4285F4;
 }
 
@@ -5791,7 +5792,7 @@ a.button.musica-icon-button {
 }
 
 :root.dark .profile-compact-form .profile-form-btn-secondary:focus-visible {
-  outline: none;
+  outline: 2px solid var(--focus-outline);
   border-color: rgba(255, 255, 255, 0.24);
   box-shadow: 0 0 0 3px rgba(138, 0, 90, 0.18);
 }
@@ -6066,7 +6067,7 @@ a.button.musica-icon-button {
 }
 
 .profile-input:focus {
-  outline: none;
+  outline: 2px solid var(--focus-outline);
   border-color: var(--uva);
   background: rgba(138, 0, 90, 0.03);
 }
@@ -6178,7 +6179,7 @@ a.button.musica-icon-button {
 .form-group select:focus,
 .profile-form-input:focus,
 .profile-input:focus {
-  outline: none;
+  outline: 2px solid var(--focus-outline);
   border-color: var(--uva);
   box-shadow: 0 0 0 4px rgba(138, 0, 90, 0.08);
 }
@@ -6629,7 +6630,7 @@ a.button.musica-icon-button {
 }
 
 :root.dark .profile-form-btn-secondary:focus-visible {
-  outline: none;
+  outline: 2px solid var(--focus-outline);
   border-color: rgba(255, 255, 255, 0.24);
   box-shadow: 0 0 0 3px rgba(138, 0, 90, 0.18);
 }
