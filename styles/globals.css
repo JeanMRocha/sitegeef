@@ -1472,8 +1472,8 @@ body.musica-display-route .musica-display-screen--reader {
 }
 
 .musica-display-header-title {
-  justify-self: center;
-  text-align: center;
+  justify-self: start;
+  text-align: left;
 }
 
 .musica-display-header-spacer {
