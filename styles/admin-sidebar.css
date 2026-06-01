@@ -281,20 +281,20 @@
 }
 
 :root.dark .admin-nav-title {
-  color: #e8a6c8;
+  color: var(--text-secondary);
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 :root.dark .admin-nav-title-button {
   background: linear-gradient(135deg, rgba(138, 0, 90, 0.15), rgba(138, 0, 90, 0.08));
   border-color: rgba(138, 0, 90, 0.25);
-  color: #e8a6c8;
+  color: var(--text-secondary);
 }
 
 :root.dark .admin-nav-title-button:hover {
   background: linear-gradient(135deg, rgba(138, 0, 90, 0.22), rgba(138, 0, 90, 0.15));
   border-color: rgba(138, 0, 90, 0.35);
-  color: #f4d5eb;
+  color: var(--text-primary);
 }
 
 :root.dark .admin-nav-group-items {

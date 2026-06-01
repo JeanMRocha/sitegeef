@@ -328,11 +328,11 @@
 }
 
 :root.dark .site-header-user-details strong {
-  color: #fffaf5;
+  color: var(--text-primary);
 }
 
 :root.dark .site-header-user-details span {
-  color: #e6dbcf;
+  color: var(--text-secondary);
 }
 
 /* User Navigation */
@@ -397,7 +397,7 @@
 }
 
 :root.dark .site-header-user-controls-label {
-  color: #d4ccc1;
+  color: var(--text-hint);
 }
 
 .site-header-user-controls-row {
