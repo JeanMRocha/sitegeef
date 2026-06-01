@@ -66,6 +66,7 @@ type MusicaReaderProps = {
   logoSrc: string;
   displayCode?: string | null;
   mode?: "publico" | "exibicao";
+  displayDensity?: "standard" | "full";
   showBackLink?: boolean;
   showBranding?: boolean;
 };
@@ -75,6 +76,7 @@ export function MusicaReader({
   logoSrc,
   displayCode,
   mode = "publico",
+  displayDensity = "standard",
   showBackLink = true,
   showBranding = true,
 }: MusicaReaderProps) {
@@ -150,6 +152,7 @@ export function MusicaReader({
     };
   }, [partesVisiveis, viewport.height, viewport.width]);
   const displayMetrics = useMemo(() => {
+    const isFullDisplay = displayDensity === "full";
     const totalLines = partesVisiveis.reduce((sum, parte) => sum + parte.conteudo.split("\n").length, 0);
     const totalChars = partesVisiveis.reduce((sum, parte) => sum + parte.conteudo.length, 0);
     const density = totalLines * 24 + totalChars / 22 + partesVisiveis.length * 72;
@@ -157,7 +160,9 @@ export function MusicaReader({
     const widthFactor = Math.min(1, viewport.width / 1600);
     const densityFactor = density > 1200 ? 0.78 : density > 900 ? 0.86 : density > 650 ? 0.92 : 1;
     const scale = Math.max(0.78, Math.min(1, heightFactor * widthFactor * densityFactor + 0.08));
-    const maxColumnsByWidth = Math.min(4, Math.max(2, Math.floor((viewport.width - 80) / 280)));
+    const maxColumnsByWidth = isFullDisplay
+      ? Math.min(4, Math.max(2, Math.floor((viewport.width - 80) / 300)))
+      : Math.min(4, Math.max(2, Math.floor((viewport.width - 80) / 280)));
 
     // Para músicas curtas: force mais colunas para melhor legibilidade
     let columns;
@@ -177,26 +182,164 @@ export function MusicaReader({
       columns = Math.min(maxColumnsByWidth, 4);
     }
 
-    const bodyGap = columns >= 4 ? 0.48 : columns === 3 ? 0.58 : scale < 0.85 ? 0.7 : scale < 0.92 ? 0.8 : 0.9;
-    const headerPaddingY = scale < 0.85 ? 0.82 : scale < 0.92 ? 1 : 1.2;
-    const headerPaddingX = scale < 0.85 ? 0.75 : scale < 0.92 ? 1 : 1.25;
+    const bodyGap = isFullDisplay
+      ? columns >= 4
+        ? 0.36
+        : columns === 3
+          ? 0.5
+          : scale < 0.85
+            ? 0.62
+            : scale < 0.92
+              ? 0.72
+              : 0.82
+      : columns >= 4
+        ? 0.48
+        : columns === 3
+          ? 0.58
+          : scale < 0.85
+            ? 0.7
+            : scale < 0.92
+              ? 0.8
+              : 0.9;
+    const headerPaddingY = isFullDisplay
+      ? scale < 0.85
+        ? 0.74
+        : scale < 0.92
+          ? 0.92
+          : 1.05
+      : scale < 0.85
+        ? 0.82
+        : scale < 0.92
+          ? 1
+          : 1.2;
+    const headerPaddingX = isFullDisplay
+      ? scale < 0.85
+        ? 0.68
+        : scale < 0.92
+          ? 0.9
+          : 1.08
+      : scale < 0.85
+        ? 0.75
+        : scale < 0.92
+          ? 1
+          : 1.25;
     const titleSize = 1.7;
     const subtitleSize = 1;
-    const logoWidth = columns >= 4 ? 62 : columns === 3 ? 78 : scale < 0.85 ? 76 : scale < 0.92 ? 86 : 96;
-    const bodyPaddingTop = columns >= 4 ? 0.45 : columns === 3 ? 0.7 : scale < 0.85 ? 0.65 : scale < 0.92 ? 0.9 : 1.15;
-    const versePad = columns >= 4 ? 0.58 : columns === 3 ? 0.85 : scale < 0.85 ? 0.8 : scale < 0.92 ? 0.92 : 1.02;
-    const verseTitle = columns >= 4 ? 0.9 : columns === 3 ? 1.08 : scale < 0.85 ? 0.98 : scale < 0.92 ? 1.04 : 1.15;
-    const verseText = columns >= 4 ? 0.9 : columns === 3 ? 1.08 : scale < 0.85 ? 0.92 : scale < 0.92 ? 1 : 1.08;
+    const logoWidth = isFullDisplay
+      ? columns >= 4
+        ? 68
+        : columns === 3
+          ? 84
+          : scale < 0.85
+            ? 82
+            : scale < 0.92
+              ? 90
+              : 102
+      : columns >= 4
+        ? 62
+        : columns === 3
+          ? 78
+          : scale < 0.85
+            ? 76
+            : scale < 0.92
+              ? 86
+              : 96;
+    const bodyPaddingTop = isFullDisplay
+      ? columns >= 4
+        ? 0.25
+        : columns === 3
+          ? 0.45
+          : scale < 0.85
+            ? 0.5
+            : scale < 0.92
+              ? 0.7
+              : 0.95
+      : columns >= 4
+        ? 0.45
+        : columns === 3
+          ? 0.7
+          : scale < 0.85
+            ? 0.65
+            : scale < 0.92
+              ? 0.9
+              : 1.15;
+    const versePad = isFullDisplay
+      ? columns >= 4
+        ? 0.7
+        : columns === 3
+          ? 0.92
+          : scale < 0.85
+            ? 0.92
+            : scale < 0.92
+              ? 1.05
+              : 1.15
+      : columns >= 4
+        ? 0.58
+        : columns === 3
+          ? 0.85
+          : scale < 0.85
+            ? 0.8
+            : scale < 0.92
+              ? 0.92
+              : 1.02;
+    const verseTitle = isFullDisplay
+      ? columns >= 4
+        ? 1.02
+        : columns === 3
+          ? 1.16
+          : scale < 0.85
+            ? 1.08
+            : scale < 0.92
+              ? 1.14
+              : 1.22
+      : columns >= 4
+        ? 0.9
+        : columns === 3
+          ? 1.08
+          : scale < 0.85
+            ? 0.98
+            : scale < 0.92
+              ? 1.04
+              : 1.15;
+    const verseText = isFullDisplay
+      ? columns >= 4
+        ? 1.06
+        : columns === 3
+          ? 1.16
+          : scale < 0.85
+            ? 1.1
+            : scale < 0.92
+              ? 1.18
+              : 1.28
+      : columns >= 4
+        ? 0.9
+        : columns === 3
+          ? 1.08
+          : scale < 0.85
+            ? 0.92
+            : scale < 0.92
+              ? 1
+              : 1.08;
     const verseMinHeight =
       totalLines <= 14
-        ? 8.8
+        ? isFullDisplay
+          ? 9.6
+          : 8.8
         : totalLines <= 20
-          ? 8
+          ? isFullDisplay
+            ? 8.8
+            : 8
           : totalLines <= 30
-            ? 7.1
+            ? isFullDisplay
+              ? 7.8
+              : 7.1
             : totalLines <= 42
-              ? 6.4
-              : 5.8;
+              ? isFullDisplay
+                ? 6.8
+                : 6.4
+              : isFullDisplay
+                ? 6
+                : 5.8;
 
     return {
       scale,
