@@ -3497,6 +3497,14 @@ a.button.musica-icon-button {
   border-left: 3px solid var(--primary);
 }
 
+.area-panel-item-end {
+  align-self: end;
+}
+
+.form-field-full {
+  grid-column: 1 / -1;
+}
+
 .form-card-title {
   margin: 0 0 1.5rem;
   font-size: 1rem;

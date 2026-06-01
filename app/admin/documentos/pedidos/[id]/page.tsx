@@ -9,6 +9,27 @@ export const metadata = {
   title: 'Pedido do Titular - Admin GEEF',
 };
 
+type PedidoDetalhe = {
+  id: string;
+  titular_nome?: string | null;
+  titular_email?: string | null;
+  request_type: string;
+  status: string;
+  responsavel_id?: string | null;
+  created_at: string;
+  prazo_resposta?: string | null;
+  resposta?: string | null;
+};
+
+type PessoaItem = {
+  id: string;
+  nome: string;
+};
+
+type PedidoParams = {
+  id: string;
+};
+
 function resolveLabel(tipo: string) {
   if (tipo === 'acesso') return 'Acesso';
   if (tipo === 'correcao') return 'Correção';
@@ -23,6 +44,13 @@ function resolveStatusLabel(status: string) {
   if (status === 'respondida') return 'Respondida';
   if (status === 'encerrada') return 'Encerrada';
   return status;
+}
+
+function resolveStatusClass(status: string) {
+  if (status === 'aberta') return 'inline-status inline-status-info';
+  if (status === 'em_andamento') return 'inline-status inline-status-warning';
+  if (status === 'respondida') return 'inline-status inline-status-success';
+  return 'inline-status inline-status-neutral';
 }
 
 async function handleSave(id: string, formData: FormData) {
@@ -75,23 +103,15 @@ async function PedidoContent({ id }: { id: string }) {
           </div>
         </div>
 
-        <div className="admin-card">
-          <p style={{ margin: 0, color: 'var(--muted)' }}>
-            O pedido pode ter sido removido ou você não tem acesso.
-          </p>
+        <div className="admin-card panel-accent-card">
+          <p className="text-sm-muted">O pedido pode ter sido removido ou você não tem acesso.</p>
         </div>
       </div>
     );
   }
 
-  const colors =
-    pedido.status === 'aberta'
-      ? { bg: 'rgba(59, 130, 246, 0.1)', fg: 'var(--primary)' }
-      : pedido.status === 'em_andamento'
-        ? { bg: 'rgba(245, 158, 11, 0.1)', fg: '#d97706' }
-        : pedido.status === 'respondida'
-          ? { bg: 'rgba(34, 197, 94, 0.1)', fg: '#22c55e' }
-          : { bg: 'rgba(107, 114, 128, 0.1)', fg: '#6b7280' };
+  const people = pessoas as PessoaItem[];
+  const pedidoDetalhe = pedido as PedidoDetalhe;
 
   return (
     <div>
@@ -99,7 +119,7 @@ async function PedidoContent({ id }: { id: string }) {
         <div>
           <h1 className="admin-page-title">Pedido do Titular</h1>
           <p className="admin-page-subtitle">
-            {pedido.titular_nome || pedido.titular_email || 'Titular'}
+            {pedidoDetalhe.titular_nome || pedidoDetalhe.titular_email || 'Titular'}
           </p>
         </div>
         <Link href="/admin/documentos/pedidos" className="admin-btn admin-btn-secondary">
@@ -107,54 +127,53 @@ async function PedidoContent({ id }: { id: string }) {
         </Link>
       </div>
 
-      <div className="admin-card" style={{ marginBottom: '2rem' }}>
-        <div style={{ marginBottom: '1rem', padding: '0.9rem 1rem', borderRadius: '0.75rem', background: 'rgba(138, 0, 90, 0.06)', color: 'var(--muted)', lineHeight: 1.6 }}>
+      <div className="admin-card panel-accent-card">
+        <div className="content-surface-note">
           Trate o pedido com o mínimo necessário e registre a resposta no mesmo fluxo.
         </div>
 
-        <div className="area-panel-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
+        <div className="area-panel-grid">
           <div className="area-panel-item">
             <strong>Titular</strong>
-            <p>{pedido.titular_nome || '—'}</p>
-            <p style={{ color: 'var(--muted)' }}>{pedido.titular_email || '—'}</p>
+            <p>{pedidoDetalhe.titular_nome || '—'}</p>
+            <p className="text-sm-muted">{pedidoDetalhe.titular_email || '—'}</p>
           </div>
           <div className="area-panel-item">
             <strong>Pedido</strong>
-            <p>{resolveLabel(pedido.request_type)}</p>
+            <p>{resolveLabel(pedidoDetalhe.request_type)}</p>
           </div>
           <div className="area-panel-item">
             <strong>Status</strong>
             <p>
-              <span
-                style={{
-                  display: 'inline-block',
-                  padding: '0.35rem 0.7rem',
-                  backgroundColor: colors.bg,
-                  color: colors.fg,
-                  borderRadius: '0.4rem',
-                  fontSize: '0.85rem',
-                }}
-              >
-                {resolveStatusLabel(pedido.status)}
+              <span className={resolveStatusClass(pedidoDetalhe.status)}>
+                {resolveStatusLabel(pedidoDetalhe.status)}
               </span>
             </p>
           </div>
         </div>
       </div>
 
-      <div className="admin-card" style={{ marginBottom: '2rem' }}>
-        <div className="area-panel-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
+      <div className="admin-card panel-accent-card">
+        <div className="area-panel-grid">
           <div className="area-panel-item">
             <strong>Solicitado em</strong>
-            <p>{new Date(pedido.created_at).toLocaleDateString('pt-BR')}</p>
+            <p>{new Date(pedidoDetalhe.created_at).toLocaleDateString('pt-BR')}</p>
           </div>
           <div className="area-panel-item">
             <strong>Prazo</strong>
-            <p>{pedido.prazo_resposta ? new Date(pedido.prazo_resposta + 'T00:00:00').toLocaleDateString('pt-BR') : '—'}</p>
+            <p>
+              {pedidoDetalhe.prazo_resposta
+                ? new Date(pedidoDetalhe.prazo_resposta + 'T00:00:00').toLocaleDateString('pt-BR')
+                : '—'}
+            </p>
           </div>
           <div className="area-panel-item">
             <strong>Responsável</strong>
-            <p>{pedido.responsavel_id ? pessoas.find((p: any) => p.id === pedido.responsavel_id)?.nome || '—' : '—'}</p>
+            <p>
+              {pedidoDetalhe.responsavel_id
+                ? people.find((p) => p.id === pedidoDetalhe.responsavel_id)?.nome || '—'
+                : '—'}
+            </p>
           </div>
         </div>
       </div>
@@ -164,7 +183,7 @@ async function PedidoContent({ id }: { id: string }) {
           <div className="module-grid">
             <label className="profile-form-field">
               <span>Status</span>
-              <select name="status" defaultValue={pedido.status} className="profile-form-input">
+              <select name="status" defaultValue={pedidoDetalhe.status} className="profile-form-input">
                 <option value="aberta">Aberta</option>
                 <option value="em_andamento">Em andamento</option>
                 <option value="respondida">Respondida</option>
@@ -174,9 +193,13 @@ async function PedidoContent({ id }: { id: string }) {
 
             <label className="profile-form-field">
               <span>Responsável</span>
-              <select name="responsavel_id" defaultValue={pedido.responsavel_id || ''} className="profile-form-input">
+              <select
+                name="responsavel_id"
+                defaultValue={pedidoDetalhe.responsavel_id || ''}
+                className="profile-form-input"
+              >
                 <option value="">—</option>
-                {pessoas.map((p: any) => (
+                {people.map((p) => (
                   <option key={p.id} value={p.id}>
                     {p.nome}
                   </option>
@@ -189,24 +212,24 @@ async function PedidoContent({ id }: { id: string }) {
               <input
                 type="date"
                 name="prazo_resposta"
-                defaultValue={pedido.prazo_resposta || ''}
+                defaultValue={pedidoDetalhe.prazo_resposta || ''}
                 className="profile-form-input"
               />
             </label>
 
-            <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
+            <label className="profile-form-field form-field-full">
               <span>Resposta curta</span>
               <textarea
                 name="resposta"
                 className="profile-form-input"
                 rows={5}
-                defaultValue={pedido.resposta || ''}
+                defaultValue={pedidoDetalhe.resposta || ''}
                 placeholder="Resposta objetiva para o titular."
               />
             </label>
           </div>
 
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+          <div className="form-actions-row">
             <button type="submit" className="admin-btn admin-btn-primary">
               ✅ Salvar
             </button>
@@ -220,11 +243,11 @@ async function PedidoContent({ id }: { id: string }) {
   );
 }
 
-export default async function PedidoPage({ params }: { params: Promise<any> }) {
+export default async function PedidoPage({ params }: { params: Promise<PedidoParams> }) {
   const resolvedParams = await params;
 
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <PedidoContent id={resolvedParams.id} />
     </Suspense>
   );

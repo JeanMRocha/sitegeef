@@ -21,6 +21,11 @@ type PessoaItem = {
   nome: string;
 };
 
+type PedidosSearchParams = {
+  page?: string;
+  status?: string;
+};
+
 function resolveStatus(status?: string) {
   if (
     status === 'aberta' ||
@@ -50,7 +55,14 @@ function resolveStatusLabel(status?: string | null) {
   return status || '—';
 }
 
-async function PedidosContent({ searchParams }: { searchParams: { page?: string; status?: string } }) {
+function resolveStatusClass(status?: string | null) {
+  if (status === 'aberta') return 'inline-status inline-status-info';
+  if (status === 'em_andamento') return 'inline-status inline-status-warning';
+  if (status === 'respondida') return 'inline-status inline-status-success';
+  return 'inline-status inline-status-neutral';
+}
+
+async function PedidosContent({ searchParams }: { searchParams: PedidosSearchParams }) {
   const page = parseInt(searchParams.page || '1', 10);
   const filterStatus = resolveStatus(searchParams.status);
 
@@ -156,7 +168,7 @@ async function PedidosContent({ searchParams }: { searchParams: { page?: string;
               </select>
             </label>
 
-            <div className="area-panel-item" style={{ alignSelf: 'end' }}>
+            <div className="area-panel-item area-panel-item-end">
               <button type="submit" className="profile-form-btn profile-form-btn-primary">
                 Filtrar
               </button>
@@ -189,9 +201,7 @@ async function PedidosContent({ searchParams }: { searchParams: { page?: string;
                   return (
                     <tr key={pedido.id}>
                       <td>
-                        <strong>
-                        {pedido.titular_nome || pedido.titular_email || '—'}
-                        </strong>
+                        <strong>{pedido.titular_nome || pedido.titular_email || '—'}</strong>
                         <div className="text-xs-muted mt-035">
                           {pedido.titular_email || '—'}
                         </div>
@@ -200,7 +210,7 @@ async function PedidosContent({ searchParams }: { searchParams: { page?: string;
                         <span className="tag">{resolveLabel(pedido.request_type)}</span>
                       </td>
                       <td>
-                        <span className={pedido.status === 'aberta' ? 'inline-status inline-status-info' : pedido.status === 'em_andamento' ? 'inline-status inline-status-warning' : pedido.status === 'respondida' ? 'inline-status inline-status-success' : 'inline-status inline-status-neutral'}>
+                        <span className={resolveStatusClass(pedido.status)}>
                           {resolveStatusLabel(pedido.status)}
                         </span>
                       </td>
@@ -245,7 +255,7 @@ async function PedidosContent({ searchParams }: { searchParams: { page?: string;
   );
 }
 
-export default async function PedidosPage({ searchParams }: { searchParams: Promise<any> }) {
+export default async function PedidosPage({ searchParams }: { searchParams: Promise<PedidosSearchParams> }) {
   const resolvedSearchParams = await searchParams;
 
   return (
