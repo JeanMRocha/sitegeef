@@ -447,12 +447,26 @@ body.musica-display-route .site-shell {
   flex: 0 0 auto;
 }
 
+.musica-toolbar-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
 .musica-toolbar-title h1 {
   margin: 0;
   font-family: var(--font-heading);
   font-size: clamp(1.5rem, 3vw, 2.2rem);
   line-height: 0.94;
   letter-spacing: -0.05em;
+}
+
+.musica-toolbar-live-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  white-space: nowrap;
 }
 
 .musica-toolbar-filters {

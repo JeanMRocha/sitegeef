@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import type { Musica } from "@/lib/musicas";
 import { musicaMatchesSearch } from "@/lib/musicas";
-import { IconSearch, IconX } from "@/components/icons";
+import { IconExternalLink, IconSearch, IconX } from "@/components/icons";
 
 type MusicasCatalogProps = {
   musicas: Musica[];
@@ -23,7 +23,18 @@ export function MusicasCatalog({ musicas }: MusicasCatalogProps) {
     <>
       <div className="musica-toolbar">
         <div className="musica-toolbar-title">
-          <h1>Músicas</h1>
+          <div className="musica-toolbar-title-row">
+            <h1>Músicas</h1>
+            <Link
+              href="/musicas/exibir"
+              className="button button-primary musica-toolbar-live-btn"
+              aria-label="Abrir exibição ao vivo"
+              title="Abrir exibição ao vivo"
+            >
+              <IconExternalLink size={16} />
+              <span>Ao vivo</span>
+            </Link>
+          </div>
         </div>
 
         <div className="musica-toolbar-filters">
