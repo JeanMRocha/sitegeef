@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { getUsuarios } from './actions';
 import { Suspense } from 'react';
+import { getUsuarios } from './actions';
 
 export const metadata = {
   title: 'Usuários - Admin GEEF',
@@ -23,33 +23,43 @@ type UsuarioItem = {
   pode_apse?: boolean | null;
 };
 
-async function UsuariosList({ searchParams }: { searchParams: { page?: string } }) {
-  const page = parseInt(searchParams.page || '1', 10);
+type UsuariosSearchParams = {
+  page?: string;
+};
 
+function resolvePerfilChipClass(perfil?: string | null) {
+  switch (perfil) {
+    case 'administrador':
+    case 'diretoria':
+    case 'patrimonio':
+      return 'perfil-chip perfil-chip--accent';
+    case 'financeiro':
+    case 'livraria':
+      return 'perfil-chip perfil-chip--warning';
+    case 'secretaria':
+    case 'comunicacao':
+    case 'pessoas':
+      return 'perfil-chip perfil-chip--info';
+    case 'bibliotecario':
+    case 'leitor':
+      return 'perfil-chip perfil-chip--success';
+    case 'evangelizador':
+    case 'coord_juventude':
+    case 'coord_estudos':
+    case 'coord_atendimento':
+    case 'coord_passe':
+    case 'coord_apse':
+      return 'perfil-chip perfil-chip--leaf';
+    default:
+      return 'perfil-chip perfil-chip--neutral';
+  }
+}
+
+async function UsuariosList({ searchParams }: { searchParams: UsuariosSearchParams }) {
+  const page = Number.parseInt(searchParams.page || '1', 10);
   const { usuarios, total, pageSize, erro } = await getUsuarios(page);
-  const totalPages = Math.ceil(total / pageSize);
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
   const usuarioList = usuarios as UsuarioItem[];
-
-  const perfilColor: Record<string, string> = {
-    administrador: '#8a005a',
-    diretoria: '#005a8a',
-    secretaria: '#5a8a00',
-    financeiro: '#8a5a00',
-    bibliotecario: '#00688a',
-    livraria: '#8a0a00',
-    evangelizador: '#00608a',
-    coord_juventude: '#6a8a00',
-    coord_estudos: '#8a006a',
-    coord_atendimento: '#008a6a',
-    coord_passe: '#008a00',
-    coord_apse: '#8a6a00',
-    comunicacao: '#008a8a',
-    patrimonio: '#6a008a',
-    tarefeiro: '#8a5a5a',
-    leitor: '#5a6a8a',
-    voluntario: '#6a8a5a',
-    publico: '#aaaaaa',
-  };
 
   const isPermissionLabel = (value: string | boolean | null | undefined): value is string => Boolean(value);
 
@@ -67,13 +77,9 @@ async function UsuariosList({ searchParams }: { searchParams: { page?: string } 
       </div>
 
       <div className="admin-card table-surface">
-        {erro ? (
-          <div className="area-empty" style={{ marginBottom: '1rem' }}>
-            {erro}
-          </div>
-        ) : null}
+        {erro ? <div className="area-empty">{erro}</div> : null}
         {usuarioList.length === 0 ? (
-          <div className="text-center-muted" style={{ padding: '2rem' }}>
+          <div className="text-center-muted page-empty-state">
             <p>Nenhum usuário cadastrado.</p>
             <Link href="/admin/usuarios/novo" className="admin-btn admin-btn-primary mt-1">
               ➕ Criar primeiro usuário
@@ -106,16 +112,12 @@ async function UsuariosList({ searchParams }: { searchParams: { page?: string } 
 
                 return (
                   <tr key={usuario.id}>
-                    <td><strong>{usuario.nome || usuario.email || 'N/A'}</strong></td>
+                    <td>
+                      <strong>{usuario.nome || usuario.email || 'N/A'}</strong>
+                    </td>
                     <td className="text-sm-muted">{usuario.email || usuario.pessoas?.email || '—'}</td>
                     <td>
-                      <span
-                        className="status-pill inline-status"
-                        style={{
-                          backgroundColor: `${perfilColor[usuario.perfil || ''] || '#999'}22`,
-                          color: perfilColor[usuario.perfil || ''] || '#666',
-                        }}
-                      >
+                      <span className={`${resolvePerfilChipClass(usuario.perfil)} status-pill`}>
                         {usuario.perfil}
                       </span>
                     </td>
@@ -127,9 +129,7 @@ async function UsuariosList({ searchParams }: { searchParams: { page?: string } 
                               {p}
                             </span>
                           ))}
-                          {perms.length > 3 && (
-                            <span className="text-xs-muted">+{perms.length - 3}</span>
-                          )}
+                          {perms.length > 3 && <span className="text-xs-muted">+{perms.length - 3}</span>}
                         </div>
                       ) : (
                         <span className="text-sm-muted">—</span>
@@ -148,7 +148,6 @@ async function UsuariosList({ searchParams }: { searchParams: { page?: string } 
         )}
       </div>
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="page-pagination">
           {page > 1 && (
@@ -170,12 +169,12 @@ async function UsuariosList({ searchParams }: { searchParams: { page?: string } 
   );
 }
 
-export default async function UsuariosPage({ searchParams }: { searchParams: Promise<any> }) {
+export default async function UsuariosPage({ searchParams }: { searchParams: Promise<UsuariosSearchParams> }) {
   const resolvedSearchParams = await searchParams;
+
   return (
     <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <UsuariosList searchParams={resolvedSearchParams} />
     </Suspense>
   );
 }
-

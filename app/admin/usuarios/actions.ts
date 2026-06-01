@@ -4,9 +4,77 @@ import { createServiceRoleClient } from '@/lib/supabase/service-role';
 import { invalidateUserAreaCache } from '@/lib/areas/invalidate-user-area';
 import { calculateOffset } from '@/lib/admin/query-helpers';
 
+type AuthUserMetadata = {
+  full_name?: string;
+  name?: string;
+  is_test?: boolean;
+  test_account?: boolean;
+};
+
+type AuthUserRecord = {
+  id: string;
+  email?: string | null;
+  created_at?: string;
+  confirmed_at?: string | null;
+  user_metadata?: AuthUserMetadata | null;
+};
+
+type UsuarioSistemaRow = {
+  id: string;
+  perfil?: string | null;
+  pessoa_id?: string | null;
+  pode_escalas?: boolean | null;
+  pode_biblioteca?: boolean | null;
+  pode_livraria?: boolean | null;
+  pode_financeiro?: boolean | null;
+  pode_pessoas?: boolean | null;
+  pode_publicar?: boolean | null;
+  pode_mediunidade?: boolean | null;
+  pode_atendimento?: boolean | null;
+  pode_apse?: boolean | null;
+  pessoas?: {
+    nome?: string | null;
+    email?: string | null;
+  } | null;
+};
+
+type UsuarioListaItem = {
+  id: string;
+  email: string | null;
+  nome: string;
+  perfil: string;
+  pessoa_id: string | null;
+  pode_escalas: boolean;
+  pode_biblioteca: boolean;
+  pode_livraria: boolean;
+  pode_financeiro: boolean;
+  pode_pessoas: boolean;
+  pode_publicar: boolean;
+  pode_mediunidade: boolean;
+  pode_atendimento: boolean;
+  pode_apse: boolean;
+  created_at?: string;
+  confirmed_at?: string | null;
+  has_admin_record: boolean;
+  pessoas?: {
+    nome?: string | null;
+    email?: string | null;
+  } | null;
+};
+
+type UsuarioDetalhe = UsuarioListaItem & {
+  auth_user?: AuthUserRecord | null;
+};
+
+type PessoaDisponivel = {
+  id: string;
+  nome: string | null;
+  email?: string | null;
+};
+
 const TEST_EMAIL_PATTERNS = [/^codex-profile-/i, /^codex-test-/i];
 
-function isTestAuthUser(user: any) {
+function isTestAuthUser(user: AuthUserRecord) {
   const email = String(user?.email || '').toLowerCase();
 
   if (!email) return false;
@@ -25,7 +93,7 @@ function isTestAuthUser(user: any) {
 async function listAllAuthUsers(supabase: ReturnType<typeof createServiceRoleClient>) {
   const pageSize = 100;
   let page = 1;
-  let allUsers: any[] = [];
+  let allUsers: AuthUserRecord[] = [];
   let lastPage = 1;
 
   while (page <= lastPage) {
@@ -36,7 +104,7 @@ async function listAllAuthUsers(supabase: ReturnType<typeof createServiceRoleCli
 
     if (error) return [];
 
-    const pageUsers = data?.users || [];
+    const pageUsers = (data?.users || []) as AuthUserRecord[];
     allUsers = allUsers.concat(pageUsers);
     lastPage = data?.lastPage || page;
 
@@ -54,11 +122,10 @@ export async function getUsuarios(page = 1) {
   try {
     const authRows = await listAllAuthUsers(supabase);
     const authIds = authRows.map((user) => user.id);
-
-    let adminRows: any[] = [];
+    let adminRows: UsuarioSistemaRow[] = [];
 
     if (authIds.length > 0) {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('usuarios_sistema')
         .select(
           `
@@ -79,15 +146,15 @@ export async function getUsuarios(page = 1) {
         )
         .in('id', authIds);
 
-      adminRows = data || [];
+      adminRows = (data || []) as UsuarioSistemaRow[];
     }
 
-    const adminMap = new Map(adminRows.map((row: any) => [row.id, row]));
+    const adminMap = new Map<string, UsuarioSistemaRow>(adminRows.map((row) => [row.id, row]));
     const startIndex = calculateOffset(page, pageSize);
     const endIndex = startIndex + pageSize;
     const pageUsers = authRows.slice(startIndex, endIndex);
 
-    const usuarios = pageUsers.map((user: any) => {
+    const usuarios = pageUsers.map((user) => {
       const adminRow = adminMap.get(user.id);
       const pessoa = adminRow?.pessoas ?? null;
 
@@ -115,7 +182,7 @@ export async function getUsuarios(page = 1) {
         confirmed_at: user.confirmed_at,
         has_admin_record: Boolean(adminRow),
         pessoas: pessoa,
-      };
+      } satisfies UsuarioListaItem;
     });
 
     return {
@@ -123,7 +190,7 @@ export async function getUsuarios(page = 1) {
       total: authRows.length,
       page,
       pageSize,
-      erro: null,
+      erro: null as string | null,
     };
   } catch {
     return {
@@ -140,7 +207,7 @@ export async function getUsuarioById(id: string) {
   const supabase = createServiceRoleClient();
 
   try {
-    const [{ data: authUser, error: authError }, { data: adminRecord, error: adminError }] = await Promise.all([
+    const [{ data: authUser, error: authError }, { data: adminRecord }] = await Promise.all([
       supabase.auth.admin.getUserById(id),
       supabase
         .from('usuarios_sistema')
@@ -159,17 +226,19 @@ export async function getUsuarioById(id: string) {
       return null;
     }
 
-    const user = authUser?.user;
+    const user = authUser?.user as AuthUserRecord | undefined;
 
     if (user && isTestAuthUser(user)) {
       return null;
     }
 
+    const pessoa = adminRecord?.pessoas ?? null;
+
     return {
       id: user?.id || adminRecord?.id || id,
-      email: user?.email || adminRecord?.pessoas?.email || null,
+      email: user?.email || pessoa?.email || null,
       nome:
-        adminRecord?.pessoas?.nome ||
+        pessoa?.nome ||
         user?.user_metadata?.full_name ||
         user?.user_metadata?.name ||
         user?.email ||
@@ -185,9 +254,10 @@ export async function getUsuarioById(id: string) {
       pode_mediunidade: Boolean(adminRecord?.pode_mediunidade),
       pode_atendimento: Boolean(adminRecord?.pode_atendimento),
       pode_apse: Boolean(adminRecord?.pode_apse),
-      pessoas: adminRecord?.pessoas || null,
+      has_admin_record: Boolean(adminRecord),
+      pessoas: pessoa,
       auth_user: user || null,
-    };
+    } satisfies UsuarioDetalhe;
   } catch {
     return null;
   }
@@ -207,11 +277,11 @@ export async function getPessoasSemLogin() {
 
     if (erroUsuarios) throw erroUsuarios;
 
-    const pessoasComLogin = new Set(usuariosExistentes?.map((u: any) => u.pessoa_id) || []);
+    const pessoasComLogin = new Set((usuariosExistentes || []).map((u: { pessoa_id?: string | null }) => u.pessoa_id));
 
     return {
-      pessoas: (todasPessoas || []).filter((p: any) => !pessoasComLogin.has(p.id)),
-      erro: null,
+      pessoas: (todasPessoas || []).filter((p: PessoaDisponivel) => !pessoasComLogin.has(p.id)),
+      erro: null as string | null,
     };
   } catch {
     return {

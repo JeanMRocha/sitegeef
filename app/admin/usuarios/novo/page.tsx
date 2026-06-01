@@ -1,12 +1,18 @@
-import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { getPessoasSemLogin, grantLogin } from '../actions';
-import { createServiceRoleClient } from '@/lib/supabase/service-role';
+import { redirect } from 'next/navigation';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
+import { createServiceRoleClient } from '@/lib/supabase/service-role';
+import { getPessoasSemLogin, grantLogin } from '../actions';
 
 export const metadata = {
   title: 'Novo Usuário - Admin GEEF',
+};
+
+type PessoaSemLogin = {
+  id: string;
+  nome: string | null;
+  email?: string | null;
 };
 
 const PERFIS = [
@@ -34,12 +40,11 @@ async function handleSubmit(formData: FormData) {
   'use server';
 
   try {
-    const pessoaId = formData.get('pessoa_id') as string;
-    const perfil = formData.get('perfil') as string;
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
+    const pessoaId = String(formData.get('pessoa_id') || '').trim();
+    const perfil = String(formData.get('perfil') || '').trim();
+    const email = String(formData.get('email') || '').trim();
+    const password = String(formData.get('password') || '').trim();
 
-    // Create auth user
     const supabase = createServiceRoleClient();
     const { data: authData, error: authError } = await supabase.auth.admin.createUser({
       email,
@@ -51,7 +56,6 @@ async function handleSubmit(formData: FormData) {
 
     const userId = authData.user.id;
 
-    // Create usuario_sistema record
     const permissoes = {
       pode_escalas: formData.get('pode_escalas') === 'on',
       pode_biblioteca: formData.get('pode_biblioteca') === 'on',
@@ -74,8 +78,9 @@ async function handleSubmit(formData: FormData) {
   }
 }
 
-export default async function NovoUsuarioPage() {
+async function NovoUsuarioContent() {
   const { pessoas: pessoasSemLogin, erro } = await getPessoasSemLogin();
+  const pessoas = pessoasSemLogin as PessoaSemLogin[];
 
   return (
     <div className="area-page">
@@ -90,38 +95,41 @@ export default async function NovoUsuarioPage() {
       </section>
 
       <section className="area-section">
-        <div className="table-surface" style={{ maxWidth: '900px', margin: '0 auto' }}>
-          {erro ? (
-            <div className="area-empty" style={{ marginBottom: '1rem' }}>
-              {erro}
-            </div>
-          ) : null}
-          {pessoasSemLogin.length === 0 ? (
+        <div className="table-surface table-surface-centered">
+          {erro ? <div className="area-empty">{erro}</div> : null}
+          {pessoas.length === 0 ? (
             <div className="area-empty">
               <p>{erro ? 'Não foi possível carregar as pessoas disponíveis.' : 'Todas as pessoas já possuem login.'}</p>
-              <Link href="/admin/usuarios" className="profile-form-btn profile-form-btn-secondary">Voltar</Link>
+              <Link href="/admin/usuarios" className="profile-form-btn profile-form-btn-secondary">
+                Voltar
+              </Link>
             </div>
           ) : (
             <form action={handleSubmit}>
               <LgpdFormNotice text="Usamos estes dados para criar o acesso e registrar as permissões da conta." />
+
               <div className="area-section-title">
                 <h2>Pessoa</h2>
                 <p>Selecione quem receberá o login.</p>
               </div>
+
               <label className="profile-form-field">
                 <span>Selecione a pessoa *</span>
                 <select name="pessoa_id" required className="profile-form-input">
                   <option value="">— Selecione uma pessoa —</option>
-                  {pessoasSemLogin.map((p: any) => (
-                    <option key={p.id} value={p.id}>{p.nome} ({p.email || 'sem email'})</option>
+                  {pessoas.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.nome} ({p.email || 'sem email'})
+                    </option>
                   ))}
                 </select>
               </label>
 
-              <div className="area-section-title" style={{ marginTop: '1.5rem' }}>
+              <div className="area-section-title mt-1">
                 <h2>Credenciais</h2>
                 <p>Email e senha inicial.</p>
               </div>
+
               <div className="module-grid">
                 <label className="profile-form-field">
                   <span>Email (login) *</span>
@@ -133,23 +141,27 @@ export default async function NovoUsuarioPage() {
                 </label>
               </div>
 
-              <div className="area-section-title" style={{ marginTop: '1.5rem' }}>
+              <div className="area-section-title mt-1">
                 <h2>Perfil e permissões</h2>
                 <p>Defina o perfil base e os acessos específicos.</p>
               </div>
+
               <div className="module-grid">
                 <label className="profile-form-field">
                   <span>Perfil do sistema *</span>
                   <select name="perfil" required className="profile-form-input">
                     <option value="">— Selecione um perfil —</option>
                     {PERFIS.map((p) => (
-                      <option key={p} value={p}>{p}</option>
+                      <option key={p} value={p}>
+                        {p}
+                      </option>
                     ))}
                   </select>
                 </label>
-                <div className="area-panel-item" style={{ gridColumn: '1 / -1' }}>
+
+                <div className="area-panel-item form-field-full">
                   <span className="stat-label">Permissões específicas</span>
-                  <div className="tag-list" style={{ flexWrap: 'wrap' }}>
+                  <div className="tag-list tag-list--wrap">
                     {[
                       'pode_escalas',
                       'pode_biblioteca',
@@ -161,7 +173,7 @@ export default async function NovoUsuarioPage() {
                       'pode_atendimento',
                       'pode_apse',
                     ].map((name) => (
-                      <label key={name} className="tag" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <label key={name} className="tag tag-check">
                         <input type="checkbox" name={name} />
                         <span>{name.replace('pode_', '')}</span>
                       </label>
@@ -170,9 +182,13 @@ export default async function NovoUsuarioPage() {
                 </div>
               </div>
 
-              <div className="area-panel-grid" style={{ marginTop: '1.5rem' }}>
-                <button type="submit" className="profile-form-btn profile-form-btn-primary">Criar Usuário</button>
-                <Link href="/admin/usuarios" className="profile-form-btn profile-form-btn-secondary">Cancelar</Link>
+              <div className="area-panel-grid mt-1">
+                <button type="submit" className="profile-form-btn profile-form-btn-primary">
+                  Criar Usuário
+                </button>
+                <Link href="/admin/usuarios" className="profile-form-btn profile-form-btn-secondary">
+                  Cancelar
+                </Link>
               </div>
             </form>
           )}
@@ -180,4 +196,8 @@ export default async function NovoUsuarioPage() {
       </section>
     </div>
   );
+}
+
+export default async function NovoUsuarioPage() {
+  return <NovoUsuarioContent />;
 }
