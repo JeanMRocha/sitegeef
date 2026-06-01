@@ -120,13 +120,7 @@ export default function EnderecoForm({ initialData }: EnderecoFormProps) {
             name="numero"
             value={formData.numero}
             onChange={handleChange}
-            style={{
-              width: '100%',
-              padding: '0.75rem',
-              border: '1px solid var(--border)',
-              borderRadius: '0.5rem',
-              fontSize: '1rem',
-            }}
+            className="form-input-styled"
           />
         </div>
         <div>
@@ -140,13 +134,7 @@ export default function EnderecoForm({ initialData }: EnderecoFormProps) {
             value={formData.cep}
             onChange={handleChange}
             placeholder="XXXXX-XXX"
-            style={{
-              width: '100%',
-              padding: '0.75rem',
-              border: '1px solid var(--border)',
-              borderRadius: '0.5rem',
-              fontSize: '1rem',
-            }}
+            className="form-input-styled"
           />
         </div>
       </div>
@@ -191,13 +179,7 @@ export default function EnderecoForm({ initialData }: EnderecoFormProps) {
             name="cidade"
             value={formData.cidade}
             onChange={handleChange}
-            style={{
-              width: '100%',
-              padding: '0.75rem',
-              border: '1px solid var(--border)',
-              borderRadius: '0.5rem',
-              fontSize: '1rem',
-            }}
+            className="form-input-styled"
           />
         </div>
         <div>
@@ -211,13 +193,7 @@ export default function EnderecoForm({ initialData }: EnderecoFormProps) {
             value={formData.estado}
             onChange={handleChange}
             placeholder="SP, RJ, etc"
-            style={{
-              width: '100%',
-              padding: '0.75rem',
-              border: '1px solid var(--border)',
-              borderRadius: '0.5rem',
-              fontSize: '1rem',
-            }}
+            className="form-input-styled"
           />
         </div>
       </div>

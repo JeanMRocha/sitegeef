@@ -91,8 +91,8 @@ export default function MissaoValoresForm({ initialData }: MissaoValoresFormProp
         />
       </div>
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label htmlFor="visao" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+      <div className="spacing-lg">
+        <label htmlFor="visao" className="form-field-label">
           Visão
         </label>
         <textarea
@@ -106,8 +106,8 @@ export default function MissaoValoresForm({ initialData }: MissaoValoresFormProp
         />
       </div>
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label htmlFor="valores" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>
+      <div className="spacing-lg">
+        <label htmlFor="valores" className="form-field-label">
           Valores
         </label>
         <textarea

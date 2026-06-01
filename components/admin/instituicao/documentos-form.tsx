@@ -93,22 +93,22 @@ export default function DocumentosForm({ initialData }: DocumentosFormProps) {
         <div className="file-upload-area">
           {statuteFile ? (
             <>
-              <p style={{ fontWeight: 600 }}>📄 {statuteFile.name}</p>
-              <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+              <p className="text-strong">📄 {statuteFile.name}</p>
+              <p className="form-field-text">
                 {(statuteFile.size / 1024 / 1024).toFixed(2)} MB
               </p>
             </>
           ) : statuteUrl ? (
             <>
-              <p style={{ fontWeight: 600 }}>📄 Documento já enviado</p>
-              <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-                <a href={statuteUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)' }}>
+              <p className="text-strong">📄 Documento já enviado</p>
+              <p className="form-field-text">
+                <a href={statuteUrl} target="_blank" rel="noopener noreferrer" className="form-field-link">
                   Ver documento
                 </a>
               </p>
             </>
           ) : (
-            <p style={{ color: 'var(--text-secondary)' }}>Nenhum arquivo enviado</p>
+            <p className="text-muted">Nenhum arquivo enviado</p>
           )}
         </div>
 

@@ -1,7 +1,9 @@
-/* Utilities — Reusable CSS classes for common patterns */
+/**
+ * Utility Classes — Design System Compliance
+ * Substitui inline styles em componentes, garantindo DRY e manutenibilidade
+ */
 
-/* ===== FORM UTILITIES ===== */
-
+/* Form Labels & Text Styles */
 .form-field-label {
   display: block;
   margin-bottom: 0.5rem;
@@ -14,42 +16,52 @@
   margin: 0;
 }
 
-.form-group-spacing {
-  margin-bottom: 1.5rem;
+.form-field-link {
+  color: var(--primary);
+  text-decoration: none;
 }
 
-/* ===== TEXT UTILITIES ===== */
+.form-field-link:hover {
+  text-decoration: underline;
+}
 
+/* Text Utilities */
 .text-strong {
   font-weight: 600;
 }
 
-.text-strong-lg {
-  font-weight: 600;
-  font-size: 1.1rem;
+.text-muted {
+  color: var(--text-secondary);
 }
 
-.text-muted-small {
-  font-size: 0.85rem;
-  color: var(--text-muted);
+/* Spacing Utilities */
+.spacing-md {
+  margin-bottom: var(--spacing-md);
 }
-
-/* ===== SPACING UTILITIES ===== */
 
 .spacing-lg {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--spacing-lg);
 }
 
-.spacing-md {
-  margin-bottom: 1rem;
+/* Form Input Styles */
+.form-input-styled {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  background: var(--input-bg);
+  color: var(--input-text);
+  transition: all var(--transition-fast);
 }
 
-.spacing-sm {
-  margin-bottom: 0.5rem;
+.form-input-styled:focus {
+  outline: 2px solid var(--focus-outline);
+  border-color: var(--input-border-focus);
+  box-shadow: 0 0 0 4px var(--input-focus-ring);
 }
 
-/* ===== FLEX UTILITIES ===== */
-
+/* Flex Utilities */
 .flex-center {
   display: flex;
   align-items: center;
@@ -59,12 +71,6 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-}
-
-.flex-center-gap-lg {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
 }
 
 .flex-space-between {
@@ -80,37 +86,41 @@
   gap: 0.5rem;
 }
 
-.flex-end-gap-lg {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
+/* Status Badges (for music catalog) */
+.inline-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-medium);
+  font-size: 0.8rem;
+  font-weight: 700;
 }
 
-.flex-column {
-  display: flex;
-  flex-direction: column;
+.inline-status--ativa {
+  background-color: var(--status-success-bg);
+  color: var(--status-success-text);
 }
 
-.flex-column-gap {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+.inline-status--rascunho {
+  background-color: var(--status-info-bg);
+  color: var(--status-info-text);
 }
 
-.flex-column-gap-lg {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+.inline-status--inativa {
+  background-color: var(--surface-secondary-hover);
+  color: var(--text-primary);
 }
 
-/* ===== DISPLAY UTILITIES ===== */
-
-.block-center {
-  display: block;
-  text-align: center;
+/* Dark Mode Adjustments */
+:root.dark .form-input-styled {
+  background: var(--input-bg);
+  color: var(--input-text);
+  border-color: var(--input-border);
 }
 
-.inline-block-center {
-  display: inline-block;
-  text-align: center;
+:root.dark .form-input-styled:focus {
+  border-color: var(--input-border-focus);
+  outline-color: var(--focus-outline);
+  box-shadow: 0 0 0 4px var(--input-focus-ring);
 }
