@@ -110,5 +110,5 @@ export function MusicaExibicaoPublicaLive({
     );
   }
 
-  return <MusicaReader musica={musica} logoSrc={logoSrc} showBranding={false} />;
+  return <MusicaReader musica={musica} logoSrc={logoSrc} mode="exibicao" showBranding={false} />;
 }
