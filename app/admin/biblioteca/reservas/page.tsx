@@ -14,7 +14,11 @@ type ReservaItem = {
   obras?: { titulo?: string | null; autor?: string | null } | null;
 };
 
-async function ReservasList({ searchParams }: { searchParams: { page?: string } }) {
+type ReservasSearchParams = {
+  page?: string;
+};
+
+async function ReservasList({ searchParams }: { searchParams: ReservasSearchParams }) {
   const page = parseInt(searchParams.page || '1', 10);
 
   const { reservas, total, pageSize } = await getReservas(page);
@@ -81,7 +85,7 @@ async function ReservasList({ searchParams }: { searchParams: { page?: string } 
           </table>
           </div>
         ) : (
-          <div className="text-center-muted" style={{ padding: '2rem' }}>
+          <div className="area-empty">
             <p>Nenhuma reserva aguardando.</p>
           </div>
         )}
@@ -114,7 +118,7 @@ async function ReservasList({ searchParams }: { searchParams: { page?: string } 
   );
 }
 
-export default async function ReservasPage({ searchParams }: { searchParams: Promise<any> }) {
+export default async function ReservasPage({ searchParams }: { searchParams: Promise<ReservasSearchParams> }) {
   const resolvedSearchParams = await searchParams;
   return (
     <Suspense fallback={<div className="suspense-center">Carregando...</div>}>

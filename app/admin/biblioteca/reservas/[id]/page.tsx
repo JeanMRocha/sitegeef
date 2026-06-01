@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getReservaById, cancelarReserva, confirmarReserva, getExemplaresdisponiveisParaReserva } from '../actions';
 import { Suspense } from 'react';
@@ -7,6 +8,21 @@ import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 
 export const metadata = {
   title: 'Reserva - Admin GEEF',
+};
+
+type ReservaDetalhe = {
+  id: string;
+  posicao_fila: number;
+  criado_em: string;
+  obra_id: string;
+  pessoas?: { nome?: string | null } | null;
+  obras?: { titulo?: string | null; autor?: string | null } | null;
+};
+
+type ExemplarReserva = {
+  id: string;
+  codigo: string;
+  situacao: string;
 };
 
 async function handleCancel(id: string) {
@@ -37,8 +53,12 @@ async function handleConfirm(id: string, formData: FormData) {
 }
 
 async function ReservaContent({ id }: { id: string }) {
-  const reserva = await getReservaById(id);
-  const exemplares = await getExemplaresdisponiveisParaReserva(reserva.obra_id);
+  const reserva = (await getReservaById(id)) as ReservaDetalhe | null;
+  if (!reserva) {
+    notFound();
+  }
+  const exemplares = (await getExemplaresdisponiveisParaReserva(reserva.obra_id)) as ExemplarReserva[];
+  const exemplaresDisponiveis = exemplares.filter((e) => e.situacao === 'disponivel');
 
   const diasEsperando = Math.floor(
     (new Date().getTime() - new Date(reserva.criado_em).getTime()) / (1000 * 60 * 60 * 24)
@@ -52,15 +72,10 @@ async function ReservaContent({ id }: { id: string }) {
           <h1 className="admin-page-title">Reserva #{reserva.posicao_fila}</h1>
           <p className="admin-page-subtitle">{reserva.obras?.titulo}</p>
         </div>
-        <form action={() => handleCancel(id)} style={{ display: 'inline' }}>
+        <form action={() => handleCancel(id)}>
           <button
             type="submit"
-            className="admin-btn"
-            style={{
-              backgroundColor: 'rgba(239, 68, 68, 0.1)',
-              color: '#ef4444',
-              border: '1px solid rgba(239, 68, 68, 0.3)',
-            }}
+            className="admin-btn admin-btn-secondary admin-btn-danger"
             onClick={(e) => {
               if (!confirm('Tem certeza que deseja cancelar esta reserva?')) {
                 e.preventDefault();
@@ -73,34 +88,34 @@ async function ReservaContent({ id }: { id: string }) {
       </div>
 
       {/* Info Box */}
-      <div className="admin-card" style={{ marginBottom: '2rem', backgroundColor: 'rgba(59, 130, 246, 0.05)', borderLeft: '4px solid var(--primary)' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem' }}>
+      <div className="admin-card panel-accent-card">
+        <div className="area-panel-grid grid-auto-220">
           <div>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.85rem', color: 'var(--muted)', textTransform: 'uppercase' }}>Pessoa</p>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.95rem', fontWeight: 500 }}>
+            <p className="text-xs-muted">Pessoa</p>
+            <p className="text-sm-500">
               {reserva.pessoas?.nome}
             </p>
           </div>
           <div>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.85rem', color: 'var(--muted)', textTransform: 'uppercase' }}>Espera</p>
-            <p style={{ margin: '0.5rem 0', fontSize: '1.1rem', fontWeight: 600 }}>
+            <p className="text-xs-muted">Espera</p>
+            <p className="text-sm-500">
               {diasEsperando} dias
             </p>
           </div>
           <div>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.85rem', color: 'var(--muted)', textTransform: 'uppercase' }}>Exemplares Disponíveis</p>
-            <p style={{ margin: '0.5rem 0', fontSize: '1.1rem', fontWeight: 600 }}>
-              {exemplares.filter((e: any) => e.situacao === 'disponivel').length}
+            <p className="text-xs-muted">Exemplares Disponíveis</p>
+            <p className="text-sm-500">
+              {exemplaresDisponiveis.length}
             </p>
           </div>
         </div>
       </div>
 
       {/* Confirmação */}
-      {exemplares.filter((e: any) => e.situacao === 'disponivel').length > 0 && (
-        <div className="admin-card" style={{ maxWidth: '600px', margin: '0 auto', marginBottom: '2rem' }}>
-          <h2 style={{ margin: '0 0 1.5rem', fontSize: '1.1rem', color: 'var(--text)' }}>Confirmar Reserva</h2>
-          <p style={{ margin: '0 0 1rem', fontSize: '0.9rem', color: 'var(--muted)' }}>
+      {exemplaresDisponiveis.length > 0 && (
+        <div className="admin-card form-panel-centered-sm mb-2">
+          <h2 className="form-card-title">Confirmar Reserva</h2>
+          <p className="text-sm-muted">
             Exemplar disponível detectado. Confirme a reserva selecionando o exemplar.
           </p>
 
@@ -111,27 +126,19 @@ async function ReservaContent({ id }: { id: string }) {
               <select
                 name="exemplar_id"
                 required
-                style={{
-                  padding: '0.65rem 0.85rem',
-                  border: '1px solid var(--admin-border)',
-                  borderRadius: '0.6rem',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.95rem',
-                  color: 'var(--text)',
-                }}
+                className="profile-form-input"
               >
                 <option value="">— Selecione —</option>
-                {exemplares
-                  .filter((e: any) => e.situacao === 'disponivel')
-                  .map((e: any) => (
+                {exemplaresDisponiveis.map((e) => (
                     <option key={e.id} value={e.id}>
                       {e.codigo}
                     </option>
-                  ))}
+                  ))
+                }
               </select>
             </div>
 
-            <div style={{ display: 'flex', gap: '1rem', marginTop: '1.5rem' }}>
+            <div className="form-actions-row">
               <button type="submit" className="admin-btn admin-btn-primary">
                 ✅ Confirmar
               </button>
@@ -141,24 +148,24 @@ async function ReservaContent({ id }: { id: string }) {
       )}
 
       {/* Detalhes */}
-      <div className="admin-card" style={{ maxWidth: '600px', margin: '0 auto' }}>
-        <h2 style={{ margin: '0 0 1.5rem', fontSize: '1.1rem', color: 'var(--text)' }}>Detalhes</h2>
+      <div className="admin-card form-panel-centered-sm">
+        <h2 className="form-card-title">Detalhes</h2>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+        <div className="area-panel-grid grid-auto-220">
           <div>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.85rem', color: 'var(--muted)' }}>Obra</p>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.95rem', fontWeight: 500 }}>
+            <p className="text-xs-muted">Obra</p>
+            <p className="text-sm-500">
               {reserva.obras?.titulo}
             </p>
             {reserva.obras?.autor && (
-              <p style={{ margin: '0.25rem 0', fontSize: '0.85rem', color: 'var(--muted)' }}>
+              <p className="text-xs-muted mt-035">
                 {reserva.obras.autor}
               </p>
             )}
           </div>
           <div>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.85rem', color: 'var(--muted)' }}>Data Reserva</p>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.95rem' }}>
+            <p className="text-xs-muted">Data Reserva</p>
+            <p className="text-sm-500">
               {new Date(reserva.criado_em).toLocaleDateString('pt-BR', {
                 weekday: 'long',
                 year: 'numeric',
@@ -169,31 +176,16 @@ async function ReservaContent({ id }: { id: string }) {
           </div>
         </div>
 
-        <div style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid var(--admin-border)' }}>
-          <p style={{ margin: '0.5rem 0', fontSize: '0.85rem', color: 'var(--muted)' }}>Exemplares</p>
-          <div style={{ margin: '0.75rem 0', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            {exemplares.map((e: any) => (
+        <div className="content-surface-note-bordered">
+          <p className="text-xs-muted">Exemplares</p>
+          <div className="atendimento-list mt-075">
+            {exemplares.map((e) => (
               <div
                 key={e.id}
-                style={{
-                  padding: '0.5rem',
-                  backgroundColor: 'var(--admin-bg)',
-                  borderRadius: '0.4rem',
-                  fontSize: '0.9rem',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                }}
+                className="profile-panel"
               >
                 <span>{e.codigo}</span>
-                <span
-                  style={{
-                    padding: '0.2rem 0.5rem',
-                    backgroundColor: e.situacao === 'disponivel' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(168, 85, 247, 0.1)',
-                    color: e.situacao === 'disponivel' ? '#22c55e' : '#a855f7',
-                    borderRadius: '0.3rem',
-                    fontSize: '0.8rem',
-                  }}
-                >
+                <span className={e.situacao === 'disponivel' ? 'inline-status inline-status-success' : 'inline-status inline-status-primary'}>
                   {e.situacao}
                 </span>
               </div>
@@ -201,7 +193,7 @@ async function ReservaContent({ id }: { id: string }) {
           </div>
         </div>
 
-        <div style={{ marginTop: '1.5rem', display: 'flex', gap: '1rem' }}>
+        <div className="form-actions-row">
           <Link href="/admin/biblioteca/reservas" className="admin-btn admin-btn-secondary">
             ← Voltar
           </Link>
@@ -211,10 +203,14 @@ async function ReservaContent({ id }: { id: string }) {
   );
 }
 
-export default async function ReservaPage({ params }: { params: Promise<any> }) {
+type ReservaParams = {
+  id: string;
+};
+
+export default async function ReservaPage({ params }: { params: Promise<ReservaParams> }) {
   const resolvedParams = await params;
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <ReservaContent id={resolvedParams.id} />
     </Suspense>
   );
