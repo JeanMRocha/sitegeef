@@ -112,15 +112,15 @@
 }
 
 .text-success {
-  color: #22c55e;
+  color: var(--status-success-text);
 }
 
 .text-danger {
-  color: #ef4444;
+  color: var(--status-error-text);
 }
 
 .text-primary {
-  color: #3b82f6;
+  color: var(--status-info-text);
 }
 
 .table-row-info {
