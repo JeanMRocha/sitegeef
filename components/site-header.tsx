@@ -27,7 +27,7 @@ export function SiteHeader({
         <span className="site-header-brand-logo">
           <Image
             src="/brand/logo-oficial-transparent.png"
-            alt=""
+            alt="GEEF - Grupo de Estudos Espíritas de Franquia"
             width={360}
             height={156}
             decoding="async"
