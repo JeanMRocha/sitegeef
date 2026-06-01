@@ -110,10 +110,6 @@ describe('Supabase Query Patterns', () => {
       relatedItems: RelatedItem[],
       keyField: 'parent_id' = 'parent_id'
     ): T[] {
-      if (!relatedItems.length) {
-        return parents;
-      }
-
       const relatedByParentId = relatedItems.reduce((acc: Record<string, RelatedItem[]>, item) => {
         const key = item[keyField as keyof RelatedItem] as string;
         if (!acc[key]) acc[key] = [];

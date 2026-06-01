@@ -1,6 +1,6 @@
 import { createServiceRoleClient } from "@/lib/supabase/service-role";
 
-export type MusicaParteTipo = "estrofe" | "refrao" | "ponte" | "intro" | "cifra";
+export type MusicaParteTipo = "estrofe" | "verso" | "refrao" | "ponte" | "intro" | "cifra";
 export type MusicaSessaoModo = "exibicao" | "catalogo";
 
 export const MUSICA_EXIBICAO_PUBLICA_CODIGO = "EXIBICAO_PUBLICA";
@@ -113,13 +113,13 @@ export function parsePartesFromText(texto: string): MusicaParte[] {
     return [];
   }
 
-  const regex = /^\s*===\s*([A-Z]+(?:\s+[A-Z]+)*)\s*===/gm;
+  const regex = /^\s*===\s*([A-Za-zÀ-ÿ]+(?:\s+[A-Za-zÀ-ÿ]+)*)\s*===/gmi;
   const partes: MusicaParte[] = [];
   let match;
 
   const matches: Array<{ tipo: string; indice: number; fim: number }> = [];
   while ((match = regex.exec(texto)) !== null) {
-    const tipo = match[1].toLowerCase().replace(/\s+/g, "");
+    const tipo = normalizeText(match[1]).replace(/\s+/g, "");
     matches.push({
       tipo,
       indice: match.index,
@@ -140,11 +140,24 @@ export function parsePartesFromText(texto: string): MusicaParte[] {
     }
 
     const tipo: MusicaParteTipo =
-      matchAtual.tipo === "refrao" || matchAtual.tipo === "ponte" || matchAtual.tipo === "intro" || matchAtual.tipo === "cifra"
+      matchAtual.tipo === "verso" ||
+      matchAtual.tipo === "estrofe" ||
+      matchAtual.tipo === "refrao" ||
+      matchAtual.tipo === "ponte" ||
+      matchAtual.tipo === "intro" ||
+      matchAtual.tipo === "cifra"
         ? (matchAtual.tipo as MusicaParteTipo)
         : "estrofe";
 
-    const tipoLabel = matchAtual.tipo.toUpperCase().replace(/([a-z])([A-Z])/g, "$1 $2");
+    const tipoLabelMap: Record<string, string> = {
+      verso: "Verso",
+      estrofe: "Estrofe",
+      refrao: "Refrão",
+      ponte: "Ponte",
+      intro: "Introdução",
+      cifra: "Cifra",
+    };
+    const tipoLabel = tipoLabelMap[matchAtual.tipo] ?? "Estrofe";
     partes.push({
       ordem: partes.length + 1,
       tipo,
@@ -175,7 +188,10 @@ export function normalizePartes(partes: unknown): MusicaParte[] {
       }
 
       const tipo: MusicaParteTipo =
-        item.tipo === "refrao" || item.tipo === "ponte" || item.tipo === "intro" || item.tipo === "cifra"
+        item.tipo === "refrao" ||
+        item.tipo === "ponte" ||
+        item.tipo === "intro" ||
+        item.tipo === "cifra"
           ? item.tipo
           : "estrofe";
 
@@ -201,6 +217,8 @@ export function normalizePartes(partes: unknown): MusicaParte[] {
 
 export function formatParteTipoLabel(tipo: MusicaParteTipo) {
   switch (tipo) {
+    case "verso":
+      return "Verso";
     case "refrao":
       return "Refrão";
     case "ponte":

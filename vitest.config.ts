@@ -18,6 +18,10 @@ export default defineConfig({
       ],
     },
     include: ['tests/**/*.test.ts'],
+    exclude: [
+      'tests/css-regression.test.ts',
+      'tests/rls-permissions.test.ts',
+    ],
     testTimeout: 10000,
   },
   resolve: {

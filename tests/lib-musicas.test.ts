@@ -210,7 +210,7 @@ P1
       `;
       const partes = parsePartesFromText(text);
       const tipos = partes.map(p => p.tipo);
-      expect(tipos.indexOf('verso')).toBeLessThan(tipos.indexOf('refrão'));
+      expect(tipos.indexOf('verso')).toBeLessThan(tipos.indexOf('refrao'));
     });
 
     it('recognizes all valid section types', () => {
@@ -233,7 +233,7 @@ c
       const partes = parsePartesFromText(text);
       const tipos = partes.map(p => p.tipo);
       expect(tipos).toContain('verso');
-      expect(tipos).toContain('refrão');
+      expect(tipos).toContain('refrao');
       expect(tipos).toContain('ponte');
       expect(tipos).toContain('intro');
       expect(tipos).toContain('cifra');
