@@ -93,7 +93,6 @@ export function MusicaExibicaoPublicaLive({
     }
 
     const compactSlugs = new Set([
-      "a-cancao-que-a-gente-fez-b74fe92f",
       "aos-pes-do-monte-3f5d1e8b",
       "santa-casa-santa-e3448514",
     ]);
