@@ -156,7 +156,7 @@
 
 .document-tabs {
   display: flex;
-  gap: 1rem;
+  gap: var(--spacing-md);
   margin-bottom: var(--spacing-xl);
   border-bottom: 1px solid var(--admin-border);
   padding-bottom: 1rem;
@@ -177,7 +177,7 @@
 
 .table-actions-inline {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
 }
 
 .status-toggle-btn {
@@ -207,7 +207,7 @@
 .progress-row {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
   min-width: 140px;
 }
 
@@ -238,7 +238,7 @@
 
 .page-pagination {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
   justify-content: center;
   margin-top: 2rem;
   flex-wrap: wrap;
@@ -258,7 +258,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1rem;
+  gap: var(--spacing-md);
   margin-bottom: var(--spacing-md);
   flex-wrap: wrap;
 }
@@ -287,7 +287,7 @@
   display: flex;
   justify-content: space-between;
   align-items: start;
-  gap: 1rem;
+  gap: var(--spacing-md);
 }
 
 .suspense-center {
@@ -346,7 +346,7 @@ body.musica-display-route .site-shell {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--spacing-md);
   padding: 1.05rem 1.15rem;
   border: 1px solid var(--line);
   border-radius: var(--radius-xl);
@@ -388,14 +388,14 @@ body.musica-display-route .site-shell {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--spacing-md);
   flex-wrap: wrap;
 }
 
 .musica-brand-block {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: var(--spacing-md);
   min-width: 0;
 }
 
@@ -476,7 +476,7 @@ body.musica-display-route .site-shell {
 .musica-toolbar-filters {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
   flex: 1;
   flex-wrap: wrap;
   min-width: 0;
@@ -577,7 +577,7 @@ body.musica-display-route .site-shell {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--spacing-md);
   margin-bottom: var(--spacing-md);
   flex-wrap: wrap;
 }
@@ -610,7 +610,7 @@ body.musica-display-route .site-shell {
   padding: 1rem;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1rem;
+  gap: var(--spacing-md);
 }
 
 .musica-control-remote-empty {
@@ -698,7 +698,7 @@ body.musica-display-route .site-shell {
 .musica-toolbar-search {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
   flex-wrap: wrap;
 }
 
@@ -740,7 +740,7 @@ body.musica-display-route .site-shell {
 .musica-reader-grid {
   display: grid;
   grid-template-columns: minmax(240px, 320px) minmax(0, 1fr);
-  gap: 1rem;
+  gap: var(--spacing-md);
   align-items: start;
 }
 
@@ -765,7 +765,7 @@ body.musica-display-route .site-shell {
 .musica-reader-top-grid {
   display: grid;
   grid-template-columns: minmax(280px, 1fr);
-  gap: 1rem;
+  gap: var(--spacing-md);
   align-items: stretch;
   margin-top: 1rem;
   max-width: 320px;
@@ -774,7 +774,7 @@ body.musica-display-route .site-shell {
 .musica-reader-panel--media {
   padding: 1rem;
   display: grid;
-  gap: 1rem;
+  gap: var(--spacing-md);
   height: 100%;
 }
 
@@ -1068,7 +1068,7 @@ body.musica-display-route .site-shell {
 .musica-partes-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
+  gap: var(--spacing-md);
 }
 
 .musica-parte {
@@ -1174,7 +1174,7 @@ body.musica-display-route .site-shell {
 
 .musica-catalog-card {
   display: grid;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
   min-height: 0;
   padding: 0.5rem 0.85rem;
   border: 1px solid var(--line);
@@ -1198,7 +1198,7 @@ body.musica-display-route .site-shell {
 .musica-catalog-line {
   display: flex;
   align-items: baseline;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
   min-width: 0;
   margin: 0;
   overflow: hidden;
@@ -1291,7 +1291,7 @@ body.musica-display-route .site-shell {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--spacing-md);
   flex-wrap: wrap;
 }
 
@@ -1356,7 +1356,7 @@ body.musica-display-route .site-shell {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  gap: var(--spacing-lg);
 }
 
 .musica-display-pairing-label {
@@ -1382,7 +1382,7 @@ body.musica-display-route .site-shell {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: var(--spacing-md);
   margin-top: 1rem;
 }
 
@@ -2339,7 +2339,7 @@ img {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
   padding: 0.8rem 1.15rem;
   border-radius: 999px;
   border: 1px solid transparent;
@@ -2441,7 +2441,7 @@ a.button.musica-icon-button {
 .hero-panel-top {
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--spacing-md);
   margin-bottom: 0.65rem;
 }
 
@@ -2508,7 +2508,7 @@ a.button.musica-icon-button {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--spacing-md);
   margin-bottom: 0.75rem;
 }
 
@@ -2562,7 +2562,7 @@ a.button.musica-icon-button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--spacing-md);
   margin-bottom: 0.95rem;
 }
 
@@ -2687,7 +2687,7 @@ a.button.musica-icon-button {
 .public-showcase {
   display: grid;
   grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.75fr);
-  gap: 1rem;
+  gap: var(--spacing-md);
   align-items: stretch;
 }
 
@@ -2774,7 +2774,7 @@ a.button.musica-icon-button {
 .public-hero-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.6fr);
-  gap: 1rem;
+  gap: var(--spacing-md);
 }
 
 .public-info-list {
@@ -2817,7 +2817,7 @@ a.button.musica-icon-button {
 
 .area-page {
   display: grid;
-  gap: 1rem;
+  gap: var(--spacing-md);
   width: min(1320px, calc(100% - 2rem));
   margin: 0 auto;
   padding: 1rem 0 2rem;
@@ -2826,7 +2826,7 @@ a.button.musica-icon-button {
 .area-body {
   display: grid;
   grid-template-columns: 270px minmax(0, 1fr);
-  gap: 1rem;
+  gap: var(--spacing-md);
   align-items: start;
 }
 
@@ -2905,7 +2905,7 @@ a.button.musica-icon-button {
 
 .area-content {
   display: grid;
-  gap: 1rem;
+  gap: var(--spacing-md);
   min-width: 0;
 }
 
@@ -2913,7 +2913,7 @@ a.button.musica-icon-button {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 1rem;
+  gap: var(--spacing-md);
   margin-bottom: var(--spacing-md);
 }
 
@@ -2961,7 +2961,7 @@ a.button.musica-icon-button {
 
 .area-section {
   display: grid;
-  gap: 1rem;
+  gap: var(--spacing-md);
 }
 
 .area-section-title {
@@ -3029,7 +3029,7 @@ a.button.musica-icon-button {
 .governance-docs-shell {
   display: grid;
   grid-template-columns: 280px minmax(0, 1fr) 280px;
-  gap: 1rem;
+  gap: var(--spacing-md);
   align-items: start;
 }
 
@@ -3121,7 +3121,7 @@ a.button.musica-icon-button {
 
 .governance-doc-reader {
   display: grid;
-  gap: 1rem;
+  gap: var(--spacing-md);
 }
 
 .governance-doc-reader-hero {
@@ -3132,7 +3132,7 @@ a.button.musica-icon-button {
 .governance-doc-chip-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
 }
 
 .governance-doc-chip {
@@ -3148,7 +3148,7 @@ a.button.musica-icon-button {
 
 .governance-doc-paper {
   display: grid;
-  gap: 1rem;
+  gap: var(--spacing-md);
 }
 
 .governance-doc-section {
@@ -3325,7 +3325,7 @@ a.button.musica-icon-button {
 .stat-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1rem;
+  gap: var(--spacing-md);
 }
 
 .stat-card {
@@ -3412,25 +3412,25 @@ a.button.musica-icon-button {
 .module-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem;
+  gap: var(--spacing-md);
 }
 
 .form-grid-2 {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
+  gap: var(--spacing-md);
 }
 
 .admin-search-form {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 1rem;
+  gap: var(--spacing-md);
   align-items: end;
 }
 
 .form-actions-row {
   display: flex;
-  gap: 1rem;
+  gap: var(--spacing-md);
   flex-wrap: wrap;
   margin-top: 2rem;
 }
@@ -3517,7 +3517,7 @@ a.button.musica-icon-button {
 
 .profile-page {
   display: grid;
-  gap: 1rem;
+  gap: var(--spacing-md);
 }
 
 .profile-hero {
@@ -3533,7 +3533,7 @@ a.button.musica-icon-button {
 .profile-hero-body {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
-  gap: 1rem;
+  gap: var(--spacing-md);
   align-items: start;
 }
 
@@ -3607,13 +3607,13 @@ a.button.musica-icon-button {
 .profile-card-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
+  gap: var(--spacing-md);
 }
 
 .profile-chip-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
   margin-top: 1rem;
 }
 
@@ -3759,7 +3759,7 @@ a.button.musica-icon-button {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 1rem;
+  gap: var(--spacing-md);
   margin-bottom: 0.4rem;
   padding-bottom: 0.3rem;
   border-bottom: 1px solid rgba(14, 36, 8, 0.08);
@@ -3924,7 +3924,7 @@ a.button.musica-icon-button {
   grid-area: cards;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1rem;
+  gap: var(--spacing-md);
 }
 
 .contact-card-grid--official {
@@ -4011,7 +4011,7 @@ a.button.musica-icon-button {
 
 .contact-mini-card {
   display: grid;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
   align-content: start;
   min-height: auto;
   padding: 1.2rem 1.1rem;
@@ -4068,7 +4068,7 @@ a.button.musica-icon-button {
   grid-column: 1 / -1;
   display: grid;
   grid-template-columns: minmax(0, 0.98fr) minmax(0, 1.02fr);
-  gap: 1rem;
+  gap: var(--spacing-md);
 }
 
 .contact-mini-card--email {
@@ -4079,7 +4079,7 @@ a.button.musica-icon-button {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--spacing-md);
   list-style: none;
 }
 
@@ -4320,7 +4320,7 @@ a.button.musica-icon-button {
 .contact-message-panel,
 .contact-side-panel {
   display: grid;
-  gap: 1rem;
+  gap: var(--spacing-md);
   padding: 1.5rem 1.2rem;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
@@ -4337,7 +4337,7 @@ a.button.musica-icon-button {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--spacing-md);
 }
 
 .contact-message-panel-head-copy {
@@ -4386,7 +4386,7 @@ a.button.musica-icon-button {
 .contact-message-form-split {
   display: grid;
   grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
-  gap: 1rem;
+  gap: var(--spacing-md);
   align-items: start;
 }
 
@@ -4727,7 +4727,7 @@ a.button.musica-icon-button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--spacing-md);
   margin-bottom: 0;
   padding-bottom: 0.95rem;
   border-bottom: 1px solid var(--line);
@@ -5015,7 +5015,7 @@ a.button.musica-icon-button {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--spacing-md);
 }
 
 .lgpd-request-modal-head h3 {
@@ -5078,7 +5078,7 @@ a.button.musica-icon-button {
 
 .instituicao-contatos-layout {
   display: grid;
-  gap: 1rem;
+  gap: var(--spacing-md);
 }
 
 .instituicao-contatos-section {
@@ -5094,7 +5094,7 @@ a.button.musica-icon-button {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--spacing-md);
   flex-wrap: wrap;
 }
 
@@ -5285,7 +5285,7 @@ a.button.musica-icon-button {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--spacing-md);
   margin-bottom: var(--spacing-md);
 }
 
@@ -5329,7 +5329,7 @@ a.button.musica-icon-button {
 .login-shell {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(320px, 0.9fr);
-  gap: 1rem;
+  gap: var(--spacing-md);
   align-items: stretch;
   width: min(1060px, calc(100% - 2rem));
   margin: 0 auto;
@@ -5455,7 +5455,7 @@ a.button.musica-icon-button {
 
 .login-form {
   display: grid;
-  gap: 1rem;
+  gap: var(--spacing-md);
 }
 
 .login-actions-row {
@@ -5660,7 +5660,7 @@ a.button.musica-icon-button {
 
 .profile-compact-container {
   display: grid;
-  gap: 1rem;
+  gap: var(--spacing-md);
   padding: clamp(1.2rem, 3vw, 2rem);
   border: 1px solid rgba(14, 36, 8, 0.08);
   border-radius: 28px;
@@ -5673,7 +5673,7 @@ a.button.musica-icon-button {
 .profile-compact-header {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 1rem;
+  gap: var(--spacing-md);
   align-items: center;
 }
 
@@ -5729,7 +5729,7 @@ a.button.musica-icon-button {
 
 .profile-form-field {
   display: grid;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
 }
 
 .profile-form-field label {
@@ -5834,12 +5834,12 @@ a.button.musica-icon-button {
 }
 
 .profile-shell {
-  gap: 1rem;
+  gap: var(--spacing-md);
 }
 
 .profile-shell-hero {
   display: grid;
-  gap: 1rem;
+  gap: var(--spacing-md);
 }
 
 .profile-shell-intro {
@@ -5860,14 +5860,14 @@ a.button.musica-icon-button {
 .profile-shell-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.75fr);
-  gap: 1rem;
+  gap: var(--spacing-md);
   align-items: start;
 }
 
 .profile-shell-main,
 .profile-shell-aside {
   display: grid;
-  gap: 1rem;
+  gap: var(--spacing-md);
 }
 
 .profile-section-kicker {
@@ -5918,7 +5918,7 @@ a.button.musica-icon-button {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--spacing-md);
 }
 
 .descritivo-field-count {
@@ -6011,7 +6011,7 @@ a.button.musica-icon-button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: var(--spacing-md);
 }
 
 .profile-avatar,
@@ -6035,12 +6035,12 @@ a.button.musica-icon-button {
 
 .profile-info {
   display: grid;
-  gap: 1.5rem;
+  gap: var(--spacing-lg);
 }
 
 .profile-field {
   display: grid;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
 }
 
 .profile-field label {
@@ -6131,7 +6131,7 @@ a.button.musica-icon-button {
 .error-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
   margin-top: 1rem;
 }
 
@@ -6743,7 +6743,7 @@ a.button.musica-icon-button {
 
   .profile-main {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: var(--spacing-lg);
   }
 
   .profile-form {
