@@ -18,7 +18,7 @@ export async function getUserPermissions() {
   try {
     const authResult = await supabase.auth.getUser();
     user = authResult.data.user;
-  } catch (error) {
+  } catch (_error) {
     return null;
   }
 
@@ -27,7 +27,7 @@ export async function getUserPermissions() {
   }
 
   try {
-    const { data: usuarioSistema, error } = await supabase
+    const { data: usuarioSistema } = await supabase
       .from('usuarios_sistema')
       .select('id, pessoa_id, perfil, pode_escalas, pode_biblioteca, pode_livraria, pode_financeiro, pode_pessoas, pode_publicar, pode_mediunidade, pode_atendimento, pode_apse')
       .eq('id', user.id)
@@ -59,7 +59,7 @@ export async function getUserPermissions() {
   };
 }
 
-export async function requirePermission(permission: PermissionFlag, redirectPath = '/admin') {
+export async function requirePermission(permission: PermissionFlag, _redirectPath = '/admin') {
   const permissions = await getUserPermissions();
 
   if (!permissions || !permissions[permission]) {

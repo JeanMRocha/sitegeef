@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Musica } from "@/lib/musicas";
@@ -61,6 +61,14 @@ function CifraLineRenderer({ text, hideChords }: { text: string; hideChords: boo
   );
 }
 
+function getLyricsMarginClass(marginTop: number) {
+  if (marginTop <= 0.23) return "musica-reader-lyrics--mt-xxs";
+  if (marginTop <= 0.32) return "musica-reader-lyrics--mt-xs";
+  if (marginTop <= 0.45) return "musica-reader-lyrics--mt-sm";
+  if (marginTop <= 0.58) return "musica-reader-lyrics--mt-md";
+  return "musica-reader-lyrics--mt-lg";
+}
+
 type MusicaReaderProps = {
   musica: Musica;
   logoSrc: string;
@@ -84,6 +92,7 @@ export function MusicaReader({
 }: MusicaReaderProps) {
   const isDisplay = mode === "exibicao";
   const displayScreenRef = useRef<HTMLElement | null>(null);
+  const publicLyricsPanelRef = useRef<HTMLElement | null>(null);
   const [viewMode, setViewMode] = useState<"letra" | "cifra">("letra");
   const [pipExpanded, setPipExpanded] = useState(false);
   const [pipHidden, setPipHidden] = useState(false);
@@ -152,7 +161,7 @@ export function MusicaReader({
       lineHeight,
       lyricSpacer,
     };
-  }, [partesVisiveis, viewport.height, viewport.width]);
+  }, [partesVisiveis, viewport.width]);
   const publicReaderMetrics = useMemo(() => {
     if (readerDensity !== "full") {
       return readerMetrics;
@@ -377,7 +386,7 @@ export function MusicaReader({
       verseText,
       verseMinHeight,
     };
-  }, [partesVisiveis, viewport.height, viewport.width]);
+  }, [displayDensity, partesVisiveis, viewport.height, viewport.width]);
 
   useEffect(() => {
     const el = displayScreenRef.current;
@@ -412,6 +421,35 @@ export function MusicaReader({
       });
     };
   }, [displayMetrics, isDisplay]);
+
+  useEffect(() => {
+    const el = publicLyricsPanelRef.current;
+    if (isDisplay || !el) {
+      return;
+    }
+
+    const properties: Record<string, string> = {
+      "--reader-lyrics-panel-padding": publicReaderMetrics.lyricsPanelPadding,
+      "--reader-column-width": `${publicReaderMetrics.columnWidth}rem`,
+      "--reader-column-gap": `${publicReaderMetrics.columnGap}rem`,
+      "--reader-parte-padding": `${publicReaderMetrics.partePad}rem`,
+      "--reader-label-size": `${publicReaderMetrics.labelSize}rem`,
+      "--reader-title-size": `${publicReaderMetrics.titleSize}rem`,
+      "--reader-text-size": `${publicReaderMetrics.textSize}rem`,
+      "--reader-line-height": String(publicReaderMetrics.lineHeight),
+      "--reader-lyric-spacer": `${publicReaderMetrics.lyricSpacer}rem`,
+    };
+
+    Object.entries(properties).forEach(([property, value]) => {
+      el.style.setProperty(property, value);
+    });
+
+    return () => {
+      Object.keys(properties).forEach((property) => {
+        el.style.removeProperty(property);
+      });
+    };
+  }, [isDisplay, publicReaderMetrics]);
 
   useEffect(() => {
     if (isDisplay) {
@@ -570,22 +608,10 @@ export function MusicaReader({
 
       {!isDisplay && (
         <>
-          <section className="musica-reader-lyrics" style={{ marginTop: `${publicReaderMetrics.lyricsMarginTop}rem` }}>
+          <section className={`musica-reader-lyrics ${getLyricsMarginClass(publicReaderMetrics.lyricsMarginTop)}`}>
             <article
+              ref={publicLyricsPanelRef}
               className="musica-reader-panel musica-reader-panel--lyrics musica-reader-panel--lyrics-full"
-              style={
-                {
-                  "--reader-lyrics-panel-padding": publicReaderMetrics.lyricsPanelPadding,
-                  "--reader-column-width": `${publicReaderMetrics.columnWidth}rem`,
-                  "--reader-column-gap": `${publicReaderMetrics.columnGap}rem`,
-                  "--reader-parte-padding": `${publicReaderMetrics.partePad}rem`,
-                  "--reader-label-size": `${publicReaderMetrics.labelSize}rem`,
-                  "--reader-title-size": `${publicReaderMetrics.titleSize}rem`,
-                  "--reader-text-size": `${publicReaderMetrics.textSize}rem`,
-                  "--reader-line-height": String(publicReaderMetrics.lineHeight),
-                  "--reader-lyric-spacer": `${publicReaderMetrics.lyricSpacer}rem`,
-                } as CSSProperties
-              }
             >
               <div className="musica-letra-blocos">
                 {partesVisiveis.map((parte, index) => {

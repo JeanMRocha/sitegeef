@@ -41,7 +41,7 @@ export function useUserPersistence(user: User | null) {
     const loginCountKey = `geef-login-count-${user.id}`;
     const currentCount = parseInt(localStorage.getItem(loginCountKey) || "0");
     localStorage.setItem(loginCountKey, String(currentCount + 1));
-  }, [user?.id]);
+  }, [user]);
 }
 
 /**

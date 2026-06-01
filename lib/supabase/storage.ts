@@ -30,7 +30,7 @@ export async function uploadStorageAsset(
     }
 
     // Faz upload do novo arquivo
-    const { data, error: uploadError } = await supabase.storage
+    const { data: _data, error: uploadError } = await supabase.storage
       .from(LOGO_BUCKET)
       .upload(storagePath, buffer, {
         contentType: file.type,

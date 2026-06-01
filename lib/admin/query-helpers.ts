@@ -106,7 +106,7 @@ export function shouldApplyStatusFilter<T extends { status?: string }>(
  */
 export function mapRelatedData<
   Parent extends { id: string },
-  Related extends Record<string, any>,
+  Related extends Record<string, unknown>,
 >(
   parents: Parent[],
   relatedItems: Related[],

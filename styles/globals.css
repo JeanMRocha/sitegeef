@@ -286,7 +286,7 @@
 .atendimento-list-item-content {
   display: flex;
   justify-content: space-between;
-  align-items: start;
+  align-items: flex-start;
   gap: var(--spacing-md);
 }
 
@@ -808,6 +808,26 @@ body.musica-display-route .site-shell {
 }
 
 .musica-reader-lyrics {
+  margin-top: 0.65rem;
+}
+
+.musica-reader-lyrics--mt-xxs {
+  margin-top: 0.2rem;
+}
+
+.musica-reader-lyrics--mt-xs {
+  margin-top: 0.3rem;
+}
+
+.musica-reader-lyrics--mt-sm {
+  margin-top: 0.4rem;
+}
+
+.musica-reader-lyrics--mt-md {
+  margin-top: 0.5rem;
+}
+
+.musica-reader-lyrics--mt-lg {
   margin-top: 0.65rem;
 }
 

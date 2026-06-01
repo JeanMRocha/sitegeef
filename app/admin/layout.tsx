@@ -17,6 +17,41 @@ export const metadata = {
 
 export const dynamic = 'force-dynamic';
 
+type AdminAuthUser = {
+  id: string;
+  email: string | null;
+  app_metadata?: Record<string, unknown>;
+  user_metadata?: {
+    full_name?: string;
+    name?: string;
+  } | null;
+};
+
+type AdminAuthResult = {
+  data: {
+    user: AdminAuthUser | null;
+  };
+  error: unknown | null;
+};
+
+type UsuarioSistemaRow = {
+  perfil: string;
+  pode_mediunidade: boolean;
+  pode_escalas: boolean;
+  pode_biblioteca: boolean;
+  pode_livraria: boolean;
+  pode_financeiro: boolean;
+  pode_pessoas: boolean;
+  pode_publicar: boolean;
+  pode_atendimento: boolean;
+  pode_apse: boolean;
+};
+
+type UsuarioSistemaResult = {
+  data: UsuarioSistemaRow | null;
+  error: unknown | null;
+};
+
 export default async function AdminLayout({
   children,
 }: {
@@ -24,13 +59,13 @@ export default async function AdminLayout({
 }) {
   const locale = await getRequestLocale();
   const supabase = await createClient();
-  let user = null;
+  let user: AdminAuthUser | null = null;
 
   try {
     const authResult = await withTimeout(
-      supabase.auth.getUser() as Promise<any>,
+      supabase.auth.getUser() as PromiseLike<AdminAuthResult>,
       4500,
-      { data: { user: null }, error: null } as any,
+      { data: { user: null }, error: null },
     );
     user = authResult.data.user;
   } catch (error) {
@@ -54,9 +89,9 @@ export default async function AdminLayout({
         .from('usuarios_sistema')
         .select('perfil, pode_mediunidade, pode_escalas, pode_biblioteca, pode_livraria, pode_financeiro, pode_pessoas, pode_publicar, pode_atendimento, pode_apse')
         .eq('id', user.id)
-        .maybeSingle(),
+        .maybeSingle() as PromiseLike<UsuarioSistemaResult>,
       4500,
-      { data: null, error: null } as any,
+      { data: null, error: null },
     );
 
     if (!error) {
@@ -69,12 +104,12 @@ export default async function AdminLayout({
   if (!usuarioSistema && !isAdminViaAuth) {
     return (
       <div className="admin-access-denied">
-        <div style={{ textAlign: 'center', padding: '2rem' }}>
+        <div className="admin-access-denied-content">
           <h1>Acesso Negado</h1>
-          <p style={{ marginTop: '0.5rem', color: 'var(--muted)' }}>
+          <p className="text-center-muted">
             Você não tem permissão para acessar o painel administrativo.
           </p>
-          <Link href="/" style={{ marginTop: '1rem', display: 'inline-block', color: 'var(--uva)' }}>
+          <Link href="/" className="text-primary">
             Voltar para home
           </Link>
         </div>
@@ -108,7 +143,7 @@ export default async function AdminLayout({
       </Suspense>
       <AdminHeader
         locale={locale}
-        user={{ email: user.email, fullName: displayName }}
+        user={{ email: user.email ?? undefined, fullName: displayName }}
       />
       <div className="admin-container">
         <AdminSidebar usuarioSistema={resolvedUsuarioSistema} />

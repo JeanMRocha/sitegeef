@@ -348,7 +348,7 @@ export async function getMusicaById(id: string) {
 
 export async function getMusicasResumo() {
   const musicas = await fetchMusicasBase();
-  return musicas.map(({ partes, ...rest }) => rest);
+  return musicas.map(({ partes: _partes, ...rest }) => rest);
 }
 
 export async function getMusicaSessaoByCodigo(codigo: string) {
