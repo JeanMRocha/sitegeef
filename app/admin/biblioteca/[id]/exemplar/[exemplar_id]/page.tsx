@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getExemplarById, updateExemplar } from '../../../actions';
 import { Suspense } from 'react';
@@ -6,6 +7,27 @@ import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Editar Exemplar - Admin GEEF',
+};
+
+type ExemplarEmprestimoAtivo = {
+  pessoas?: {
+    nome?: string | null;
+  } | null;
+  data_retirada: string;
+  prazo_devolucao: string;
+};
+
+type ExemplarDetalhe = {
+  id: string;
+  codigo: string;
+  localizacao?: string | null;
+  conservacao?: string | null;
+  origem?: string | null;
+  situacao?: string | null;
+  obra?: {
+    titulo?: string | null;
+  } | null;
+  emprestimo_ativo?: ExemplarEmprestimoAtivo[] | null;
 };
 
 async function handleUpdate(formData: FormData, obraId: string, exemplarId: string) {
@@ -41,7 +63,10 @@ async function EditExemplarContent({
 }: {
   params: { id: string; exemplar_id: string };
 }) {
-  const exemplar = await getExemplarById(params.exemplar_id);
+  const exemplar = (await getExemplarById(params.exemplar_id)) as ExemplarDetalhe | null;
+  if (!exemplar) {
+    notFound();
+  }
 
   const situacoes = ['disponivel', 'emprestado', 'reservado', 'danificado', 'perdido'];
   const conservacoes = ['excelente', 'bom', 'regular', 'danificado'];
@@ -59,21 +84,21 @@ async function EditExemplarContent({
 
       {/* Info Box */}
       {exemplar.emprestimo_ativo && exemplar.emprestimo_ativo.length > 0 && (
-        <div className="admin-card" style={{ marginBottom: '2rem', backgroundColor: 'rgba(251, 146, 60, 0.05)', borderLeft: '4px solid #f97316' }}>
-          <p style={{ margin: '0.5rem 0', fontSize: '0.9rem' }}>
+        <div className="admin-card panel-accent-card content-surface-note-danger mb-2">
+          <p className="text-sm-muted">
             <strong>Em empréstimo para:</strong> {exemplar.emprestimo_ativo[0].pessoas?.nome}
           </p>
-          <p style={{ margin: '0.5rem 0', fontSize: '0.9rem' }}>
+          <p className="text-sm-muted">
             <strong>Data de retirada:</strong> {new Date(exemplar.emprestimo_ativo[0].data_retirada + 'T00:00:00').toLocaleDateString('pt-BR')}
           </p>
-          <p style={{ margin: '0.5rem 0', fontSize: '0.9rem' }}>
+          <p className="text-sm-muted">
             <strong>Prazo de devolução:</strong> {new Date(exemplar.emprestimo_ativo[0].prazo_devolucao + 'T00:00:00').toLocaleDateString('pt-BR')}
           </p>
         </div>
       )}
 
       {/* Form */}
-      <div className="admin-card" style={{ maxWidth: '600px', margin: '0 auto' }}>
+      <div className="admin-card form-panel-centered-sm">
         <form action={(formData) => handleUpdate(formData, params.id, params.exemplar_id)}>
           <div className="admin-form-group">
             <label>Código</label>
@@ -81,15 +106,7 @@ async function EditExemplarContent({
               type="text"
               value={exemplar.codigo}
               disabled
-              style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--muted)',
-                backgroundColor: 'var(--admin-bg)',
-              }}
+              className="profile-input form-control-full"
             />
           </div>
 
@@ -108,14 +125,7 @@ async function EditExemplarContent({
             <select
               name="conservacao"
               defaultValue={exemplar.conservacao || ''}
-              style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-              }}
+              className="profile-form-input form-control-full"
             >
               <option value="">— Selecione —</option>
               {conservacoes.map((cons) => (
@@ -131,14 +141,7 @@ async function EditExemplarContent({
             <select
               name="origem"
               defaultValue={exemplar.origem || 'acervo'}
-              style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-              }}
+              className="profile-form-input form-control-full"
             >
               {origens.map((orig) => (
                 <option key={orig} value={orig}>
@@ -153,14 +156,7 @@ async function EditExemplarContent({
             <select
               name="situacao"
               defaultValue={exemplar.situacao || 'disponivel'}
-              style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-              }}
+              className="profile-form-input form-control-full"
             >
               {situacoes.map((sit) => (
                 <option key={sit} value={sit}>
@@ -170,7 +166,7 @@ async function EditExemplarContent({
             </select>
           </div>
 
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+          <div className="form-actions-row">
             <button type="submit" className="admin-btn admin-btn-primary">
               ✅ Salvar
             </button>
@@ -187,11 +183,11 @@ async function EditExemplarContent({
 export default async function EditExemplarPage({
   params,
 }: {
-  params: Promise<any>;
+  params: Promise<{ id: string; exemplar_id: string }>;
 }) {
   const resolvedParams = await params;
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <EditExemplarContent params={resolvedParams} />
     </Suspense>
   );

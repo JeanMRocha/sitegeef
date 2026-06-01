@@ -2,9 +2,14 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createExemplar, getObraById } from '../../actions';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
+import { notFound } from 'next/navigation';
 
 export const metadata = {
   title: 'Novo Exemplar - Admin GEEF',
+};
+
+type ObraParams = {
+  id: string;
 };
 
 async function handleSubmit(formData: FormData, obraId: string) {
@@ -27,9 +32,12 @@ async function handleSubmit(formData: FormData, obraId: string) {
   }
 }
 
-export default async function NovoExemplarPage({ params }: { params: Promise<any> }) {
+export default async function NovoExemplarPage({ params }: { params: Promise<ObraParams> }) {
   const resolvedParams = await params;
   const obra = await getObraById(resolvedParams.id);
+  if (!obra) {
+    notFound();
+  }
 
   return (
     <div>
@@ -42,7 +50,7 @@ export default async function NovoExemplarPage({ params }: { params: Promise<any
       </div>
 
       {/* Form */}
-      <div className="admin-card" style={{ maxWidth: '600px', margin: '0 auto' }}>
+      <div className="admin-card form-panel-centered-sm">
         <form action={(formData) => handleSubmit(formData, resolvedParams.id)}>
           <div className="admin-form-group">
             <label>Código do Exemplar *</label>
@@ -67,14 +75,7 @@ export default async function NovoExemplarPage({ params }: { params: Promise<any
             <label>Conservação</label>
             <select
               name="conservacao"
-              style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-              }}
+              className="profile-form-input form-control-full"
             >
               <option value="">— Selecione —</option>
               <option value="excelente">Excelente</option>
@@ -89,14 +90,7 @@ export default async function NovoExemplarPage({ params }: { params: Promise<any
             <select
               name="origem"
               defaultValue="acervo"
-              style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-              }}
+              className="profile-form-input form-control-full"
             >
               <option value="acervo">Acervo Institucional</option>
               <option value="compra">Compra</option>
@@ -104,7 +98,7 @@ export default async function NovoExemplarPage({ params }: { params: Promise<any
             </select>
           </div>
 
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+          <div className="form-actions-row">
             <button type="submit" className="admin-btn admin-btn-primary">
               ✅ Adicionar Exemplar
             </button>

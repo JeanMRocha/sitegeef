@@ -1,4 +1,4 @@
-import { redirect } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getObraById, updateObra, toggleObraStatus, deleteExemplar } from '../actions';
 import { Suspense } from 'react';
@@ -6,6 +6,28 @@ import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Editar Obra - Admin GEEF',
+};
+
+type ObraExemplar = {
+  id: string;
+  codigo: string;
+  localizacao?: string | null;
+  origem?: string | null;
+  situacao: 'disponivel' | 'emprestado' | 'reservado' | 'danificado' | 'perdido' | string;
+};
+
+type ObraDetalhe = {
+  id: string;
+  titulo: string;
+  autor?: string | null;
+  editora?: string | null;
+  isbn?: string | null;
+  categoria?: string | null;
+  sinopse?: string | null;
+  capa_url?: string | null;
+  publico?: string | null;
+  ativo: boolean;
+  exemplares?: ObraExemplar[] | null;
 };
 
 async function handleUpdate(id: string, formData: FormData) {
@@ -58,12 +80,16 @@ async function handleDeleteExemplar(obraId: string, exemplarId: string) {
 }
 
 async function EditObraContent({ id }: { id: string }) {
-  const obra = await getObraById(id);
+  const obra = (await getObraById(id)) as ObraDetalhe | null;
+  if (!obra) {
+    notFound();
+  }
   const categorias = ['Espiritismo', 'Religião', 'Filosofia', 'Autoajuda', 'Infantil', 'Juventude', 'Ficção', 'Outro'];
 
-  const disponiveis = obra.exemplares?.filter((e: any) => e.situacao === 'disponivel').length || 0;
-  const emprestados = obra.exemplares?.filter((e: any) => e.situacao === 'emprestado').length || 0;
-  const reservados = obra.exemplares?.filter((e: any) => e.situacao === 'reservado').length || 0;
+  const exemplares = obra.exemplares ?? [];
+  const disponiveis = exemplares.filter((e) => e.situacao === 'disponivel').length;
+  const emprestados = exemplares.filter((e) => e.situacao === 'emprestado').length;
+  const reservados = exemplares.filter((e) => e.situacao === 'reservado').length;
 
   return (
     <div>
@@ -73,15 +99,10 @@ async function EditObraContent({ id }: { id: string }) {
           <h1 className="admin-page-title">Editar Obra</h1>
           <p className="admin-page-subtitle">{obra.titulo}</p>
         </div>
-        <form action={() => handleToggleStatus(id, !obra.ativo)}>
+        <form action={() => handleToggleStatus(id, !obra.ativo)} className="inline-form">
           <button
             type="submit"
-            className="admin-btn"
-            style={{
-              backgroundColor: obra.ativo ? 'rgba(34, 197, 94, 0.1)' : 'rgba(107, 114, 128, 0.1)',
-              color: obra.ativo ? '#22c55e' : '#6b7280',
-              border: `1px solid ${obra.ativo ? 'rgba(34, 197, 94, 0.3)' : 'rgba(107, 114, 128, 0.3)'}`,
-            }}
+            className={`admin-btn ${obra.ativo ? 'admin-btn-primary' : 'admin-btn-secondary'}`}
           >
             {obra.ativo ? '✓ Ativo' : '○ Inativo'}
           </button>
@@ -89,30 +110,30 @@ async function EditObraContent({ id }: { id: string }) {
       </div>
 
       {/* Info Box */}
-      <div className="admin-card" style={{ marginBottom: '2rem', backgroundColor: 'rgba(59, 130, 246, 0.05)', borderLeft: '4px solid var(--primary)' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '2rem' }}>
+      <div className="admin-card panel-accent-card">
+        <div className="area-panel-grid grid-auto-220">
           <div>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.85rem', color: 'var(--muted)', textTransform: 'uppercase' }}>Total</p>
-            <p style={{ margin: '0.5rem 0', fontSize: '1.3rem', fontWeight: 600 }}>{obra.exemplares?.length || 0}</p>
+            <p className="text-xs-muted">Total</p>
+            <p className="text-sm-500">{exemplares.length}</p>
           </div>
           <div>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.85rem', color: 'var(--muted)', textTransform: 'uppercase' }}>Disponíveis</p>
-            <p style={{ margin: '0.5rem 0', fontSize: '1.3rem', fontWeight: 600, color: '#22c55e' }}>{disponiveis}</p>
+            <p className="text-xs-muted">Disponíveis</p>
+            <p className="text-sm-500 text-success">{disponiveis}</p>
           </div>
           <div>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.85rem', color: 'var(--muted)', textTransform: 'uppercase' }}>Emprestados</p>
-            <p style={{ margin: '0.5rem 0', fontSize: '1.3rem', fontWeight: 600, color: '#f97316' }}>{emprestados}</p>
+            <p className="text-xs-muted">Emprestados</p>
+            <p className="text-sm-500 text-warning">{emprestados}</p>
           </div>
           <div>
-            <p style={{ margin: '0.5rem 0', fontSize: '0.85rem', color: 'var(--muted)', textTransform: 'uppercase' }}>Reservados</p>
-            <p style={{ margin: '0.5rem 0', fontSize: '1.3rem', fontWeight: 600, color: '#a855f7' }}>{reservados}</p>
+            <p className="text-xs-muted">Reservados</p>
+            <p className="text-sm-500 text-primary">{reservados}</p>
           </div>
         </div>
       </div>
 
       {/* Form */}
-      <div className="admin-card" style={{ marginBottom: '2rem', maxWidth: '700px', margin: '0 auto 2rem' }}>
-        <h2 style={{ margin: '0 0 1.5rem', fontSize: '1.1rem', color: 'var(--text)' }}>Informações da Obra</h2>
+      <div className="admin-card form-panel-centered">
+        <h2 className="form-card-title">Informações da Obra</h2>
 
         <form action={(formData) => handleUpdate(id, formData)}>
           <div className="admin-form-group">
@@ -125,7 +146,7 @@ async function EditObraContent({ id }: { id: string }) {
             />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+          <div className="grid-auto-300 mb-1-5">
             <div className="admin-form-group">
               <label>Autor</label>
               <input type="text" name="autor" defaultValue={obra.autor || ''} />
@@ -136,7 +157,7 @@ async function EditObraContent({ id }: { id: string }) {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+          <div className="grid-auto-300 mb-1-5">
             <div className="admin-form-group">
               <label>ISBN</label>
               <input type="text" name="isbn" defaultValue={obra.isbn || ''} />
@@ -146,14 +167,7 @@ async function EditObraContent({ id }: { id: string }) {
               <select
                 name="categoria"
                 defaultValue={obra.categoria || ''}
-                style={{
-                  padding: '0.65rem 0.85rem',
-                  border: '1px solid var(--admin-border)',
-                  borderRadius: '0.6rem',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.95rem',
-                  color: 'var(--text)',
-                }}
+                className="profile-form-input form-control-full"
               >
                 <option value="">— Selecione —</option>
                 {categorias.map((cat) => (
@@ -170,14 +184,7 @@ async function EditObraContent({ id }: { id: string }) {
             <select
               name="publico"
               defaultValue={obra.publico || 'adulto'}
-              style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-              }}
+              className="profile-form-input form-control-full"
             >
               <option value="adulto">Adulto</option>
               <option value="jovem">Jovem</option>
@@ -191,15 +198,7 @@ async function EditObraContent({ id }: { id: string }) {
               name="sinopse"
               rows={4}
               defaultValue={obra.sinopse || ''}
-              style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-                resize: 'vertical',
-              }}
+              className="profile-input form-control-full"
             />
           </div>
 
@@ -212,7 +211,7 @@ async function EditObraContent({ id }: { id: string }) {
             />
           </div>
 
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+          <div className="form-actions-row">
             <button type="submit" className="admin-btn admin-btn-primary">
               ✅ Salvar
             </button>
@@ -225,8 +224,8 @@ async function EditObraContent({ id }: { id: string }) {
 
       {/* Exemplares */}
       <div className="admin-card">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-          <h2 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text)' }}>
+        <div className="area-top-line">
+          <h2 className="form-card-title">
             📚 Exemplares ({obra.exemplares?.length || 0})
           </h2>
           <Link href={`/admin/biblioteca/${id}/novo-exemplar`} className="admin-btn admin-btn-small">
@@ -234,72 +233,49 @@ async function EditObraContent({ id }: { id: string }) {
           </Link>
         </div>
 
-        {obra.exemplares && obra.exemplares.length > 0 ? (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            {obra.exemplares.map((exemplar: any) => (
+        {exemplares.length > 0 ? (
+          <div className="atendimento-list">
+            {exemplares.map((exemplar) => (
               <div
                 key={exemplar.id}
-                style={{
-                  padding: '1rem',
-                  backgroundColor: 'var(--admin-bg)',
-                  borderRadius: '0.6rem',
-                  border: '1px solid var(--admin-border)',
-                  display: 'grid',
-                  gridTemplateColumns: '120px 1fr 120px 1fr auto',
-                  gap: '1rem',
-                  alignItems: 'center',
-                }}
+                className="profile-panel admin-exemplar-row"
               >
                 <div>
-                  <p style={{ margin: '0.25rem 0', fontSize: '0.75rem', color: 'var(--muted)' }}>Código</p>
-                  <p style={{ margin: '0.25rem 0', fontWeight: 600 }}>{exemplar.codigo}</p>
+                  <p className="text-xs-muted mt-035">Código</p>
+                  <p className="text-sm-500">{exemplar.codigo}</p>
                 </div>
                 <div>
-                  <p style={{ margin: '0.25rem 0', fontSize: '0.75rem', color: 'var(--muted)' }}>Localização</p>
-                  <p style={{ margin: '0.25rem 0', fontSize: '0.9rem' }}>{exemplar.localizacao || '—'}</p>
+                  <p className="text-xs-muted mt-035">Localização</p>
+                  <p className="text-sm-muted">{exemplar.localizacao || '—'}</p>
                 </div>
                 <div>
-                  <p style={{ margin: '0.25rem 0', fontSize: '0.75rem', color: 'var(--muted)' }}>Origem</p>
-                  <p style={{ margin: '0.25rem 0', fontSize: '0.9rem' }}>{exemplar.origem || '—'}</p>
+                  <p className="text-xs-muted mt-035">Origem</p>
+                  <p className="text-sm-muted">{exemplar.origem || '—'}</p>
                 </div>
                 <div>
-                  <p style={{ margin: '0.25rem 0', fontSize: '0.75rem', color: 'var(--muted)' }}>Situação</p>
-                  <span style={{
-                    display: 'inline-block',
-                    padding: '0.25rem 0.6rem',
-                    backgroundColor:
-                      exemplar.situacao === 'disponivel' ? 'rgba(34, 197, 94, 0.1)' :
-                      exemplar.situacao === 'emprestado' ? 'rgba(251, 146, 60, 0.1)' :
-                      exemplar.situacao === 'reservado' ? 'rgba(168, 85, 247, 0.1)' :
-                      exemplar.situacao === 'danificado' ? 'rgba(239, 68, 68, 0.1)' :
-                      'rgba(107, 114, 128, 0.1)',
-                    color:
-                      exemplar.situacao === 'disponivel' ? '#22c55e' :
-                      exemplar.situacao === 'emprestado' ? '#f97316' :
-                      exemplar.situacao === 'reservado' ? '#a855f7' :
-                      exemplar.situacao === 'danificado' ? '#ef4444' :
-                      '#6b7280',
-                    borderRadius: '0.3rem',
-                    fontSize: '0.85rem',
-                  }}>
+                  <p className="text-xs-muted mt-035">Situação</p>
+                  <span className={`inline-status ${
+                    exemplar.situacao === 'disponivel'
+                      ? 'inline-status-success'
+                      : exemplar.situacao === 'emprestado'
+                        ? 'inline-status-warning'
+                        : exemplar.situacao === 'reservado'
+                          ? 'inline-status-primary'
+                          : exemplar.situacao === 'danificado'
+                            ? 'inline-status-danger'
+                            : 'inline-status-neutral'
+                  }`}>
                     {exemplar.situacao}
                   </span>
                 </div>
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <div className="form-actions-row mt-075">
                   <Link href={`/admin/biblioteca/${id}/exemplar/${exemplar.id}`} className="admin-btn admin-btn-small">
                     ✏️
                   </Link>
-                  <form action={() => handleDeleteExemplar(id, exemplar.id)} style={{ display: 'inline' }}>
+                  <form action={() => handleDeleteExemplar(id, exemplar.id)} className="inline-form">
                     <button
                       type="submit"
-                      className="admin-btn"
-                      style={{
-                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                        color: '#ef4444',
-                        border: '1px solid rgba(239, 68, 68, 0.3)',
-                        padding: '0.4rem 0.8rem',
-                        fontSize: '0.8rem',
-                      }}
+                      className="admin-btn admin-btn-danger admin-btn-small"
                       onClick={(e) => {
                         if (!confirm('Tem certeza que deseja deletar este exemplar?')) {
                           e.preventDefault();
@@ -314,17 +290,21 @@ async function EditObraContent({ id }: { id: string }) {
             ))}
           </div>
         ) : (
-          <p style={{ color: 'var(--muted)', margin: 0 }}>Nenhum exemplar cadastrado.</p>
+          <p className="text-muted">Nenhum exemplar cadastrado.</p>
         )}
       </div>
     </div>
   );
 }
 
-export default async function EditObraPage({ params }: { params: Promise<any> }) {
+type ObraParams = {
+  id: string;
+};
+
+export default async function EditObraPage({ params }: { params: Promise<ObraParams> }) {
   const resolvedParams = await params;
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <EditObraContent id={resolvedParams.id} />
     </Suspense>
   );
