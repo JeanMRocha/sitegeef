@@ -19,8 +19,20 @@ function formatDate(value?: string | null) {
   });
 }
 
+type ContatoMensagem = {
+  id: string;
+  criado_em?: string | null;
+  nome: string;
+  email: string;
+  telefone?: string | null;
+  assunto?: string | null;
+  status: "novo" | "lido" | "respondido" | string;
+  pagina_origem?: string | null;
+  referer?: string | null;
+};
+
 export default async function AdminContatoMensagensPage() {
-  const mensagens = await loadContatoMensagensAdmin();
+  const mensagens = (await loadContatoMensagensAdmin()) as ContatoMensagem[];
 
   const stats = [
     { label: "Novas", value: mensagens.filter((item) => item.status === "novo").length },
@@ -75,37 +87,30 @@ export default async function AdminContatoMensagensPage() {
               <tbody>
                 {mensagens.map((mensagem) => (
                   <tr key={mensagem.id}>
-                    <td style={{ color: "var(--muted)", whiteSpace: "nowrap" }}>{formatDate(mensagem.criado_em)}</td>
-                    <td style={{ fontWeight: 600 }}>{mensagem.nome}</td>
-                    <td style={{ fontSize: "0.92rem" }}>
+                    <td className="text-xs-muted table-cell-truncate">{formatDate(mensagem.criado_em)}</td>
+                    <td className="text-sm-500">{mensagem.nome}</td>
+                    <td className="text-sm-muted">
                       {mensagem.email}
                       <br />
                       {mensagem.telefone || "—"}
                     </td>
-                    <td style={{ fontSize: "0.92rem", maxWidth: "260px" }}>{mensagem.assunto || "—"}</td>
+                    <td className="text-sm-muted table-cell-truncate table-cell-truncate-260">{mensagem.assunto || "—"}</td>
                     <td>
-                      <span className="inline-status" style={{
-                        backgroundColor:
+                      <span
+                        className={`inline-status ${
                           mensagem.status === "novo"
-                            ? "rgba(59, 130, 246, 0.1)"
+                            ? "inline-status-info"
                             : mensagem.status === "lido"
-                              ? "rgba(250, 204, 21, 0.12)"
+                              ? "inline-status-warning"
                               : mensagem.status === "respondido"
-                                ? "rgba(34, 197, 94, 0.1)"
-                                : "rgba(107, 114, 128, 0.1)",
-                        color:
-                          mensagem.status === "novo"
-                            ? "#2563eb"
-                            : mensagem.status === "lido"
-                              ? "#b45309"
-                              : mensagem.status === "respondido"
-                                ? "#16a34a"
-                                : "#6b7280",
-                      }}>
+                                ? "inline-status-success"
+                                : "inline-status-neutral"
+                        }`}
+                      >
                         {mensagem.status}
                       </span>
                     </td>
-                    <td style={{ fontSize: "0.92rem" }}>
+                    <td className="text-sm-muted">
                       {mensagem.pagina_origem || "/contato"}
                       <br />
                       {mensagem.referer ? "com referer" : "sem referer"}
@@ -122,4 +127,3 @@ export default async function AdminContatoMensagensPage() {
     </div>
   );
 }
-

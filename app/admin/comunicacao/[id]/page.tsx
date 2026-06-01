@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getPublicacaoById, updatePublicacao, deletePublicacao } from '../actions';
 import { Suspense } from 'react';
@@ -6,6 +7,18 @@ import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 
 export const metadata = {
   title: 'Publicação - Admin GEEF',
+};
+
+type PublicacaoDetalhe = {
+  id: string;
+  titulo: string;
+  tipo?: string | null;
+  conteudo?: string | null;
+  status?: string | null;
+  publicado_em?: string | null;
+  autor?: {
+    nome?: string | null;
+  } | null;
 };
 
 async function handleSubmit(id: string, formData: FormData) {
@@ -41,7 +54,10 @@ async function handleDelete(id: string) {
 }
 
 async function PublicacaoContent({ id }: { id: string }) {
-  const publicacao = await getPublicacaoById(id);
+  const publicacao = (await getPublicacaoById(id)) as PublicacaoDetalhe | null;
+  if (!publicacao) {
+    notFound();
+  }
 
   return (
     <div>
@@ -52,8 +68,8 @@ async function PublicacaoContent({ id }: { id: string }) {
         </div>
       </div>
 
-      <div className="admin-card" style={{ maxWidth: '800px', margin: '0 auto', marginBottom: '2rem' }}>
-        <h2 style={{ margin: '0 0 1.5rem', fontSize: '1rem', fontWeight: 600 }}>Editar Publicação</h2>
+      <div className="admin-card form-panel-centered-lg mb-2">
+        <h2 className="form-card-title">Editar Publicação</h2>
         <form action={(formData) => handleSubmit(id, formData)}>
           <div className="admin-form-group">
             <label>Título *</label>
@@ -65,22 +81,13 @@ async function PublicacaoContent({ id }: { id: string }) {
             />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <div className="grid-auto-300">
             <div className="admin-form-group">
               <label>Tipo</label>
               <select
                 name="tipo"
                 defaultValue={publicacao.tipo || ''}
-                style={{
-                  width: '100%',
-                  padding: '0.65rem 0.85rem',
-                  border: '1px solid var(--admin-border)',
-                  borderRadius: '0.6rem',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.95rem',
-                  color: 'var(--text)',
-                  backgroundColor: '#fff',
-                }}
+                className="profile-form-input form-control-full"
               >
                 <option value="">Selecione um tipo</option>
                 <option value="noticia">📰 Notícia</option>
@@ -97,16 +104,7 @@ async function PublicacaoContent({ id }: { id: string }) {
               <select
                 name="status"
                 defaultValue={publicacao.status || 'rascunho'}
-                style={{
-                  width: '100%',
-                  padding: '0.65rem 0.85rem',
-                  border: '1px solid var(--admin-border)',
-                  borderRadius: '0.6rem',
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.95rem',
-                  color: 'var(--text)',
-                  backgroundColor: '#fff',
-                }}
+                className="profile-form-input form-control-full"
               >
                 <option value="rascunho">📝 Rascunho</option>
                 <option value="revisao">🔍 Revisão</option>
@@ -123,33 +121,19 @@ async function PublicacaoContent({ id }: { id: string }) {
               defaultValue={publicacao.conteudo || ''}
               placeholder="Conteúdo da publicação..."
               rows={8}
-              style={{
-                width: '100%',
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-                resize: 'vertical',
-              }}
+              className="profile-input form-control-full"
             />
           </div>
 
           {publicacao.publicado_em && (
-            <div className="admin-form-group" style={{
-              padding: '1rem',
-              backgroundColor: 'rgba(34, 197, 94, 0.05)',
-              borderRadius: '0.6rem',
-              borderLeft: '4px solid #22c55e',
-            }}>
-              <p style={{ margin: 0, fontSize: '0.9rem' }}>
+            <div className="admin-form-group panel-accent-card content-surface-note-danger">
+              <p className="text-sm-muted">
                 ✓ Publicado em {new Date(publicacao.publicado_em).toLocaleDateString('pt-BR', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
               </p>
             </div>
           )}
 
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+          <div className="form-actions-row">
             <button type="submit" className="admin-btn admin-btn-primary">
               ✅ Salvar
             </button>
@@ -160,13 +144,13 @@ async function PublicacaoContent({ id }: { id: string }) {
         </form>
       </div>
 
-      <div className="admin-card" style={{ maxWidth: '800px', margin: '0 auto', backgroundColor: 'rgba(239, 68, 68, 0.05)', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
-        <h2 style={{ margin: '0 0 1rem', fontSize: '1rem', fontWeight: 600, color: '#ef4444' }}>Zona de Perigo</h2>
+      <div className="admin-card form-panel-centered-lg content-surface-note-danger">
+        <h2 className="form-card-title text-danger">Zona de Perigo</h2>
         <form action={() => handleDelete(id)}>
-          <p style={{ margin: '0 0 1rem', fontSize: '0.9rem', color: 'var(--muted)' }}>
+          <p className="text-sm-muted">
             Excluir esta publicação permanentemente.
           </p>
-          <button type="submit" className="admin-btn" style={{ backgroundColor: '#ef4444', color: '#fff', border: 'none' }}>
+          <button type="submit" className="admin-btn admin-btn-secondary admin-btn-danger">
             🗑️ Excluir Publicação
           </button>
         </form>
@@ -175,10 +159,14 @@ async function PublicacaoContent({ id }: { id: string }) {
   );
 }
 
-export default async function PublicacaoPage({ params }: { params: Promise<any> }) {
+type PublicacaoParams = {
+  id: string;
+};
+
+export default async function PublicacaoPage({ params }: { params: Promise<PublicacaoParams> }) {
   const resolvedParams = await params;
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <PublicacaoContent id={resolvedParams.id} />
     </Suspense>
   );

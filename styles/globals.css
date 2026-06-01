@@ -135,6 +135,10 @@
   white-space: nowrap;
 }
 
+.table-cell-truncate-260 {
+  max-width: 260px;
+}
+
 .table-cell-center {
   text-align: center;
 }
