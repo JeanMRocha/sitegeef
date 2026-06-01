@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Musica } from "@/lib/musicas";
@@ -97,6 +97,49 @@ export function MusicaReader({
 
   const hasMedia = musica.youtube_url || musica.audio_url;
   const partesVisiveis = musica.partes.filter((parte) => !mostrarCifra || parte.cifra);
+  const readerMetrics = useMemo(() => {
+    const totalLines = partesVisiveis.reduce((sum, parte) => sum + parte.conteudo.split("\n").length, 0);
+    const totalChars = partesVisiveis.reduce((sum, parte) => sum + parte.conteudo.length, 0);
+    const isCompact = totalLines > 18 || totalChars > 900 || partesVisiveis.length > 6;
+    const isDense = totalLines > 30 || totalChars > 1400 || partesVisiveis.length > 9;
+    const maxColumnsByWidth = Math.min(4, Math.max(2, Math.floor((viewport.width - 64) / 260)));
+
+    let columns;
+    if (viewport.width < 960) {
+      columns = 1;
+    } else if (isDense) {
+      columns = Math.min(maxColumnsByWidth, viewport.width >= 1400 ? 4 : 3);
+    } else if (isCompact) {
+      columns = Math.min(maxColumnsByWidth, 3);
+    } else {
+      columns = Math.min(maxColumnsByWidth, 2);
+    }
+
+    const columnWidth = columns >= 4 ? 14 : columns === 3 ? 16 : 18.5;
+    const columnGap = columns >= 4 ? 0.7 : columns === 3 ? 0.85 : 1;
+    const lyricsMarginTop = columns >= 4 ? 0.35 : columns === 3 ? 0.45 : 0.65;
+    const lyricsPanelPadding = columns >= 4 ? "0.6rem 0.8rem 0.85rem" : columns === 3 ? "0.75rem 0.9rem 0.95rem" : "0.85rem 1rem 1rem";
+    const partePad = columns >= 4 ? 0.55 : columns === 3 ? 0.7 : 0.9;
+    const labelSize = columns >= 4 ? 0.62 : columns === 3 ? 0.66 : 0.72;
+    const titleSize = columns >= 4 ? 0.94 : columns === 3 ? 1.0 : 1.05;
+    const textSize = columns >= 4 ? 0.82 : columns === 3 ? 0.88 : 0.96;
+    const lineHeight = columns >= 4 ? 1.38 : columns === 3 ? 1.48 : 1.62;
+    const lyricSpacer = columns >= 4 ? 0.28 : columns === 3 ? 0.36 : 0.5;
+
+    return {
+      columns,
+      columnWidth,
+      columnGap,
+      lyricsMarginTop,
+      lyricsPanelPadding,
+      partePad,
+      labelSize,
+      titleSize,
+      textSize,
+      lineHeight,
+      lyricSpacer,
+    };
+  }, [partesVisiveis, viewport.height, viewport.width]);
   const displayMetrics = useMemo(() => {
     const totalLines = partesVisiveis.reduce((sum, parte) => sum + parte.conteudo.split("\n").length, 0);
     const totalChars = partesVisiveis.reduce((sum, parte) => sum + parte.conteudo.length, 0);
@@ -208,8 +251,6 @@ export function MusicaReader({
   }, [musica.id, isDisplay]);
 
   useEffect(() => {
-    if (!isDisplay) return;
-
     function handleResize() {
       setViewport({
         width: window.innerWidth,
@@ -220,7 +261,7 @@ export function MusicaReader({
     handleResize();
     window.addEventListener("resize", handleResize, { passive: true });
     return () => window.removeEventListener("resize", handleResize);
-  }, [isDisplay, musica.id]);
+  }, [musica.id]);
 
   if (isDisplay) {
     let estrofeCount = 0;
@@ -356,8 +397,23 @@ export function MusicaReader({
 
       {!isDisplay && (
         <>
-          <section className="musica-reader-lyrics">
-            <article className="musica-reader-panel musica-reader-panel--lyrics musica-reader-panel--lyrics-full">
+          <section className="musica-reader-lyrics" style={{ marginTop: `${readerMetrics.lyricsMarginTop}rem` }}>
+            <article
+              className="musica-reader-panel musica-reader-panel--lyrics musica-reader-panel--lyrics-full"
+              style={
+                {
+                  "--reader-lyrics-panel-padding": readerMetrics.lyricsPanelPadding,
+                  "--reader-column-width": `${readerMetrics.columnWidth}rem`,
+                  "--reader-column-gap": `${readerMetrics.columnGap}rem`,
+                  "--reader-parte-padding": `${readerMetrics.partePad}rem`,
+                  "--reader-label-size": `${readerMetrics.labelSize}rem`,
+                  "--reader-title-size": `${readerMetrics.titleSize}rem`,
+                  "--reader-text-size": `${readerMetrics.textSize}rem`,
+                  "--reader-line-height": String(readerMetrics.lineHeight),
+                  "--reader-lyric-spacer": `${readerMetrics.lyricSpacer}rem`,
+                } as CSSProperties
+              }
+            >
               <div className="musica-letra-blocos">
                 {partesVisiveis.map((parte, index) => {
                   const estrofeCount = partesVisiveis
@@ -375,16 +431,16 @@ export function MusicaReader({
                       <div className="musica-parte-type-badge">
                         {displayLabel}
                       </div>
-                    {parte.titulo && !isTituloSameasTipo(parte.titulo, formatParteTipoLabel(parte.tipo)) && (
-                      <h3 className="musica-parte-title">{parte.titulo}</h3>
-                    )}
-                    {mostrarCifra && parte.cifra ? (
-                      <pre className="musica-parte-text musica-parte-text--compact">
-                        {parte.cifra}
-                      </pre>
-                    ) : (
-                      <CifraLineRenderer text={parte.conteudo} hideChords={mostrarCifra} />
-                    )}
+                      {parte.titulo && !isTituloSameasTipo(parte.titulo, formatParteTipoLabel(parte.tipo)) && (
+                        <h3 className="musica-parte-title">{parte.titulo}</h3>
+                      )}
+                      {mostrarCifra && parte.cifra ? (
+                        <pre className="musica-parte-text musica-parte-text--compact">
+                          {parte.cifra}
+                        </pre>
+                      ) : (
+                        <CifraLineRenderer text={parte.conteudo} hideChords={mostrarCifra} />
+                      )}
                     </section>
                   );
                 })}
