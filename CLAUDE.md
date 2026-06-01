@@ -446,14 +446,47 @@ Consulte `docs/UI_UX_CORRECTIONS.md` para:
 
 ---
 
+## Dark Mode Remediation (2026-05-31)
+
+**Status:** ✅ 100% COMPLETO  
+**Commits:** 5 (phases 1-3 + fixes + docs)
+
+Migração completa de cores hardcoded para `identity-system.css` variáveis CSS. Todos os 16 problemas críticos/moderados/baixos resolvidos. Veja `docs/DARK_MODE_REMEDIATION_PLAN.md`.
+
+---
+
+## UI/UX Audit & Critical Fixes (2026-05-31)
+
+**Status:** 🔄 FASE 1 (66% completa)
+
+**Phase 1 (Críticos - 2.5h):**
+- ✅ Fix 2: Focus visible violations (WCAG 2.4.7) — 20 `outline:none` → fallback outline
+- ✅ Fix 3: Alt text violations (WCAG 1.1.1) — Logo alt atualizado
+- ⏳ Fix 1: Inline styles refactoring (2h) — 6 componentes, padrão documentado
+
+**Phase 2 (Moderados - 6h):** NOT STARTED
+- Fix 4: Media query breakpoints (3h)
+- Fix 5: Spacing variables (2h)
+- Fix 6: Backdrop-filter fallback (1h)
+
+**Phase 3 (Baixos - 3.5h):** NOT STARTED
+- Fix 7: Focus contrast validation (1h)
+- Fix 8: Form spacing cleanup (30m)
+- Fix 9: Emoji icon labels (1h)
+
+**Veja:** `HANDOFF.md` para planos Phase 2-3
+
+---
+
 ## Roadmap conhecido
 
 - ✅ 29/29 módulos core implementados
 - ✅ RLS em módulos sensíveis
 - ✅ Email notifications (Resend)
 - ✅ Relatórios avançados
-- ✅ UI/UX corrections — Design system compliance (music catalog)
-- 🔄 Melhorias de UX/performance (continue Phase 2)
+- ✅ Dark Mode Remediation — 100% identity-system compliance
+- ✅ UI/UX Critical Fixes — Phase 1 (66%) + WCAG compliance
+- 🔄 UI/UX Phase 2-3 — Design system consolidation + polish (9.5h restantes)
 - 🔄 Mobile responsiveness
 
 ---
