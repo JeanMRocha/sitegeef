@@ -2,10 +2,11 @@
 
 ## Comece aqui
 
-1. [`CONTINUATION_GUIDE.md`](CONTINUATION_GUIDE.md) - estado atual e próximos passos
-2. [`QUICK_REFERENCE.md`](QUICK_REFERENCE.md) - resumo rápido
-3. [`AGENT_GUIDE.md`](AGENT_GUIDE.md) - detalhes técnicos para agentes
-4. [`CLAUDE.md`](CLAUDE.md) - regras e contexto geral do projeto
+1. [`README_HANDOFF.md`](README_HANDOFF.md) - porta de entrada com escolha de caminho
+2. [`CONTINUATION_GUIDE.md`](CONTINUATION_GUIDE.md) - estado atual e próximos passos
+3. [`QUICK_REFERENCE.md`](QUICK_REFERENCE.md) - resumo rápido
+4. [`AGENT_GUIDE.md`](AGENT_GUIDE.md) - detalhes técnicos para agentes
+5. [`CLAUDE.md`](CLAUDE.md) - regras e contexto geral do projeto
 
 ## Estado atual
 
