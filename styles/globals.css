@@ -786,11 +786,11 @@ body.musica-display-route .site-shell {
 }
 
 .musica-reader-lyrics {
-  margin-top: 1rem;
+  margin-top: 0.65rem;
 }
 
 .musica-reader-panel--lyrics-full {
-  padding: 1rem;
+  padding: 0.85rem 1rem 1rem;
 }
 
 .musica-letra-blocos {
