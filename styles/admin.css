@@ -2266,3 +2266,18 @@
   background: rgba(40, 36, 33, 0.96);
   color: var(--text);
 }
+
+/* Backdrop-filter fallback for Firefox and older browsers */
+@supports not (backdrop-filter: blur(1px)) {
+  .admin-user-menu-trigger,
+  .site-header,
+  .admin-header {
+    background-color: rgba(249, 242, 255, 0.85) !important;
+  }
+
+  :root.dark .admin-user-menu-trigger,
+  :root.dark .site-header,
+  :root.dark .admin-header {
+    background-color: rgba(34, 31, 29, 0.90) !important;
+  }
+}

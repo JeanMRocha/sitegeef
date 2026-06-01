@@ -6818,3 +6818,16 @@ a.button.musica-icon-button {
     width: 100%;
   }
 }
+
+/* Backdrop-filter fallback for Firefox and older browsers */
+@supports not (backdrop-filter: blur(1px)) {
+  .site-header-nav,
+  .site-user-menu-trigger {
+    background-color: rgba(249, 242, 255, 0.85) !important;
+  }
+
+  :root.dark .site-header-nav,
+  :root.dark .site-user-menu-trigger {
+    background-color: rgba(34, 31, 29, 0.90) !important;
+  }
+}
