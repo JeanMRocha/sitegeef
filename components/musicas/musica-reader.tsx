@@ -180,8 +180,8 @@ export function MusicaReader({
     const bodyGap = columns >= 4 ? 0.48 : columns === 3 ? 0.58 : scale < 0.85 ? 0.7 : scale < 0.92 ? 0.8 : 0.9;
     const headerPaddingY = scale < 0.85 ? 0.82 : scale < 0.92 ? 1 : 1.2;
     const headerPaddingX = scale < 0.85 ? 0.75 : scale < 0.92 ? 1 : 1.25;
-    const titleSize = columns >= 4 ? 1.45 : columns === 3 ? 1.65 : scale < 0.85 ? 1.55 : scale < 0.92 ? 1.6 : 1.7;
-    const subtitleSize = columns >= 4 ? 0.8 : columns === 3 ? 0.92 : scale < 0.85 ? 0.86 : scale < 0.92 ? 0.94 : 1;
+    const titleSize = scale < 0.85 ? 1.55 : scale < 0.92 ? 1.6 : 1.7;
+    const subtitleSize = scale < 0.85 ? 0.86 : scale < 0.92 ? 0.94 : 1;
     const logoWidth = columns >= 4 ? 62 : columns === 3 ? 78 : scale < 0.85 ? 76 : scale < 0.92 ? 86 : 96;
     const bodyPaddingTop = columns >= 4 ? 0.45 : columns === 3 ? 0.7 : scale < 0.85 ? 0.65 : scale < 0.92 ? 0.9 : 1.15;
     const versePad = columns >= 4 ? 0.58 : columns === 3 ? 0.85 : scale < 0.85 ? 0.8 : scale < 0.92 ? 0.92 : 1.02;
