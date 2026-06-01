@@ -8,6 +8,11 @@ export const metadata = {
   title: 'Nova Irradiação - Admin GEEF',
 };
 
+type PessoaDisponivel = {
+  id: string;
+  nome: string | null;
+};
+
 async function handleSubmit(formData: FormData) {
   'use server';
 
@@ -29,7 +34,7 @@ async function handleSubmit(formData: FormData) {
 }
 
 async function NovaPage() {
-  const pessoas = await getPessoasDisponiveis();
+  const pessoas = (await getPessoasDisponiveis()) as PessoaDisponivel[];
 
   return (
     <div>
@@ -40,7 +45,7 @@ async function NovaPage() {
         </div>
       </div>
 
-      <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto' }}>
+      <div className="admin-card form-panel-centered">
         <LgpdFormNotice
           title="Irradiação"
           text="Usamos os dados apenas para registrar a solicitação e manter o sigilo da equipe responsável."
@@ -48,20 +53,9 @@ async function NovaPage() {
         <form action={handleSubmit}>
           <div className="admin-form-group">
             <label>Solicitante *</label>
-            <select
-              name="solicitante_id"
-              required
-              style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-              }}
-            >
+            <select name="solicitante_id" required className="profile-form-input">
               <option value="">— Selecione —</option>
-              {pessoas.map((p: any) => (
+              {pessoas.map((p) => (
                 <option key={p.id} value={p.id}>
                   {p.nome}
                 </option>
@@ -86,15 +80,7 @@ async function NovaPage() {
               placeholder="Qual é o motivo da solicitação de irradiação?"
               rows={3}
               required
-              style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-                resize: 'vertical',
-              }}
+              className="profile-form-input"
             />
           </div>
 
@@ -108,27 +94,19 @@ async function NovaPage() {
             />
           </div>
 
-          <div style={{
-            padding: '1rem',
-            backgroundColor: 'rgba(249, 115, 22, 0.05)',
-            borderRadius: '0.6rem',
-            marginBottom: '1.5rem',
-            display: 'flex',
-            gap: '0.75rem',
-            alignItems: 'flex-start',
-          }}>
+          <div className="content-surface-note content-surface-note-inline">
             <input
               type="checkbox"
               name="confidencial"
               id="confidencial"
-              style={{ marginTop: '0.3rem' }}
+              className="mt-035"
             />
-            <label htmlFor="confidencial" style={{ fontSize: '0.95rem', color: 'var(--text)', margin: 0 }}>
+            <label htmlFor="confidencial" className="mb-0">
               🔒 Marcar como confidencial (restrinja acesso)
             </label>
           </div>
 
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+          <div className="form-actions-row">
             <button type="submit" className="admin-btn admin-btn-primary">
               ✅ Registrar
             </button>

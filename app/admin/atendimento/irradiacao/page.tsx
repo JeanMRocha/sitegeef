@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getIrradiacoes, toggleIrradiacaoStatus } from '../actions';
+import { getIrradiacoes } from '../actions';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
@@ -16,6 +16,12 @@ type IrradiacaoItem = {
   confidencial?: boolean | null;
   pessoas?: { nome?: string | null } | null;
 };
+
+type IrradiacaoStatus = 'ativa' | 'encerrada' | string | null | undefined;
+
+function resolveStatusClass(status: IrradiacaoStatus) {
+  return status === 'ativa' ? 'inline-status inline-status-success' : 'inline-status inline-status-neutral';
+}
 
 async function handleToggle(id: string, ativa: boolean) {
   'use server';
@@ -69,7 +75,7 @@ async function IrradiacaoContent() {
                       {irr.periodo}
                     </td>
                     <td>
-                      <span className={irr.status === 'ativa' ? 'inline-status inline-status-success' : 'inline-status inline-status-neutral'}>
+                      <span className={resolveStatusClass(irr.status)}>
                         {irr.status === 'ativa' ? '✓ Ativa' : '✕ Encerrada'}
                       </span>
                     </td>

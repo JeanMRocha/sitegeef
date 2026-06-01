@@ -1,12 +1,26 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { getIrradiacaoById, updateIrradiacao, toggleIrradiacaoStatus, getPessoasDisponiveis } from '../../actions';
+import { getIrradiacaoById, updateIrradiacao, toggleIrradiacaoStatus } from '../../actions';
 import { Suspense } from 'react';
 import { buildFlashNoticeUrl } from '@/lib/notificacoes/flash-notice';
 import { LgpdFormNotice } from '@/components/lgpd/lgpd-form-notice';
 
 export const metadata = {
   title: 'Irradiação - Admin GEEF',
+};
+
+type IrradiacaoDetalhe = {
+  id: string;
+  nome_irradiacao: string;
+  motivo: string;
+  periodo?: string | null;
+  status: string;
+  confidencial?: boolean | null;
+  pessoas?: { nome?: string | null } | null;
+};
+
+type IrradiacaoParams = {
+  id: string;
 };
 
 async function handleSubmit(id: string, formData: FormData) {
@@ -43,8 +57,7 @@ async function handleToggle(id: string, ativa: boolean) {
 }
 
 async function Content({ id }: { id: string }) {
-  const irr = await getIrradiacaoById(id);
-  const pessoas = await getPessoasDisponiveis();
+  const irr = (await getIrradiacaoById(id)) as IrradiacaoDetalhe;
 
   return (
     <div>
@@ -53,24 +66,20 @@ async function Content({ id }: { id: string }) {
           <h1 className="admin-page-title">{irr.nome_irradiacao}</h1>
           <p className="admin-page-subtitle">{irr.pessoas?.nome}</p>
         </div>
-        <form action={() => handleToggle(id, irr.status === 'ativa')} style={{ display: 'inline' }}>
+        <form action={() => handleToggle(id, irr.status === 'ativa')} className="inline-form">
           <button
             type="submit"
-            className="admin-btn"
-            style={{
-              backgroundColor: irr.status === 'ativa' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(34, 197, 94, 0.1)',
-              color: irr.status === 'ativa' ? '#ef4444' : '#22c55e',
-              border: irr.status === 'ativa' ? '1px solid rgba(239, 68, 68, 0.3)' : '1px solid rgba(34, 197, 94, 0.3)',
-            }}
+            className={irr.status === 'ativa' ? 'admin-btn admin-btn-secondary admin-btn-danger' : 'admin-btn admin-btn-secondary status-toggle-btn status-toggle-btn--active'}
           >
             {irr.status === 'ativa' ? '🔒 Encerrar' : '✓ Reativar'}
           </button>
         </form>
       </div>
 
-      <div className="admin-card" style={{ maxWidth: '700px', margin: '0 auto' }}>
+      <div className="admin-card form-panel-centered">
         <form action={(formData) => handleSubmit(id, formData)}>
           <LgpdFormNotice text="Usamos estes dados para registrar a solicitação e manter o fluxo de acompanhamento." />
+
           <div className="admin-form-group">
             <label>Nome da Irradiação *</label>
             <input
@@ -78,6 +87,7 @@ async function Content({ id }: { id: string }) {
               name="nome_irradiacao"
               defaultValue={irr.nome_irradiacao}
               required
+              className="profile-form-input"
             />
           </div>
 
@@ -88,15 +98,7 @@ async function Content({ id }: { id: string }) {
               defaultValue={irr.motivo}
               rows={3}
               required
-              style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-                resize: 'vertical',
-              }}
+              className="profile-form-input"
             />
           </div>
 
@@ -105,28 +107,21 @@ async function Content({ id }: { id: string }) {
             <input
               type="text"
               name="periodo"
-              defaultValue={irr.periodo}
+              defaultValue={irr.periodo || ''}
               required
+              className="profile-form-input"
             />
           </div>
 
-          <div style={{
-            padding: '1rem',
-            backgroundColor: 'rgba(249, 115, 22, 0.05)',
-            borderRadius: '0.6rem',
-            marginBottom: '1.5rem',
-            display: 'flex',
-            gap: '0.75rem',
-            alignItems: 'flex-start',
-          }}>
+          <div className="content-surface-note content-surface-note-inline content-surface-note-danger">
             <input
               type="checkbox"
               name="confidencial"
               id="confidencial"
-              defaultChecked={irr.confidencial}
-              style={{ marginTop: '0.3rem' }}
+              defaultChecked={Boolean(irr.confidencial)}
+              className="mt-035"
             />
-            <label htmlFor="confidencial" style={{ fontSize: '0.95rem', color: 'var(--text)', margin: 0 }}>
+            <label htmlFor="confidencial" className="mb-0">
               🔒 Marcar como confidencial
             </label>
           </div>
@@ -137,21 +132,14 @@ async function Content({ id }: { id: string }) {
               name="status"
               defaultValue={irr.status}
               required
-              style={{
-                padding: '0.65rem 0.85rem',
-                border: '1px solid var(--admin-border)',
-                borderRadius: '0.6rem',
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.95rem',
-                color: 'var(--text)',
-              }}
+              className="profile-form-input"
             >
               <option value="ativa">✓ Ativa</option>
               <option value="encerrada">Encerrada</option>
             </select>
           </div>
 
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+          <div className="form-actions-row">
             <button type="submit" className="admin-btn admin-btn-primary">
               ✅ Salvar
             </button>
@@ -165,10 +153,10 @@ async function Content({ id }: { id: string }) {
   );
 }
 
-export default async function Page({ params }: { params: Promise<any> }) {
+export default async function Page({ params }: { params: Promise<IrradiacaoParams> }) {
   const resolvedParams = await params;
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <Content id={resolvedParams.id} />
     </Suspense>
   );
