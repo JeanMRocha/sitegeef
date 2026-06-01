@@ -6,12 +6,28 @@ export const metadata = {
   title: 'Lançamentos - Admin GEEF',
 };
 
-async function LancamentosContent({ searchParams }: { searchParams: { mes?: string; ano?: string } }) {
+type MovimentoItem = {
+  id: string;
+  data: string;
+  descricao: string;
+  tipo: 'entrada' | 'saida';
+  valor: number;
+  plano_contas?: { codigo?: string | null } | null;
+  centros_custo?: { nome?: string | null } | null;
+};
+
+type FinanceSearchParams = {
+  mes?: string;
+  ano?: string;
+};
+
+async function LancamentosContent({ searchParams }: { searchParams: FinanceSearchParams }) {
   const hoje = new Date();
   const mes = searchParams.mes ? parseInt(searchParams.mes) : hoje.getMonth() + 1;
   const ano = searchParams.ano ? parseInt(searchParams.ano) : hoje.getFullYear();
 
   const movimentos = await getMovimentosFinanceiros(mes, ano);
+  const movimentoList = movimentos as MovimentoItem[];
 
   const mesTexto = new Date(ano, mes - 1).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
 
@@ -29,49 +45,31 @@ async function LancamentosContent({ searchParams }: { searchParams: { mes?: stri
       </div>
 
       {/* Filtros */}
-      <div className="admin-card" style={{ marginBottom: '2rem' }}>
-        <form method="get" style={{ display: 'flex', gap: '1rem', alignItems: 'flex-end' }}>
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
-            <div>
-              <label style={{ display: 'block', fontSize: '0.85rem', color: 'var(--muted)', marginBottom: '0.3rem' }}>Mês</label>
-              <select
-                name="mes"
-                defaultValue={mes}
-                style={{
-                  padding: '0.5rem',
-                  border: '1px solid var(--admin-border)',
-                  borderRadius: '0.4rem',
-                  fontSize: '0.9rem',
-                }}
-              >
-                {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
-                  <option key={m} value={m}>
-                    {new Date(ano, m - 1).toLocaleDateString('pt-BR', { month: 'long' })}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label style={{ display: 'block', fontSize: '0.85rem', color: 'var(--muted)', marginBottom: '0.3rem' }}>Ano</label>
-              <select
-                name="ano"
-                defaultValue={ano}
-                style={{
-                  padding: '0.5rem',
-                  border: '1px solid var(--admin-border)',
-                  borderRadius: '0.4rem',
-                  fontSize: '0.9rem',
-                }}
-              >
-                {Array.from({ length: 5 }, (_, i) => ano - 2 + i).map((a) => (
-                  <option key={a} value={a}>
-                    {a}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <button type="submit" className="admin-btn admin-btn-primary" style={{ width: 'auto' }}>
+      <div className="admin-card panel-accent-card">
+        <form method="get" className="admin-search-form">
+          <label className="profile-form-field">
+            <span>Mês</span>
+            <select name="mes" defaultValue={mes} className="profile-form-input">
+              {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
+                <option key={m} value={m}>
+                  {new Date(ano, m - 1).toLocaleDateString('pt-BR', { month: 'long' })}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className="profile-form-field">
+            <span>Ano</span>
+            <select name="ano" defaultValue={ano} className="profile-form-input">
+              {Array.from({ length: 5 }, (_, i) => ano - 2 + i).map((a) => (
+                <option key={a} value={a}>
+                  {a}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <button type="submit" className="admin-btn admin-btn-primary">
             🔍 Filtrar
           </button>
         </form>
@@ -79,8 +77,8 @@ async function LancamentosContent({ searchParams }: { searchParams: { mes?: stri
 
       {/* Tabela */}
       <div className="admin-card">
-        {movimentos.length > 0 ? (
-          <div style={{ overflowX: 'auto' }}>
+        {movimentoList.length > 0 ? (
+          <div className="overflow-x-auto">
             <table className="admin-table">
               <thead>
                 <tr>
@@ -94,33 +92,26 @@ async function LancamentosContent({ searchParams }: { searchParams: { mes?: stri
                 </tr>
               </thead>
               <tbody>
-                {movimentos.map((mov: any) => (
+                {movimentoList.map((mov) => (
                   <tr key={mov.id}>
-                    <td style={{ fontSize: '0.9rem' }}>
+                    <td className="text-sm-muted">
                       {new Date(mov.data).toLocaleDateString('pt-BR')}
                     </td>
-                    <td style={{ fontWeight: 500 }}>
+                    <td className="text-sm-500">
                       {mov.descricao}
                     </td>
                     <td>
-                      <span style={{
-                        display: 'inline-block',
-                        padding: '0.25rem 0.6rem',
-                        backgroundColor: mov.tipo === 'entrada' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-                        color: mov.tipo === 'entrada' ? '#22c55e' : '#ef4444',
-                        borderRadius: '0.3rem',
-                        fontSize: '0.85rem',
-                      }}>
+                      <span className={mov.tipo === 'entrada' ? 'inline-status inline-status-success' : 'inline-status inline-status-danger'}>
                         {mov.tipo === 'entrada' ? '📥' : '📤'} {mov.tipo}
                       </span>
                     </td>
-                    <td style={{ fontSize: '0.9rem' }}>
+                    <td className="text-sm-muted">
                       {mov.plano_contas?.codigo}
                     </td>
-                    <td style={{ fontWeight: 600, color: mov.tipo === 'entrada' ? '#22c55e' : '#ef4444' }}>
+                    <td className={mov.tipo === 'entrada' ? 'text-success' : 'text-danger'}>
                       {mov.tipo === 'entrada' ? '+' : '-'} R$ {mov.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                     </td>
-                    <td style={{ fontSize: '0.9rem', color: 'var(--muted)' }}>
+                    <td className="text-sm-muted">
                       {mov.centros_custo?.nome || '—'}
                     </td>
                     <td>
@@ -134,13 +125,7 @@ async function LancamentosContent({ searchParams }: { searchParams: { mes?: stri
             </table>
           </div>
         ) : (
-          <div style={{
-            padding: '2rem',
-            textAlign: 'center',
-            backgroundColor: 'var(--admin-bg)',
-            borderRadius: '0.6rem',
-            color: 'var(--muted)',
-          }}>
+          <div className="area-empty">
             <p>Nenhum lançamento neste período.</p>
           </div>
         )}
@@ -149,10 +134,10 @@ async function LancamentosContent({ searchParams }: { searchParams: { mes?: stri
   );
 }
 
-export default async function LancamentosPage({ searchParams }: { searchParams: Promise<any> }) {
+export default async function LancamentosPage({ searchParams }: { searchParams: Promise<FinanceSearchParams> }) {
   const resolvedSearchParams = await searchParams;
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <LancamentosContent searchParams={resolvedSearchParams} />
     </Suspense>
   );

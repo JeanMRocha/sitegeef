@@ -9,6 +9,22 @@ export const metadata = {
   title: 'Novo Lançamento - Admin GEEF',
 };
 
+type PlanoItem = {
+  id: string;
+  codigo?: string | null;
+  nome?: string | null;
+};
+
+type CentroItem = {
+  id: string;
+  nome?: string | null;
+};
+
+type PessoaItem = {
+  id: string;
+  nome?: string | null;
+};
+
 async function handleSubmit(formData: FormData) {
   'use server';
 
@@ -34,9 +50,10 @@ async function handleSubmit(formData: FormData) {
 }
 
 async function NovoLancamentoPage() {
-  const contas = await getPlanoContas('ativo');
-  const centros = await getCentrosCusto(true);
+  const contas = (await getPlanoContas('ativo')) as PlanoItem[];
+  const centros = (await getCentrosCusto(true)) as CentroItem[];
   const { pessoas } = await getPessoas();
+  const people = pessoas as PessoaItem[];
   const hoje = new Date().toISOString().split('T')[0];
 
   return (
@@ -52,7 +69,7 @@ async function NovoLancamentoPage() {
       </section>
 
       <section className="area-section">
-        <div className="table-surface" style={{ maxWidth: '760px', margin: '0 auto' }}>
+        <div className="table-surface form-panel-centered">
           <LgpdFormNotice
             title="Lançamento financeiro"
             text="Os dados enviados ao checkout interno e à cobrança serão usados só para o registro financeiro e comprovação."
@@ -71,7 +88,7 @@ async function NovoLancamentoPage() {
                 <span>Data *</span>
                 <input type="date" name="data" defaultValue={hoje} required className="profile-form-input" />
               </label>
-              <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
+              <label className="profile-form-field form-field-full">
                 <span>Descrição *</span>
                 <input type="text" name="descricao" placeholder="Ex: Doação de Ana Silva" required className="profile-form-input" />
               </label>
@@ -79,7 +96,7 @@ async function NovoLancamentoPage() {
                 <span>Conta contábil *</span>
                 <select name="conta_id" required className="profile-form-input">
                   <option value="">— Selecione —</option>
-                  {contas.map((c: any) => (
+                  {contas.map((c) => (
                     <option key={c.id} value={c.id}>{c.codigo} - {c.nome}</option>
                   ))}
                 </select>
@@ -92,7 +109,7 @@ async function NovoLancamentoPage() {
                 <span>Centro de custo</span>
                 <select name="centro_custo_id" className="profile-form-input">
                   <option value="">— Nenhum —</option>
-                  {centros.map((c: any) => (
+                  {centros.map((c) => (
                     <option key={c.id} value={c.id}>{c.nome}</option>
                   ))}
                 </select>
@@ -101,7 +118,7 @@ async function NovoLancamentoPage() {
                 <span>Pessoa</span>
                 <select name="pessoa_id" className="profile-form-input">
                   <option value="">— Nenhuma —</option>
-                  {pessoas.map((p: any) => (
+                  {people.map((p) => (
                     <option key={p.id} value={p.id}>{p.nome}</option>
                   ))}
                 </select>
@@ -110,13 +127,13 @@ async function NovoLancamentoPage() {
                 <span>Categoria *</span>
                 <input type="text" name="categoria" placeholder="Ex: Doação, Pagamento, Venda" required className="profile-form-input" />
               </label>
-              <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
+              <label className="profile-form-field form-field-full">
                 <span>URL do comprovante</span>
                 <input type="url" name="comprovante_url" placeholder="https://..." className="profile-form-input" />
               </label>
             </div>
 
-            <div className="area-panel-grid" style={{ marginTop: '1.5rem' }}>
+            <div className="form-actions-row">
               <button type="submit" className="profile-form-btn profile-form-btn-primary">Registrar Lançamento</button>
               <Link href="/admin/financeiro/lancamentos" className="profile-form-btn profile-form-btn-secondary">Cancelar</Link>
             </div>

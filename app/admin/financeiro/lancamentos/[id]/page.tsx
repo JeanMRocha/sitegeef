@@ -9,6 +9,40 @@ export const metadata = {
   title: 'Lançamento - Admin GEEF',
 };
 
+type PlanoItem = {
+  id: string;
+  codigo?: string | null;
+  nome?: string | null;
+};
+
+type CentroItem = {
+  id: string;
+  nome?: string | null;
+};
+
+type PessoaItem = {
+  id: string;
+  nome?: string | null;
+};
+
+type MovimentoDetalhe = {
+  id: string;
+  tipo: 'entrada' | 'saida';
+  conta_id?: string | null;
+  categoria: string;
+  descricao: string;
+  valor: number;
+  data: string;
+  comprovante_url?: string | null;
+  plano_contas?: { id?: string | null; codigo?: string | null; nome?: string | null } | null;
+  centros_custo?: { id?: string | null; nome?: string | null } | null;
+  pessoas?: { id?: string | null; nome?: string | null } | null;
+};
+
+type FinanceParams = {
+  id: string;
+};
+
 async function handleSubmit(id: string, formData: FormData) {
   'use server';
 
@@ -47,10 +81,11 @@ async function handleDelete(id: string) {
 }
 
 async function LancamentoContent({ id }: { id: string }) {
-  const movimento = await getMovimentoById(id);
-  const contas = await getPlanoContas('ativo');
-  const centros = await getCentrosCusto(true);
+  const movimento = (await getMovimentoById(id)) as MovimentoDetalhe;
+  const contas = (await getPlanoContas('ativo')) as PlanoItem[];
+  const centros = (await getCentrosCusto(true)) as CentroItem[];
   const { pessoas } = await getPessoas();
+  const people = pessoas as PessoaItem[];
 
   return (
     <div className="area-page">
@@ -68,7 +103,7 @@ async function LancamentoContent({ id }: { id: string }) {
         <p className="area-subtitle">{new Date(movimento.data).toLocaleDateString('pt-BR')}</p>
         <div className="area-panel-grid">
           <form action={() => handleDelete(id)}>
-            <button type="submit" className="profile-form-btn profile-form-btn-secondary" style={{ color: 'var(--danger)', borderColor: 'rgba(239, 68, 68, 0.25)' }}>
+            <button type="submit" className="profile-form-btn profile-form-btn-secondary text-danger">
               Deletar
             </button>
           </form>
@@ -85,7 +120,7 @@ async function LancamentoContent({ id }: { id: string }) {
         </article>
         <article className="stat-card">
           <span className="stat-label">Valor</span>
-          <strong style={{ color: movimento.tipo === 'entrada' ? 'var(--success)' : 'var(--danger)' }}>
+          <strong className={movimento.tipo === 'entrada' ? 'text-success' : 'text-danger'}>
             {movimento.tipo === 'entrada' ? '+' : '-'} R$ {movimento.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
           </strong>
         </article>
@@ -100,7 +135,7 @@ async function LancamentoContent({ id }: { id: string }) {
           <h2>Editar lançamento</h2>
           <p>Atualize tipo, conta, centro de custo e anexos.</p>
         </div>
-        <div className="table-surface" style={{ maxWidth: '760px', margin: '0 auto' }}>
+        <div className="table-surface form-panel-centered">
           <form action={(formData) => handleSubmit(id, formData)}>
             <div className="module-grid">
               <label className="profile-form-field">
@@ -114,15 +149,15 @@ async function LancamentoContent({ id }: { id: string }) {
                 <span>Data *</span>
                 <input type="date" name="data" defaultValue={movimento.data} required className="profile-form-input" />
               </label>
-              <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
+              <label className="profile-form-field form-field-full">
                 <span>Descrição *</span>
                 <input type="text" name="descricao" defaultValue={movimento.descricao} required className="profile-form-input" />
               </label>
               <label className="profile-form-field">
                 <span>Conta contábil *</span>
-                <select name="conta_id" defaultValue={movimento.plano_contas?.id} required className="profile-form-input">
+                <select name="conta_id" defaultValue={movimento.plano_contas?.id || ''} required className="profile-form-input">
                   <option value="">— Selecione —</option>
-                  {contas.map((c: any) => (
+                  {contas.map((c) => (
                     <option key={c.id} value={c.id}>{c.codigo} - {c.nome}</option>
                   ))}
                 </select>
@@ -135,7 +170,7 @@ async function LancamentoContent({ id }: { id: string }) {
                 <span>Centro de custo</span>
                 <select name="centro_custo_id" defaultValue={movimento.centros_custo?.id || ''} className="profile-form-input">
                   <option value="">— Nenhum —</option>
-                  {centros.map((c: any) => (
+                  {centros.map((c) => (
                     <option key={c.id} value={c.id}>{c.nome}</option>
                   ))}
                 </select>
@@ -144,7 +179,7 @@ async function LancamentoContent({ id }: { id: string }) {
                 <span>Pessoa</span>
                 <select name="pessoa_id" defaultValue={movimento.pessoas?.id || ''} className="profile-form-input">
                   <option value="">— Nenhuma —</option>
-                  {pessoas.map((p: any) => (
+                  {people.map((p) => (
                     <option key={p.id} value={p.id}>{p.nome}</option>
                   ))}
                 </select>
@@ -153,13 +188,13 @@ async function LancamentoContent({ id }: { id: string }) {
                 <span>Categoria *</span>
                 <input type="text" name="categoria" defaultValue={movimento.categoria} required className="profile-form-input" />
               </label>
-              <label className="profile-form-field" style={{ gridColumn: '1 / -1' }}>
+              <label className="profile-form-field form-field-full">
                 <span>URL do comprovante</span>
                 <input type="url" name="comprovante_url" defaultValue={movimento.comprovante_url || ''} className="profile-form-input" />
               </label>
             </div>
 
-            <div className="area-panel-grid" style={{ marginTop: '1.5rem' }}>
+            <div className="form-actions-row">
               <button type="submit" className="profile-form-btn profile-form-btn-primary">Salvar alterações</button>
               <Link href="/admin/financeiro/lancamentos" className="profile-form-btn profile-form-btn-secondary">Cancelar</Link>
             </div>
@@ -170,10 +205,10 @@ async function LancamentoContent({ id }: { id: string }) {
   );
 }
 
-export default async function LancamentoPage({ params }: { params: Promise<any> }) {
+export default async function LancamentoPage({ params }: { params: Promise<FinanceParams> }) {
   const resolvedParams = await params;
   return (
-    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Carregando...</div>}>
+    <Suspense fallback={<div className="suspense-center">Carregando...</div>}>
       <LancamentoContent id={resolvedParams.id} />
     </Suspense>
   );
