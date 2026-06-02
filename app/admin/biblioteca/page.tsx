@@ -15,13 +15,18 @@ type ObraItem = {
   exemplares?: Array<unknown> | null;
 };
 
-async function BibliotecaList({ searchParams }: { searchParams: { page?: string; search?: string } }) {
-  const page = parseInt(searchParams.page || "1", 10);
+type BibliotecaSearchParams = {
+  page?: string;
+  search?: string;
+};
+
+async function BibliotecaList({ searchParams }: { searchParams: BibliotecaSearchParams }) {
+  const page = Number.parseInt(searchParams.page || "1", 10);
   const search = searchParams.search || "";
 
   const { obras, total, pageSize } = await getObras(page, search);
   const obraList = obras as ObraItem[];
-  const totalPages = Math.ceil(total / pageSize);
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
   return (
     <div className="area-page">
@@ -39,9 +44,9 @@ async function BibliotecaList({ searchParams }: { searchParams: { page?: string;
       </section>
 
       <section className="area-section">
-        <div className="table-surface">
+        <div className="table-surface library-filter-surface">
           <form method="get" className="module-grid align-start">
-            <label className="profile-form-field" style={{ gridColumn: "1 / -2" }}>
+            <label className="profile-form-field library-search-field">
               <span>Buscar por título ou autor</span>
               <input type="text" name="search" placeholder="Buscar por título ou autor..." defaultValue={search} className="profile-form-input" />
             </label>
@@ -121,7 +126,12 @@ async function BibliotecaList({ searchParams }: { searchParams: { page?: string;
   );
 }
 
-export default async function BibliotecaPage({ searchParams }: { searchParams: Promise<any> }) {
+type BibliotecaPageParams = {
+  page?: string;
+  search?: string;
+};
+
+export default async function BibliotecaPage({ searchParams }: { searchParams: Promise<BibliotecaPageParams> }) {
   const resolvedSearchParams = await searchParams;
   return (
     <Suspense fallback={<div className="suspense-center">Carregando...</div>}>

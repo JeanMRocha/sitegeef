@@ -3472,9 +3472,21 @@ a.button.musica-icon-button {
   gap: 0.35rem;
 }
 
+.tag-list--wrap {
+  flex-wrap: wrap;
+}
+
 .table-surface-centered {
   max-width: 900px;
   margin: 0 auto;
+}
+
+.library-search-field {
+  grid-column: 1 / -2;
+}
+
+.library-filter-surface {
+  padding-bottom: 1.1rem;
 }
 
 .tag-check {
