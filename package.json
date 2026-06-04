@@ -44,16 +44,16 @@
     "skills:health": "node scripts/geef-skills.mjs health"
   },
   "dependencies": {
-    "@supabase/ssr": "^0.6.1",
-    "@supabase/supabase-js": "^2.102.0",
+    "@supabase/ssr": "^0.10.3",
+    "@supabase/supabase-js": "^2.107.0",
     "next": "^15.0.0",
     "postgres": "^3.4.9",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
-    "@types/react": "^19.0.0",
+    "@types/react": "^19.2.16",
     "@types/react-dom": "^19.0.0",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",
@@ -63,9 +63,9 @@
     "eslint": "^8.50.0",
     "eslint-config-next": "^15.0.0",
     "eslint-plugin-react": "^7.33.0",
-    "pg": "^8.20.0",
+    "pg": "^8.21.0",
     "prettier": "^3.1.0",
-    "supabase": "^2.98.2",
+    "supabase": "^2.104.0",
     "typescript": "^5.0.0",
     "vitest": "^1.0.0"
   }
