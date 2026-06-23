@@ -772,6 +772,33 @@ body.musica-display-route .site-shell {
   flex: 0 0 auto;
 }
 
+.musica-reader-live-button {
+  min-height: 2.25rem;
+  padding: 0.45rem 0.65rem;
+  gap: 0.35rem;
+  border-radius: 999px;
+  flex: 0 0 auto;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.musica-reader-live-button--icon-only {
+  width: 2.25rem;
+  padding: 0;
+  justify-content: center;
+  border-color: rgba(138, 0, 90, 0.18);
+  background: rgba(138, 0, 90, 0.08);
+  color: var(--uva);
+  box-shadow: none;
+}
+
+.musica-reader-live-button--icon-only:hover,
+.musica-reader-live-button--icon-only:focus-visible {
+  border-color: rgba(138, 0, 90, 0.28);
+  background: rgba(138, 0, 90, 0.12);
+  color: var(--uva-strong);
+}
+
 .musica-code-pill {
   display: inline-flex;
   align-items: center;
@@ -946,8 +973,11 @@ body.musica-display-route .site-shell {
 }
 
 .musica-lyric-row {
-  font-size: var(--reader-text-size, 0.96rem);
+  font-family: var(--font-heading);
+  font-size: calc(var(--reader-text-size, 0.96rem) * 1.02);
   line-height: var(--reader-line-height, 1.62);
+  font-weight: 600;
+  letter-spacing: 0.01em;
   white-space: pre-wrap;
   word-wrap: break-word;
   margin: 0;

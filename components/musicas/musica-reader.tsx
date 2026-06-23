@@ -6,6 +6,7 @@ import Link from "next/link";
 import type { Musica } from "@/lib/musicas";
 import { formatParteTipoLabel, isTituloSameasTipo } from "@/lib/musicas";
 import { IconArrowLeft, IconPrinter } from "@/components/icons";
+import { MusicaExibicaoPublicaButton } from "@/components/musicas/musica-exibicao-publica-button";
 
 function isChordLine(line: string): boolean {
   if (!line || !line.trim()) return false;
@@ -78,6 +79,8 @@ type MusicaReaderProps = {
   readerDensity?: "standard" | "full";
   showBackLink?: boolean;
   showBranding?: boolean;
+  showLiveAction?: boolean;
+  isExibicaoPublicaAtiva?: boolean;
 };
 
 export function MusicaReader({
@@ -89,6 +92,8 @@ export function MusicaReader({
   readerDensity = "standard",
   showBackLink = true,
   showBranding = true,
+  showLiveAction = true,
+  isExibicaoPublicaAtiva = false,
 }: MusicaReaderProps) {
   const isDisplay = mode === "exibicao";
   const displayScreenRef = useRef<HTMLElement | null>(null);
@@ -591,6 +596,9 @@ export function MusicaReader({
               >
                 <IconPrinter size={18} />
               </button>
+            ) : null}
+            {!isDisplay && showLiveAction ? (
+              <MusicaExibicaoPublicaButton musicaId={musica.id} isAtiva={isExibicaoPublicaAtiva} />
             ) : null}
             {!isDisplay && podeAlternarCifra ? (
               <button

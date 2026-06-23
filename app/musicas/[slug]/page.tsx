@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getMusicaBySlug } from "@/lib/musicas";
+import { getMusicaBySlug, getMusicaExibicaoPublicaAtual } from "@/lib/musicas";
 import { MusicaReader } from "@/components/musicas/musica-reader";
 import { getInstitutionBrand } from "@/lib/institution-brand";
 
@@ -26,11 +26,22 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function MusicaPage({ params }: PageProps) {
   const { slug } = await params;
-  const [musica, brand] = await Promise.all([getMusicaBySlug(slug), getInstitutionBrand()]);
+  const [musica, brand, exibicaoPublica] = await Promise.all([
+    getMusicaBySlug(slug),
+    getInstitutionBrand(),
+    getMusicaExibicaoPublicaAtual(),
+  ]);
 
   if (!musica || musica.status !== "ativa") {
     notFound();
   }
 
-  return <MusicaReader musica={musica} logoSrc={brand.logoSemFundoUrl} showBranding={false} />;
+  return (
+    <MusicaReader
+      musica={musica}
+      logoSrc={brand.logoSemFundoUrl}
+      showBranding={false}
+      isExibicaoPublicaAtiva={exibicaoPublica?.musica?.id === musica.id}
+    />
+  );
 }

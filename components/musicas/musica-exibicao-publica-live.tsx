@@ -121,5 +121,13 @@ export function MusicaExibicaoPublicaLive({
     );
   }
 
-  return <MusicaReader musica={musica} logoSrc={logoSrc} readerDensity="full" showBranding={false} />;
+  return (
+    <MusicaReader
+      musica={musica}
+      logoSrc={logoSrc}
+      readerDensity="full"
+      showBranding={false}
+      showLiveAction={false}
+    />
+  );
 }

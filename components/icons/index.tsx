@@ -46,6 +46,18 @@ export function IconExternalLink({ className = "", size = 20 }: { className?: st
   );
 }
 
+export function IconBroadcast({ className = "", size = 20 }: { className?: string; size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+      <path d="M12 11a1 1 0 1 0 0.001 2.001A1 1 0 0 0 12 11z"></path>
+      <path d="M8.5 7.5a5 5 0 0 0 0 9"></path>
+      <path d="M15.5 7.5a5 5 0 0 1 0 9"></path>
+      <path d="M5 4a10 10 0 0 0 0 16"></path>
+      <path d="M19 4a10 10 0 0 1 0 16"></path>
+    </svg>
+  );
+}
+
 export function IconCheck({ className = "", size = 20 }: { className?: string; size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
