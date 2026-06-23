@@ -199,13 +199,22 @@
 }
 
 .musica-public-toggle-button {
-  min-width: 9.5rem;
+  min-width: 8rem;
+  padding: 0.45rem 0.75rem;
   justify-content: center;
+  font-size: 0.8rem;
 }
 
 .musica-public-toggle-badge {
-  min-width: 6rem;
+  min-width: 4.75rem;
+  padding: 0.25rem 0.55rem;
   justify-content: center;
+  font-size: 0.72rem;
+}
+
+.musica-public-toggle-link {
+  gap: 0.28rem;
+  text-decoration: none;
 }
 
 .progress-row {
@@ -773,17 +782,17 @@ body.musica-display-route .site-shell {
 }
 
 .musica-reader-live-button {
-  min-height: 2.25rem;
-  padding: 0.45rem 0.65rem;
-  gap: 0.35rem;
+  min-height: 2rem;
+  padding: 0.35rem 0.55rem;
+  gap: 0.25rem;
   border-radius: 999px;
   flex: 0 0 auto;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 600;
 }
 
 .musica-reader-live-button--icon-only {
-  width: 2.25rem;
+  width: 2rem;
   padding: 0;
   justify-content: center;
   border-color: rgba(138, 0, 90, 0.18);
@@ -1322,6 +1331,15 @@ body.musica-display-route .site-shell {
   white-space: nowrap;
 }
 
+.musica-catalog-title-link {
+  text-decoration: none;
+}
+
+.musica-catalog-title-link:hover,
+.musica-catalog-title-link:focus-visible {
+  text-decoration: underline;
+}
+
 .musica-catalog-meta-inline {
   color: var(--muted);
   font-size: 0.88rem;
@@ -1344,6 +1362,17 @@ body.musica-display-route .site-shell {
 .musica-catalog-actions .button {
   min-width: 5rem;
   padding-inline: 1rem;
+}
+
+.musica-catalog-live-button {
+  min-width: 4.75rem !important;
+  padding: 0.42rem 0.62rem !important;
+  gap: 0.28rem;
+  font-size: 0.78rem;
+}
+
+.musica-catalog-live-button--active {
+  min-width: 4.9rem !important;
 }
 
 @media (max-width: var(--bp-desktop)) {

@@ -5,12 +5,14 @@ import Link from "next/link";
 import type { Musica } from "@/lib/musicas";
 import { musicaMatchesSearch } from "@/lib/musicas";
 import { IconExternalLink, IconSearch, IconX } from "@/components/icons";
+import { MusicaCatalogLiveButton } from "@/components/musicas/musica-catalog-live-button";
 
 type MusicasCatalogProps = {
   musicas: Musica[];
+  activeMusicaId?: string | null;
 };
 
-export function MusicasCatalog({ musicas }: MusicasCatalogProps) {
+export function MusicasCatalog({ musicas, activeMusicaId = null }: MusicasCatalogProps) {
   const [searchText, setSearchText] = useState("");
 
   const filtered = useMemo(() => {
@@ -95,21 +97,21 @@ export function MusicasCatalog({ musicas }: MusicasCatalogProps) {
                     <span className="musica-catalog-author-inline">
                       {musica.autor}
                     </span>
-                    <span className="musica-catalog-title-inline">
+                    <Link
+                      href={`/musicas/${musica.slug}`}
+                      className="musica-catalog-title-inline musica-catalog-title-link"
+                      aria-label={`Abrir ${musica.titulo}`}
+                      title={`Abrir ${musica.titulo}`}
+                    >
                       {musica.titulo}
-                    </span>
+                    </Link>
                     {meta && (
                       <span className="musica-catalog-meta-inline">{meta}</span>
                     )}
                   </p>
 
                   <div className="musica-catalog-actions">
-                    <Link
-                      href={`/musicas/${musica.slug}`}
-                      className="button button-secondary"
-                    >
-                      Ler
-                    </Link>
+                    <MusicaCatalogLiveButton musicaId={musica.id} isAtiva={musica.id === activeMusicaId} />
                   </div>
                 </div>
               </article>

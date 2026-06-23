@@ -1,8 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { setMusicaExibicaoPublicaAction } from "@/app/admin/reuniao-publica/musicas/actions";
+import { IconExternalLink } from "@/components/icons";
 import { showToast } from "@/components/ui/toast-notification";
 
 type MusicaExibicaoPublicaButtonProps = {
@@ -38,7 +40,17 @@ export function MusicaExibicaoPublicaButton({ musicaId, isAtiva }: MusicaExibica
   };
 
   if (isAtiva) {
-    return <span className="inline-status inline-status-success musica-public-toggle-badge">Ao vivo</span>;
+    return (
+      <Link
+        href="/musicas/exibir"
+        className="inline-status inline-status-success musica-public-toggle-badge musica-public-toggle-link"
+        aria-label="Abrir exibição pública"
+        title="Abrir exibição pública"
+      >
+        <span>Ao vivo</span>
+        <IconExternalLink size={12} />
+      </Link>
+    );
   }
 
   return (

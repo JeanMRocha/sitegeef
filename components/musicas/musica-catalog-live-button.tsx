@@ -7,12 +7,12 @@ import { setMusicaExibicaoPublicaAction } from "@/app/admin/reuniao-publica/musi
 import { IconBroadcast, IconExternalLink } from "@/components/icons";
 import { showToast } from "@/components/ui/toast-notification";
 
-type MusicaExibicaoPublicaButtonProps = {
+type MusicaCatalogLiveButtonProps = {
   musicaId: string;
   isAtiva: boolean;
 };
 
-export function MusicaExibicaoPublicaButton({ musicaId, isAtiva }: MusicaExibicaoPublicaButtonProps) {
+export function MusicaCatalogLiveButton({ musicaId, isAtiva }: MusicaCatalogLiveButtonProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -28,6 +28,7 @@ export function MusicaExibicaoPublicaButton({ musicaId, isAtiva }: MusicaExibica
         variant: "success",
         message: "Música enviada para a exibição pública",
       });
+      router.push("/musicas/exibir");
       router.refresh();
     } catch (error) {
       showToast({
@@ -43,12 +44,12 @@ export function MusicaExibicaoPublicaButton({ musicaId, isAtiva }: MusicaExibica
     return (
       <Link
         href="/musicas/exibir"
-        className="inline-status inline-status-success musica-public-toggle-badge musica-public-toggle-link"
+        className="button button-secondary musica-catalog-live-button musica-catalog-live-button--active"
         aria-label="Abrir exibição pública"
         title="Abrir exibição pública"
       >
+        <IconExternalLink size={14} />
         <span>Ao vivo</span>
-        <IconExternalLink size={12} />
       </Link>
     );
   }
@@ -58,11 +59,12 @@ export function MusicaExibicaoPublicaButton({ musicaId, isAtiva }: MusicaExibica
       type="button"
       onClick={handleActivate}
       disabled={loading}
-      className="button button-secondary musica-reader-live-button musica-reader-live-button--icon-only"
-      aria-label="Jogar ao vivo"
-      title="Jogar ao vivo"
+      className="button button-secondary musica-catalog-live-button"
+      aria-label="Enviar para ao vivo"
+      title="Enviar para ao vivo"
     >
-      <IconBroadcast size={15} />
+      <IconBroadcast size={14} />
+      <span>{loading ? "Enviando..." : "Ao vivo"}</span>
     </button>
   );
 }
