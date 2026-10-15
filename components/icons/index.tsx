@@ -46,6 +46,30 @@ export function IconPlus({ className = "", size = 20 }: { className?: string; si
   );
 }
 
+export function IconMinus({ className = "", size = 20 }: { className?: string; size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+    </svg>
+  );
+}
+
+export function IconSliders({ className = "", size = 20 }: { className?: string; size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+      <line x1="4" y1="6" x2="14" y2="6"></line>
+      <line x1="18" y1="6" x2="20" y2="6"></line>
+      <circle cx="16" cy="6" r="2"></circle>
+      <line x1="4" y1="12" x2="6" y2="12"></line>
+      <line x1="10" y1="12" x2="20" y2="12"></line>
+      <circle cx="8" cy="12" r="2"></circle>
+      <line x1="4" y1="18" x2="14" y2="18"></line>
+      <line x1="18" y1="18" x2="20" y2="18"></line>
+      <circle cx="16" cy="18" r="2"></circle>
+    </svg>
+  );
+}
+
 export function IconEdit({ className = "", size = 20 }: { className?: string; size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">

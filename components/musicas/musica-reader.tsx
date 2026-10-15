@@ -1,23 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Musica } from "@/lib/musicas";
 import { formatParteTipoLabel, isTituloSameasTipo } from "@/lib/musicas";
-import { IconArrowLeft, IconPrinter } from "@/components/icons";
+import { IconArrowLeft, IconMinus, IconPlus, IconPrinter, IconSliders } from "@/components/icons";
 import { MusicaExibicaoPublicaButton } from "@/components/musicas/musica-exibicao-publica-button";
 import { getMusicaDisplayConfig, getMusicaDisplayScale } from "@/lib/musica-display-config";
-
-type DisplayPreset = "auto" | "hd" | "fullhd" | "classic";
-
-const DISPLAY_PRESET_STORAGE_KEY = "geef-musicas-display-preset";
-const DISPLAY_PRESETS: Record<DisplayPreset, { label: string; scale: number }> = {
-  auto: { label: "Automático", scale: 1 },
-  hd: { label: "HD 1280×720", scale: 0.9 },
-  fullhd: { label: "Full HD 1920×1080", scale: 1.08 },
-  classic: { label: "4:3 clássico", scale: 0.84 },
-};
 
 function isChordLine(line: string): boolean {
   if (!line || !line.trim()) return false;
@@ -112,7 +102,16 @@ export function MusicaReader({
   const [viewMode, setViewMode] = useState<"letra" | "cifra">("letra");
   const [pipExpanded, setPipExpanded] = useState(false);
   const [pipHidden, setPipHidden] = useState(true);
-  const [displayPreset, setDisplayPreset] = useState<DisplayPreset>("auto");
+  const [displayZoom, setDisplayZoom] = useState(1);
+  const [maxDisplayZoom, setMaxDisplayZoom] = useState(1.6);
+  const [displayFitReady, setDisplayFitReady] = useState(false);
+  const [commandsOpen, setCommandsOpen] = useState(false);
+  const [commandsHovered, setCommandsHovered] = useState(false);
+  const commandsRootRef = useRef<HTMLDivElement | null>(null);
+  const commandsCloseTimerRef = useRef<number | null>(null);
+  const lastFitZoomRef = useRef(1);
+  const pendingZoomValidationRef = useRef(false);
+  const fitSearchRef = useRef({ active: false, low: 0.4, high: 1.6, steps: 0 });
   const [viewport, setViewport] = useState(() => ({
     width: 1366,
     height: 768,
@@ -127,6 +126,9 @@ export function MusicaReader({
 
   const hasMedia = musica.youtube_url || musica.audio_url;
   const partesVisiveis = musica.partes.filter((parte) => !mostrarCifra || parte.cifra);
+  const displayContentSignature = partesVisiveis
+    .map((parte) => `${parte.id ?? parte.ordem}:${parte.conteudo}:${parte.cifra ?? ""}`)
+    .join("\u0000");
   const readerMetrics = useMemo(() => {
     const totalLines = partesVisiveis.reduce((sum, parte) => sum + parte.conteudo.split("\n").length, 0);
     const totalChars = partesVisiveis.reduce((sum, parte) => sum + parte.conteudo.length, 0);
@@ -425,19 +427,77 @@ export function MusicaReader({
   }, [displayMetrics.columns, partesVisiveis]);
 
   useEffect(() => {
+    if (!isDisplay || !commandsOpen || commandsHovered) return;
+    const timeoutId = window.setTimeout(() => setCommandsOpen(false), 3_500);
+    return () => window.clearTimeout(timeoutId);
+  }, [commandsHovered, commandsOpen, isDisplay]);
+
+  useEffect(() => () => {
+    if (commandsCloseTimerRef.current !== null) window.clearTimeout(commandsCloseTimerRef.current);
+  }, []);
+
+  useLayoutEffect(() => {
     if (!isDisplay) return;
+    lastFitZoomRef.current = 1;
+    pendingZoomValidationRef.current = false;
+    fitSearchRef.current = { active: true, low: 0.4, high: 1.6, steps: 0 };
+    setDisplayFitReady(false);
+    setDisplayZoom(1);
+    setMaxDisplayZoom(1.6);
+  }, [displayContentSignature, isDisplay, musica.id, viewport.height, viewport.width]);
 
-    const savedPreset = window.localStorage.getItem(DISPLAY_PRESET_STORAGE_KEY) as DisplayPreset | null;
-    if (savedPreset && savedPreset in DISPLAY_PRESETS) {
-      setDisplayPreset(savedPreset);
-    }
-  }, [isDisplay]);
+  useLayoutEffect(() => {
+    const screen = displayScreenRef.current;
+    if (!isDisplay || !screen) return;
+    let frameId = 0;
+    frameId = window.requestAnimationFrame(() => {
+      const content = [
+        screen.querySelector<HTMLElement>(".musica-display-header-16x9"),
+        screen.querySelector<HTMLElement>(".musica-display-body-16x9"),
+      ].filter((element): element is HTMLElement => Boolean(element));
+      const overflowRatio = content.reduce((ratio, element) => {
+        const widthRatio = element.scrollWidth > element.clientWidth
+          ? element.clientWidth / element.scrollWidth
+          : 1;
+        const heightRatio = element.scrollHeight > element.clientHeight
+          ? element.clientHeight / element.scrollHeight
+          : 1;
+        return Math.min(ratio, widthRatio, heightRatio);
+      }, 1);
 
-  useEffect(() => {
-    if (isDisplay) {
-      window.localStorage.setItem(DISPLAY_PRESET_STORAGE_KEY, displayPreset);
-    }
-  }, [displayPreset, isDisplay]);
+      const search = fitSearchRef.current;
+      if (search.active) {
+        if (overflowRatio < 0.995) search.high = displayZoom;
+        else search.low = displayZoom;
+        search.steps += 1;
+
+        if (search.steps >= 7 || search.high - search.low <= 0.015) {
+          search.active = false;
+          lastFitZoomRef.current = search.low;
+          setMaxDisplayZoom(search.low);
+          setDisplayZoom(search.low);
+          setDisplayFitReady(true);
+        } else {
+          setDisplayZoom((search.low + search.high) / 2);
+        }
+        return;
+      }
+
+      if (pendingZoomValidationRef.current) {
+        pendingZoomValidationRef.current = false;
+        if (overflowRatio < 0.995) {
+          setMaxDisplayZoom(lastFitZoomRef.current);
+          setDisplayZoom(lastFitZoomRef.current);
+        } else {
+          lastFitZoomRef.current = displayZoom;
+        }
+        return;
+      }
+
+      lastFitZoomRef.current = displayZoom;
+    });
+    return () => window.cancelAnimationFrame(frameId);
+  }, [displayContentSignature, displayZoom, isDisplay, musica.id, viewport.height, viewport.width]);
 
   useEffect(() => {
     const el = displayScreenRef.current;
@@ -446,7 +506,7 @@ export function MusicaReader({
     }
 
     const displayScale =
-      getMusicaDisplayScale(musica.titulo, viewport.width, displayMetrics.scale) * DISPLAY_PRESETS[displayPreset].scale;
+      getMusicaDisplayScale(musica.titulo, viewport.width, displayMetrics.scale) * displayZoom;
 
     const properties: Record<string, string> = {
       "--display-scale": String(displayScale),
@@ -470,7 +530,7 @@ export function MusicaReader({
     Object.entries(properties).forEach(([property, value]) => {
       el.style.setProperty(property, value);
     });
-  }, [displayDensity, displayMetrics, displayPreset, isDisplay, musica.titulo, viewport.width]);
+  }, [displayDensity, displayMetrics, displayZoom, isDisplay, musica.titulo, viewport.width]);
 
   useEffect(() => {
     const el = publicLyricsPanelRef.current;
@@ -528,63 +588,93 @@ export function MusicaReader({
     return (
       <main
         ref={displayScreenRef}
-        className={`musica-display-screen musica-display-screen--reader musica-display-screen--live ${getMusicaDisplayConfig(musica.titulo).fillRows ? "is-fill-rows" : ""}`}
+        className={`musica-display-screen musica-display-screen--reader musica-display-screen--live ${displayFitReady ? "" : "is-fit-pending"} ${getMusicaDisplayConfig(musica.titulo).fillRows ? "is-fill-rows" : ""}`}
       >
-        <div className="musica-display-command-bar" role="toolbar" aria-label="Comandos da exibição">
-          <Link
-            href="/reuniao-publica/musicas"
-            className="musica-display-command-button"
-            aria-label="Voltar ao catálogo"
-            title="Voltar ao catálogo"
-          >
-            <IconArrowLeft size={16} />
-          </Link>
+        <div
+          ref={commandsRootRef}
+          className={`musica-display-controls ${commandsOpen ? "is-open" : ""}`}
+          onMouseEnter={() => {
+            if (commandsCloseTimerRef.current !== null) window.clearTimeout(commandsCloseTimerRef.current);
+            setCommandsHovered(true);
+            setCommandsOpen(true);
+          }}
+          onMouseLeave={() => {
+            setCommandsHovered(false);
+            if (commandsCloseTimerRef.current !== null) window.clearTimeout(commandsCloseTimerRef.current);
+            commandsCloseTimerRef.current = window.setTimeout(() => setCommandsOpen(false), 2_500);
+          }}
+          onFocusCapture={() => { setCommandsHovered(true); setCommandsOpen(true); }}
+          onBlurCapture={(event) => {
+            if (!commandsRootRef.current?.contains(event.relatedTarget as Node | null)) {
+              setCommandsHovered(false);
+              setCommandsOpen(false);
+            }
+          }}
+        >
+          <div className="musica-display-command-bar" role="toolbar" aria-label="Comandos da exibição" aria-hidden={!commandsOpen}>
+            <button
+              type="button"
+              className="musica-display-command-button"
+              onClick={() => {
+                pendingZoomValidationRef.current = true;
+                setDisplayZoom((zoom) => Math.max(0.55, Math.round((zoom - 0.05) * 100) / 100));
+              }}
+              aria-label="Diminuir zoom"
+              title="Diminuir zoom"
+              disabled={displayZoom <= 0.55}
+            >
+              <IconMinus size={16} />
+            </button>
+            <span className="musica-display-zoom-value" aria-live="polite">{Math.round(displayZoom * 100)}%</span>
+            <button
+              type="button"
+              className="musica-display-command-button"
+              onClick={() => {
+                pendingZoomValidationRef.current = true;
+                setDisplayZoom((zoom) => Math.min(maxDisplayZoom, Math.round((zoom + 0.05) * 100) / 100));
+              }}
+              aria-label="Aumentar zoom"
+              title="Aumentar zoom"
+              disabled={displayZoom >= maxDisplayZoom - 0.005}
+            >
+              <IconPlus size={16} />
+            </button>
+            <button
+              type="button"
+              className="musica-display-command-button"
+              onClick={() => window.print()}
+              aria-label="Imprimir música"
+              title="Imprimir música"
+            >
+              <IconPrinter size={16} />
+            </button>
+            <Link href="/reuniao-publica/musicas" className="musica-display-command-button" aria-label="Voltar ao catálogo" title="Voltar ao catálogo">
+              <IconArrowLeft size={16} />
+            </Link>
+            {hasMedia ? (
+              <button type="button" className="musica-display-command-button" onClick={() => setPipHidden((hidden) => !hidden)} aria-label={pipHidden ? "Mostrar vídeo" : "Ocultar vídeo"} title={pipHidden ? "Mostrar vídeo" : "Ocultar vídeo"}>
+                <span aria-hidden="true">{pipHidden ? "▶" : "■"}</span>
+              </button>
+            ) : null}
+            {podeAlternarCifra ? (
+              <button type="button" className="musica-display-command-button" onClick={() => setViewMode(viewMode === "letra" ? "cifra" : "letra")} aria-label={`Exibir ${viewMode === "letra" ? "cifra" : "letra"}`} title={`Exibir ${viewMode === "letra" ? "cifra" : "letra"}`}>
+                <span aria-hidden="true">🎼</span>
+              </button>
+            ) : null}
+          </div>
           <button
             type="button"
-            className="musica-display-command-button"
-            onClick={() => window.print()}
-            aria-label="Imprimir música"
-            title="Imprimir música"
+            className="musica-display-controls-trigger"
+            onClick={() => {
+              setCommandsHovered(false);
+              setCommandsOpen(true);
+            }}
+            aria-expanded={commandsOpen}
+            aria-label="Abrir opções da exibição"
+            title="Opções da exibição"
           >
-            <IconPrinter size={16} />
+            <IconSliders size={18} />
           </button>
-          <label className="musica-display-preset-control">
-            <span>Resolução</span>
-            <select
-              value={displayPreset}
-              onChange={(event) => setDisplayPreset(event.target.value as DisplayPreset)}
-              aria-label="Escolher ajuste de resolução da projeção"
-              title="Ajuste de resolução da projeção"
-            >
-              {Object.entries(DISPLAY_PRESETS).map(([value, preset]) => (
-                <option key={value} value={value}>
-                  {preset.label}
-                </option>
-              ))}
-            </select>
-          </label>
-          {hasMedia ? (
-            <button
-              type="button"
-              className="musica-display-command-button"
-              onClick={() => setPipHidden((hidden) => !hidden)}
-              aria-label={pipHidden ? "Mostrar vídeo" : "Ocultar vídeo"}
-              title={pipHidden ? "Mostrar vídeo" : "Ocultar vídeo"}
-            >
-              <span aria-hidden="true">{pipHidden ? "▶" : "■"}</span>
-            </button>
-          ) : null}
-          {podeAlternarCifra ? (
-            <button
-              type="button"
-              className="musica-display-command-button"
-              onClick={() => setViewMode(viewMode === "letra" ? "cifra" : "letra")}
-              aria-label={`Exibir ${viewMode === "letra" ? "cifra" : "letra"}`}
-              title={`Exibir ${viewMode === "letra" ? "cifra" : "letra"}`}
-            >
-              <span aria-hidden="true">🎼</span>
-            </button>
-          ) : null}
         </div>
 
         <div className="musica-display-header-16x9">

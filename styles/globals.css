@@ -379,7 +379,7 @@ html.musica-display-route,
 body.musica-display-route {
   overflow: hidden;
   width: 100%;
-  height: 100%;
+  height: 100dvh;
 }
 
 html.musica-display-route .site-shell-main,
@@ -391,7 +391,8 @@ body.musica-display-route .site-shell-main {
 
 html.musica-display-route .site-shell,
 body.musica-display-route .site-shell {
-  min-height: 100vh;
+  height: 100dvh;
+  min-height: 100dvh;
   width: 100vw;
   max-width: none;
   margin: 0;
@@ -2299,6 +2300,10 @@ body.musica-display-route * {
   -webkit-text-stroke: 0.12px currentColor;
 }
 
+.musica-display-screen--live .musica-display-verse-content pre {
+  text-shadow: 0 1px 2px rgba(74, 0, 48, 0.22);
+}
+
 .musica-display-screen--live .musica-display-header-subtitle {
   color: #5d4c4c;
   font-weight: 650;
@@ -2357,10 +2362,14 @@ body.musica-display-route .musica-display-screen--reader {
   position: fixed;
   inset: 0;
   width: 100%;
-  height: 100vh;
+  height: 100dvh;
   min-height: 0;
-  max-height: 100vh;
+  max-height: 100dvh;
   overflow: hidden;
+}
+
+.musica-display-screen--reader.is-fit-pending {
+  visibility: hidden;
 }
 
 .musica-display-floating-controls {
@@ -2370,11 +2379,17 @@ body.musica-display-route .musica-display-screen--reader {
   z-index: 20;
 }
 
-.musica-display-command-bar {
+.musica-display-controls {
   position: fixed;
   right: clamp(0.85rem, 1.5vw, 1.2rem);
   bottom: clamp(0.85rem, 1.5vw, 1.2rem);
   z-index: 30;
+}
+
+.musica-display-command-bar {
+  position: absolute;
+  right: 0;
+  bottom: 100%;
   display: flex;
   align-items: center;
   gap: 0.35rem;
@@ -2384,6 +2399,54 @@ body.musica-display-route .musica-display-screen--reader {
   background: rgba(255, 255, 255, 0.9);
   box-shadow: 0 8px 24px rgba(56, 26, 52, 0.16);
   backdrop-filter: blur(12px);
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.musica-display-controls.is-open .musica-display-command-bar {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.musica-display-controls-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.8rem;
+  height: 2.8rem;
+  border: 1px solid rgba(101, 0, 76, 0.18);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.94);
+  color: #65004c;
+  box-shadow: 0 6px 20px rgba(56, 26, 52, 0.16);
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease !important;
+}
+
+.musica-display-controls-trigger:hover {
+  transform: rotate(18deg) scale(1.04);
+}
+
+.musica-display-controls.is-open .musica-display-controls-trigger {
+  transform: rotate(90deg);
+}
+
+.musica-display-controls-trigger:focus-visible {
+  outline: 3px solid rgba(138, 0, 90, 0.3);
+  outline-offset: 3px;
+}
+
+html.musica-display-route .musica-display-controls-trigger,
+body.musica-display-route .musica-display-controls-trigger {
+  transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease !important;
+}
+
+.musica-display-zoom-value {
+  min-width: 2.8rem;
+  color: #65004c;
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-align: center;
 }
 
 .musica-display-command-button {
@@ -2412,33 +2475,9 @@ body.musica-display-route .musica-display-screen--reader {
   outline-offset: 2px;
 }
 
-.musica-display-preset-control {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  min-height: 2.35rem;
-  padding: 0.25rem 0.45rem 0.25rem 0.7rem;
-  border: 1px solid rgba(101, 0, 76, 0.2);
-  border-radius: 999px;
-  background: #fff;
-  color: #3a2834;
-  font-size: 0.76rem;
-  font-weight: 750;
-  white-space: nowrap;
-}
-
-.musica-display-preset-control select {
-  max-width: 8.8rem;
-  border: 0;
-  background: transparent;
-  color: #65004c;
-  font: inherit;
-  cursor: pointer;
-}
-
-.musica-display-preset-control select:focus-visible {
-  outline: 2px solid rgba(138, 0, 90, 0.45);
-  outline-offset: 2px;
+.musica-display-command-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .musica-display-video-overlay {
@@ -2467,25 +2506,22 @@ body.musica-display-route .musica-display-screen--reader {
 }
 
 @media (max-width: 600px) {
-  .musica-display-command-bar {
+  .musica-display-controls {
     right: 0.65rem;
     bottom: 0.65rem;
-    left: 0.65rem;
+  }
+
+  .musica-display-command-bar {
+    right: 0;
+    bottom: 100%;
+    max-width: calc(100vw - 1.3rem);
     justify-content: center;
+    flex-wrap: wrap;
   }
 
   .musica-display-command-button {
     flex: 1;
     padding-inline: 0.5rem;
-  }
-
-  .musica-display-preset-control {
-    flex: 2;
-    justify-content: center;
-  }
-
-  .musica-display-preset-control span {
-    display: none;
   }
 
   .musica-display-command-button span:last-child {
